@@ -1,0 +1,10 @@
+#!/bin/sh
+
+# Gets a filename where the name of the current branch is part of the name of the file.
+versionFile="version_$(git branch | sed -n -e 's/^\* \(.*\)/\1/p').properties"
+cd ".git/hooks"
+javac Version.java
+java -cp . Version "../../$versionFile" 0
+rm -rf Version.class
+cd "../.."
+git add "$versionFile"
