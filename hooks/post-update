@@ -1,0 +1,7 @@
+#!/bin/sh
+
+#exec git update-index --skip-worktree gradlew
+#exec git update-index --skip-worktree gradlew.bat
+exec git update-index --skip-worktree LICENSE
+#exec git update-index --skip-worktree .travis.yml
+exec git update-index --skip-worktree gradle/
