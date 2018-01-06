@@ -51,6 +51,4 @@ public class ClimberSubsystem extends Subsystem
         climbMotorLeft.set(0.0D);
         climbMotorRight.set(0.0D);
     }
-
-
 }

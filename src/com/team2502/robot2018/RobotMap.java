@@ -29,6 +29,7 @@ public class RobotMap
     {
         private Motor() {}
 
+        // TODO: Set proper values.
         public static final int DRIVE_TRAIN_FRONT_LEFT = UNDEFINED;
         public static final int DRIVE_TRAIN_BACK_LEFT = UNDEFINED;
         public static final int DRIVE_TRAIN_FRONT_RIGHT = UNDEFINED;
