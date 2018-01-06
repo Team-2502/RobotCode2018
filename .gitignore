@@ -28,7 +28,9 @@ build/
 
 ## Gradle
 .gradle/
-/gradle
+
+## Never uncomment these gradle lines. They are required for gralde to work.
+#/gradle
 #gradlew.bat
 #gradlew
 deploy.sh
