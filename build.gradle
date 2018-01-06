@@ -2,7 +2,7 @@ plugins {
     id "java"
     id "eclipse"
     id "idea"
-    id "jaci.openrio.gradle.GradleRIO" version "2017.2.3"
+    id "jaci.openrio.gradle.GradleRIO" version "2018.01.06b"
 }
 
 frc {
@@ -58,7 +58,7 @@ genJavadoc.onlyIf { project.hasProperty('runJavadoc') }
 javadoc.onlyIf { project.hasProperty('runJavadoc') }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '3.2.1'
+    gradleVersion = '4.4'
 }
 
 sourceSets {
