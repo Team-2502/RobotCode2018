@@ -1,8 +1,8 @@
-package com.team2502.robot2017.command.teleop;
+package com.team2502.robot2018.command.teleop;
 
 import com.kauailabs.navx.frc.AHRS;
-import com.team2502.robot2017.Robot;
-import com.team2502.robot2017.subsystem.DriveTrainSubsystem;
+import com.team2502.robot2018.Robot;
+import com.team2502.robot2018.subsystem.DriveTrainSubsystem;
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
@@ -32,7 +32,7 @@ public class DriveCommand extends Command
     @Override
     protected void initialize()
     {
-        driveTrainSubsystem.setTeleopSettings();
+//        driveTrainSubsystem.setTeleopSettings();
     }
 
     @Override
@@ -42,11 +42,10 @@ public class DriveCommand extends Command
     }
 
     @Override
-    protected boolean isFinished() { return false; }
+    protected boolean isFinished()
+    { return false; }
 
     @Override
-    protected void end() { driveTrainSubsystem.stop(); }
-
-    @Override
-    protected void interrupted() { end(); }
+    protected void end()
+    { driveTrainSubsystem.stop(); }
 }

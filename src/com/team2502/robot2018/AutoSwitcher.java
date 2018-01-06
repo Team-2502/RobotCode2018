@@ -1,4 +1,4 @@
-package com.team2502.robot2017;
+package com.team2502.robot2018;
 
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -14,8 +14,8 @@ class AutoSwitcher
         DEMO("Demo", null);
 
 
-        private Class<? extends Command> autoCommand;
-        private String name;
+        public final Class<? extends Command> autoCommand;
+        public final String name;
 
         AutoMode(String name, Class<? extends Command> autoCommand)
         {

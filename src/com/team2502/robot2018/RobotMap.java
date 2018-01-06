@@ -1,4 +1,4 @@
-package com.team2502.robot2017;
+package com.team2502.robot2018;
 
 public class RobotMap
 {
@@ -28,5 +28,14 @@ public class RobotMap
     public static final class Motor
     {
         private Motor() {}
+
+        // TODO: Set proper values.
+        public static final int DRIVE_TRAIN_FRONT_LEFT = UNDEFINED;
+        public static final int DRIVE_TRAIN_BACK_LEFT = UNDEFINED;
+        public static final int DRIVE_TRAIN_FRONT_RIGHT = UNDEFINED;
+        public static final int DRIVE_TRAIN_BACK_RIGHT = UNDEFINED;
+
+        public static final int CLIMBER_LEFT = UNDEFINED;
+        public static final int CLIMBER_RIGHT = UNDEFINED;
     }
 }
