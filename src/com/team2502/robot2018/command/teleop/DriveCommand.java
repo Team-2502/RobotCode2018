@@ -32,7 +32,7 @@ public class DriveCommand extends Command
     @Override
     protected void initialize()
     {
-        driveTrainSubsystem.setTeleopSettings();
+//        driveTrainSubsystem.setTeleopSettings();
     }
 
     @Override
@@ -42,11 +42,14 @@ public class DriveCommand extends Command
     }
 
     @Override
-    protected boolean isFinished() { return false; }
+    protected boolean isFinished()
+    { return false; }
 
     @Override
-    protected void end() { driveTrainSubsystem.stop(); }
+    protected void end()
+    { driveTrainSubsystem.stop(); }
 
     @Override
-    protected void interrupted() { end(); }
+    protected void interrupted()
+    { end(); }
 }

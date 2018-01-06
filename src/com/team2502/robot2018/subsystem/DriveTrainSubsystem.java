@@ -47,6 +47,11 @@ public class DriveTrainSubsystem extends Subsystem
         drive.setSafetyEnabled(true);
     }
 
+    public void stop()
+    {
+        drive.stopMotor();
+    }
+
     public double turningFactor() { return Math.abs(OI.JOYSTICK_DRIVE_LEFT.getY() - OI.JOYSTICK_DRIVE_RIGHT.getY());}
 
     @Override
