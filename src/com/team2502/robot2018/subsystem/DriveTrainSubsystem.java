@@ -1,10 +1,12 @@
-package com.team2502.robot2017.subsystem;
+package com.team2502.robot2018.subsystem;
 
-import com.team2502.robot2017.OI;
-import com.team2502.robot2017.RobotMap;
-import com.team2502.robot2017.command.teleop.DriveCommand;
-import edu.wpi.first.wpilibj.RobotDrive;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.team2502.robot2018.OI;
+import com.team2502.robot2018.RobotMap;
+import com.team2502.robot2018.command.teleop.DriveCommand;
+import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 
 /**
  * Example Implementation, Many changes needed.
@@ -13,7 +15,15 @@ public class DriveTrainSubsystem extends Subsystem
 {
     private static final Pair<Double, Double> SPEED_CONTAINER = new Pair<Double, Double>();
 
-    private final RobotDrive drive;
+    public final WPI_TalonSRX leftFrontTalon;
+    public final WPI_TalonSRX leftRearTalon;
+    public final WPI_TalonSRX rightFrontTalon;
+    public final WPI_TalonSRX rightRearTalon;
+    public final DifferentialDrive drive;
+    public final SpeedControllerGroup spgLeft;
+    public final SpeedControllerGroup spgRight;
+
+
     private double lastLeft;
     private double lastRight;
     private boolean isNegativePressed;
@@ -24,7 +34,15 @@ public class DriveTrainSubsystem extends Subsystem
         lastLeft = 0.0D;
         lastRight = 0.0D;
 
-        drive = new RobotDrive(RobotMap.UNDEFINED, RobotMap.UNDEFINED);
+        leftFrontTalon = new WPI_TalonSRX(RobotMap.UNDEFINED);
+        leftRearTalon = new WPI_TalonSRX(RobotMap.UNDEFINED);
+        rightFrontTalon = new WPI_TalonSRX(RobotMap.UNDEFINED);
+        rightRearTalon = new WPI_TalonSRX(RobotMap.UNDEFINED);
+
+        spgLeft = new SpeedControllerGroup(leftFrontTalon, leftRearTalon);
+        spgRight = new SpeedControllerGroup(rightFrontTalon, rightRearTalon);
+
+        drive = new DifferentialDrive(spgLeft, spgRight);
 
         drive.setSafetyEnabled(true);
     }

@@ -1,7 +1,7 @@
-package com.team2502.robot2017;
+package com.team2502.robot2018;
 
 import com.kauailabs.navx.frc.AHRS;
-import com.team2502.robot2017.subsystem.DriveTrainSubsystem;
+import com.team2502.robot2018.subsystem.DriveTrainSubsystem;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.command.Scheduler;

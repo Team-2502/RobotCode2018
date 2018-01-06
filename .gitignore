@@ -104,11 +104,13 @@ cmake-build-debug/
 
 ## File-based project format:
 *.iws
+*.iml
+*.ipr
 
 ## Plugin-specific files:
 
 # IntelliJ
-/out/
+#/out/
 
 ## mpeltonen/sbt-idea plugin
 .idea_modules/
