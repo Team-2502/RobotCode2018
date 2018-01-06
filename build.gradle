@@ -5,11 +5,22 @@ plugins {
     id "jaci.openrio.gradle.GradleRIO" version "2018.01.06b"
 }
 
-frc {
-    team = "2502"
-    robotClass = "com.team2502.robot2018.Robot"     //The class for the main Robot Class. Used in manifest
-    //Your FRC team number (e.g. 5333 for team 'Can't C#', or 47 for Chief Delphi)
-//    rioIP = "10.25.2.37"                             //Uncomment to specify the IP address of the RIO
+def TEAM = 2502
+def ROBOT_CLASS = "com.team2502.robot2018.Robot"
+
+// Define my targets (RoboRIO) and artifacts (deployable files)
+// This is added by GradleRIO's backing project EmbeddedTools.
+deploy {
+    targets {
+        target("roborio", jaci.openrio.gradle.frc.RoboRIO) {
+            team = TEAM
+        }
+    }
+    artifacts {
+        artifact('frcJava', jaci.openrio.gradle.frc.FRCJavaArtifact) {
+            targets << "roborio"
+        }
+    }
 }
 
 repositories {
@@ -18,23 +29,21 @@ repositories {
 
 dependencies {
     compile wpilib()
-    compile talonSrx()
-    compile talonSrxJni()
+    compile ctre()
     compile navx()
 
 //    compile "org.jetbrains:annotations:15.0" // Provides useful annotations like @NotNull & @Nullable
 
 }
 
-def robotManifest = {
-    attributes 'Main-Class': 'edu.wpi.first.wpilibj.RobotBase'
-    attributes 'Robot-Class': frc.robotClass
-}
-
+// Setting up my Jar File. In this case, adding all libraries into the main jar ('fat jar')
+// in order to make them all available at runtime. Also adding the manifest so WPILib
+// knows where to look for our Robot Class.
 jar {
     from configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
-    manifest robotManifest
+    manifest jaci.openrio.gradle.GradleRIOPlugin.javaManifest(ROBOT_CLASS)
 }
+
 
 task genJavadoc(type: Jar, dependsOn: javadoc) {
   classifier = 'javadoc'
