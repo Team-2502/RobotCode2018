@@ -34,10 +34,10 @@ public class DriveTrainSubsystem extends Subsystem
         lastLeft = 0.0D;
         lastRight = 0.0D;
 
-        leftFrontTalon = new WPI_TalonSRX(RobotMap.UNDEFINED);
-        leftRearTalon = new WPI_TalonSRX(RobotMap.UNDEFINED);
-        rightFrontTalon = new WPI_TalonSRX(RobotMap.UNDEFINED);
-        rightRearTalon = new WPI_TalonSRX(RobotMap.UNDEFINED);
+        leftFrontTalon = new WPI_TalonSRX(RobotMap.Motor.DRIVE_TRAIN_FRONT_LEFT);
+        leftRearTalon = new WPI_TalonSRX(RobotMap.Motor.DRIVE_TRAIN_BACK_LEFT);
+        rightFrontTalon = new WPI_TalonSRX(RobotMap.Motor.DRIVE_TRAIN_FRONT_RIGHT);
+        rightRearTalon = new WPI_TalonSRX(RobotMap.Motor.DRIVE_TRAIN_BACK_RIGHT);
 
         spgLeft = new SpeedControllerGroup(leftFrontTalon, leftRearTalon);
         spgRight = new SpeedControllerGroup(rightFrontTalon, rightRearTalon);

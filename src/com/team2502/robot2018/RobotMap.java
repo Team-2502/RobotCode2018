@@ -28,5 +28,13 @@ public class RobotMap
     public static final class Motor
     {
         private Motor() {}
+
+        public static final int DRIVE_TRAIN_FRONT_LEFT = UNDEFINED;
+        public static final int DRIVE_TRAIN_BACK_LEFT = UNDEFINED;
+        public static final int DRIVE_TRAIN_FRONT_RIGHT = UNDEFINED;
+        public static final int DRIVE_TRAIN_BACK_RIGHT = UNDEFINED;
+
+        public static final int CLIMBER_LEFT = UNDEFINED;
+        public static final int CLIMBER_RIGHT = UNDEFINED;
     }
 }
