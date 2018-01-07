@@ -27,7 +27,7 @@ public final class Robot extends IterativeRobot
     public static final double VL_MAX = 100;
     public static final double VR_MIN = -100;
     public static final double VL_MIN = -100;
-    public static final double LATERAL_WHEEL_DISTANCE = 24;
+    public static final double LATERAL_WHEEL_DISTANCE = 7.6666666667;
 
     // NavX Subsystem
     public static AHRS NAVX;
