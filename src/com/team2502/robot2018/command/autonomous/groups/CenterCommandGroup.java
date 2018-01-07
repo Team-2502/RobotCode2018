@@ -1,5 +1,7 @@
 package com.team2502.robot2018.command.autonomous.groups;
 
-public class CenterCommandGroup
+import edu.wpi.first.wpilibj.command.CommandGroup;
+
+public class CenterCommandGroup extends CommandGroup
 {
 }

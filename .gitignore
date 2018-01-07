@@ -89,6 +89,8 @@ cmake-build-debug/
 ## File-based project format:
 *.iws
 RobotCode2018.iml
+RobotCode2018_main.iml
+RobotCode2018_test.iml
 *.ipr
 
 ## Plugin-specific files:
