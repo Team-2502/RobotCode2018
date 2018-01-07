@@ -1,0 +1,33 @@
+Each side of the field is identical as far as code goes. No need for red v blue auto programs.
+
+Left start position:
+    LLx:
+        1. score in scale
+    LRx:
+        1. score in switch
+    RLx:
+        1. score in scale
+    RRx:
+        1. cross line
+        2. rush scale (pure pursuit?)
+
+Center start position:
+    LLx:
+        1. score in switch
+    LRx:
+        1. score in switch
+    RLx:
+        1. score in switch
+    RRx:
+        1. score in switch
+
+Right start position:
+    LLx:
+        1. cross line
+        2. rush scale (pure pursuit?)
+    LRx:
+        1. score in scale
+    RLx:
+        1. score in switch
+    RRx:
+        1. score in scale
