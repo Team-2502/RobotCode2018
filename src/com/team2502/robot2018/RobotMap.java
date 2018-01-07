@@ -52,10 +52,10 @@ public class RobotMap
 
 
         // TODO: Set proper values.
-        public static final int DRIVE_TRAIN_FRONT_LEFT = 4;
-        public static final int DRIVE_TRAIN_BACK_LEFT = 12;
-        public static final int DRIVE_TRAIN_FRONT_RIGHT = 8;
-        public static final int DRIVE_TRAIN_BACK_RIGHT = 7;
+        public static final int DRIVE_TRAIN_FRONT_LEFT = 8;//8
+        public static final int DRIVE_TRAIN_BACK_LEFT = 7;//7
+        public static final int DRIVE_TRAIN_FRONT_RIGHT = 4;
+        public static final int DRIVE_TRAIN_BACK_RIGHT = 12;
 
         @Undefined(safe = true)
         public static final int CLIMBER_LEFT = UNDEFINED;

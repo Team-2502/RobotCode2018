@@ -53,6 +53,7 @@ public class DriveTrainSubsystem extends Subsystem
         drive = new DifferentialDrive(spgLeft, spgRight);
 
         drive.setSafetyEnabled(true);
+        setTeleopSettings();
     }
 
     public void stop()
@@ -144,12 +145,14 @@ public class DriveTrainSubsystem extends Subsystem
     {
         Pair<Double, Double> speed = getSpeed();
 
+        Log.info("Left: " + String.format("%.02f", speed.right) + "\t\t Right: " + String.format("%.02f", speed.left));
+
         //reverse drive
         if(OI.JOYSTICK_DRIVE_LEFT.getRawButton(RobotMap.UNDEFINED) && !isNegativePressed) { negative = !negative; }
 
         isNegativePressed = OI.JOYSTICK_DRIVE_LEFT.getRawButton(RobotMap.UNDEFINED);
 
-        if(negative) { drive.tankDrive(-speed.left, -speed.right, true); }
+        if(!negative) { drive.tankDrive(-speed.left, -speed.right, true); }
         else { drive.tankDrive(speed.left, speed.right, true); }
     }
 
