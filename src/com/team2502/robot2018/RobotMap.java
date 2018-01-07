@@ -29,6 +29,10 @@ public class RobotMap
 
     public static final class Motor
     {
+
+        public static final int INIT_TIMEOUT = 10; // When initializing a sensor/whatever, the timeout will be 10 ms
+        public static final int LOOP_TIMEOUT = 0; // When doing things in a loop, there won't be a timeout
+
         public static final double SHIFT_UP_THRESHOLD = UNDEFINED;
         public static final double SHIFT_DOWN_THRESHOLD = UNDEFINED;
 
