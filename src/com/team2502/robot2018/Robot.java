@@ -7,12 +7,17 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Compressor;
 import logger.Log;
 
 public final class Robot extends IterativeRobot
 {
     public static DriveTrainSubsystem DRIVE_TRAIN;
     public static ClimberSubsystem CLIMBER;
+    public static Compressor COMPRESSOR;
+    public static String GAME_DATA; //TODO: Have better name
+
 
     // NavX Subsystem
     public static AHRS NAVX;
@@ -27,6 +32,7 @@ public final class Robot extends IterativeRobot
         DRIVE_TRAIN = new DriveTrainSubsystem();
         CLIMBER = new ClimberSubsystem();
         NAVX = new AHRS(SPI.Port.kMXP);
+        COMPRESSOR = new Compressor();
 
         AutoSwitcher.putToSmartDashboard();
 
@@ -49,6 +55,7 @@ public final class Robot extends IterativeRobot
     {
         Scheduler.getInstance().run();
         DashboardData.update();
+        GAME_DATA = DriverStation.getInstance().getGameSpecificMessage();
     }
 
     /**
