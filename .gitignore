@@ -19,11 +19,18 @@ hs_err_pid*
 bin/
 
 ## Intellij Idea
-# .idea/ Removed because this is useful for formatting settings
+.idea/compiler.xml
+.idea/gradle.xml
+.idea/libraries/**
+.idea/misc.xml
+.idea/modules
+.idea/modules.xml
+.idea/vcs.xml
+.idea/workspace.xml
+
 build/
 *.eml*
-## Do not ignore `*.iml`, required for project formatter.
-#*.iml*
+*.iml*
 *.ipr*
 *.iws*
 
