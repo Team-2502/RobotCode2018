@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
  */
 public class DriveTrainSubsystem extends Subsystem
 {
-    private static final Pair<Double, Double> SPEED_CONTAINER = new Pair<Double, Double>();
+    private static final Pair<Double, Double> SPEED_CONTAINER = new Pair<>();
 
     public final WPI_TalonSRX leftFrontTalon;
     public final WPI_TalonSRX leftRearTalon;
@@ -56,6 +56,20 @@ public class DriveTrainSubsystem extends Subsystem
 
     @Override
     protected void initDefaultCommand() { setDefaultCommand(new DriveCommand()); }
+
+    /**
+     * Drive the robot. The equation x=-y must be true for the robot to drive straight.
+     * <br>
+     * Make sure to set the motors according to the control mode. In auton, it's position. In teleop, it's percent voltage.
+     *
+     * @param x Units for the left side of drivetrain
+     * @param y Units for the right side of drivetrain
+     */
+    public void runMotors(double x, double y) // double z
+    {
+        lastLeft = x;
+        lastRight = y;
+    }
 
     /**
      * Used to gradually increase the speed of the robot.
