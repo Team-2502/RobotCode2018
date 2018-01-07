@@ -28,7 +28,7 @@ eclipse
 
 # IntelliJ IDEA
 .idea
-!.idea/codeStyles
+!.idea/codeStyles/
 *.eml
 *.iml
 *.iws
