@@ -30,7 +30,8 @@ bin/
 
 build/
 *.eml*
-*.iml*
+## Do not ignore `*.iml`, required for project formatter.
+#*.iml*
 *.ipr*
 *.iws*
 
