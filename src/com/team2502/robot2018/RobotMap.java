@@ -69,6 +69,6 @@ public class RobotMap
     public class Solenoid {
         private Solenoid() {}
 
-        public static final int TRANSMISSION_SWITCH = UNDEFINED;
+        public static final int TRANSMISSION_SWITCH = 0;
     }
 }
