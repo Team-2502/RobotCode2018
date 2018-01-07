@@ -10,7 +10,6 @@ public class ClimberSubsystem extends Subsystem
 {
     public final WPI_TalonSRX climbMotorLeft;
     public final WPI_TalonSRX climbMotorRight;
-    public boolean isBraked = false;
 
     public ClimberSubsystem()
     {
