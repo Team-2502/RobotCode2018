@@ -16,9 +16,9 @@ public class DriveTrainSubsystem extends Subsystem
     private static final Pair<Double, Double> SPEED_CONTAINER = new Pair<Double, Double>();
 
     public final WPI_TalonSRX leftFrontTalon;
-    public final WPI_TalonSRX leftRearTalon;
+    public final WPI_TalonSRX leftRearTalonEnc;
     public final WPI_TalonSRX rightFrontTalon;
-    public final WPI_TalonSRX rightRearTalon;
+    public final WPI_TalonSRX rightRearTalonEnc;
     public final DifferentialDrive drive;
     public final SpeedControllerGroup spgLeft;
     public final SpeedControllerGroup spgRight;
@@ -35,12 +35,12 @@ public class DriveTrainSubsystem extends Subsystem
         lastRight = 0.0D;
 
         leftFrontTalon = new WPI_TalonSRX(RobotMap.Motor.DRIVE_TRAIN_FRONT_LEFT);
-        leftRearTalon = new WPI_TalonSRX(RobotMap.Motor.DRIVE_TRAIN_BACK_LEFT);
+        leftRearTalonEnc = new WPI_TalonSRX(RobotMap.Motor.DRIVE_TRAIN_BACK_LEFT_ENC);
         rightFrontTalon = new WPI_TalonSRX(RobotMap.Motor.DRIVE_TRAIN_FRONT_RIGHT);
-        rightRearTalon = new WPI_TalonSRX(RobotMap.Motor.DRIVE_TRAIN_BACK_RIGHT);
+        rightRearTalonEnc = new WPI_TalonSRX(RobotMap.Motor.DRIVE_TRAIN_BACK_RIGHT_ENC);
 
-        spgLeft = new SpeedControllerGroup(leftFrontTalon, leftRearTalon);
-        spgRight = new SpeedControllerGroup(rightFrontTalon, rightRearTalon);
+        spgLeft = new SpeedControllerGroup(leftFrontTalon, leftRearTalonEnc);
+        spgRight = new SpeedControllerGroup(rightFrontTalon, rightRearTalonEnc);
 
         drive = new DifferentialDrive(spgLeft, spgRight);
 
@@ -108,6 +108,11 @@ public class DriveTrainSubsystem extends Subsystem
 
         if(negative) { drive.tankDrive(-speed.left, -speed.right, true); }
         else { drive.tankDrive(speed.left, speed.right, true); }
+    }
+
+    public double avgVel()
+    {
+        return Math.abs((leftRearTalonEnc.getEncVelocity() + rightRearTalonEnc.getEncVelocity()) / 2);
     }
 
     @SuppressWarnings("WeakerAccess")

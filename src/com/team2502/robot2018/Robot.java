@@ -3,6 +3,7 @@ package com.team2502.robot2018;
 import com.kauailabs.navx.frc.AHRS;
 import com.team2502.robot2018.subsystem.ClimberSubsystem;
 import com.team2502.robot2018.subsystem.DriveTrainSubsystem;
+import com.team2502.robot2018.subsystem.TransmissionSubsystem;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -12,7 +13,9 @@ import logger.Log;
 public final class Robot extends IterativeRobot
 {
     public static DriveTrainSubsystem DRIVE_TRAIN;
+    public static TransmissionSubsystem TRANSMISSION;
     public static ClimberSubsystem CLIMBER;
+    public static long SHIFTED;
 
     // NavX Subsystem
     public static AHRS NAVX;
@@ -27,6 +30,7 @@ public final class Robot extends IterativeRobot
         DRIVE_TRAIN = new DriveTrainSubsystem();
         CLIMBER = new ClimberSubsystem();
         NAVX = new AHRS(SPI.Port.kMXP);
+        TRANSMISSION = new TransmissionSubsystem();
 
         AutoSwitcher.putToSmartDashboard();
 

@@ -6,6 +6,7 @@ import com.team2502.robot2018.RobotMap;
 import com.team2502.robot2018.command.teleop.RunClimberCommand;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
+@Deprecated
 public class ClimberSubsystem extends Subsystem
 {
     public final WPI_TalonSRX climbMotorLeft;
