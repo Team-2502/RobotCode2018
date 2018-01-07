@@ -23,10 +23,10 @@ public final class Robot extends IterativeRobot
     public static String GAME_DATA; //TODO: Have better name
     private static Robot instance;
 
-    public static final double VR_MAX = 100;
-    public static final double VL_MAX = 100;
-    public static final double VR_MIN = -100;
-    public static final double VL_MIN = -100;
+    public static final double VR_MAX = .75;
+    public static final double VL_MAX = .75;
+    public static final double VR_MIN = -.75;
+    public static final double VL_MIN = -.75;
     public static final double LATERAL_WHEEL_DISTANCE = 7.6666666667;
 
     // NavX Subsystem
