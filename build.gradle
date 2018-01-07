@@ -3,6 +3,7 @@ plugins {
     id "eclipse"
     id "idea"
     id "jaci.openrio.gradle.GradleRIO" version "2018.01.06b"
+    id "net.ltgt.apt" version "0.13"
 }
 
 def TEAM = 2502
@@ -25,12 +26,18 @@ deploy {
 
 repositories {
     mavenCentral()
+    flatDir {
+        dirs 'libs'
+    }
 }
 
 dependencies {
     compile wpilib()
     compile ctre()
     compile navx()
+
+    compile "com.team2502.undefinedprocessor:UndefinedProcessor:1.0"
+    apt         "com.team2502.undefinedprocessor:UndefinedProcessor:1.0"
 
 //    compile "org.jetbrains:annotations:15.0" // Provides useful annotations like @NotNull & @Nullable
 
@@ -43,7 +50,6 @@ jar {
     from configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
     manifest jaci.openrio.gradle.GradleRIOPlugin.javaManifest(ROBOT_CLASS)
 }
-
 
 task genJavadoc(type: Jar, dependsOn: javadoc) {
   classifier = 'javadoc'
@@ -76,7 +82,7 @@ sourceSets {
             srcDirs = ['src/']
         }
         resources {
-            srcDirs = ['src/main/resources']
+            srcDirs = ['res/']
         }
     }
 }

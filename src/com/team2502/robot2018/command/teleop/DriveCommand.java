@@ -48,8 +48,4 @@ public class DriveCommand extends Command
     @Override
     protected void end()
     { driveTrainSubsystem.stop(); }
-
-    @Override
-    protected void interrupted()
-    { end(); }
 }

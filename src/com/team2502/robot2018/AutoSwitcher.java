@@ -14,8 +14,8 @@ class AutoSwitcher
         DEMO("Demo", null);
 
 
-        private Class<? extends Command> autoCommand;
-        private String name;
+        public final Class<? extends Command> autoCommand;
+        public final String name;
 
         AutoMode(String name, Class<? extends Command> autoCommand)
         {
