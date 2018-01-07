@@ -36,8 +36,8 @@ dependencies {
     compile ctre()
     compile navx()
 
-    compile "com.team2502.undefinedprocessor:UndefinedProcessor:1.0"
-    apt         "com.team2502.undefinedprocessor:UndefinedProcessor:1.0"
+    compile "com.team2502.ctannotationprocessor:CTAnnotationProcessor:1.0"
+    apt     "com.team2502.ctannotationprocessor:CTAnnotationProcessor:1.0"
 
 //    compile "org.jetbrains:annotations:15.0" // Provides useful annotations like @NotNull & @Nullable
 
