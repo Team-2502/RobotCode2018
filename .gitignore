@@ -22,7 +22,8 @@ bin/
 # .idea/ Removed because this is useful for formatting settings
 build/
 *.eml*
-*.iml*
+## Do not ignore `*.iml`, required for project formatter.
+#*.iml*
 *.ipr*
 *.iws*
 
@@ -53,6 +54,7 @@ dist/
 # User-specific stuff:
 .idea/**/workspace.xml
 .idea/**/tasks.xml
+.idea/kotlinc.xml
 .idea/dictionaries
 
 # Sensitive or high-churn files:
