@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="FRC Deployment -- RobotCode2018" default="deploy">
+    <property file="${user.home}/wpilib/wpilib.properties"/>
+    <property file="build.properties"/>
+    <property file="${user.home}/wpilib/java/${version}/ant/build.properties"/>
+
+    <import file="${wpilib.ant.dir}/build.xml"/>
+
+</project>
