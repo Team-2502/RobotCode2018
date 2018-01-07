@@ -2,6 +2,11 @@ package com.team2502.robot2018;
 
 public class RobotMap
 {
+    /**
+     * Value is marked as deprecated to trigger a compile time warning to notify
+     * end user that the code may not work unless they properly set the proper id's.
+     */
+    @Deprecated
     public static final int UNDEFINED = -1;
 
     private RobotMap() {}
