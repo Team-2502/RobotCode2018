@@ -1,12 +1,16 @@
 package com.team2502.robot2018.subsystem;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.team2502.robot2018.OI;
+import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.RobotMap;
 import com.team2502.robot2018.command.teleop.DriveCommand;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import logger.Log;
 
 /**
  * Example Implementation, Many changes needed.
@@ -16,9 +20,9 @@ public class DriveTrainSubsystem extends Subsystem
     private static final Pair<Double, Double> SPEED_CONTAINER = new Pair<Double, Double>();
 
     public final WPI_TalonSRX leftFrontTalon;
-    public final WPI_TalonSRX leftRearTalon;
+    public final WPI_TalonSRX leftRearTalonEnc;
     public final WPI_TalonSRX rightFrontTalon;
-    public final WPI_TalonSRX rightRearTalon;
+    public final WPI_TalonSRX rightRearTalonEnc;
     public final DifferentialDrive drive;
     public final SpeedControllerGroup spgLeft;
     public final SpeedControllerGroup spgRight;
@@ -35,12 +39,16 @@ public class DriveTrainSubsystem extends Subsystem
         lastRight = 0.0D;
 
         leftFrontTalon = new WPI_TalonSRX(RobotMap.Motor.DRIVE_TRAIN_FRONT_LEFT);
-        leftRearTalon = new WPI_TalonSRX(RobotMap.Motor.DRIVE_TRAIN_BACK_LEFT);
+        leftRearTalonEnc = new WPI_TalonSRX(RobotMap.Motor.DRIVE_TRAIN_BACK_LEFT);
         rightFrontTalon = new WPI_TalonSRX(RobotMap.Motor.DRIVE_TRAIN_FRONT_RIGHT);
-        rightRearTalon = new WPI_TalonSRX(RobotMap.Motor.DRIVE_TRAIN_BACK_RIGHT);
+        rightRearTalonEnc = new WPI_TalonSRX(RobotMap.Motor.DRIVE_TRAIN_BACK_RIGHT);
 
-        spgLeft = new SpeedControllerGroup(leftFrontTalon, leftRearTalon);
-        spgRight = new SpeedControllerGroup(rightFrontTalon, rightRearTalon);
+        // Add encoders (ask nicely for encoders on drivetrain)
+        leftRearTalonEnc.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, RobotMap.Motor.INIT_TIMEOUT);
+        rightRearTalonEnc.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, RobotMap.Motor.INIT_TIMEOUT);
+
+        spgLeft = new SpeedControllerGroup(leftFrontTalon, leftRearTalonEnc);
+        spgRight = new SpeedControllerGroup(rightFrontTalon, rightRearTalonEnc);
 
         drive = new DifferentialDrive(spgLeft, spgRight);
 
@@ -52,6 +60,40 @@ public class DriveTrainSubsystem extends Subsystem
         drive.stopMotor();
     }
 
+    private void setTeleopSettings(WPI_TalonSRX talon)
+    {
+        talon.set(ControlMode.PercentOutput, 0);
+        talon.configNominalOutputForward(0, RobotMap.Motor.INIT_TIMEOUT);
+        talon.configNominalOutputReverse(0, RobotMap.Motor.INIT_TIMEOUT);
+        talon.configPeakOutputForward(1.0, RobotMap.Motor.INIT_TIMEOUT);
+        talon.configPeakOutputReverse(-1.0, RobotMap.Motor.INIT_TIMEOUT);
+    }
+
+    public void setTeleopSettings()
+    {
+        setTeleopSettings(leftFrontTalon);
+        setTeleopSettings(rightFrontTalon);
+        setTeleopSettings(leftRearTalonEnc);
+        setTeleopSettings(rightRearTalonEnc);
+    }
+
+    public void setAutonSettings()
+    {
+        leftRearTalonEnc.set(ControlMode.Position, 0);
+        rightRearTalonEnc.set(ControlMode.Position, 0);
+
+        leftFrontTalon.follow(leftRearTalonEnc);
+        rightFrontTalon.follow(rightRearTalonEnc);
+
+        if(leftRearTalonEnc.getControlMode() != ControlMode.Position || rightRearTalonEnc.getControlMode() != ControlMode.Position || leftFrontTalon.getControlMode() != ControlMode.Follower || rightFrontTalon.getControlMode() != ControlMode.Follower)
+        {
+            Log.warn("setAutonSettings: One or more of the talons did not retain their control mode!\n" +
+                    "Using the .set(int x) method will yield undesirable results!");
+
+        }
+
+    }
+
     public double turningFactor() { return Math.abs(OI.JOYSTICK_DRIVE_LEFT.getY() - OI.JOYSTICK_DRIVE_RIGHT.getY());}
 
     @Override
@@ -61,6 +103,7 @@ public class DriveTrainSubsystem extends Subsystem
      * Used to gradually increase the speed of the robot.
      *
      * @param out The object to store the data in
+     *
      * @return the speed of the robot
      */
     private Pair<Double, Double> getSpeed(Pair<Double, Double> out)
@@ -110,8 +153,13 @@ public class DriveTrainSubsystem extends Subsystem
         else { drive.tankDrive(speed.left, speed.right, true); }
     }
 
-    @SuppressWarnings("WeakerAccess")
-    public static class Pair<L, R>
+    public double avgVel()
+    {
+        return Math.abs((leftRearTalonEnc.getSelectedSensorVelocity(0) + rightRearTalonEnc.getSelectedSensorVelocity(0)) / 2);
+    }
+
+
+    private static class Pair<L, R>
     {
         public L left;
         public R right;
@@ -133,8 +181,8 @@ public class DriveTrainSubsystem extends Subsystem
         public String toString()
         {
             return new StringBuilder(100 + nameL.length() + nameR.length()).append("Pair<").append(nameL).append(',')
-                                                                           .append(nameR).append("> { \"left\": \"").append(left).append("\", \"right\": \"").append(right)
-                                                                           .append("\" }").toString();
+                    .append(nameR).append("> { \"left\": \"").append(left).append("\", \"right\": \"").append(right)
+                    .append("\" }").toString();
         }
 
         @Override
@@ -148,7 +196,7 @@ public class DriveTrainSubsystem extends Subsystem
             {
                 Pair pair = (Pair) o;
                 return (left != null ? left.equals(pair.left) : pair.left == null)
-                       && (left != null ? left.equals(pair.left) : pair.left == null);
+                        && (left != null ? left.equals(pair.left) : pair.left == null);
             }
             return false;
         }
