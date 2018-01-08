@@ -16,6 +16,9 @@ public class TransmissionSubsystem extends Subsystem
     // TODO: Change name to `lowGear` if applicable.
     public boolean highGear;
 
+    /**
+     * Initialize transmission
+     */
     public TransmissionSubsystem()
     {
         switcher = new Solenoid(RobotMap.Solenoid.TRANSMISSION_SWITCH);
@@ -39,10 +42,7 @@ public class TransmissionSubsystem extends Subsystem
     /**
      * @return if we are in high gear
      */
-    public boolean getGear()
-    {
-        return highGear;
-    }
+    public boolean getGear() { return highGear; }
 
     /**
      * Set the transmission to a specific high gear or low gear
@@ -51,7 +51,7 @@ public class TransmissionSubsystem extends Subsystem
      */
     public void setGear(boolean highGear)
     {
-        if(this.highGear != highGear)
+        if (this.highGear != highGear)
         {
             Robot.SHIFTED = System.currentTimeMillis();
             switcher.set(this.highGear = highGear);
