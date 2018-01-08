@@ -21,7 +21,6 @@ public final class Robot extends IterativeRobot
     public static Compressor COMPRESSOR;
     public static String GAME_DATA; //TODO: Have better name
 
-
     // NavX Subsystem
     public static AHRS NAVX;
 
@@ -52,10 +51,7 @@ public final class Robot extends IterativeRobot
      * You can use it to reset any subsystem information you want to clear when
      * the robot is disabled.
      */
-    public void disabledInit()
-    {
-        CLIMBER.stop();
-    }
+    public void disabledInit() { }
 
     public void disabledPeriodic()
     {
@@ -90,9 +86,7 @@ public final class Robot extends IterativeRobot
         DashboardData.update();
     }
 
-    public void teleopInit()
-    {
-    }
+    public void teleopInit() { }
 
     /**
      * This function is called periodically during operator control
