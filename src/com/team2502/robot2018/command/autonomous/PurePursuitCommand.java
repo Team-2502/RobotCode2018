@@ -13,7 +13,7 @@ import java.util.List;
 
 public class PurePursuitCommand extends Command
 {
-    public double lookAheadDistance;
+    public float lookAheadDistance;
     private DriveTrainSubsystem driveTrain;
     private AHRS navx;
     private PurePursuitMovementStrategy purePursuitMovementStrategy;
@@ -28,10 +28,10 @@ public class PurePursuitCommand extends Command
         double dTime;
         dTime = lastTime == -1 ? 0 : nanoTime - lastTime;
         lastTime = nanoTime;
-        return dTime / 1E6;
+        return (dTime / 1E6);
     }
 
-    public PurePursuitCommand(List<Vector> waypoints, double lookAheadDistance)
+    public PurePursuitCommand(List<Vector> waypoints, float lookAheadDistance)
     {
         this.lookAheadDistance = lookAheadDistance;
         requires(Robot.DRIVE_TRAIN);
@@ -41,27 +41,27 @@ public class PurePursuitCommand extends Command
         TankRobot tankRobot = new TankRobot()
         {
             @Override
-            public double getHeading()
-            { return navx.getAngle(); }
+            public float getHeading()
+            { return (float) navx.getAngle(); }
 
             @Override
-            public double getV_rMax()
+            public float getV_rMax()
             { return Robot.VR_MAX; }
 
             @Override
-            public double getV_lMax()
+            public float getV_lMax()
             { return Robot.VL_MAX; }
 
             @Override
-            public double getV_lMin()
+            public float getV_lMin()
             { return Robot.VL_MIN; }
 
             @Override
-            public double getV_rMin()
+            public float getV_rMin()
             { return Robot.VR_MIN; }
 
             @Override
-            public double getLateralWheelDistance()
+            public float getLateralWheelDistance()
             { return Robot.LATERAL_WHEEL_DISTANCE; }
         };
 
@@ -72,10 +72,10 @@ public class PurePursuitCommand extends Command
         /*
         locationEstimator = () ->
         {
-            double dTime = getDTime();
+            float dTime = getDTime();
             Function<Double,Vector> estimatePositionFromDTheta = dTheta -> {
-                double dxRelative = -purePursuitMovementStrategy.getPathRadius() * (1-Math.cos(-dTheta));
-                double dyRelative = -purePursuitMovementStrategy.getPathRadius() * Math.sin(-dTheta);
+                float dxRelative = -purePursuitMovementStrategy.getPathRadius() * (1-Math.cos(-dTheta));
+                float dyRelative = -purePursuitMovementStrategy.getPathRadius() * Math.sin(-dTheta);
                 Vector dRelativeVector = new Vector(dxRelative, dyRelative);
                 Vector rotated = MathUtils.LinearAlgebra.rotate2D(dRelativeVector, purePursuitMovementStrategy.getUsedHeading());
                 Vector toReturn = rotated.add(purePursuitMovementStrategy.getUsedEstimatedLocation());
@@ -83,7 +83,7 @@ public class PurePursuitCommand extends Command
             };
 
             Function<Double,Vector> dTimeToPosition = dTime1 -> {
-                double dTheta = dTime1 * purePursuitMovementStrategy.getRotVelocity();
+                float dTheta = dTime1 * purePursuitMovementStrategy.getRotVelocity();
                 return estimatePositionFromDTheta.apply(dTheta);
             };
             return dTimeToPosition.apply(dTime);

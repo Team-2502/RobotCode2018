@@ -25,11 +25,11 @@ public final class Robot extends IterativeRobot
     public static Compressor COMPRESSOR;
     public static String GAME_DATA; // TODO: Have better name
 
-    public static final double VR_MAX = 0.75D;
-    public static final double VL_MAX = 0.75D;
-    public static final double VR_MIN = -0.75D;
-    public static final double VL_MIN = -0.75D;
-    public static final double LATERAL_WHEEL_DISTANCE = 7.6666666667D;
+    public static final float VR_MAX = 0.75F;
+    public static final float VL_MAX = 0.75F;
+    public static final float VR_MIN = -0.75F;
+    public static final float VL_MIN = -0.75F;
+    public static final float LATERAL_WHEEL_DISTANCE = 7.6666666667F;
 
     // NavX Subsystem
     public static AHRS NAVX;
@@ -83,7 +83,7 @@ public final class Robot extends IterativeRobot
     {
         // waypoints (meter,meter) ... first waypoint should _probably_ be (0,0)
         List<Vector> waypoints = Vector.genFromArray(
-                new double[][] {
+                new float[][] {
                         { 0, 0 },
                         { 1, 1 },
                         { 2, 7 },

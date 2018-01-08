@@ -14,23 +14,23 @@ public class PurePursuitMovementStrategy implements TankMovementStrategy
     private Vector relativeGoalPoint;
     private final TankRobot tankRobot;
     private double pathRadius;
-    private double rotVelocity;
-    public final double lookAheadDistance;
+    private float rotVelocity;
+    public final float lookAheadDistance;
     private boolean finishedPath = false;
 
     private Vector usedEstimatedLocation;
-    private double usedHeading;
+    private float usedHeading;
 
     private int lastPath = 0;
 
     private Vector wheelVelocities;
-    private double tangentialSpeed;
-    private double leftWheelTanVel;
-    private double rightWheelTanVel;
+    private float tangentialSpeed;
+    private float leftWheelTanVel;
+    private float rightWheelTanVel;
     private Vector absoluteGoalPoint;
-    private double dThetaToRotate;
+    private float dThetaToRotate;
 
-    public PurePursuitMovementStrategy(TankRobot tankRobot, LocationEstimator estimator, List<Vector> waypoints, double lookAheadDistance)
+    public PurePursuitMovementStrategy(TankRobot tankRobot, LocationEstimator estimator, List<Vector> waypoints, float lookAheadDistance)
     {
         this.waypoints = waypoints;
         this.tankRobot = tankRobot;
@@ -61,7 +61,7 @@ public class PurePursuitMovementStrategy implements TankMovementStrategy
             if(i + 1 >= waypoints.size()) { continue; }
             Vector lineP1 = waypoints.get(i);
             Vector lineP2 = waypoints.get(i + 1);
-            double toLookAhead = lookAheadDistance;
+            float toLookAhead = lookAheadDistance;
             List<Vector> vectorList = new ArrayList<>(MathUtils.Geometry.getCircleLineIntersectionPoint(lineP1, lineP2, usedEstimatedLocation, toLookAhead));
             vectorList.removeIf(vector -> !vector.between(lineP1, lineP2));
             if(i == lastPath + 1 && !vectorList.isEmpty()) { nextPathI = intersections.size(); }
@@ -92,12 +92,12 @@ public class PurePursuitMovementStrategy implements TankMovementStrategy
 
     int closest(Vector origin, List<Vector> vectors)
     {
-        double minMagSquared = Double.MAX_VALUE;
+        float minMagSquared = Float.MAX_VALUE;
         int minVectorI = -1;
         for(int i = 0; i < vectors.size(); i++)
         {
             Vector vector = vectors.get(i);
-            double magnitudeSquared = origin.subtractBy(vector).getMagnitudeSquared();
+            float magnitudeSquared = origin.subtractBy(vector).getMagnitudeSquared();
             if(magnitudeSquared < minMagSquared)
             {
                 minMagSquared = magnitudeSquared;
@@ -122,15 +122,15 @@ public class PurePursuitMovementStrategy implements TankMovementStrategy
         return true;
     }
 
-    private double curvatureToGoal()
+    private float curvatureToGoal()
     {
-        double lSquared = relativeGoalPoint.getMagnitudeSquared(); // x^2 + y^2 = l^2 (length)
+        float lSquared = relativeGoalPoint.getMagnitudeSquared(); // x^2 + y^2 = l^2 (length)
         return -2 * relativeGoalPoint.get(0) / lSquared;
     }
 
     public Vector getCircleCenter()
     {
-        Vector circleRelativeCenter = new Vector(-pathRadius, 0);
+        Vector circleRelativeCenter = new Vector((float) -pathRadius, 0.0F);
         Vector circleRelativeCenterRotated = MathUtils.LinearAlgebra.rotate2D(circleRelativeCenter, usedHeading);
         return usedEstimatedLocation.add(circleRelativeCenterRotated);
     }
@@ -156,20 +156,20 @@ public class PurePursuitMovementStrategy implements TankMovementStrategy
 
     private Vector calculateWheelVelocities()
     {
-        double curvature = curvatureToGoal();
-        double c = 2 / (tankRobot.getLateralWheelDistance() * curvature);
-        double velLeftToRightRatio = -(c + 1) / (1 - c);
-        double velRightToLeftRatio = 1 / velLeftToRightRatio;
-        double score = Double.MIN_VALUE;
+        float curvature = curvatureToGoal();
+        float c = 2 / (tankRobot.getLateralWheelDistance() * curvature);
+        float velLeftToRightRatio = -(c + 1) / (1 - c);
+        float velRightToLeftRatio = 1 / velLeftToRightRatio;
+        float score = Float.MIN_VALUE;
         Vector bestVector = null;
         //TODO: fix clumsy way of optimizing :(
 
-        double v_lMax = tankRobot.getV_lMax();
-        double v_rMax = tankRobot.getV_rMax();
-        double v_lMin = tankRobot.getV_lMin();
-        double v_rMin = tankRobot.getV_rMin();
+        float v_lMax = tankRobot.getV_lMax();
+        float v_rMax = tankRobot.getV_rMax();
+        float v_lMin = tankRobot.getV_lMin();
+        float v_rMin = tankRobot.getV_rMin();
 
-        double v_r = v_lMax * velLeftToRightRatio;
+        float v_r = v_lMax * velLeftToRightRatio;
         if(MathUtils.Algebra.between(v_rMin, v_r, v_rMax))
         {
             score = Math.abs(v_lMax + v_r);
@@ -179,7 +179,7 @@ public class PurePursuitMovementStrategy implements TankMovementStrategy
         v_r = v_lMin * velLeftToRightRatio;
         if(MathUtils.Algebra.between(v_rMin, v_r, v_rMax))
         {
-            double tempScore = Math.abs(v_lMin + v_r);
+            float tempScore = Math.abs(v_lMin + v_r);
             if(tempScore > score)
             {
                 score = tempScore;
@@ -187,10 +187,10 @@ public class PurePursuitMovementStrategy implements TankMovementStrategy
             }
         }
 
-        double v_l = v_rMax * velRightToLeftRatio;
+        float v_l = v_rMax * velRightToLeftRatio;
         if(MathUtils.Algebra.between(v_lMin, v_l, v_lMax))
         {
-            double tempScore = Math.abs(v_lMax + v_l);
+            float tempScore = Math.abs(v_lMax + v_l);
             if(tempScore > score)
             {
                 score = tempScore;
@@ -201,7 +201,7 @@ public class PurePursuitMovementStrategy implements TankMovementStrategy
         v_l = v_rMin * velRightToLeftRatio;
         if(MathUtils.Algebra.between(v_lMin, v_l, v_lMax))
         {
-            double tempScore = Math.abs(v_lMin + v_l);
+            float tempScore = Math.abs(v_lMin + v_l);
             if(tempScore > score)
             {
                 bestVector = new Vector(v_l, v_rMin);
@@ -215,16 +215,16 @@ public class PurePursuitMovementStrategy implements TankMovementStrategy
 
         pathRadius = 1 / curvature;
 
-        leftWheelTanVel = Math.abs((pathRadius - tankRobot.getLateralWheelDistance() / 2) * rotVelocity);
-        rightWheelTanVel = Math.abs((pathRadius + tankRobot.getLateralWheelDistance() / 2) * rotVelocity);
-        tangentialSpeed = Math.abs(pathRadius * rotVelocity);
+        leftWheelTanVel = (float) Math.abs((pathRadius - tankRobot.getLateralWheelDistance() / 2) * rotVelocity);
+        rightWheelTanVel = (float) Math.abs((pathRadius + tankRobot.getLateralWheelDistance() / 2) * rotVelocity);
+        tangentialSpeed = (float) Math.abs(pathRadius * rotVelocity);
         usedHeading = tankRobot.getHeading();
 
-        dThetaToRotate = MathUtils.Arithmetic.sign(rotVelocity) * Math.atan(relativeGoalPoint.get(1) / (Math.abs(pathRadius) - relativeGoalPoint.get(0)));
+        dThetaToRotate = (float) (MathUtils.Arithmetic.sign(rotVelocity) * Math.atan(relativeGoalPoint.get(1) / (Math.abs(pathRadius) - relativeGoalPoint.get(0))));
 
         Function<Double, Vector> estimatePositionFromDTheta = dTheta -> {
-            double dxRelative = -pathRadius * (1 - Math.cos(-dTheta));
-            double dyRelative = -pathRadius * Math.sin(-dTheta);
+            float dxRelative = (float) (-pathRadius * (1 - Math.cos(-dTheta)));
+            float dyRelative = (float) (-pathRadius * Math.sin(-dTheta));
             Vector dRelativeVector = new Vector(dxRelative, dyRelative);
             Vector rotated = MathUtils.LinearAlgebra.rotate2D(dRelativeVector, usedHeading);
             return rotated.add(usedEstimatedLocation);
@@ -234,19 +234,19 @@ public class PurePursuitMovementStrategy implements TankMovementStrategy
 
         /*
         estimateHeadingFromTime = time-> {
-            double heading = usedHeading + rotVelocity*time;
+            float heading = usedHeading + rotVelocity*time;
             return heading;
         };
 
         esimatePositionFromRotation = angle -> {
-            double dTheta = angle - usedHeading;
+            float dTheta = angle - usedHeading;
             return estimatePositionFromDTheta.apply(dTheta);
         };
 
         estimatedTime = thetaToRotate / rotVelocity;
 
         timeToPosition = time -> {
-            double dTheta = time * rotVelocity;
+            float dTheta = time * rotVelocity;
             return estimatePositionFromDTheta.apply(dTheta);
         };
         */
@@ -254,17 +254,17 @@ public class PurePursuitMovementStrategy implements TankMovementStrategy
         return bestVector;
     }
 
-    public double getTangentialSpeed()
+    public float getTangentialSpeed()
     {
         return tangentialSpeed;
     }
 
-    public double getLeftWheelTanVel()
+    public float getLeftWheelTanVel()
     {
         return leftWheelTanVel;
     }
 
-    public double getRightWheelTanVel()
+    public float getRightWheelTanVel()
     {
         return rightWheelTanVel;
     }
@@ -274,7 +274,7 @@ public class PurePursuitMovementStrategy implements TankMovementStrategy
         return relativeGoalPoint;
     }
 
-    public double getRotVelocity()
+    public float getRotVelocity()
     {
         return rotVelocity;
     }
@@ -284,7 +284,7 @@ public class PurePursuitMovementStrategy implements TankMovementStrategy
         return finishedPath;
     }
 
-    public double getUsedHeading()
+    public float getUsedHeading()
     {
         return usedHeading;
     }
@@ -294,7 +294,7 @@ public class PurePursuitMovementStrategy implements TankMovementStrategy
         return absoluteGoalPoint;
     }
 
-    public double getdThetaToRotate()
+    public float getdThetaToRotate()
     {
         return dThetaToRotate;
     }

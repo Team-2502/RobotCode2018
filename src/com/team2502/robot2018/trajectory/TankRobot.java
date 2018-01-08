@@ -2,10 +2,10 @@ package com.team2502.robot2018.trajectory;
 
 public interface TankRobot
 {
-    double getHeading();
-    double getV_rMax();
-    double getV_lMax();
-    double getV_lMin();
-    double getV_rMin();
-    double getLateralWheelDistance();
+    float getHeading();
+    float getV_rMax();
+    float getV_lMax();
+    float getV_lMin();
+    float getV_rMin();
+    float getLateralWheelDistance();
 }

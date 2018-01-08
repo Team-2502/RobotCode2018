@@ -9,24 +9,24 @@ import java.util.List;
 public class Vector
 {
 
-    private final double[] elements;
+    private final float[] elements;
 
-    public Vector(double... elements)
+    public Vector(float... elements)
     { this.elements = elements; }
 
     public Vector add(Vector other) throws IndexOutOfBoundsException
     {
         if(other.elements.length != elements.length) { throw new IndexOutOfBoundsException("Vector lengths must be equal."); }
-        double[] vals = new double[elements.length];
+        float[] vals = new float[elements.length];
         for(int i = 0; i < elements.length; ++i) { vals[i] = elements[i] + other.elements[i]; }
         return new Vector(vals);
     }
 
-    public static List<Vector> genFromArray(double[][] vectorArray)
+    public static List<Vector> genFromArray(float[][] vectorArray)
     {
         if(vectorArray.length == 0 || vectorArray[0].length == 0) { return new ArrayList<>(); }
         List<Vector> vectorList = new ArrayList<>();
-        for(double[] vectorElements : vectorArray) { vectorList.add(new Vector(vectorElements)); }
+        for(float[] vectorElements : vectorArray) { vectorList.add(new Vector(vectorElements)); }
         return vectorList;
     }
 
@@ -39,9 +39,9 @@ public class Vector
         return true;
     }
 
-    public Vector multiply(double scalar)
+    public Vector multiply(float scalar)
     {
-        double[] vals = new double[elements.length];
+        float[] vals = new float[elements.length];
         for(int i = 0; i < elements.length; ++i)
         { vals[i] = elements[i] * scalar; }
         return new Vector(vals);
@@ -53,17 +53,17 @@ public class Vector
     public int dimensions()
     { return elements.length; }
 
-    public double getMagnitudeSquared()
+    public float getMagnitudeSquared()
     {
-        double xsum = 0.0D;
-        for(double xi : elements) { xsum += xi * xi; }
+        float xsum = 0.0F;
+        for(float xi : elements) { xsum += xi * xi; }
         return xsum;
     }
 
-    public double getMagnitude()
-    { return Math.sqrt(getMagnitudeSquared()); }
+    public float getMagnitude()
+    { return (float) Math.sqrt(getMagnitudeSquared()); }
 
-    public double get(int place)
+    public float get(int place)
     { return elements[place]; }
 
     @Override
@@ -88,6 +88,7 @@ public class Vector
     }
 
     @Override
+    @SuppressWarnings("MethodDoesntCallSuperMethod")
     public Vector clone()
     {
         return new Vector(elements);
