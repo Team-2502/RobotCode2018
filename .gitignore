@@ -27,8 +27,8 @@ eclipse
 *.launch
 
 # IntelliJ IDEA
-.idea
-!.idea/codeStyles/
+.idea/
+!.idea/codeStyles/*
 *.eml
 *.iml
 *.iws

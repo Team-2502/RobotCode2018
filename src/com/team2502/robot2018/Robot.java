@@ -5,6 +5,7 @@ import com.team2502.robot2018.command.autonomous.PurePursuitCommand;
 import com.team2502.robot2018.data.Vector;
 import com.team2502.robot2018.subsystem.ClimberSubsystem;
 import com.team2502.robot2018.subsystem.DriveTrainSubsystem;
+import com.team2502.robot2018.subsystem.TransmissionSubsystem;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -18,7 +19,9 @@ import java.util.List;
 public final class Robot extends IterativeRobot
 {
     public static DriveTrainSubsystem DRIVE_TRAIN;
+    public static TransmissionSubsystem TRANSMISSION;
     public static ClimberSubsystem CLIMBER;
+    public static long SHIFTED;
     public static Compressor COMPRESSOR;
     public static String GAME_DATA; //TODO: Have better name
     private static Robot instance;
@@ -43,6 +46,7 @@ public final class Robot extends IterativeRobot
         DRIVE_TRAIN = new DriveTrainSubsystem();
         CLIMBER = new ClimberSubsystem();
         NAVX = new AHRS(SPI.Port.kMXP);
+        TRANSMISSION = new TransmissionSubsystem();
         COMPRESSOR = new Compressor();
 
         AutoSwitcher.putToSmartDashboard();
