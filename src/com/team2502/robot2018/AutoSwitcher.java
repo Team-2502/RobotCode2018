@@ -1,5 +1,6 @@
 package com.team2502.robot2018;
 
+import com.team2502.robot2018.command.autonomous.PurePursuitCommand;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -11,7 +12,7 @@ class AutoSwitcher
     public enum AutoMode
     {
         // TODO: Remove this
-        DEMO("Demo", null);
+        DEMO("Demo", PurePursuitCommand.class);
 
 
         public final Class<? extends Command> autoCommand;
