@@ -12,9 +12,7 @@ public final class OI
     {
     }
 
-    public static void init()
-    {
-    }
+    public static void init() { }
 
     public static boolean joysThreshold(double threshold, boolean above)
     {
