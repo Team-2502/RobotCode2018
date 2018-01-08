@@ -28,7 +28,6 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     public final SpeedControllerGroup spgLeft;
     public final SpeedControllerGroup spgRight;
 
-
     private float lastLeft;
     private float lastRight;
     private boolean isNegativePressed;
