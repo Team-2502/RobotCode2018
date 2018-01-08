@@ -13,7 +13,6 @@ class AutoSwitcher
         // TODO: Remove this
         DEMO("Demo", null);
 
-
         public final Class<? extends Command> autoCommand;
         public final String name;
 
@@ -46,5 +45,6 @@ class AutoSwitcher
         SmartDashboard.putData("auto_modes", autoChooser);
     }
 
-    static Command getAutoInstance() { return autoChooser.getSelected().getInstance(); }
+    static Command getAutoInstance()
+    { return autoChooser.getSelected().getInstance(); }
 }

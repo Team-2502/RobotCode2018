@@ -4,12 +4,12 @@ import com.kauailabs.navx.frc.AHRS;
 import com.team2502.robot2018.subsystem.ClimberSubsystem;
 import com.team2502.robot2018.subsystem.DriveTrainSubsystem;
 import com.team2502.robot2018.subsystem.TransmissionSubsystem;
+import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Compressor;
 import logger.Log;
 
 public final class Robot extends IterativeRobot
@@ -43,6 +43,8 @@ public final class Robot extends IterativeRobot
         OI.init();
 
         NAVX.resetDisplacement();
+
+        DashboardData.addUpdater(DRIVE_TRAIN);
     }
 
     /**

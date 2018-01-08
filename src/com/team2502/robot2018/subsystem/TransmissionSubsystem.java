@@ -26,7 +26,9 @@ public class TransmissionSubsystem extends Subsystem
     }
 
     @Override
-    protected void initDefaultCommand() {}
+    protected void initDefaultCommand()
+    {
+    }
 
     /**
      * Switch the gear from its current state
@@ -49,7 +51,7 @@ public class TransmissionSubsystem extends Subsystem
      */
     public void setGear(boolean highGear)
     {
-        if (this.highGear != highGear)
+        if(this.highGear != highGear)
         {
             Robot.SHIFTED = System.currentTimeMillis();
             switcher.set(this.highGear = highGear);
@@ -70,20 +72,35 @@ public class TransmissionSubsystem extends Subsystem
      */
     public double fpsToRPM(double fps)
     {
-        return ((fps) * 60 * 12) / (4 * Math.PI);
+        return (fps * 60 * 12) / (4 * Math.PI);
     }
 
-
     /**
-     * @param x A number
-     * @return The sign of the number
+     * @param fps The number in feet per second to convert to RPM given wheels of 4 inches in diameter
+     * @return The equivalent RPM
      */
-    public double sign(double x) { return Math.abs(x) / x; }
+    public float fpsToRPM(float fps)
+    {
+        return (fps * 60 * 12) / (4 * (float) Math.PI);
+    }
 
     /**
      * @param x A number
      * @param y Another number
      * @return If the numbers have the same sign
      */
-    public boolean signsame(double x, double y) { return sign(x) == sign(y); }
+    public boolean signSame(double x, double y)
+    {
+        return Math.signum(x) == Math.signum(y);
+    }
+
+    /**
+     * @param x A number
+     * @param y Another number
+     * @return If the numbers have the same sign
+     */
+    public boolean signSame(float x, float y)
+    {
+        return Math.signum(x) == Math.signum(y);
+    }
 }
