@@ -5,7 +5,6 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.team2502.robot2018.DashboardData;
 import com.team2502.robot2018.OI;
-import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.RobotMap;
 import com.team2502.robot2018.command.teleop.DriveCommand;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
@@ -19,252 +18,257 @@ import logger.Log;
  */
 public class DriveTrainSubsystem extends Subsystem implements DashboardData.Updater
 {
-	private static final Pair<Double, Double> SPEED_CONTAINER = new Pair<Double, Double>();
+    private static final Pair<Double, Double> SPEED_CONTAINER = new Pair<Double, Double>();
 
-	public final WPI_TalonSRX leftFrontTalon;
-	public final WPI_TalonSRX leftRearTalonEnc;
-	public final WPI_TalonSRX rightFrontTalon;
-	public final WPI_TalonSRX rightRearTalonEnc;
-	public final DifferentialDrive drive;
-	public final SpeedControllerGroup spgLeft;
-	public final SpeedControllerGroup spgRight;
-
-
-	private double lastLeft;
-	private double lastRight;
-	private boolean isNegativePressed;
-	private boolean negative;
-
-	public DriveTrainSubsystem()
-	{
-		lastLeft = 0.0D;
-		lastRight = 0.0D;
-
-		leftFrontTalon = new WPI_TalonSRX(RobotMap.Motor.DRIVE_TRAIN_FRONT_LEFT);
-		leftRearTalonEnc = new WPI_TalonSRX(RobotMap.Motor.DRIVE_TRAIN_BACK_LEFT);
-		rightFrontTalon = new WPI_TalonSRX(RobotMap.Motor.DRIVE_TRAIN_FRONT_RIGHT);
-		rightRearTalonEnc = new WPI_TalonSRX(RobotMap.Motor.DRIVE_TRAIN_BACK_RIGHT);
-
-		// Add encoders (ask nicely for encoders on drivetrain)
-		leftRearTalonEnc.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, RobotMap.Motor.INIT_TIMEOUT);
-		rightRearTalonEnc.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, RobotMap.Motor.INIT_TIMEOUT);
-
-		spgLeft = new SpeedControllerGroup(leftFrontTalon, leftRearTalonEnc);
-		spgRight = new SpeedControllerGroup(rightFrontTalon, rightRearTalonEnc);
-
-		drive = new DifferentialDrive(spgLeft, spgRight);
-
-		drive.setSafetyEnabled(true);
-		setTeleopSettings();
-	}
-
-	public void stop()
-	{
-		drive.stopMotor();
-	}
-
-	private void setTeleopSettings(WPI_TalonSRX talon)
-	{
-		talon.set(ControlMode.PercentOutput, 0);
-		talon.configNominalOutputForward(0, RobotMap.Motor.INIT_TIMEOUT);
-		talon.configNominalOutputReverse(0, RobotMap.Motor.INIT_TIMEOUT);
-		talon.configPeakOutputForward(1.0, RobotMap.Motor.INIT_TIMEOUT);
-		talon.configPeakOutputReverse(-1.0, RobotMap.Motor.INIT_TIMEOUT);
-	}
-
-	public void setTeleopSettings()
-	{
-		setTeleopSettings(leftFrontTalon);
-		setTeleopSettings(rightFrontTalon);
-		setTeleopSettings(leftRearTalonEnc);
-		setTeleopSettings(rightRearTalonEnc);
-	}
-
-	public void setAutonSettings()
-	{
-		leftRearTalonEnc.set(ControlMode.Position, 0);
-		rightRearTalonEnc.set(ControlMode.Position, 0);
-
-		leftFrontTalon.follow(leftRearTalonEnc);
-		rightFrontTalon.follow(rightRearTalonEnc);
-
-		if (leftRearTalonEnc.getControlMode() != ControlMode.Position || rightRearTalonEnc.getControlMode() != ControlMode.Position || leftFrontTalon.getControlMode() != ControlMode.Follower || rightFrontTalon.getControlMode() != ControlMode.Follower)
-		{
-			Log.warn("setAutonSettings: One or more of the talons did not retain their control mode!\n" +
-					"Using the .set(int x) method will yield undesirable results!");
-
-		}
-
-	}
-
-	public double turningFactor()
-	{
-		return Math.abs(OI.JOYSTICK_DRIVE_LEFT.getY() - OI.JOYSTICK_DRIVE_RIGHT.getY());
-	}
-
-	@Override
-	protected void initDefaultCommand()
-	{
-		setDefaultCommand(new DriveCommand());
-	}
-
-	/**
-	 * Used to gradually increase the speed of the robot.
-	 *
-	 * @param out The object to store the data in
-	 * @return the speed of the robot
-	 */
-	private Pair<Double, Double> getSpeed(Pair<Double, Double> out)
-	{
-		double joystickLevel;
-		// Get the base speed of the robot
-		if (negative)
-		{
-			joystickLevel = -OI.JOYSTICK_DRIVE_RIGHT.getY();
-		} else
-		{
-			joystickLevel = -OI.JOYSTICK_DRIVE_LEFT.getY();
-		}
-
-		// Only increase the speed by a small amount
-		double diff = joystickLevel - lastLeft;
-		if (diff > 0.1D)
-		{
-			joystickLevel = lastLeft + 0.1D;
-		} else if (diff < 0.1D)
-		{
-			joystickLevel = lastLeft - 0.1D;
-		}
-
-		lastLeft = joystickLevel;
-		out.left = joystickLevel;
-
-		if (negative)
-		{
-			joystickLevel = -OI.JOYSTICK_DRIVE_LEFT.getY();
-		} else
-		{
-			joystickLevel = -OI.JOYSTICK_DRIVE_RIGHT.getY();
-		}
-
-		diff = joystickLevel - lastRight;
-		if (diff > 0.1D)
-		{
-			joystickLevel = lastRight + 0.1D;
-		} else if (diff < 0.1D)
-		{
-			joystickLevel = lastRight - 0.1D;
-		}
-
-		lastRight = joystickLevel;
-		out.right = joystickLevel;
-
-		// Sets the speed to 0 if the speed is less than 0.05 or larger than -0.05
-		if (Math.abs(out.left) < 0.05D)
-		{
-			out.left = 0.0D;
-		}
-		if (Math.abs(out.right) < 0.05D)
-		{
-			out.right = 0.0D;
-		}
-
-		return out;
-	}
-
-	private Pair<Double, Double> getSpeed()
-	{
-		return getSpeed(SPEED_CONTAINER);
-	}
-
-	public void drive()
-	{
-		Pair<Double, Double> speed = getSpeed();
-
-		Log.info("Left: " + String.format("%.02f", speed.right) + "\t\t Right: " + String.format("%.02f", speed.left));
-
-		//reverse drive
-		if (OI.JOYSTICK_DRIVE_LEFT.getRawButton(RobotMap.UNDEFINED) && !isNegativePressed)
-		{
-			negative = !negative;
-		}
-
-		isNegativePressed = OI.JOYSTICK_DRIVE_LEFT.getRawButton(RobotMap.UNDEFINED);
-
-		if (!negative)
-		{
-			drive.tankDrive(-speed.left, -speed.right, true);
-		} else
-		{
-			drive.tankDrive(speed.left, speed.right, true);
-		}
-	}
-
-	public double avgVel()
-	{
-		return Math.abs((leftRearTalonEnc.getSelectedSensorVelocity(0) + rightRearTalonEnc.getSelectedSensorVelocity(0)) / 2);
-	}
-
-	@Override
-	public void update()
-	{
-		SmartDashboard.putNumber("Left Speed (ft/s)", leftRearTalonEnc.getSelectedSensorVelocity(0) * RobotMap.Motor.VEL_TO_FPS);
-		SmartDashboard.putNumber("Left Pos (ft)", leftRearTalonEnc.getSelectedSensorPosition(0) * RobotMap.Motor.POS_TO_FT);
-
-		SmartDashboard.putNumber("Right Speed (ft/s)", rightRearTalonEnc.getSelectedSensorVelocity(0) * RobotMap.Motor.VEL_TO_FPS);
-		SmartDashboard.putNumber("Right Pos (ft)", rightRearTalonEnc.getSelectedSensorPosition(0) * RobotMap.Motor.POS_TO_FT);
-	}
+    public final WPI_TalonSRX leftFrontTalon;
+    public final WPI_TalonSRX leftRearTalonEnc;
+    public final WPI_TalonSRX rightFrontTalon;
+    public final WPI_TalonSRX rightRearTalonEnc;
+    public final DifferentialDrive drive;
+    public final SpeedControllerGroup spgLeft;
+    public final SpeedControllerGroup spgRight;
 
 
-	private static class Pair<L, R>
-	{
-		public L left;
-		public R right;
+    private double lastLeft;
+    private double lastRight;
+    private boolean isNegativePressed;
+    private boolean negative;
 
-		private String nameL;
-		private String nameR;
+    public DriveTrainSubsystem()
+    {
+        lastLeft = 0.0D;
+        lastRight = 0.0D;
 
-		public Pair(L left, R right)
-		{
-			this.left = left;
-			this.right = right;
-			this.nameL = left.getClass().getSimpleName();
-			this.nameR = right.getClass().getSimpleName();
-		}
+        leftFrontTalon = new WPI_TalonSRX(RobotMap.Motor.DRIVE_TRAIN_FRONT_LEFT);
+        leftRearTalonEnc = new WPI_TalonSRX(RobotMap.Motor.DRIVE_TRAIN_BACK_LEFT);
+        rightFrontTalon = new WPI_TalonSRX(RobotMap.Motor.DRIVE_TRAIN_FRONT_RIGHT);
+        rightRearTalonEnc = new WPI_TalonSRX(RobotMap.Motor.DRIVE_TRAIN_BACK_RIGHT);
 
-		public Pair()
-		{
-		}
+        // Add encoders (ask nicely for encoders on drivetrain)
+        leftRearTalonEnc.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, RobotMap.Motor.INIT_TIMEOUT);
+        rightRearTalonEnc.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, RobotMap.Motor.INIT_TIMEOUT);
 
-		@Override
-		public String toString()
-		{
-			return new StringBuilder(100 + nameL.length() + nameR.length()).append("Pair<").append(nameL).append(',')
-					.append(nameR).append("> { \"left\": \"").append(left).append("\", \"right\": \"").append(right)
-					.append("\" }").toString();
-		}
+        spgLeft = new SpeedControllerGroup(leftFrontTalon, leftRearTalonEnc);
+        spgRight = new SpeedControllerGroup(rightFrontTalon, rightRearTalonEnc);
 
-		@Override
-		public int hashCode()
-		{
-			return left.hashCode() * 13 + (right == null ? 0 : right.hashCode());
-		}
+        drive = new DifferentialDrive(spgLeft, spgRight);
 
-		@Override
-		public boolean equals(Object o)
-		{
-			if (this == o)
-			{
-				return true;
-			}
-			if (o instanceof Pair)
-			{
-				Pair pair = (Pair) o;
-				return (left != null ? left.equals(pair.left) : pair.left == null)
-						&& (left != null ? left.equals(pair.left) : pair.left == null);
-			}
-			return false;
-		}
-	}
+        drive.setSafetyEnabled(true);
+        setTeleopSettings();
+    }
+
+    public void stop()
+    {
+        drive.stopMotor();
+    }
+
+    private void setTeleopSettings(WPI_TalonSRX talon)
+    {
+        talon.set(ControlMode.PercentOutput, 0);
+        talon.configNominalOutputForward(0, RobotMap.Motor.INIT_TIMEOUT);
+        talon.configNominalOutputReverse(0, RobotMap.Motor.INIT_TIMEOUT);
+        talon.configPeakOutputForward(1.0, RobotMap.Motor.INIT_TIMEOUT);
+        talon.configPeakOutputReverse(-1.0, RobotMap.Motor.INIT_TIMEOUT);
+    }
+
+    public void setTeleopSettings()
+    {
+        setTeleopSettings(leftFrontTalon);
+        setTeleopSettings(rightFrontTalon);
+        setTeleopSettings(leftRearTalonEnc);
+        setTeleopSettings(rightRearTalonEnc);
+    }
+
+    public void setAutonSettings()
+    {
+        leftRearTalonEnc.set(ControlMode.Position, 0);
+        rightRearTalonEnc.set(ControlMode.Position, 0);
+
+        leftFrontTalon.follow(leftRearTalonEnc);
+        rightFrontTalon.follow(rightRearTalonEnc);
+
+        if(leftRearTalonEnc.getControlMode() != ControlMode.Position || rightRearTalonEnc.getControlMode() != ControlMode.Position || leftFrontTalon.getControlMode() != ControlMode.Follower || rightFrontTalon.getControlMode() != ControlMode.Follower)
+        {
+            Log.warn("setAutonSettings: One or more of the talons did not retain their control mode!\n" +
+                     "Using the .set(int x) method will yield undesirable results!");
+
+        }
+
+    }
+
+    public double turningFactor()
+    {
+        return Math.abs(OI.JOYSTICK_DRIVE_LEFT.getY() - OI.JOYSTICK_DRIVE_RIGHT.getY());
+    }
+
+    @Override
+    protected void initDefaultCommand()
+    {
+        setDefaultCommand(new DriveCommand());
+    }
+
+    /**
+     * Used to gradually increase the speed of the robot.
+     *
+     * @param out The object to store the data in
+     * @return the speed of the robot
+     */
+    private Pair<Double, Double> getSpeed(Pair<Double, Double> out)
+    {
+        double joystickLevel;
+        // Get the base speed of the robot
+        if(negative)
+        {
+            joystickLevel = -OI.JOYSTICK_DRIVE_RIGHT.getY();
+        }
+        else
+        {
+            joystickLevel = -OI.JOYSTICK_DRIVE_LEFT.getY();
+        }
+
+        // Only increase the speed by a small amount
+        double diff = joystickLevel - lastLeft;
+        if(diff > 0.1D)
+        {
+            joystickLevel = lastLeft + 0.1D;
+        }
+        else if(diff < 0.1D)
+        {
+            joystickLevel = lastLeft - 0.1D;
+        }
+
+        lastLeft = joystickLevel;
+        out.left = joystickLevel;
+
+        if(negative)
+        {
+            joystickLevel = -OI.JOYSTICK_DRIVE_LEFT.getY();
+        }
+        else
+        {
+            joystickLevel = -OI.JOYSTICK_DRIVE_RIGHT.getY();
+        }
+
+        diff = joystickLevel - lastRight;
+        if(diff > 0.1D)
+        {
+            joystickLevel = lastRight + 0.1D;
+        }
+        else if(diff < 0.1D)
+        {
+            joystickLevel = lastRight - 0.1D;
+        }
+
+        lastRight = joystickLevel;
+        out.right = joystickLevel;
+
+        // Sets the speed to 0 if the speed is less than 0.05 or larger than -0.05
+        if(Math.abs(out.left) < 0.05D)
+        {
+            out.left = 0.0D;
+        }
+        if(Math.abs(out.right) < 0.05D)
+        {
+            out.right = 0.0D;
+        }
+
+        return out;
+    }
+
+    private Pair<Double, Double> getSpeed()
+    {
+        return getSpeed(SPEED_CONTAINER);
+    }
+
+    public void drive()
+    {
+        Pair<Double, Double> speed = getSpeed();
+
+        Log.info("Left: " + String.format("%.02f", speed.right) + "\t\t Right: " + String.format("%.02f", speed.left));
+
+        //reverse drive
+        if(OI.JOYSTICK_DRIVE_LEFT.getRawButton(RobotMap.UNDEFINED) && !isNegativePressed)
+        {
+            negative = !negative;
+        }
+
+        isNegativePressed = OI.JOYSTICK_DRIVE_LEFT.getRawButton(RobotMap.UNDEFINED);
+
+        if(!negative)
+        {
+            drive.tankDrive(-speed.left, -speed.right, true);
+        }
+        else
+        {
+            drive.tankDrive(speed.left, speed.right, true);
+        }
+    }
+
+    public double avgVel()
+    {
+        return Math.abs((leftRearTalonEnc.getSelectedSensorVelocity(0) + rightRearTalonEnc.getSelectedSensorVelocity(0)) / 2);
+    }
+
+    @Override
+    public void update()
+    {
+        SmartDashboard.putNumber("Left Speed (ft/s)", leftRearTalonEnc.getSelectedSensorVelocity(0) * RobotMap.Motor.VEL_TO_FPS);
+        SmartDashboard.putNumber("Left Pos (ft)", leftRearTalonEnc.getSelectedSensorPosition(0) * RobotMap.Motor.POS_TO_FT);
+
+        SmartDashboard.putNumber("Right Speed (ft/s)", rightRearTalonEnc.getSelectedSensorVelocity(0) * RobotMap.Motor.VEL_TO_FPS);
+        SmartDashboard.putNumber("Right Pos (ft)", rightRearTalonEnc.getSelectedSensorPosition(0) * RobotMap.Motor.POS_TO_FT);
+    }
+
+
+    private static class Pair<L, R>
+    {
+        public L left;
+        public R right;
+
+        private String nameL;
+        private String nameR;
+
+        public Pair(L left, R right)
+        {
+            this.left = left;
+            this.right = right;
+            this.nameL = left.getClass().getSimpleName();
+            this.nameR = right.getClass().getSimpleName();
+        }
+
+        public Pair()
+        {
+        }
+
+        @Override
+        public String toString()
+        {
+            return new StringBuilder(100 + nameL.length() + nameR.length()).append("Pair<").append(nameL).append(',')
+                                                                           .append(nameR).append("> { \"left\": \"").append(left).append("\", \"right\": \"").append(right)
+                                                                           .append("\" }").toString();
+        }
+
+        @Override
+        public int hashCode()
+        {
+            return left.hashCode() * 13 + (right == null ? 0 : right.hashCode());
+        }
+
+        @Override
+        public boolean equals(Object o)
+        {
+            if(this == o)
+            {
+                return true;
+            }
+            if(o instanceof Pair)
+            {
+                Pair pair = (Pair) o;
+                return (left != null ? left.equals(pair.left) : pair.left == null)
+                       && (left != null ? left.equals(pair.left) : pair.left == null);
+            }
+            return false;
+        }
+    }
 
 }
