@@ -4,6 +4,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.team2502.robot2018.OI;
+import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.RobotMap;
 import com.team2502.robot2018.command.teleop.DriveCommand;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
@@ -88,7 +89,7 @@ public class DriveTrainSubsystem extends Subsystem
         if(leftRearTalonEnc.getControlMode() != ControlMode.Position || rightRearTalonEnc.getControlMode() != ControlMode.Position || leftFrontTalon.getControlMode() != ControlMode.Follower || rightFrontTalon.getControlMode() != ControlMode.Follower)
         {
             Log.warn("setAutonSettings: One or more of the talons did not retain their control mode!\n" +
-                     "Using the .set(int x) method will yield undesirable results!");
+                    "Using the .set(int x) method will yield undesirable results!");
 
         }
 
@@ -103,6 +104,7 @@ public class DriveTrainSubsystem extends Subsystem
      * Used to gradually increase the speed of the robot.
      *
      * @param out The object to store the data in
+     *
      * @return the speed of the robot
      */
     private Pair<Double, Double> getSpeed(Pair<Double, Double> out)
@@ -182,8 +184,8 @@ public class DriveTrainSubsystem extends Subsystem
         public String toString()
         {
             return new StringBuilder(100 + nameL.length() + nameR.length()).append("Pair<").append(nameL).append(',')
-                                                                           .append(nameR).append("> { \"left\": \"").append(left).append("\", \"right\": \"").append(right)
-                                                                           .append("\" }").toString();
+                    .append(nameR).append("> { \"left\": \"").append(left).append("\", \"right\": \"").append(right)
+                    .append("\" }").toString();
         }
 
         @Override
@@ -197,7 +199,7 @@ public class DriveTrainSubsystem extends Subsystem
             {
                 Pair pair = (Pair) o;
                 return (left != null ? left.equals(pair.left) : pair.left == null)
-                       && (left != null ? left.equals(pair.left) : pair.left == null);
+                        && (left != null ? left.equals(pair.left) : pair.left == null);
             }
             return false;
         }

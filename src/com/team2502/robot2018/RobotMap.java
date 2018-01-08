@@ -23,7 +23,6 @@ public class RobotMap
 
         public static final class Button
         {
-            @Undefined(safe = true)
             public static final int FORCE_LOW_GEAR = UNDEFINED;
 
             private Button() {}
@@ -38,9 +37,22 @@ public class RobotMap
     public static final class Motor
     {
         public static final double WHEEL_DIAMETER = 6.0;
+
         public static final double POS_TO_FT = (WHEEL_DIAMETER * Math.PI) / (4096 * 12);
+
         public static final double VEL_TO_RPM = (600 / 4096);
+
         public static final double VEL_TO_FPS = VEL_TO_RPM * (6 * Math.PI / 12);
+
+
+
+        public static final int INIT_TIMEOUT = 10; // When initializing a sensor/whatever, the timeout will be 10 ms
+        public static final int LOOP_TIMEOUT = 0; // When doing things in a loop, there won't be a timeout
+
+        public static final double SHIFT_UP_THRESHOLD = UNDEFINED;
+        public static final double SHIFT_DOWN_THRESHOLD = UNDEFINED;
+
+        private Motor() {}
 
         public static final int INIT_TIMEOUT = 10; // When initializing a sensor/whatever, the timeout will be 10 ms
         public static final int LOOP_TIMEOUT = 0; // When doing things in a loop, there won't be a timeout
@@ -65,10 +77,9 @@ public class RobotMap
         private Motor() {}
     }
 
-    public class Solenoid
-    {
-        public static final int TRANSMISSION_SWITCH = 0;
-
+    public class Solenoid {
         private Solenoid() {}
+
+        public static final int TRANSMISSION_SWITCH = 0;
     }
 }
