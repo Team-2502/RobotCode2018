@@ -9,100 +9,87 @@ import java.util.List;
 public class Vector
 {
 
-    private final double[] x;
+    private final double[] elements;
 
-    public Vector(double... x){
-        this.x = x;
-    }
+    public Vector(double... elements)
+    { this.elements = elements; }
 
-    public Vector add(Vector other) {
-        if(other.x.length != x.length) {
-            try {
-                throw new IllegalAccessException();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            }
-        }
-        double[] vals = new double[x.length];
-        for(int i =0; i < x.length; i++){
-            vals[i]=x[i]+other.x[i];
-        }
+    public Vector add(Vector other) throws IndexOutOfBoundsException
+    {
+        if(other.elements.length != elements.length) { throw new IndexOutOfBoundsException("Vector lengths must be equal."); }
+        double[] vals = new double[elements.length];
+        for(int i = 0; i < elements.length; ++i) { vals[i] = elements[i] + other.elements[i]; }
         return new Vector(vals);
     }
 
-    public static List<Vector> genFromArray(double[][] vectorArray){
-        if(vectorArray.length == 0 || vectorArray[0].length == 0)
-            return new ArrayList<>();
+    public static List<Vector> genFromArray(double[][] vectorArray)
+    {
+        if(vectorArray.length == 0 || vectorArray[0].length == 0) { return new ArrayList<>(); }
         List<Vector> vectorList = new ArrayList<>();
-        for (double[] vectorElements : vectorArray)
-        {
-            vectorList.add(new Vector(vectorElements));
-        }
+        for(double[] vectorElements : vectorArray) { vectorList.add(new Vector(vectorElements)); }
         return vectorList;
     }
 
-    public boolean between(Vector a, Vector c){
-        for(int i = 0; i < dimensions(); i++){
-            if(!MathUtils.Algebra.between(a.get(i),get(i),c.get(i)))
-                return false;
+    public boolean between(Vector a, Vector c)
+    {
+        for(int i = 0; i < dimensions(); ++i)
+        {
+            if(!MathUtils.Algebra.between(a.get(i), get(i), c.get(i))) { return false; }
         }
         return true;
     }
 
-    public Vector subtractBy(Vector other) {
-        return add(other.clone().multiply(-1));
-    }
-
-    public Vector multiply(double scalar){
-        double[] vals = new double[x.length];
-        for(int i =0; i<x.length; i++){
-            vals[i]=x[i]*scalar;
-        }
+    public Vector multiply(double scalar)
+    {
+        double[] vals = new double[elements.length];
+        for(int i = 0; i < elements.length; ++i)
+        { vals[i] = elements[i] * scalar; }
         return new Vector(vals);
     }
 
-    public int dimensions(){
-        return x.length;
-    }
+    public Vector subtractBy(Vector other)
+    { return add(other.clone().multiply(-1)); }
 
-    public double getMagnitude(){
-        return Math.sqrt(getMagnitudeSquared());
-    }
+    public int dimensions()
+    { return elements.length; }
 
-    public double getMagnitudeSquared(){
-        double xsum = 0;
-        for(double xi : x){
-            xsum+=xi*xi;
-        }
+    public double getMagnitudeSquared()
+    {
+        double xsum = 0.0D;
+        for(double xi : elements) { xsum += xi * xi; }
         return xsum;
     }
 
-    public double get(int place){
-        return x[place];
-    }
+    public double getMagnitude()
+    { return Math.sqrt(getMagnitudeSquared()); }
+
+    public double get(int place)
+    { return elements[place]; }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+    public boolean equals(Object o)
+    {
+        if(this == o) { return true; }
+        if(o == null || getClass() != o.getClass()) { return false; }
         Vector vector = (Vector) o;
-        return Arrays.equals(x, vector.x);
+        return Arrays.equals(elements, vector.elements);
     }
 
     @Override
-    public String toString() {
-        return "Vector{" +
-                "x=" + Arrays.toString(x) +
-                '}';
+    public int hashCode()
+    {
+        return Arrays.hashCode(elements);
     }
 
     @Override
-    public int hashCode() {
-        return Arrays.hashCode(x);
+    public String toString()
+    {
+        return new StringBuilder().append("Vector: { \"elements\"=").append(Arrays.toString(elements)).append(" }").toString();
     }
 
     @Override
-    public Vector clone() {
-        return new Vector(x);
+    public Vector clone()
+    {
+        return new Vector(elements);
     }
 }

@@ -13,92 +13,59 @@ import java.util.List;
 
 public class PurePursuitCommand extends Command
 {
-
-    private double lookAheadDistance;
+    public double lookAheadDistance;
     private DriveTrainSubsystem driveTrain;
     private AHRS navx;
-    private List<Vector> waypoints;
     private PurePursuitMovementStrategy purePursuitMovementStrategy;
-    private long lastTime=-1;
-    private LocationEstimator locationEstimator;
+    private long lastTime = -1;
 
     /**
      * @return difference in seconds since last time the method was called
      */
-    double getDTime(){
+    double getDTime()
+    {
         long nanoTime = System.nanoTime();
         double dTime;
-        if(lastTime == -1){
-            dTime = 0;
-        }
-        else{
-            dTime = nanoTime - lastTime;
-        }
+        dTime = lastTime == -1 ? 0 : nanoTime - lastTime;
         lastTime = nanoTime;
-        return dTime/1E6;
+        return dTime / 1E6;
     }
 
-    public void setLookAheadDistance(double lookAheadDistance)
+    public PurePursuitCommand(List<Vector> waypoints, double lookAheadDistance)
     {
-        this.lookAheadDistance = lookAheadDistance;
-    }
-
-    @Override
-    protected void execute()
-    {
-        purePursuitMovementStrategy.update();
-        Vector wheelVelocities = purePursuitMovementStrategy.getWheelVelocities();
-        driveTrain.runMotors(wheelVelocities.get(0),wheelVelocities.get(1));
-    }
-
-
-
-    public PurePursuitCommand(List<Vector> waypoints, double lookAheadDistance){
-        this.waypoints = waypoints;
         this.lookAheadDistance = lookAheadDistance;
         requires(Robot.DRIVE_TRAIN);
         driveTrain = Robot.DRIVE_TRAIN;
         navx = Robot.NAVX;
 
-        TankRobot tankRobot = new TankRobot() {
+        TankRobot tankRobot = new TankRobot()
+        {
             @Override
             public double getHeading()
-            {
-                return navx.getAngle();
-            }
+            { return navx.getAngle(); }
 
             @Override
             public double getV_rMax()
-            {
-                return Robot.VR_MAX;
-            }
+            { return Robot.VR_MAX; }
 
             @Override
             public double getV_lMax()
-            {
-                return Robot.VL_MAX;
-            }
+            { return Robot.VL_MAX; }
 
             @Override
             public double getV_lMin()
-            {
-                return Robot.VL_MIN;
-            }
+            { return Robot.VL_MIN; }
 
             @Override
             public double getV_rMin()
-            {
-                return Robot.VR_MIN;
-            }
+            { return Robot.VR_MIN; }
 
             @Override
             public double getLateralWheelDistance()
-            {
-                return Robot.LATERAL_WHEEL_DISTANCE;
-            }
+            { return Robot.LATERAL_WHEEL_DISTANCE; }
         };
 
-        locationEstimator = () -> new Vector(navx.getDisplacementX(),navx.getDisplacementY());
+        LocationEstimator locationEstimator = () -> new Vector(navx.getDisplacementX(), navx.getDisplacementY());
 
         // Not used: reason encoders do not yet setup.
 
@@ -123,13 +90,21 @@ public class PurePursuitCommand extends Command
         };
         */
 
-        purePursuitMovementStrategy = new PurePursuitMovementStrategy(tankRobot,locationEstimator,waypoints,lookAheadDistance);
+        purePursuitMovementStrategy = new PurePursuitMovementStrategy(tankRobot, locationEstimator, waypoints, lookAheadDistance);
     }
 
     @Override
     protected void initialize()
     {
         navx.resetDisplacement();
+    }
+
+    @Override
+    protected void execute()
+    {
+        purePursuitMovementStrategy.update();
+        Vector wheelVelocities = purePursuitMovementStrategy.getWheelVelocities();
+        driveTrain.runMotors(wheelVelocities.get(0), wheelVelocities.get(1));
     }
 
     @Override

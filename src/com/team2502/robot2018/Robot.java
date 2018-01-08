@@ -23,14 +23,13 @@ public final class Robot extends IterativeRobot
     public static ClimberSubsystem CLIMBER;
     public static long SHIFTED;
     public static Compressor COMPRESSOR;
-    public static String GAME_DATA; //TODO: Have better name
-    private static Robot instance;
+    public static String GAME_DATA; // TODO: Have better name
 
-    public static final double VR_MAX = .75;
-    public static final double VL_MAX = .75;
-    public static final double VR_MIN = -.75;
-    public static final double VL_MIN = -.75;
-    public static final double LATERAL_WHEEL_DISTANCE = 7.6666666667;
+    public static final double VR_MAX = 0.75D;
+    public static final double VL_MAX = 0.75D;
+    public static final double VR_MIN = -0.75D;
+    public static final double VL_MIN = -0.75D;
+    public static final double LATERAL_WHEEL_DISTANCE = 7.6666666667D;
 
     // NavX Subsystem
     public static AHRS NAVX;
@@ -41,7 +40,6 @@ public final class Robot extends IterativeRobot
      */
     public void robotInit()
     {
-        instance = this;
         Log.createLogger();
         DRIVE_TRAIN = new DriveTrainSubsystem();
         CLIMBER = new ClimberSubsystem();
@@ -61,15 +59,7 @@ public final class Robot extends IterativeRobot
      * You can use it to reset any subsystem information you want to clear when
      * the robot is disabled.
      */
-    public void disabledInit()
-    {
-        CLIMBER.stop();
-    }
-
-    public static Robot getInstance()
-    {
-        return instance;
-    }
+    public void disabledInit() { }
 
     public void disabledPeriodic()
     {
@@ -93,15 +83,15 @@ public final class Robot extends IterativeRobot
     {
         // waypoints (meter,meter) ... first waypoint should _probably_ be (0,0)
         List<Vector> waypoints = Vector.genFromArray(
-                new double[][]{
-                        {0,0},
-                        {1,1},
-                        {2,7},
-                }
-        );
-        Scheduler.getInstance().add(new PurePursuitCommand(waypoints,1));
+                new double[][] {
+                        { 0, 0 },
+                        { 1, 1 },
+                        { 2, 7 },
+                        });
+        Scheduler.getInstance().add(new PurePursuitCommand(waypoints, 1));
         // Scheduler.getInstance().add(AutoSwitcher.getAutoInstance());
 
+        GAME_DATA = DriverStation.getInstance().getGameSpecificMessage();
         NAVX.reset();
     }
 
