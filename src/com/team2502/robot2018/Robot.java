@@ -25,6 +25,11 @@ public final class Robot extends IterativeRobot
     public static Compressor COMPRESSOR;
     public static String GAME_DATA; //TODO: Have better name
 
+    public static final float VR_MAX = .75F;
+    public static final float VL_MAX = .75F;
+    public static final float VR_MIN = -.75F;
+    public static final float VL_MIN = -.75F;
+    public static final float LATERAL_WHEEL_DISTANCE = 7.6666666667F;
 
     // NavX Subsystem
     public static AHRS NAVX;

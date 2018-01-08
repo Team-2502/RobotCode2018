@@ -16,7 +16,7 @@ import logger.Log;
  */
 public class DriveTrainSubsystem extends Subsystem
 {
-    private static final Pair<Double, Double> SPEED_CONTAINER = new Pair<Double, Double>();
+    private static final Pair<Float, Float> SPEED_CONTAINER = new Pair<>();
 
     public final WPI_TalonSRX leftFrontTalon;
     public final WPI_TalonSRX leftRearTalonEnc;
@@ -27,15 +27,15 @@ public class DriveTrainSubsystem extends Subsystem
     public final SpeedControllerGroup spgRight;
 
 
-    private double lastLeft;
-    private double lastRight;
+    private float lastLeft;
+    private float lastRight;
     private boolean isNegativePressed;
     private boolean negative;
 
     public DriveTrainSubsystem()
     {
-        lastLeft = 0.0D;
-        lastRight = 0.0D;
+        lastLeft = 0.0F;
+        lastRight = 0.0F;
 
         leftFrontTalon = new WPI_TalonSRX(RobotMap.Motor.DRIVE_TRAIN_FRONT_LEFT);
         leftRearTalonEnc = new WPI_TalonSRX(RobotMap.Motor.DRIVE_TRAIN_BACK_LEFT);
@@ -100,48 +100,62 @@ public class DriveTrainSubsystem extends Subsystem
     protected void initDefaultCommand() { setDefaultCommand(new DriveCommand()); }
 
     /**
+     * Drive the robot. The equation x=-y must be true for the robot to drive straight.
+     * <br>
+     * Make sure to set the motors according to the control mode. In auton, it's position. In teleop, it's percent voltage.
+     *
+     * @param x Units for the left side of drivetrain
+     * @param y Units for the right side of drivetrain
+     */
+    public void runMotors(float x, float y) // double z
+    {
+        lastLeft = x;
+        lastRight = y;
+    }
+
+    /**
      * Used to gradually increase the speed of the robot.
      *
      * @param out The object to store the data in
      * @return the speed of the robot
      */
-    private Pair<Double, Double> getSpeed(Pair<Double, Double> out)
+    private Pair<Float,Float> getSpeed(Pair<Float, Float> out)
     {
-        double joystickLevel;
+        float joystickLevel;
         // Get the base speed of the robot
-        if(negative) { joystickLevel = -OI.JOYSTICK_DRIVE_RIGHT.getY(); }
-        else { joystickLevel = -OI.JOYSTICK_DRIVE_LEFT.getY(); }
+        if(negative) { joystickLevel = (float) -OI.JOYSTICK_DRIVE_RIGHT.getY(); }
+        else { joystickLevel = (float) -OI.JOYSTICK_DRIVE_LEFT.getY(); }
 
         // Only increase the speed by a small amount
         double diff = joystickLevel - lastLeft;
-        if(diff > 0.1D) { joystickLevel = lastLeft + 0.1D; }
-        else if(diff < 0.1D) { joystickLevel = lastLeft - 0.1D; }
+        if(diff > 0.1D) { joystickLevel = lastLeft + 0.1F; }
+        else if(diff < 0.1D) { joystickLevel = lastLeft - 0.1F; }
 
         lastLeft = joystickLevel;
         out.left = joystickLevel;
 
-        if(negative) { joystickLevel = -OI.JOYSTICK_DRIVE_LEFT.getY(); }
-        else { joystickLevel = -OI.JOYSTICK_DRIVE_RIGHT.getY(); }
+        if(negative) { joystickLevel = (float) -OI.JOYSTICK_DRIVE_LEFT.getY(); }
+        else { joystickLevel = (float) -OI.JOYSTICK_DRIVE_RIGHT.getY(); }
 
         diff = joystickLevel - lastRight;
-        if(diff > 0.1D) { joystickLevel = lastRight + 0.1D; }
-        else if(diff < 0.1D) { joystickLevel = lastRight - 0.1D; }
+        if(diff > 0.1D) { joystickLevel = lastRight + 0.1F; }
+        else if(diff < 0.1D) { joystickLevel = lastRight - 0.1F; }
 
         lastRight = joystickLevel;
         out.right = joystickLevel;
 
         // Sets the speed to 0 if the speed is less than 0.05 or larger than -0.05
-        if(Math.abs(out.left) < 0.05D) { out.left = 0.0D; }
-        if(Math.abs(out.right) < 0.05D) { out.right = 0.0D; }
+        if(Math.abs(out.left) < 0.05D) { out.left = 0.0F; }
+        if(Math.abs(out.right) < 0.05D) { out.right = 0.0F; }
 
         return out;
     }
 
-    private Pair<Double, Double> getSpeed() { return getSpeed(SPEED_CONTAINER); }
+    private Pair<Float, Float> getSpeed() { return getSpeed(SPEED_CONTAINER); }
 
     public void drive()
     {
-        Pair<Double, Double> speed = getSpeed();
+        Pair<Float, Float> speed = getSpeed();
 
         Log.info("Left: " + String.format("%.02f", speed.right) + "\t\t Right: " + String.format("%.02f", speed.left));
 

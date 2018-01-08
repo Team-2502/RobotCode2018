@@ -13,10 +13,11 @@ public class PurePursuitMovementStrategy implements TankMovementStrategy
     private final LocationEstimator estimator;
     private Vector relativeGoalPoint;
     private final TankRobot tankRobot;
-    private double pathRadius;
+    private float pathRadius;
     private float rotVelocity;
     public final float lookAheadDistance;
     private boolean finishedPath = false;
+    private static final float THRESHOLD_CURVTURE = 0.001F;
 
     private Vector usedEstimatedLocation;
     private float usedHeading;
@@ -37,17 +38,6 @@ public class PurePursuitMovementStrategy implements TankMovementStrategy
         this.lookAheadDistance = lookAheadDistance;
         this.estimator = estimator;
     }
-
-    /*
-    public Function<Double, Double> getEstimateHeadingFromTime()
-    { return estimateHeadingFromTime; }
-
-    public Function<Double, Vector> estimateTimeToPosition()
-    { return timeToPosition; }
-
-    public Function<Double, Vector> getEsimatePositionFromRotation()
-    { return estimatePositionFromRotation; }
-    */
 
     public Vector calculateAbsoluteGoalPoint()
     {
@@ -138,7 +128,7 @@ public class PurePursuitMovementStrategy implements TankMovementStrategy
     /**
      * @return The radius of the circle that the robot is traveling across. Positive if the robot is turning left, negative if right.
      */
-    public double getPathRadius()
+    public float getPathRadius()
     {
         return pathRadius;
     }
@@ -157,99 +147,75 @@ public class PurePursuitMovementStrategy implements TankMovementStrategy
     private Vector calculateWheelVelocities()
     {
         float curvature = curvatureToGoal();
-        float c = 2 / (tankRobot.getLateralWheelDistance() * curvature);
-        float velLeftToRightRatio = -(c + 1) / (1 - c);
-        float velRightToLeftRatio = 1 / velLeftToRightRatio;
-        float score = Float.MIN_VALUE;
         Vector bestVector = null;
-        //TODO: fix clumsy way of optimizing :(
 
         float v_lMax = tankRobot.getV_lMax();
         float v_rMax = tankRobot.getV_rMax();
         float v_lMin = tankRobot.getV_lMin();
         float v_rMin = tankRobot.getV_rMin();
 
-        float v_r = v_lMax * velLeftToRightRatio;
-        if(MathUtils.Algebra.between(v_rMin, v_r, v_rMax))
-        {
-            score = Math.abs(v_lMax + v_r);
-            bestVector = new Vector(v_lMax, v_r);
+        if(Math.abs(curvature) < THRESHOLD_CURVTURE){
+            bestVector = new Vector(v_lMax, v_rMax);
+            rotVelocity = (bestVector.get(1) - bestVector.get(0)) / tankRobot.getLateralWheelDistance();
+            pathRadius = Float.MAX_VALUE;
+            leftWheelTanVel = bestVector.get(0);
+            rightWheelTanVel = bestVector.get(1);
+            tangentialSpeed = leftWheelTanVel;
+            dThetaToRotate = 0;
         }
-
-        v_r = v_lMin * velLeftToRightRatio;
-        if(MathUtils.Algebra.between(v_rMin, v_r, v_rMax))
+        else
         {
-            float tempScore = Math.abs(v_lMin + v_r);
-            if(tempScore > score)
+            float c = 2 / (tankRobot.getLateralWheelDistance() * curvature);
+            float velLeftToRightRatio = -(c + 1) / (1 - c);
+            float velRightToLeftRatio = 1 / velLeftToRightRatio;
+            float score = Float.MIN_VALUE;
+            //TODO: fix clumsy way of optimizing :(
+
+            float v_r = v_lMax * velLeftToRightRatio;
+            if (MathUtils.Algebra.between(v_rMin, v_r, v_rMax))
             {
-                score = tempScore;
-                bestVector = new Vector(v_lMin, v_r);
+                score = Math.abs(v_lMax + v_r);
+                bestVector = new Vector(v_lMax, v_r);
             }
-        }
 
-        float v_l = v_rMax * velRightToLeftRatio;
-        if(MathUtils.Algebra.between(v_lMin, v_l, v_lMax))
-        {
-            float tempScore = Math.abs(v_lMax + v_l);
-            if(tempScore > score)
+            v_r = v_lMin * velLeftToRightRatio;
+            if (MathUtils.Algebra.between(v_rMin, v_r, v_rMax))
             {
-                score = tempScore;
-                bestVector = new Vector(v_l, v_rMax);
+                float tempScore = Math.abs(v_lMin + v_r);
+                if (tempScore > score)
+                {
+                    score = tempScore;
+                    bestVector = new Vector(v_lMin, v_r);
+                }
             }
-        }
 
-        v_l = v_rMin * velRightToLeftRatio;
-        if(MathUtils.Algebra.between(v_lMin, v_l, v_lMax))
-        {
-            float tempScore = Math.abs(v_lMin + v_l);
-            if(tempScore > score)
+            float v_l = v_rMax * velRightToLeftRatio;
+            if (MathUtils.Algebra.between(v_lMin, v_l, v_lMax))
             {
-                bestVector = new Vector(v_l, v_rMin);
+                float tempScore = Math.abs(v_lMax + v_l);
+                if (tempScore > score)
+                {
+                    score = tempScore;
+                    bestVector = new Vector(v_l, v_rMax);
+                }
             }
+
+            v_l = v_rMin * velRightToLeftRatio;
+            if (MathUtils.Algebra.between(v_lMin, v_l, v_lMax))
+            {
+                float tempScore = Math.abs(v_lMin + v_l);
+                if (tempScore > score)
+                {
+                    bestVector = new Vector(v_l, v_rMin);
+                }
+            }
+            rotVelocity = (bestVector.get(1) - bestVector.get(0)) / tankRobot.getLateralWheelDistance();
+            pathRadius = 1 / curvature;
+            leftWheelTanVel = Math.abs((pathRadius - tankRobot.getLateralWheelDistance() / 2) * rotVelocity);
+            rightWheelTanVel = Math.abs((pathRadius + tankRobot.getLateralWheelDistance() / 2) * rotVelocity);
+            tangentialSpeed = Math.abs(pathRadius * rotVelocity);
+            dThetaToRotate = (float) (MathUtils.Arithmetic.sign(rotVelocity) * Math.atan(relativeGoalPoint.get(1) / (Math.abs(pathRadius) - relativeGoalPoint.get(0))));
         }
-
-        if(bestVector == null) { return null; }
-
-        rotVelocity = (bestVector.get(1) - bestVector.get(0)) / tankRobot.getLateralWheelDistance();
-        // Note this can be negative
-
-        pathRadius = 1 / curvature;
-
-        leftWheelTanVel = (float) Math.abs((pathRadius - tankRobot.getLateralWheelDistance() / 2) * rotVelocity);
-        rightWheelTanVel = (float) Math.abs((pathRadius + tankRobot.getLateralWheelDistance() / 2) * rotVelocity);
-        tangentialSpeed = (float) Math.abs(pathRadius * rotVelocity);
-        usedHeading = tankRobot.getHeading();
-
-        dThetaToRotate = (float) (MathUtils.Arithmetic.sign(rotVelocity) * Math.atan(relativeGoalPoint.get(1) / (Math.abs(pathRadius) - relativeGoalPoint.get(0))));
-
-        Function<Double, Vector> estimatePositionFromDTheta = dTheta -> {
-            float dxRelative = (float) (-pathRadius * (1 - Math.cos(-dTheta)));
-            float dyRelative = (float) (-pathRadius * Math.sin(-dTheta));
-            Vector dRelativeVector = new Vector(dxRelative, dyRelative);
-            Vector rotated = MathUtils.LinearAlgebra.rotate2D(dRelativeVector, usedHeading);
-            return rotated.add(usedEstimatedLocation);
-        };
-
-
-
-        /*
-        estimateHeadingFromTime = time-> {
-            float heading = usedHeading + rotVelocity*time;
-            return heading;
-        };
-
-        esimatePositionFromRotation = angle -> {
-            float dTheta = angle - usedHeading;
-            return estimatePositionFromDTheta.apply(dTheta);
-        };
-
-        estimatedTime = thetaToRotate / rotVelocity;
-
-        timeToPosition = time -> {
-            float dTheta = time * rotVelocity;
-            return estimatePositionFromDTheta.apply(dTheta);
-        };
-        */
 
         return bestVector;
     }
