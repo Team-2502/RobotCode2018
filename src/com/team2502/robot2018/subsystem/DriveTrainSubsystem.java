@@ -112,8 +112,6 @@ public class DriveTrainSubsystem extends Subsystem
      */
     public void runMotors(float x, float y) // double z
     {
-//        lastLeft = x;
-//        lastRight = y;
         leftFrontTalon.set(x);
         leftRearTalonEnc.set(x);
 
