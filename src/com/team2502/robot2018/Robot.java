@@ -87,11 +87,9 @@ public final class Robot extends IterativeRobot
     {
 //        Scheduler.getInstance().add(AutoSwitcher.getAutoInstance());
         ArrayList<Vector> waypoints = new ArrayList<Vector>();
-//        waypoints.add(new Vector(0, 0));
-        waypoints.add(new Vector(10, 10));
-        waypoints.add(new Vector(30, 10));
-        waypoints.add(new Vector(30, 30));
-        Scheduler.getInstance().add(new PurePursuitCommand(waypoints, 2));
+        waypoints.add(new Vector(0, 0));
+        waypoints.add(new Vector(0, 4096));
+        Scheduler.getInstance().add(new PurePursuitCommand(waypoints, 100));
         NAVX.reset();
     }
 
