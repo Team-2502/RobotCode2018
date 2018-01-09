@@ -102,6 +102,7 @@ public class PurePursuitCommand extends Command
     protected void initialize()
     {
         navx.resetDisplacement();
+        driveTrain.setAutonSettings();
     }
 
     @Override
@@ -109,12 +110,19 @@ public class PurePursuitCommand extends Command
     {
         purePursuitMovementStrategy.update();
         Vector wheelVelocities = purePursuitMovementStrategy.getWheelVelocities();
-        driveTrain.runMotors(wheelVelocities.get(0), wheelVelocities.get(1));
+        driveTrain.runMotors(-wheelVelocities.get(0), -wheelVelocities.get(1));
     }
 
     @Override
     protected boolean isFinished()
     {
         return purePursuitMovementStrategy.isFinishedPath();
+
+    }
+
+    @Override
+    protected void end()
+    {
+        driveTrain.setTeleopSettings();
     }
 }

@@ -85,6 +85,9 @@ public class DriveTrainSubsystem extends Subsystem
         leftFrontTalon.follow(leftRearTalonEnc);
         rightFrontTalon.follow(rightRearTalonEnc);
 
+        leftRearTalonEnc.setSensorPhase(true);
+        rightRearTalonEnc.setSensorPhase(true);
+
         if(leftRearTalonEnc.getControlMode() != ControlMode.Position || rightRearTalonEnc.getControlMode() != ControlMode.Position || leftFrontTalon.getControlMode() != ControlMode.Follower || rightFrontTalon.getControlMode() != ControlMode.Follower)
         {
             Log.warn("setAutonSettings: One or more of the talons did not retain their control mode!\n" +
