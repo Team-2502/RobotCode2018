@@ -7,9 +7,11 @@ import com.team2502.robot2018.subsystem.DriveTrainSubsystem;
 import com.team2502.robot2018.trajectory.LocationEstimator;
 import com.team2502.robot2018.trajectory.PurePursuitMovementStrategy;
 import com.team2502.robot2018.trajectory.TankRobot;
+import com.team2502.robot2018.utils.MathUtils;
 import edu.wpi.first.wpilibj.command.Command;
 
 import java.util.List;
+import java.util.function.Function;
 
 public class PurePursuitCommand extends Command
 {
@@ -65,30 +67,33 @@ public class PurePursuitCommand extends Command
             { return Robot.LATERAL_WHEEL_DISTANCE; }
         };
 
-        LocationEstimator locationEstimator = () -> new Vector(navx.getDisplacementX(), navx.getDisplacementY());
+//        LocationEstimator locationEstimator = () -> new Vector(navx.getDisplacementX(), navx.getDisplacementY());
 
         // Not used: reason encoders do not yet setup.
 
-        /*
-        locationEstimator = () ->
+
+        LocationEstimator locationEstimator = () ->
         {
-            float dTime = getDTime();
-            Function<Double,Vector> estimatePositionFromDTheta = dTheta -> {
-                float dxRelative = -purePursuitMovementStrategy.getPathRadius() * (1-Math.cos(-dTheta));
-                float dyRelative = -purePursuitMovementStrategy.getPathRadius() * Math.sin(-dTheta);
+            double dTime = getDTime();
+            Function<Float,Vector> estimatePositionFromDTheta = dTheta -> {
+                float dxRelative = -purePursuitMovementStrategy.getPathRadius() * (1- (float) Math.cos(-dTheta));
+                float dyRelative = -purePursuitMovementStrategy.getPathRadius() * (float) Math.sin(-dTheta);
+
                 Vector dRelativeVector = new Vector(dxRelative, dyRelative);
                 Vector rotated = MathUtils.LinearAlgebra.rotate2D(dRelativeVector, purePursuitMovementStrategy.getUsedHeading());
-                Vector toReturn = rotated.add(purePursuitMovementStrategy.getUsedEstimatedLocation());
+                Vector toReturn = rotated.add(purePursuitMovementStrategy.getUsedEstimatedLocation()); //
                 return toReturn;
+
+
             };
 
             Function<Double,Vector> dTimeToPosition = dTime1 -> {
-                float dTheta = dTime1 * purePursuitMovementStrategy.getRotVelocity();
-                return estimatePositionFromDTheta.apply(dTheta);
+                double dTheta =  dTime1 * purePursuitMovementStrategy.getRotVelocity();
+                return estimatePositionFromDTheta.apply( (float) dTheta); //
             };
-            return dTimeToPosition.apply(dTime);
+            return dTimeToPosition.apply(dTime); //
         };
-        */
+
 
         purePursuitMovementStrategy = new PurePursuitMovementStrategy(tankRobot, locationEstimator, waypoints, lookAheadDistance);
     }

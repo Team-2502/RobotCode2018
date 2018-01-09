@@ -109,8 +109,13 @@ public class DriveTrainSubsystem extends Subsystem
      */
     public void runMotors(float x, float y) // double z
     {
-        lastLeft = x;
-        lastRight = y;
+//        lastLeft = x;
+//        lastRight = y;
+        leftFrontTalon.set(x);
+        leftRearTalonEnc.set(x);
+
+        rightFrontTalon.set(-y);
+        rightRearTalonEnc.set(-y);
     }
 
     /**
@@ -157,7 +162,7 @@ public class DriveTrainSubsystem extends Subsystem
     {
         Pair<Float, Float> speed = getSpeed();
 
-        Log.info("Left: " + String.format("%.02f", speed.right) + "\t\t Right: " + String.format("%.02f", speed.left));
+//        Log.info("Left: " + String.format("%.02f", speed.right) + "\t\t Right: " + String.format("%.02f", speed.left));
 
         //reverse drive
         if(OI.JOYSTICK_DRIVE_LEFT.getRawButton(RobotMap.UNDEFINED) && !isNegativePressed) { negative = !negative; }

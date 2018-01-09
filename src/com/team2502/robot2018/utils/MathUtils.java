@@ -19,6 +19,7 @@ public class MathUtils
 
         public static Vector absoluteToRelativeCoord(Vector relativeCoord, Vector absoluteLocation, float robotHeading)
         {
+//            System.out.println(relativeCoord );
             if(relativeCoord.dimensions() != 2) { throw new IllegalArgumentException("Must be in R2"); }
             Vector coordDif = relativeCoord.clone().subtractBy(absoluteLocation);
             return LinearAlgebra.rotate2D(coordDif, -robotHeading);
@@ -56,6 +57,7 @@ public class MathUtils
         {
             float baX = pointB.get(0) - pointA.get(0);
             float baY = pointB.get(1) - pointA.get(1);
+
             float caX = center.get(0) - pointA.get(0);
             float caY = center.get(1) - pointA.get(1);
 

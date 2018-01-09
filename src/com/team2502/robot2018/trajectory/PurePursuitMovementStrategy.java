@@ -19,8 +19,8 @@ public class PurePursuitMovementStrategy implements TankMovementStrategy
     private boolean finishedPath = false;
     private static final float THRESHOLD_CURVTURE = 0.001F;
 
-    private Vector usedEstimatedLocation;
-    private float usedHeading;
+    private Vector usedEstimatedLocation = new Vector(0, 0);
+    private float usedHeading = 0.0F;
 
     private int lastPath = 0;
 
@@ -42,6 +42,7 @@ public class PurePursuitMovementStrategy implements TankMovementStrategy
     public Vector calculateAbsoluteGoalPoint()
     {
         if(finishedPath) { return null; }
+
         List<Vector> intersections = new ArrayList<>();
         int nextPathI = Integer.MAX_VALUE;
         usedEstimatedLocation = estimator.estimateLocation();
@@ -49,34 +50,52 @@ public class PurePursuitMovementStrategy implements TankMovementStrategy
         for(int i = lastPath; i <= lastPath + 1; ++i)
         {
             if(i + 1 >= waypoints.size()) { continue; }
+
             Vector lineP1 = waypoints.get(i);
             Vector lineP2 = waypoints.get(i + 1);
+
             float toLookAhead = lookAheadDistance;
             List<Vector> vectorList = new ArrayList<>(MathUtils.Geometry.getCircleLineIntersectionPoint(lineP1, lineP2, usedEstimatedLocation, toLookAhead));
-            vectorList.removeIf(vector -> !vector.between(lineP1, lineP2));
+            System.out.println("Vector list: " + vectorList.toString());
+            vectorList.removeIf(vector -> !vector.between(lineP1, lineP2)); // remove if vectors not between next 2 waypoints
+            System.out.println("Vector list: " + vectorList.toString());
             if(i == lastPath + 1 && !vectorList.isEmpty()) { nextPathI = intersections.size(); }
             intersections.addAll(vectorList);
         }
 
         Vector toCompare = absoluteGoalPoint;
-        if(toCompare == null) { toCompare = waypoints.get(1); }
+        if(toCompare == null) {
+            toCompare = waypoints.get(1);
+            this.absoluteGoalPoint = waypoints.get(1);
+        }
+
+        System.out.println("Intersections is of size " + intersections.size());
 
         int closestVectorI = closest(toCompare, intersections);
         if(closestVectorI == -1)
         {
+            System.out.println("RED ALERT THE COMMIES ARE COMING I REPEAT THE COMMIES ARE COMING");
             finishedPath = true;
             return null;
         }
 
+
+
         Vector closest = intersections.get(closestVectorI);
+
         if(closestVectorI >= nextPathI) { ++lastPath; }
+        System.out.println(closest);
+        this.absoluteGoalPoint = closest;
         return closest;
     }
 
     public void update()
     {
         absoluteGoalPoint = calculateAbsoluteGoalPoint();
-        relativeGoalPoint = MathUtils.LinearAlgebra.absoluteToRelativeCoord(absoluteGoalPoint, usedEstimatedLocation, usedHeading);
+        System.out.println(usedEstimatedLocation);
+        System.out.println(usedHeading);
+        System.out.println(absoluteGoalPoint);
+        relativeGoalPoint = MathUtils.LinearAlgebra.absoluteToRelativeCoord(absoluteGoalPoint, usedEstimatedLocation, usedHeading); //
         wheelVelocities = calculateWheelVelocities();
     }
 
@@ -86,10 +105,16 @@ public class PurePursuitMovementStrategy implements TankMovementStrategy
         int minVectorI = -1;
         for(int i = 0; i < vectors.size(); i++)
         {
+
             Vector vector = vectors.get(i);
-            float magnitudeSquared = origin.subtractBy(vector).getMagnitudeSquared();
+
+            float magnitudeSquared = origin.subtractBy(vector).getMagnitudeSquared(); // find dist squared
+
+            System.out.println("A loop is does happen");
+
             if(magnitudeSquared < minMagSquared)
             {
+                System.out.println("ALL CAPS Capaalists will save the daaay by setting the minVectorI to not -1 ALL CAPS");
                 minMagSquared = magnitudeSquared;
                 minVectorI = i;
             }

@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import logger.Log;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public final class Robot extends IterativeRobot
@@ -84,7 +85,13 @@ public final class Robot extends IterativeRobot
      */
     public void autonomousInit()
     {
-        Scheduler.getInstance().add(AutoSwitcher.getAutoInstance());
+//        Scheduler.getInstance().add(AutoSwitcher.getAutoInstance());
+        ArrayList<Vector> waypoints = new ArrayList<Vector>();
+//        waypoints.add(new Vector(0, 0));
+        waypoints.add(new Vector(10, 10));
+        waypoints.add(new Vector(30, 10));
+        waypoints.add(new Vector(30, 30));
+        Scheduler.getInstance().add(new PurePursuitCommand(waypoints, 2));
         NAVX.reset();
     }
 
