@@ -69,7 +69,7 @@ public class PurePursuitCommand extends Command
 
 //        LocationEstimator locationEstimator = () -> new Vector(navx.getDisplacementX(), navx.getDisplacementY());
 
-        // Not used: reason encoders do not yet setup.
+        // Not used, reason: encoders do not yet setup.
 
 
         LocationEstimator locationEstimator = () ->

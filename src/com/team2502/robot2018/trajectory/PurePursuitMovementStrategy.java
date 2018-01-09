@@ -69,12 +69,11 @@ public class PurePursuitMovementStrategy implements TankMovementStrategy
             this.absoluteGoalPoint = waypoints.get(1);
         }
 
-        System.out.println("Intersections is of size " + intersections.size());
+        System.out.println("Intersections size: " + intersections.size());
 
         int closestVectorI = closest(toCompare, intersections);
         if(closestVectorI == -1)
         {
-            System.out.println("RED ALERT THE COMMIES ARE COMING I REPEAT THE COMMIES ARE COMING");
             finishedPath = true;
             return null;
         }
@@ -110,11 +109,8 @@ public class PurePursuitMovementStrategy implements TankMovementStrategy
 
             float magnitudeSquared = origin.subtractBy(vector).getMagnitudeSquared(); // find dist squared
 
-            System.out.println("A loop is does happen");
-
             if(magnitudeSquared < minMagSquared)
             {
-                System.out.println("ALL CAPS Capaalists will save the daaay by setting the minVectorI to not -1 ALL CAPS");
                 minMagSquared = magnitudeSquared;
                 minVectorI = i;
             }

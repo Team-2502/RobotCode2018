@@ -26,10 +26,10 @@ public final class Robot extends IterativeRobot
     public static Compressor COMPRESSOR;
     public static String GAME_DATA; //TODO: Have better name
 
-    public static final float VR_MAX = .75F;
-    public static final float VL_MAX = .75F;
-    public static final float VR_MIN = -.75F;
-    public static final float VL_MIN = -.75F;
+    public static final float VR_MAX = .3F;
+    public static final float VL_MAX = .3F;
+    public static final float VR_MIN = -.3F;
+    public static final float VL_MIN = -.3F;
     public static final float LATERAL_WHEEL_DISTANCE = 7.6666666667F;
 
     // NavX Subsystem
@@ -88,8 +88,11 @@ public final class Robot extends IterativeRobot
 //        Scheduler.getInstance().add(AutoSwitcher.getAutoInstance());
         ArrayList<Vector> waypoints = new ArrayList<Vector>();
         waypoints.add(new Vector(0, 0));
-        waypoints.add(new Vector(0, 4096));
-        Scheduler.getInstance().add(new PurePursuitCommand(waypoints, 100));
+        waypoints.add(new Vector(0, 3));
+        waypoints.add(new Vector(3, 3));
+        waypoints.add(new Vector(3, 0));
+        waypoints.add(new Vector(0, 0));
+        Scheduler.getInstance().add(new PurePursuitCommand(waypoints, 1));
         NAVX.reset();
     }
 
