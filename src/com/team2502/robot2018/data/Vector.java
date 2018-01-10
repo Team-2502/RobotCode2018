@@ -99,7 +99,18 @@ public class Vector
     @Override
     public String toString()
     {
-        return new StringBuilder().append("Vector: { \"elements\"=").append(Arrays.toString(elements)).append(" }").toString();
+        String vector = "(";
+        for (int i = 0; i < elements.length; i++)
+        {
+            String toAppend = String.valueOf(elements[i]);
+            vector+=toAppend;
+            if(i!= elements.length-1)
+            {
+                vector+=",";
+            }
+        }
+        vector+=")";
+        return vector;
     }
 
     @Override

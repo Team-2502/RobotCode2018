@@ -55,10 +55,6 @@ public class MathUtils
 
         public static List<Vector> getCircleLineIntersectionPoint(Vector pointA, Vector pointB, Vector center, double radius)
         {
-            System.out.println("A: " + pointA.toString());
-            System.out.println("B: " + pointB.toString());
-            System.out.println("Center: " + center.toString());
-            System.out.println("radius: " + radius);
 
             float baX = pointB.get(0) - pointA.get(0);
             float baY = pointB.get(1) - pointA.get(1);

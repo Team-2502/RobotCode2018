@@ -11,15 +11,18 @@ import com.team2502.robot2018.utils.MathUtils;
 import edu.wpi.first.wpilibj.command.Command;
 
 import java.util.List;
-import java.util.function.Function;
 
 public class PurePursuitCommand extends Command
 {
+    private final TankRobot tankRobot;
     public float lookAheadDistance;
+    public static final float TAU = 2*3.1415F;
     private DriveTrainSubsystem driveTrain;
     private AHRS navx;
     private PurePursuitMovementStrategy purePursuitMovementStrategy;
     private long lastTime = -1;
+    private float initAngleDegrees;
+    private float initAngleRadians;
 
     /**
      * @return difference in seconds since last time the method was called
@@ -35,16 +38,22 @@ public class PurePursuitCommand extends Command
 
     public PurePursuitCommand(List<Vector> waypoints, float lookAheadDistance)
     {
+        navx = Robot.NAVX;
+        navx.resetDisplacement();
+        initAngleDegrees = (float) navx.getAngle();
+        initAngleRadians = initAngleDegrees / 180F * TAU;
         this.lookAheadDistance = lookAheadDistance;
         requires(Robot.DRIVE_TRAIN);
         driveTrain = Robot.DRIVE_TRAIN;
-        navx = Robot.NAVX;
 
-        TankRobot tankRobot = new TankRobot()
+        tankRobot = new TankRobot()
         {
             @Override
             public float getHeading()
-            { return (float) navx.getAngle(); }
+            {
+                double radians = (navx.getAngle() - initAngleDegrees) / 180F * TAU;
+                return (float) - (radians % TAU);
+            }
 
             @Override
             public float getV_rMax()
@@ -67,32 +76,34 @@ public class PurePursuitCommand extends Command
             { return Robot.LATERAL_WHEEL_DISTANCE; }
         };
 
-//        LocationEstimator locationEstimator = () -> new Vector(navx.getDisplacementX(), navx.getDisplacementY());
+        // TODO: check whether this is right... rotation is inverted
+        LocationEstimator locationEstimator = () -> MathUtils.LinearAlgebra.rotate2D(new Vector(navx.getDisplacementX(), navx.getDisplacementY()),-initAngleRadians);
+
 
         // Not used, reason: encoders do not yet setup.
 
 
-        LocationEstimator locationEstimator = () ->
-        {
-            double dTime = getDTime();
-            Function<Float,Vector> estimatePositionFromDTheta = dTheta -> {
-                float dxRelative = -purePursuitMovementStrategy.getPathRadius() * (1- (float) Math.cos(-dTheta));
-                float dyRelative = -purePursuitMovementStrategy.getPathRadius() * (float) Math.sin(-dTheta);
-
-                Vector dRelativeVector = new Vector(dxRelative, dyRelative);
-                Vector rotated = MathUtils.LinearAlgebra.rotate2D(dRelativeVector, purePursuitMovementStrategy.getUsedHeading());
-                Vector toReturn = rotated.add(purePursuitMovementStrategy.getUsedEstimatedLocation()); //
-                return toReturn;
-
-
-            };
-
-            Function<Double,Vector> dTimeToPosition = dTime1 -> {
-                double dTheta =  dTime1 * purePursuitMovementStrategy.getRotVelocity();
-                return estimatePositionFromDTheta.apply( (float) dTheta); //
-            };
-            return dTimeToPosition.apply(dTime); //
-        };
+//        LocationEstimator locationEstimator = () ->
+//        {
+//            double dTime = getDTime();
+//            Function<Float,Vector> estimatePositionFromDTheta = dTheta -> {
+//                float dxRelative = -purePursuitMovementStrategy.getPathRadius() * (1- (float) Math.cos(-dTheta));
+//                float dyRelative = -purePursuitMovementStrategy.getPathRadius() * (float) Math.sin(-dTheta);
+//
+//                Vector dRelativeVector = new Vector(dxRelative, dyRelative);
+//                Vector rotated = MathUtils.LinearAlgebra.rotate2D(dRelativeVector, purePursuitMovementStrategy.getUsedHeading());
+//                Vector toReturn = rotated.add(purePursuitMovementStrategy.getUsedEstimatedLocation()); //
+//                return toReturn;
+//
+//
+//            };
+//
+//            Function<Double,Vector> dTimeToPosition = dTime1 -> {
+//                double dTheta =  dTime1 * purePursuitMovementStrategy.getRotVelocity();
+//                return estimatePositionFromDTheta.apply( (float) dTheta); //
+//            };
+//            return dTimeToPosition.apply(dTime); //
+//        };
 
 
         purePursuitMovementStrategy = new PurePursuitMovementStrategy(tankRobot, locationEstimator, waypoints, lookAheadDistance);
@@ -101,8 +112,8 @@ public class PurePursuitCommand extends Command
     @Override
     protected void initialize()
     {
-        navx.resetDisplacement();
-        driveTrain.setAutonSettings();
+        System.out.println("NavX initial angle"+navx.getAngle());
+//        driveTrain.setAutonSettings();
     }
 
     @Override
@@ -110,7 +121,14 @@ public class PurePursuitCommand extends Command
     {
         purePursuitMovementStrategy.update();
         Vector wheelVelocities = purePursuitMovementStrategy.getWheelVelocities();
-        driveTrain.runMotors(-wheelVelocities.get(0), -wheelVelocities.get(1));
+        float x = wheelVelocities.get(0);
+        float y = wheelVelocities.get(1);
+        // System.out.println("printing");
+        // Robot.write("test");
+        System.out.println("Wheel velocities: "+x+" ::: "+y+" ::: Wheel velocities");
+        System.out.println("Unmoded Loc: "+navx.getDisplacementX()+","+navx.getDisplacementY());
+        System.out.println("Heading: "+tankRobot.getHeading());
+        driveTrain.runMotors(x, y);
     }
 
     @Override

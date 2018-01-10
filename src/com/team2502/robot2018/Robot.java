@@ -14,8 +14,8 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import logger.Log;
 
+import java.io.*;
 import java.util.ArrayList;
-import java.util.List;
 
 public final class Robot extends IterativeRobot
 {
@@ -26,6 +26,9 @@ public final class Robot extends IterativeRobot
     public static Compressor COMPRESSOR;
     public static String GAME_DATA; //TODO: Have better name
 
+    public static PrintWriter LOG_OUTPUT;
+
+
     public static final float VR_MAX = .3F;
     public static final float VL_MAX = .3F;
     public static final float VR_MIN = -.3F;
@@ -34,6 +37,12 @@ public final class Robot extends IterativeRobot
 
     // NavX Subsystem
     public static AHRS NAVX;
+    private File logFile;
+
+    public static void write(String string){
+        LOG_OUTPUT.println(string);
+        // System.out.println("I am writing something ");
+    }
 
     /**
      * This function is run when the robot is first started up and should be
@@ -41,6 +50,33 @@ public final class Robot extends IterativeRobot
      */
     public void robotInit()
     {
+        logFile = new File("/home/lvuser/log.txt");
+        try
+        {
+            logFile.createNewFile();
+        } catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+        try
+        {
+            logFile.createNewFile();
+        } catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+        FileWriter fileWriter = null;
+        try
+        {
+            fileWriter = new FileWriter(logFile);
+        } catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+        LOG_OUTPUT = new PrintWriter(fileWriter,true);
+
+        Robot.write("tester");
+        // System.out.println("writing tester");
         Log.createLogger();
         DRIVE_TRAIN = new DriveTrainSubsystem();
         CLIMBER = new ClimberSubsystem();
@@ -55,6 +91,8 @@ public final class Robot extends IterativeRobot
         NAVX.resetDisplacement();
     }
 
+
+
     /**
      * This function is called once each time the robot enters Disabled mode.
      * You can use it to reset any subsystem information you want to clear when
@@ -63,6 +101,7 @@ public final class Robot extends IterativeRobot
     public void disabledInit()
     {
         CLIMBER.stop();
+        LOG_OUTPUT.close();
     }
 
     public void disabledPeriodic()
@@ -85,14 +124,12 @@ public final class Robot extends IterativeRobot
      */
     public void autonomousInit()
     {
+        DRIVE_TRAIN.setAutonSettings();
 //        Scheduler.getInstance().add(AutoSwitcher.getAutoInstance());
-        ArrayList<Vector> waypoints = new ArrayList<Vector>();
+        ArrayList<Vector> waypoints = new ArrayList<>();
         waypoints.add(new Vector(0, 0));
-        waypoints.add(new Vector(0, 3));
-        waypoints.add(new Vector(3, 3));
-        waypoints.add(new Vector(3, 0));
-        waypoints.add(new Vector(0, 0));
-        Scheduler.getInstance().add(new PurePursuitCommand(waypoints, 1));
+        waypoints.add(new Vector(7, 7));
+        Scheduler.getInstance().add(new PurePursuitCommand(waypoints, 2));
         NAVX.reset();
     }
 

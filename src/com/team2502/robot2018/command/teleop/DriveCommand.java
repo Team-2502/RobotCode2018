@@ -4,11 +4,15 @@ import com.kauailabs.navx.frc.AHRS;
 import com.team2502.robot2018.OI;
 import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.RobotMap;
+import com.team2502.robot2018.data.Vector;
 import com.team2502.robot2018.subsystem.DriveTrainSubsystem;
 import com.team2502.robot2018.subsystem.TransmissionSubsystem;
+import com.team2502.robot2018.utils.MathUtils;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import logger.Log;
+
+import static com.team2502.robot2018.command.autonomous.PurePursuitCommand.TAU;
 
 /**
  * Takes care of all Drivetrain related operations during Teleop, including automatic shifting
@@ -27,6 +31,8 @@ public class DriveCommand extends Command
     private final DriveTrainSubsystem driveTrainSubsystem;
     private final AHRS navx;
     private final TransmissionSubsystem transmission;
+    private final float initAngleRadians;
+    private final double initAngleDegrees;
 
     public DriveCommand()
     {
@@ -35,6 +41,8 @@ public class DriveCommand extends Command
         driveTrainSubsystem = Robot.DRIVE_TRAIN;
         transmission = Robot.TRANSMISSION;
         navx = Robot.NAVX;
+        initAngleDegrees = navx.getAngle();
+        initAngleRadians = ((float) initAngleDegrees) / 180F * TAU;
     }
 
     @Override
@@ -46,6 +54,14 @@ public class DriveCommand extends Command
     @Override
     protected void execute()
     {
+        double radians = (navx.getAngle() - initAngleDegrees) / 180F * TAU;
+        double rad = radians % TAU;
+        System.out.printf("%.2f\n",rad);
+        //float encLeft = (float) -Robot.DRIVE_TRAIN.leftRearTalonEnc.get();
+        //float encRight = (float) Robot.DRIVE_TRAIN.rightRearTalonEnc.get();
+//        System.out.printf("%.2f,%.2f\n",encLeft,encRight);
+//         System.out.println("NavX: "+Robot.NAVX.getDisplacementX()+","+Robot.NAVX.getDisplacementY()+","+Robot.NAVX.getDisplacementZ());
+//        System.out.println(MathUtils.LinearAlgebra.rotate2D(new Vector(navx.getDisplacementX(), navx.getDisplacementY()),-initAngleRadians));
         SmartDashboard.putBoolean("DT: AutoShifting Enabled?", !transmission.disabledAutoShifting);
         driveTrainSubsystem.drive();
 

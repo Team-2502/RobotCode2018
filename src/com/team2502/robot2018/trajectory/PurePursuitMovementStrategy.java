@@ -5,7 +5,6 @@ import com.team2502.robot2018.utils.MathUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
 
 public class PurePursuitMovementStrategy implements TankMovementStrategy
 {
@@ -17,7 +16,7 @@ public class PurePursuitMovementStrategy implements TankMovementStrategy
     private float rotVelocity;
     public final float lookAheadDistance;
     private boolean finishedPath = false;
-    private static final float THRESHOLD_CURVTURE = 0.001F;
+    private static final float THRESHOLD_CURVATURE = 0.001F;
 
     private Vector usedEstimatedLocation = new Vector(0, 0);
     private float usedHeading = 0.0F;
@@ -46,6 +45,7 @@ public class PurePursuitMovementStrategy implements TankMovementStrategy
         List<Vector> intersections = new ArrayList<>();
         int nextPathI = Integer.MAX_VALUE;
         usedEstimatedLocation = estimator.estimateLocation();
+        usedHeading = tankRobot.getHeading();
 
         for(int i = lastPath; i <= lastPath + 1; ++i)
         {
@@ -56,9 +56,9 @@ public class PurePursuitMovementStrategy implements TankMovementStrategy
 
             float toLookAhead = lookAheadDistance;
             List<Vector> vectorList = new ArrayList<>(MathUtils.Geometry.getCircleLineIntersectionPoint(lineP1, lineP2, usedEstimatedLocation, toLookAhead));
-            System.out.println("Vector list: " + vectorList.toString());
+            // System.out.println("Vector list: " + vectorList.toString());
             vectorList.removeIf(vector -> !vector.between(lineP1, lineP2)); // remove if vectors not between next 2 waypoints
-            System.out.println("Vector list: " + vectorList.toString());
+            // System.out.println("Vector list: " + vectorList.toString());
             if(i == lastPath + 1 && !vectorList.isEmpty()) { nextPathI = intersections.size(); }
             intersections.addAll(vectorList);
         }
@@ -92,6 +92,7 @@ public class PurePursuitMovementStrategy implements TankMovementStrategy
     {
         absoluteGoalPoint = calculateAbsoluteGoalPoint();
         System.out.println(usedEstimatedLocation);
+        System.out.println("estimated location: "+usedEstimatedLocation+" estimated location");
         System.out.println(usedHeading);
         System.out.println(absoluteGoalPoint);
         relativeGoalPoint = MathUtils.LinearAlgebra.absoluteToRelativeCoord(absoluteGoalPoint, usedEstimatedLocation, usedHeading); //
@@ -175,7 +176,7 @@ public class PurePursuitMovementStrategy implements TankMovementStrategy
         float v_lMin = tankRobot.getV_lMin();
         float v_rMin = tankRobot.getV_rMin();
 
-        if(Math.abs(curvature) < THRESHOLD_CURVTURE){
+        if(Math.abs(curvature) < THRESHOLD_CURVATURE){
             bestVector = new Vector(v_lMax, v_rMax);
             rotVelocity = (bestVector.get(1) - bestVector.get(0)) / tankRobot.getLateralWheelDistance();
             pathRadius = Float.MAX_VALUE;
