@@ -6,23 +6,32 @@ import com.team2502.robot2018.utils.MathUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Why 64 bit arithmetic is slow on a 32 bit processor,
- * explained with 8 bit arithmetic on a 4 bit processor.
- * <p>
+/*
  * aaaa   xxxx
  * bbbb   yyyy
- * <p>
- * zzzz
- * C
+ * -----------
+ *        zzzz
+ *      C
  * cccc
- * <p>
- * First you have to do the lower half of the bits (XYZ),
- * then you need to take the carry (C) and pass it into
- * the upper half of the bits operation.
- * <p>
- * This leaves you with 2 arithmetic operations, 2
- * memory accesses, and 2 memory saves.
+ */
+/**
+ * Why 64 bit arithmetic is slow on a 32 bit processor,
+ * explained with 8 bit arithmetic on a 4 bit processor. <br><br>
+ *
+ *   aaaa &nbsp &nbsp xxxx<br>
+ *   bbbb &nbsp &nbsp yyyy<br>
+ *   -----------<br>
+ *   &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp zzzz<br>
+ *   &nbsp &nbsp &nbsp &nbsp &nbsp C<br>
+ *   cccc<br>
+ *  <br>
+ *   First you have to perform the mathematical operation
+ *   on the lower half of the bits (xyz), then you need
+ *   to take the carry (C) and pass it into the operation
+ *   of the upper half of the bits (abc).
+ *  <br><br>
+ *   This leaves you with 2 arithmetic operations, 2
+ *   memory accesses, and 2 memory saves.
  */
 public class PurePursuitMovementStrategy implements TankMovementStrategy
 {
