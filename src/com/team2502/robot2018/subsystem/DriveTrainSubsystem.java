@@ -7,6 +7,9 @@ import com.team2502.robot2018.DashboardData;
 import com.team2502.robot2018.OI;
 import com.team2502.robot2018.RobotMap;
 import com.team2502.robot2018.command.teleop.DriveCommand;
+import com.team2502.robot2018.utils.DifferentialDriveF;
+import com.team2502.robot2018.utils.SpeedControllerGroupF;
+import com.team2502.robot2018.utils.WPI_TalonSRXF;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -20,13 +23,13 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
 {
     private static final FloatPair SPEED_CONTAINER = new FloatPair();
 
-    public final WPI_TalonSRX leftFrontTalon;
-    public final WPI_TalonSRX leftRearTalonEnc;
-    public final WPI_TalonSRX rightFrontTalon;
-    public final WPI_TalonSRX rightRearTalonEnc;
-    public final DifferentialDrive drive;
-    public final SpeedControllerGroup spgLeft;
-    public final SpeedControllerGroup spgRight;
+    public final WPI_TalonSRXF leftFrontTalon;
+    public final WPI_TalonSRXF leftRearTalonEnc;
+    public final WPI_TalonSRXF rightFrontTalon;
+    public final WPI_TalonSRXF rightRearTalonEnc;
+    public final DifferentialDriveF drive;
+    public final SpeedControllerGroupF spgLeft;
+    public final SpeedControllerGroupF spgRight;
 
     private float lastLeft;
     private float lastRight;
@@ -38,30 +41,28 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         lastLeft = 0.0F;
         lastRight = 0.0F;
 
-        leftFrontTalon = new WPI_TalonSRX(RobotMap.Motor.DRIVE_TRAIN_FRONT_LEFT);
-        leftRearTalonEnc = new WPI_TalonSRX(RobotMap.Motor.DRIVE_TRAIN_BACK_LEFT);
-        rightFrontTalon = new WPI_TalonSRX(RobotMap.Motor.DRIVE_TRAIN_FRONT_RIGHT);
-        rightRearTalonEnc = new WPI_TalonSRX(RobotMap.Motor.DRIVE_TRAIN_BACK_RIGHT);
+        leftFrontTalon = new WPI_TalonSRXF(RobotMap.Motor.DRIVE_TRAIN_FRONT_LEFT);
+        leftRearTalonEnc = new WPI_TalonSRXF(RobotMap.Motor.DRIVE_TRAIN_BACK_LEFT);
+        rightFrontTalon = new WPI_TalonSRXF(RobotMap.Motor.DRIVE_TRAIN_FRONT_RIGHT);
+        rightRearTalonEnc = new WPI_TalonSRXF(RobotMap.Motor.DRIVE_TRAIN_BACK_RIGHT);
 
         // Add encoders (ask nicely for encoders on drivetrain)
         leftRearTalonEnc.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, RobotMap.Motor.INIT_TIMEOUT);
         rightRearTalonEnc.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, RobotMap.Motor.INIT_TIMEOUT);
 
-        spgLeft = new SpeedControllerGroup(leftFrontTalon, leftRearTalonEnc);
-        spgRight = new SpeedControllerGroup(rightFrontTalon, rightRearTalonEnc);
+        spgLeft = new SpeedControllerGroupF(leftFrontTalon, leftRearTalonEnc);
+        spgRight = new SpeedControllerGroupF(rightFrontTalon, rightRearTalonEnc);
 
-        drive = new DifferentialDrive(spgLeft, spgRight);
+        drive = new DifferentialDriveF(spgLeft, spgRight);
 
         drive.setSafetyEnabled(true);
         setTeleopSettings();
     }
 
     public void stop()
-    {
-        drive.stopMotor();
-    }
+    { drive.stopMotor(); }
 
-    private void setTeleopSettings(WPI_TalonSRX talon)
+    private void setTeleopSettings(WPI_TalonSRXF talon)
     {
         talon.set(ControlMode.PercentOutput, 0);
         talon.configNominalOutputForward(0, RobotMap.Motor.INIT_TIMEOUT);
@@ -199,7 +200,6 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         SmartDashboard.putNumber("Right Speed (ft/s)", rightRearTalonEnc.getSelectedSensorVelocity(0) * RobotMap.Motor.VEL_TO_FPS);
         SmartDashboard.putNumber("Right Pos (ft)", rightRearTalonEnc.getSelectedSensorPosition(0) * RobotMap.Motor.POS_TO_FEET);
     }
-
 
     /**
      * A generic data structure to store a pair of objects.
