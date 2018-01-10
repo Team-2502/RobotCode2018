@@ -7,30 +7,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+@Deprecated
 public class Vector
 {
-
     private final float[] elements;
 
     public Vector(float... elements)
     { this.elements = elements; }
 
-    public Vector add(Vector other) throws IndexOutOfBoundsException
+    public Vector add(Vector other) throws IndexOutOfBoundsException, NullPointerException
     {
-        try
-        {
-            System.out.println(other.toString());
-        }
-
-        catch (NullPointerException e)
-        {
-            System.out.println("ya got the fish!");
-            throw e;
-        }
-        finally
-        {
-            if(other.elements.length != elements.length) { throw new IndexOutOfBoundsException("Vector lengths must be equal."); }
-        }
+        if(other.elements.length != elements.length) { throw new IndexOutOfBoundsException("Vector lengths must be equal."); }
 
         float[] vals = new float[elements.length];
         for(int i = 0; i < elements.length; ++i) { vals[i] = elements[i] + other.elements[i]; }

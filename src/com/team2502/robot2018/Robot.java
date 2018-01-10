@@ -2,7 +2,6 @@ package com.team2502.robot2018;
 
 import com.kauailabs.navx.frc.AHRS;
 import com.team2502.robot2018.command.autonomous.PurePursuitCommand;
-import com.team2502.robot2018.data.Vector;
 import com.team2502.robot2018.subsystem.ClimberSubsystem;
 import com.team2502.robot2018.subsystem.DriveTrainSubsystem;
 import com.team2502.robot2018.subsystem.TransmissionSubsystem;
@@ -13,6 +12,7 @@ import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import logger.Log;
+import org.joml.Vector2f;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -42,7 +42,8 @@ public final class Robot extends IterativeRobot
     public static AHRS NAVX;
     private File logFile;
 
-    public static void write(String string){
+    public static void write(String string)
+    {
         LOG_OUTPUT.println(string);
         // System.out.println("I am writing something ");
     }
@@ -54,29 +55,14 @@ public final class Robot extends IterativeRobot
     public void robotInit()
     {
         logFile = new File("/home/lvuser/log.txt");
-        try
-        {
-            logFile.createNewFile();
-        } catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-        try
-        {
-            logFile.createNewFile();
-        } catch (IOException e)
-        {
-            e.printStackTrace();
-        }
         FileWriter fileWriter = null;
         try
         {
+            logFile.createNewFile();
             fileWriter = new FileWriter(logFile);
-        } catch (IOException e)
-        {
-            e.printStackTrace();
         }
-        LOG_OUTPUT = new PrintWriter(fileWriter,true);
+        catch(IOException e) { e.printStackTrace(); }
+        LOG_OUTPUT = new PrintWriter(fileWriter == null ? new OutputStreamWriter(System.out) : fileWriter, true);
 
         Robot.write("tester");
         // System.out.println("writing tester");
@@ -130,10 +116,10 @@ public final class Robot extends IterativeRobot
     {
         DRIVE_TRAIN.setAutonSettings();
 //        Scheduler.getInstance().add(AutoSwitcher.getAutoInstance());
-        ArrayList<Vector> waypoints = new ArrayList<>();
-        waypoints.add(new Vector(0, 0));
-        waypoints.add(new Vector(7, 7));
-        Scheduler.getInstance().add(new PurePursuitCommand(waypoints,LOOKAHEAD_DISTANCE));
+        ArrayList<Vector2f> waypoints = new ArrayList<>();
+        waypoints.add(new Vector2f(0, 0));
+        waypoints.add(new Vector2f(7, 7));
+        Scheduler.getInstance().add(new PurePursuitCommand(waypoints, LOOKAHEAD_DISTANCE));
         // Scheduler.getInstance().add(AutoSwitcher.getAutoInstance());
         NAVX.reset();
     }

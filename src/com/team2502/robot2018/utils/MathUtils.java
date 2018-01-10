@@ -1,11 +1,13 @@
 package com.team2502.robot2018.utils;
 
 import com.team2502.robot2018.data.Vector;
+import org.joml.Vector2f;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+@SuppressWarnings("unused")
 public final class MathUtils
 {
     public static final double PHI = 1.618033989D;
@@ -46,13 +48,21 @@ public final class MathUtils
 
     public static class LinearAlgebra
     {
+        @Deprecated
         public static Vector rotate2D(Vector vector, float theta)
         {
             return new Vector(
-                    (float) (vector.get(0) * cos(theta) - vector.get(1) * sin(theta)),
-                    (float) (vector.get(0) * sin(theta) + vector.get(1) * cos(theta)));
+                    (vector.get(0) * cos(theta) - vector.get(1) * sin(theta)),
+                    (vector.get(0) * sin(theta) + vector.get(1) * cos(theta)));
         }
 
+        public static Vector2f rotate2D(Vector2f vector, float theta)
+        {
+            return new Vector2f((vector.x() * cos(theta) - vector.y() * sin(theta)),
+                                (vector.x() * sin(theta) + vector.y() * cos(theta)));
+        }
+
+        @Deprecated
         public static Vector absoluteToRelativeCoord(Vector relativeCoord, Vector absoluteLocation, float robotHeading)
         {
 //            System.out.println(relativeCoord );
@@ -60,16 +70,22 @@ public final class MathUtils
             Vector coordDif = relativeCoord.clone().subtractBy(absoluteLocation);
             return LinearAlgebra.rotate2D(coordDif, -robotHeading);
         }
+
+        public static Vector2f absoluteToRelativeCoord(Vector2f relativeCoord, Vector2f absoluteLocation, float robotHeading)
+        {
+            Vector2f coordDif = new Vector2f(relativeCoord).sub(absoluteLocation);
+            return rotate2D(coordDif, -robotHeading);
+        }
     }
 
     public static class Algebra
     {
         /**
-         * @return if a <= b <= c or c<= b <= a
+         * @return if a <= x <= b or b<= x <= a
          */
-        public static boolean between(final float a, final float b, final float c)
+        public static boolean between(final float a, final float x, final float b)
         {
-            return (a <= b && b <= c) || (c <= b && b <= a);
+            return (a <= x && x <= b) || (b <= x && x <= a);
         }
 
         public static boolean positiveMultiplication(final float a, final float b)
@@ -78,16 +94,21 @@ public final class MathUtils
         }
     }
 
+    public static boolean between(final Vector2f a, final Vector2f x, final Vector2f c)
+    {
+        return Algebra.between(a.x, x.x, c.x) && Algebra.between(a.y, x.y, c.y);
+    }
+
     public static class Geometry
     {
-        public static List<Vector> getCircleLineIntersectionPoint(Vector pointA, Vector pointB, Vector center, double radius)
+        public static List<Vector2f> getCircleLineIntersectionPoint(Vector2f pointA, Vector2f pointB, Vector2f center, double radius)
         {
 
-            float baX = pointB.get(0) - pointA.get(0);
-            float baY = pointB.get(1) - pointA.get(1);
+            float baX = pointB.x - pointA.x;
+            float baY = pointB.y - pointA.y;
 
-            float caX = center.get(0) - pointA.get(0);
-            float caY = center.get(1) - pointA.get(1);
+            float caX = center.x - pointA.x;
+            float caY = center.y - pointA.y;
 
             float a = baX * baX + baY * baY;
             float bBy2 = baX * caX + baY * caY;
@@ -106,50 +127,48 @@ public final class MathUtils
             float abScalingFactor1 = -pBy2 + tmpSqrt;
             float abScalingFactor2 = -pBy2 - tmpSqrt;
 
-            Vector p1 = new Vector(pointA.get(0) - baX * abScalingFactor1, pointA.get(1)
-                                                                           - baY * abScalingFactor1);
+            Vector2f p1 = new Vector2f(pointA.x - baX * abScalingFactor1, pointA.y - baY * abScalingFactor1);
             if(disc == 0)
             { // abScalingFactor1 == abScalingFactor2
                 return Collections.singletonList(p1);
             }
-            Vector p2 = new Vector(pointA.get(0) - baX * abScalingFactor2, pointA.get(1)
-                                                                           - baY * abScalingFactor2);
+            Vector2f p2 = new Vector2f(pointA.x - baX * abScalingFactor2, pointA.y - baY * abScalingFactor2);
             return Arrays.asList(p1, p2);
         }
 
-        public static Vector[] circleLineIntersect(Vector lineP1, Vector lineP2, Vector circleCenter, float circleRadius)
+        public static Vector2f[] circleLineIntersect(Vector2f lineP1, Vector2f lineP2, Vector2f circleCenter, float circleRadius)
         {
             // Circle-line intersection
-            float x_0 = lineP1.get(0), y_0 = lineP1.get(1);
-            float x_1 = lineP2.get(0), y_1 = lineP2.get(1);
-            float x_c = circleCenter.get(0), y_c = circleCenter.get(1);
+            float x_0 = lineP1.x, y_0 = lineP1.y;
+            float x_1 = lineP2.x, y_1 = lineP2.y;
+            float x_c = circleCenter.x, y_c = circleCenter.y;
 
             float f = x_1 - x_0;
             float g = y_1 - y_0;
 
             float t = f * (x_c - x_0) + g * (y_c - y_0);
             float inRoot = (float) (circleRadius * circleRadius + (f * f + g * g) - Math.pow(f * (y_c - y_0) - g * (x_c - x_0), 2));
-            if(inRoot < 0) { return new Vector[0]; }
+            if(inRoot < 0) { return new Vector2f[0]; }
             float denominator = (f * f + g * g);
             if(inRoot == 0)
             {
                 float intersectT = t / denominator;
-                Vector intersection = new Vector(intersectT * f, intersectT * g);
-                if(intersection.between(lineP1, lineP2)) { return new Vector[] { intersection }; }
-                else { return new Vector[0]; }
+                Vector2f intersection = new Vector2f(intersectT * f, intersectT * g);
+                if(between(lineP1, intersection, lineP2)) { return new Vector2f[] { intersection }; }
+                else { return new Vector2f[0]; }
             }
             float pm = (float) Math.sqrt(inRoot);
             float intersectT1 = (t + pm) / denominator;
             float intersectT2 = (t - pm) / denominator;
-            Vector intersect1 = new Vector(intersectT1 * f + x_0, intersectT1 * g + y_0);
-            Vector intersect2 = new Vector(intersectT2 * f + x_0, intersectT2 * g + y_0);
-            if(intersect1.between(lineP1, lineP2))
+            Vector2f intersect1 = new Vector2f(intersectT1 * f + x_0, intersectT1 * g + y_0);
+            Vector2f intersect2 = new Vector2f(intersectT2 * f + x_0, intersectT2 * g + y_0);
+            if(between(lineP1, intersect1, lineP2))
             {
-                if(intersect2.between(lineP1, lineP2)) { return new Vector[] { intersect1, intersect2 }; }
-                else { return new Vector[] { intersect1 }; }
+                if(between(lineP1, intersect2, lineP2)) { return new Vector2f[] { intersect1, intersect2 }; }
+                else { return new Vector2f[] { intersect1 }; }
             }
-            else if(intersect2.between(lineP1, lineP2)) { return new Vector[] { intersect2 }; }
-            return new Vector[0];
+            else if(between(lineP1, intersect2, lineP2)) { return new Vector2f[] { intersect2 }; }
+            return new Vector2f[0];
         }
     }
 
@@ -282,6 +301,193 @@ public final class MathUtils
 
     public static float maxF(final float a, final int b)
     { return a > b ? a : b; }
+
+    //region Logarithmic Functions
+
+    /**
+     * Allows for the calculate of logX(in), may have minor performance boost from using direct call to StrictMath lowering stack overhead.
+     *
+     * @param base The base of the log.
+     * @param in   The value to find the log of.
+     * @return The logX(in)
+     */
+    public static double log(final double base, final double in)
+    { return StrictMath.log(in) / StrictMath.log(base); }
+
+    /**
+     * Allows for the calculate of logX(in), may have minor performance boost from using direct call to StrictMath lowering stack overhead.
+     *
+     * @param base The base of the log.
+     * @param in   The value to find the log of.
+     * @return The logX(in)
+     */
+    public static double logX(final double base, final double in)
+    { return StrictMath.log(in) / StrictMath.log(base); }
+
+    /**
+     * Use the predefined square log instead of a custom implementation.
+     *
+     * @param in The value to find the log of.
+     * @return The log2(in)
+     */
+    public static double log2(final double in)
+    { return StrictMath.log(in) / 0.6931471806D; }
+
+    /**
+     * Use the predefined cube log instead of a custom implementation.
+     *
+     * @param in The value to find the log of.
+     * @return The log3(in)
+     */
+    public static double log3(final double in)
+    { return StrictMath.log(in) / 1.098612289D; }
+
+    /**
+     * Use pre calculated math for optimization.
+     *
+     * @param in The value to find the log of.
+     * @return The log4(in)
+     */
+    public static double log4(final double in)
+    { return StrictMath.log(in) / 1.386294361D; }
+
+    /**
+     * Use pre calculated math for optimization.
+     *
+     * @param in The value to find the log of.
+     * @return The log5(in)
+     */
+    public static double log5(final double in)
+    { return StrictMath.log(in) / 1.609437912D; }
+
+    /**
+     * Use pre calculated math for optimization.
+     *
+     * @param in The value to find the log of.
+     * @return The log6(in)
+     */
+    public static double log6(final double in)
+    { return StrictMath.log(in) / 2.791759469D; }
+
+    /**
+     * Use pre calculated math for optimization.
+     *
+     * @param in The value to find the log of.
+     * @return The log7(in)
+     */
+    public static double log7(final double in)
+    { return StrictMath.log(in) / 2.945910149D; }
+
+    /**
+     * Use pre calculated math for optimization.
+     *
+     * @param in The value to find the log of.
+     * @return The log8(in)
+     */
+    public static double log8(final double in)
+    { return StrictMath.log(in) / 2.079441542D; }
+
+    /**
+     * Use pre calculated math for optimization.
+     *
+     * @param in The value to find the log of.
+     * @return The log9(in)
+     */
+    public static double log9(final double in)
+    { return StrictMath.log(in) / 2.197224577D; }
+
+    /**
+     * Use pre calculated math for optimization.
+     *
+     * @param in The value to find the log of.
+     * @return The log10(in)
+     */
+    public static double log10(final double in)
+    { return StrictMath.log10(in); }
+
+    /**
+     * Because why not.
+     *
+     * @param in The value to find the log of.
+     * @return The logPi(in)
+     */
+    public static double logPi(final double in)
+    { return StrictMath.log(in) / 1.144729886D; }
+
+    /**
+     * Calculates the natural logarithm (base e).
+     *
+     * @param in The value to find the log of.
+     * @return The ln(in)
+     */
+    public static double loge(final double in)
+    { return StrictMath.log(in); }
+
+    /**
+     * Calculates the natural logarithm (base e).
+     *
+     * @param in The value to find the log of.
+     * @return The ln(in)
+     */
+    public static double ln(final double in)
+    { return StrictMath.log(in); }
+    //endregion
+
+    //region Exponentiation Functions
+    public static double pow2(final double x)
+    { return x * x; }
+
+    public static double pow3(final double x)
+    { return x * x * x; }
+
+    public static double pow4(final double x)
+    { return x * x * x * x; }
+
+    public static double pow5(final double x)
+    { return x * x * x * x * x; }
+
+    public static double pow6(final double x)
+    { return x * x * x * x * x * x; }
+
+    public static double pow7(final double x)
+    { return x * x * x * x * x * x * x; }
+
+    public static double pow8(final double x)
+    { return x * x * x * x * x * x * x * x; }
+
+    public static double pow9(final double x)
+    { return x * x * x * x * x * x * x * x * x; }
+
+    public static double pow10(final double x)
+    { return x * x * x * x * x * x * x * x * x * x; }
+
+    public static float pow2f(final float x)
+    { return x * x; }
+
+    public static float pow3f(final float x)
+    { return x * x * x; }
+
+    public static float pow4f(final float x)
+    { return x * x * x * x; }
+
+    public static float pow5f(final float x)
+    { return x * x * x * x * x; }
+
+    public static float pow6f(final float x)
+    { return x * x * x * x * x * x; }
+
+    public static float pow7f(final float x)
+    { return x * x * x * x * x * x * x; }
+
+    public static float pow8f(final float x)
+    { return x * x * x * x * x * x * x * x; }
+
+    public static float pow9f(final float x)
+    { return x * x * x * x * x * x * x * x * x; }
+
+    public static float pow10f(final float x)
+    { return x * x * x * x * x * x * x * x * x * x; }
+    //endregion
 
     private MathUtils() { }
 }

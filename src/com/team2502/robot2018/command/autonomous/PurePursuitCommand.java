@@ -9,6 +9,8 @@ import com.team2502.robot2018.trajectory.PurePursuitMovementStrategy;
 import com.team2502.robot2018.trajectory.TankRobot;
 import com.team2502.robot2018.utils.MathUtils;
 import edu.wpi.first.wpilibj.command.Command;
+import logger.Log;
+import org.joml.Vector2f;
 
 import java.util.List;
 import java.util.function.Function;
@@ -17,7 +19,7 @@ public class PurePursuitCommand extends Command
 {
     private final TankRobot tankRobot;
     public float lookAheadDistance;
-    public static final float TAU = 2*3.1415F;
+    public static final float TAU = 2 * 3.1415F;
     private DriveTrainSubsystem driveTrain;
     private AHRS navx;
     private PurePursuitMovementStrategy purePursuitMovementStrategy;
@@ -37,7 +39,7 @@ public class PurePursuitCommand extends Command
         return (dTime / 1E6);
     }
 
-    public PurePursuitCommand(List<Vector> waypoints, float lookAheadDistance)
+    public PurePursuitCommand(List<Vector2f> waypoints, float lookAheadDistance)
     {
         navx = Robot.NAVX;
         navx.resetDisplacement();
@@ -53,7 +55,7 @@ public class PurePursuitCommand extends Command
             public float getHeading()
             {
                 double radians = (navx.getAngle() - initAngleDegrees) / 180F * TAU;
-                return (float) - (radians % TAU);
+                return (float) -(radians % TAU);
             }
 
             @Override
@@ -80,30 +82,29 @@ public class PurePursuitCommand extends Command
         LocationEstimator locationEstimator = () ->
         {
             // How many 100 ms intervals occured
-            double dTime = getDTime()/10F;
+            double dTime = getDTime() / 10F;
 
             // talon inversed
             float leftVel = -Robot.DRIVE_TRAIN.leftRearTalonEnc.getSelectedSensorVelocity(0);
 
             float rightVel = Robot.DRIVE_TRAIN.rightRearTalonEnc.getSelectedSensorVelocity(0);
 
-            float rotVelocity = (leftVel-rightVel)/tankRobot.getLateralWheelDistance();
+            float rotVelocity = (leftVel - rightVel) / tankRobot.getLateralWheelDistance();
 
-            Function<Float,Vector> estimatePositionFromDTheta = dTheta -> {
-                float dxRelative = -purePursuitMovementStrategy.getPathRadius() * (1- MathUtils.cos(-dTheta));
+            Function<Float, Vector2f> estimatePositionFromDTheta = dTheta -> {
+                float dxRelative = -purePursuitMovementStrategy.getPathRadius() * (1 - MathUtils.cos(-dTheta));
                 float dyRelative = -purePursuitMovementStrategy.getPathRadius() * MathUtils.sin(-dTheta);
 
-                Vector dRelativeVector = new Vector(dxRelative, dyRelative);
-                Vector rotated = MathUtils.LinearAlgebra.rotate2D(dRelativeVector, purePursuitMovementStrategy.getUsedHeading());
-                Vector toReturn = rotated.add(purePursuitMovementStrategy.getUsedEstimatedLocation()); //
-                return toReturn;
+                Vector2f dRelativeVector = new Vector2f(dxRelative, dyRelative);
+                Vector2f rotated = MathUtils.LinearAlgebra.rotate2D(dRelativeVector, purePursuitMovementStrategy.getUsedHeading());
+                return rotated.add(purePursuitMovementStrategy.getUsedEstimatedLocation());
 
 
             };
 
-            Function<Double,Vector> dTimeToPosition = dTime1 -> {
-                double dTheta =  dTime1 * rotVelocity; // purePursuitMovementStrategy.getRotVelocity();
-                return estimatePositionFromDTheta.apply( (float) dTheta); //
+            Function<Double, Vector2f> dTimeToPosition = dTime1 -> {
+                double dTheta = dTime1 * rotVelocity; // purePursuitMovementStrategy.getRotVelocity();
+                return estimatePositionFromDTheta.apply((float) dTheta); //
             };
             return dTimeToPosition.apply(dTime);
         };
@@ -115,7 +116,7 @@ public class PurePursuitCommand extends Command
     @Override
     protected void initialize()
     {
-        System.out.println("NavX initial angle"+navx.getAngle());
+        System.out.println("NavX initial angle" + navx.getAngle());
 //        driveTrain.setAutonSettings();
     }
 
@@ -123,12 +124,12 @@ public class PurePursuitCommand extends Command
     protected void execute()
     {
         purePursuitMovementStrategy.update();
-        Vector wheelVelocities = purePursuitMovementStrategy.getWheelVelocities();
-        float x = wheelVelocities.get(0);
-        float y = wheelVelocities.get(1);
-        System.out.println("Wheel velocities: "+x+" ::: "+y+" ::: Wheel velocities");
-        System.out.println("Unmoded Loc: "+navx.getDisplacementX()+","+navx.getDisplacementY());
-        System.out.println("Heading: "+tankRobot.getHeading());
+        Vector2f wheelVelocities = purePursuitMovementStrategy.getWheelVelocities();
+        float x = wheelVelocities.x;
+        float y = wheelVelocities.y;
+        Log.info("Wheel velocities: " + x + " ::: " + y + " ::: Wheel velocities");
+        Log.info("Unmoded Loc: " + navx.getDisplacementX() + "," + navx.getDisplacementY());
+        Log.info("Heading: " + tankRobot.getHeading());
         driveTrain.runMotors(x, y);
     }
 

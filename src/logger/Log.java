@@ -1,10 +1,23 @@
 package logger;
 
 import java.io.PrintStream;
+import java.util.Timer;
 
 @SuppressWarnings({ "WeakerAccess", "unused", "EmptyCatchBlock", "SameParameterValue" })
 public final class Log
 {
+    private static final Timer TIMER;
+    static
+    {
+        LoggerPrintStream ops = new LoggerPrintStream(System.out);
+        LoggerPrintStream eps = new LoggerPrintStream(System.err);
+        System.setOut(ops);
+        System.setErr(eps);
+        TIMER = new Timer();
+        TIMER.schedule(new LoggerPrintStream.PrintTimer(ops), 15000);
+        TIMER.schedule(new LoggerPrintStream.PrintTimer(eps), 15000);
+    }
+
     private static boolean debug = false;
 
     private static PrintFormat pf = null;
@@ -102,12 +115,6 @@ public final class Log
         }
 
         public static String getCallerClassName() { return getCallerClassName(0); }
-    }
-
-    static
-    {
-        System.setOut(new LoggerPrintStream(System.out));
-        System.setErr(new LoggerPrintStream(System.err));
     }
 
     private Log() {}
