@@ -3,20 +3,22 @@ package com.team2502.robot2018.subsystem;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.team2502.robot2018.DashboardData;
 import com.team2502.robot2018.OI;
 import com.team2502.robot2018.RobotMap;
 import com.team2502.robot2018.command.teleop.DriveCommand;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import logger.Log;
 
 /**
  * Example Implementation, Many changes needed.
  */
-public class DriveTrainSubsystem extends Subsystem
+public class DriveTrainSubsystem extends Subsystem implements DashboardData.DashboardUpdater
 {
-    private static final Pair<Float, Float> SPEED_CONTAINER = new Pair<>();
+    private static final FloatPair SPEED_CONTAINER = new FloatPair();
 
     public final WPI_TalonSRX leftFrontTalon;
     public final WPI_TalonSRX leftRearTalonEnc;
@@ -25,7 +27,6 @@ public class DriveTrainSubsystem extends Subsystem
     public final DifferentialDrive drive;
     public final SpeedControllerGroup spgLeft;
     public final SpeedControllerGroup spgRight;
-
 
     private float lastLeft;
     private float lastRight;
@@ -97,11 +98,6 @@ public class DriveTrainSubsystem extends Subsystem
 
     }
 
-    public double turningFactor() { return Math.abs(OI.JOYSTICK_DRIVE_LEFT.getY() - OI.JOYSTICK_DRIVE_RIGHT.getY());}
-
-    @Override
-    protected void initDefaultCommand() { setDefaultCommand(new DriveCommand()); }
-
     /**
      * Drive the robot. The equation x=-y must be true for the robot to drive straight.
      * <br>
@@ -119,13 +115,25 @@ public class DriveTrainSubsystem extends Subsystem
         rightRearTalonEnc.set(-y);
     }
 
+    public float turningFactor()
+    {
+        return Math.abs((float) OI.JOYSTICK_DRIVE_LEFT.getY() - (float) OI.JOYSTICK_DRIVE_RIGHT.getY());
+    }
+
+    @Override
+    protected void initDefaultCommand()
+    {
+        setDefaultCommand(new DriveCommand());
+    }
+
     /**
      * Used to gradually increase the speed of the robot.
      *
      * @param out The object to store the data in
+     *
      * @return the speed of the robot
      */
-    private Pair<Float,Float> getSpeed(Pair<Float, Float> out)
+    private FloatPair getSpeed(FloatPair out)
     {
         float joystickLevel;
         // Get the base speed of the robot
@@ -133,7 +141,7 @@ public class DriveTrainSubsystem extends Subsystem
         else { joystickLevel = (float) -OI.JOYSTICK_DRIVE_LEFT.getY(); }
 
         // Only increase the speed by a small amount
-        double diff = joystickLevel - lastLeft;
+        float diff = joystickLevel - lastLeft;
         if(diff > 0.1D) { joystickLevel = lastLeft + 0.1F; }
         else if(diff < 0.1D) { joystickLevel = lastLeft - 0.1F; }
 
@@ -157,29 +165,48 @@ public class DriveTrainSubsystem extends Subsystem
         return out;
     }
 
-    private Pair<Float, Float> getSpeed() { return getSpeed(SPEED_CONTAINER); }
+
+    private FloatPair getSpeed()
+    {
+        return getSpeed(SPEED_CONTAINER);
+    }
 
     public void drive()
     {
-        Pair<Float, Float> speed = getSpeed();
+        FloatPair speed = getSpeed();
 
-//        Log.info("Left: " + String.format("%.02f", speed.right) + "\t\t Right: " + String.format("%.02f", speed.left));
+        Log.info("Left: " + String.format("%.02f", speed.right) + "\t\t Right: " + String.format("%.02f", speed.left));
 
         //reverse drive
-        if(OI.JOYSTICK_DRIVE_LEFT.getRawButton(RobotMap.UNDEFINED) && !isNegativePressed) { negative = !negative; }
+        if(OI.JOYSTICK_DRIVE_LEFT.getRawButton(RobotMap.Joystick.Button.INVERSE_DRIVER_CONTROLS) && !isNegativePressed) { negative = !negative; }
 
-        isNegativePressed = OI.JOYSTICK_DRIVE_LEFT.getRawButton(RobotMap.UNDEFINED);
+        isNegativePressed = OI.JOYSTICK_DRIVE_LEFT.getRawButton(RobotMap.Joystick.Button.INVERSE_DRIVER_CONTROLS);
 
         if(!negative) { drive.tankDrive(-speed.left, -speed.right, true); }
         else { drive.tankDrive(speed.left, speed.right, true); }
     }
 
-    public double avgVel()
+    public float avgVel()
     {
-        return Math.abs((leftRearTalonEnc.getSelectedSensorVelocity(0) + rightRearTalonEnc.getSelectedSensorVelocity(0)) / 2);
+        return Math.abs((leftRearTalonEnc.getSelectedSensorVelocity(0) + rightRearTalonEnc.getSelectedSensorVelocity(0)) / 2.0F);
+    }
+
+    public void updateDashboard()
+    {
+        SmartDashboard.putNumber("Left Speed (ft/s)", leftRearTalonEnc.getSelectedSensorVelocity(0) * RobotMap.Motor.VEL_TO_FPS);
+        SmartDashboard.putNumber("Left Pos (ft)", leftRearTalonEnc.getSelectedSensorPosition(0) * RobotMap.Motor.POS_TO_FEET);
+
+        SmartDashboard.putNumber("Right Speed (ft/s)", rightRearTalonEnc.getSelectedSensorVelocity(0) * RobotMap.Motor.VEL_TO_FPS);
+        SmartDashboard.putNumber("Right Pos (ft)", rightRearTalonEnc.getSelectedSensorPosition(0) * RobotMap.Motor.POS_TO_FEET);
     }
 
 
+    /**
+     * A generic data structure to store a pair of objects.
+     * @param <L> The left value
+     * @param <R> The right value
+     */
+    @Deprecated
     private static class Pair<L, R>
     {
         public L left;
@@ -196,31 +223,79 @@ public class DriveTrainSubsystem extends Subsystem
             this.nameR = right.getClass().getSimpleName();
         }
 
-        public Pair() {}
+        public Pair() { }
 
         @Override
         public String toString()
         {
             return new StringBuilder(100 + nameL.length() + nameR.length()).append("Pair<").append(nameL).append(',')
-                                                                           .append(nameR).append("> { \"left\": \"").append(left).append("\", \"right\": \"").append(right)
-                                                                           .append("\" }").toString();
+                    .append(nameR).append("> { \"left\": \"").append(left).append("\", \"right\": \"").append(right)
+                    .append("\" }").toString();
         }
 
         @Override
-        public int hashCode() { return left.hashCode() * 13 + (right == null ? 0 : right.hashCode()); }
+        public int hashCode()
+        {
+            return left.hashCode() * 13 + (right == null ? 0 : right.hashCode());
+        }
 
         @Override
         public boolean equals(Object o)
         {
-            if(this == o) { return true; }
+            if(this == o)
+            {
+                return true;
+            }
             if(o instanceof Pair)
             {
                 Pair pair = (Pair) o;
                 return (left != null ? left.equals(pair.left) : pair.left == null)
-                       && (left != null ? left.equals(pair.left) : pair.left == null);
+                        && (left != null ? left.equals(pair.left) : pair.left == null);
             }
             return false;
         }
     }
 
+    /**
+     * A generic data structure to store a pair of objects.
+     */
+    private static class FloatPair
+    {
+        public float left;
+        public float right;
+
+        public FloatPair(float left, float right)
+        {
+            this.left = left;
+            this.right = right;
+        }
+
+        public FloatPair() { }
+
+        @Override
+        public String toString()
+        {
+            return new StringBuilder(47).append("Pair: { \"left\": \"")
+                                      .append(String.format("%.05f", left)).append("\", \"right\": \"")
+                                      .append(String.format("%.05f", right)).append("\" }").toString();
+        }
+
+        @Override
+        public int hashCode()
+        {
+            return (Float.floatToIntBits(left) * 31) + (Float.floatToIntBits(right) * 7);
+        }
+
+        @Override
+        public boolean equals(Object o)
+        {
+            if(this == o) { return true; }
+            if(o instanceof FloatPair)
+            {
+                FloatPair pair = (FloatPair) o;
+                return left == pair.left && right == pair.right;
+            }
+            return false;
+        }
+    }
 }

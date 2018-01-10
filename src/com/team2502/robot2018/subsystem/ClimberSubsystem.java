@@ -20,7 +20,10 @@ public class ClimberSubsystem extends Subsystem
 
     @Override
     protected void initDefaultCommand()
-    { setDefaultCommand(new RunClimberCommand()); }
+
+    {
+        setDefaultCommand(new RunClimberCommand());
+    }
 
     public void climb()
     {
@@ -30,7 +33,11 @@ public class ClimberSubsystem extends Subsystem
          * Prevent motors from going backwards and
          * stop if speed is below a certain threshold.
          */
-        if(speed <= 0.01D) { speed = 0.0D; }
+
+        if(speed <= 0.01D)
+        {
+            speed = 0.0D;
+        }
 
         runMotors(speed);
     }

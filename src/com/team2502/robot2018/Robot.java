@@ -80,6 +80,7 @@ public final class Robot extends IterativeRobot
 
         Robot.write("tester");
         // System.out.println("writing tester");
+
         Log.createLogger();
         DRIVE_TRAIN = new DriveTrainSubsystem();
         CLIMBER = new ClimberSubsystem();
@@ -92,15 +93,15 @@ public final class Robot extends IterativeRobot
         OI.init();
 
         NAVX.resetDisplacement();
+        // DashboardData.addUpdater(DRIVE_TRAIN);
     }
-
-
 
     /**
      * This function is called once each time the robot enters Disabled mode.
      * You can use it to reset any subsystem information you want to clear when
      * the robot is disabled.
      */
+
     public void disabledInit()
     {
         CLIMBER.stop();
@@ -133,6 +134,7 @@ public final class Robot extends IterativeRobot
         waypoints.add(new Vector(0, 0));
         waypoints.add(new Vector(7, 7));
         Scheduler.getInstance().add(new PurePursuitCommand(waypoints,LOOKAHEAD_DISTANCE));
+        // Scheduler.getInstance().add(AutoSwitcher.getAutoInstance());
         NAVX.reset();
     }
 
@@ -145,9 +147,7 @@ public final class Robot extends IterativeRobot
         DashboardData.update();
     }
 
-    public void teleopInit()
-    {
-    }
+    public void teleopInit() { }
 
     /**
      * This function is called periodically during operator control
