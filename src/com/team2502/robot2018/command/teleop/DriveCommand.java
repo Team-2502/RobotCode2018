@@ -56,7 +56,7 @@ public class DriveCommand extends Command
     {
         double radians = (navx.getAngle() - initAngleDegrees) / 180F * TAU;
         double rad = radians % TAU;
-        System.out.printf("%.2f\n",rad);
+        Log.info(String.format("%.2f\n",rad));
         //float encLeft = (float) -Robot.DRIVE_TRAIN.leftRearTalonEnc.get();
         //float encRight = (float) Robot.DRIVE_TRAIN.rightRearTalonEnc.get();
 //        System.out.printf("%.2f,%.2f\n",encLeft,encRight);

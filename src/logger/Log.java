@@ -14,8 +14,8 @@ public final class Log
         System.setOut(ops);
         System.setErr(eps);
         TIMER = new Timer();
-        TIMER.schedule(new LoggerPrintStream.PrintTimer(ops), 15000);
-        TIMER.schedule(new LoggerPrintStream.PrintTimer(eps), 15000);
+        TIMER.scheduleAtFixedRate(new LoggerPrintStream.PrintTimer(ops), 1000, 1000);
+        TIMER.scheduleAtFixedRate(new LoggerPrintStream.PrintTimer(eps), 1000, 1000);
     }
 
     private static boolean debug = false;
@@ -103,7 +103,7 @@ public final class Log
     {
         private ClassGetter() {}
 
-        private static final int BASE_DEPTH = 3;
+        private static final int BASE_DEPTH = 5;
 
         public static String getCallerClassName(int depth)
         {
@@ -114,7 +114,7 @@ public final class Log
             return element.getClassName();
         }
 
-        public static String getCallerClassName() { return getCallerClassName(0); }
+        public static String getCallerClassName() { return getCallerClassName(1); }
     }
 
     private Log() {}

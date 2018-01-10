@@ -21,7 +21,7 @@ public class LoggerPrintStream extends PrintStream
         printBuffer = new PriorityQueue<>();
     }
 
-    public void outputln(String s)
+    public synchronized void outputln(String s)
     {
         synchronized(printBuffer)
         {
@@ -30,14 +30,16 @@ public class LoggerPrintStream extends PrintStream
         }
     }
 
-    public void printBuffer()
+    public synchronized void printBuffer()
     {
+//        super.println("Printing Buffer:");
         synchronized(printBuffer)
         {
             StringBuilder sb = new StringBuilder(length);
             length = 0;
             while(!printBuffer.isEmpty()) { sb.append(printBuffer.poll()).append('\n'); }
-            super.println(sb.toString());
+
+            if(sb.length() != 0) { super.print(sb); }
         }
     }
 

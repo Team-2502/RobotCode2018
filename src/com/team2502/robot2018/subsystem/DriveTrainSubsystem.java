@@ -166,7 +166,6 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         return out;
     }
 
-
     private FloatPair getSpeed()
     {
         return getSpeed(SPEED_CONTAINER);
