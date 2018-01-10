@@ -126,8 +126,6 @@ public class PurePursuitCommand extends Command
         Vector wheelVelocities = purePursuitMovementStrategy.getWheelVelocities();
         float x = wheelVelocities.get(0);
         float y = wheelVelocities.get(1);
-        // System.out.println("printing");
-        // Robot.write("test");
         System.out.println("Wheel velocities: "+x+" ::: "+y+" ::: Wheel velocities");
         System.out.println("Unmoded Loc: "+navx.getDisplacementX()+","+navx.getDisplacementY());
         System.out.println("Heading: "+tankRobot.getHeading());
