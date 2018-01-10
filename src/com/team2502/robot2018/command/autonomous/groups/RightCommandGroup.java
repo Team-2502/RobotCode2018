@@ -3,29 +3,30 @@ package com.team2502.robot2018.command.autonomous.groups;
 import com.team2502.robot2018.Robot;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
+import java.util.Scanner;
+
 public class RightCommandGroup extends CommandGroup
 {
     public RightCommandGroup()
     {
-        if(Robot.GAME_DATA.substring(0, 2).equalsIgnoreCase("LL"))
-        {
+        String AUTO_GAME_DATA = Robot.GAME_DATA.substring(0,2);
 
-        }
-        else if(Robot.GAME_DATA.substring(0,2).equalsIgnoreCase("LR"))
+        switch(AUTO_GAME_DATA)
         {
+            case "LL":
+                break;
 
-        }
-        else if(Robot.GAME_DATA.substring(0,2).equalsIgnoreCase("RL"))
-        {
+            case "LR":
+                break;
 
-        }
-        else if(Robot.GAME_DATA.substring(0,2).equalsIgnoreCase("RR"))
-        {
+            case "RL":
+                break;
 
-        }
-        else //Drive Straight
-        {
+            case "RR":
+                break;
 
+            default:
+                break;
         }
     }
 

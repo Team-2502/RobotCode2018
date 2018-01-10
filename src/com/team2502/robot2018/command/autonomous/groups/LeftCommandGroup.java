@@ -7,26 +7,24 @@ public class LeftCommandGroup extends CommandGroup
 {
     public LeftCommandGroup()
     {
-        if(Robot.GAME_DATA.substring(0, 2).equalsIgnoreCase("LL"))
-        {
+        String AUTO_GAME_DATA = Robot.GAME_DATA.substring(0,2);
 
-        }
-        else if(Robot.GAME_DATA.substring(0,2).equalsIgnoreCase("LR"))
+        switch(AUTO_GAME_DATA)
         {
+            case "LL":
+                break;
 
-        }
-        else if(Robot.GAME_DATA.substring(0,2).equalsIgnoreCase("RL"))
-        {
+            case "LR":
+                break;
 
-        }
-        else if(Robot.GAME_DATA.substring(0,2).equalsIgnoreCase("RR"))
-        {
+            case "RL":
+                break;
 
-        }
-        else //Drive Straight
-        {
+            case "RR":
+                break;
 
-        }
-    }
+            default:
+                break;
+        }    }
 
 }
