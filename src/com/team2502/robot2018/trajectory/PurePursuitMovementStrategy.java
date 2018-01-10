@@ -270,7 +270,7 @@ public class PurePursuitMovementStrategy implements TankMovementStrategy
             leftWheelTanVel = Math.abs((pathRadius - tankRobot.getLateralWheelDistance() / 2) * rotVelocity);
             rightWheelTanVel = Math.abs((pathRadius + tankRobot.getLateralWheelDistance() / 2) * rotVelocity);
             tangentialSpeed = Math.abs(pathRadius * rotVelocity);
-            dThetaToRotate = (float) (MathUtils.Arithmetic.sign(rotVelocity) * Math.atan(relativeGoalPoint.get(1) / (Math.abs(pathRadius) - relativeGoalPoint.get(0))));
+            dThetaToRotate = (float) (Math.signum(rotVelocity) * Math.atan(relativeGoalPoint.get(1) / (Math.abs(pathRadius) - relativeGoalPoint.get(0))));
         }
 
         return bestVector;

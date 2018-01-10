@@ -90,8 +90,8 @@ public class PurePursuitCommand extends Command
             float rotVelocity = (leftVel-rightVel)/tankRobot.getLateralWheelDistance();
 
             Function<Float,Vector> estimatePositionFromDTheta = dTheta -> {
-                float dxRelative = -purePursuitMovementStrategy.getPathRadius() * (1- (float) Math.cos(-dTheta));
-                float dyRelative = -purePursuitMovementStrategy.getPathRadius() * (float) Math.sin(-dTheta);
+                float dxRelative = -purePursuitMovementStrategy.getPathRadius() * (1- MathUtils.cos(-dTheta));
+                float dyRelative = -purePursuitMovementStrategy.getPathRadius() * MathUtils.sin(-dTheta);
 
                 Vector dRelativeVector = new Vector(dxRelative, dyRelative);
                 Vector rotated = MathUtils.LinearAlgebra.rotate2D(dRelativeVector, purePursuitMovementStrategy.getUsedHeading());
