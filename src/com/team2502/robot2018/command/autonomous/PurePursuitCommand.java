@@ -11,6 +11,7 @@ import com.team2502.robot2018.utils.MathUtils;
 import edu.wpi.first.wpilibj.command.Command;
 
 import java.util.List;
+import java.util.function.Function;
 
 public class PurePursuitCommand extends Command
 {
@@ -76,34 +77,36 @@ public class PurePursuitCommand extends Command
             { return Robot.LATERAL_WHEEL_DISTANCE; }
         };
 
-        // TODO: check whether this is right... rotation is inverted
-        LocationEstimator locationEstimator = () -> MathUtils.LinearAlgebra.rotate2D(new Vector(navx.getDisplacementX(), navx.getDisplacementY()),-initAngleRadians);
+        LocationEstimator locationEstimator = () ->
+        {
+            // How many 100 ms intervals occured
+            double dTime = getDTime()/10F;
+
+            // talon inversed
+            float leftVel = -Robot.DRIVE_TRAIN.leftRearTalonEnc.getSelectedSensorVelocity(0);
+
+            float rightVel = Robot.DRIVE_TRAIN.rightRearTalonEnc.getSelectedSensorVelocity(0);
+
+            float rotVelocity = (leftVel-rightVel)/tankRobot.getLateralWheelDistance();
+
+            Function<Float,Vector> estimatePositionFromDTheta = dTheta -> {
+                float dxRelative = -purePursuitMovementStrategy.getPathRadius() * (1- (float) Math.cos(-dTheta));
+                float dyRelative = -purePursuitMovementStrategy.getPathRadius() * (float) Math.sin(-dTheta);
+
+                Vector dRelativeVector = new Vector(dxRelative, dyRelative);
+                Vector rotated = MathUtils.LinearAlgebra.rotate2D(dRelativeVector, purePursuitMovementStrategy.getUsedHeading());
+                Vector toReturn = rotated.add(purePursuitMovementStrategy.getUsedEstimatedLocation()); //
+                return toReturn;
 
 
-        // Not used, reason: encoders do not yet setup.
+            };
 
-
-//        LocationEstimator locationEstimator = () ->
-//        {
-//            double dTime = getDTime();
-//            Function<Float,Vector> estimatePositionFromDTheta = dTheta -> {
-//                float dxRelative = -purePursuitMovementStrategy.getPathRadius() * (1- (float) Math.cos(-dTheta));
-//                float dyRelative = -purePursuitMovementStrategy.getPathRadius() * (float) Math.sin(-dTheta);
-//
-//                Vector dRelativeVector = new Vector(dxRelative, dyRelative);
-//                Vector rotated = MathUtils.LinearAlgebra.rotate2D(dRelativeVector, purePursuitMovementStrategy.getUsedHeading());
-//                Vector toReturn = rotated.add(purePursuitMovementStrategy.getUsedEstimatedLocation()); //
-//                return toReturn;
-//
-//
-//            };
-//
-//            Function<Double,Vector> dTimeToPosition = dTime1 -> {
-//                double dTheta =  dTime1 * purePursuitMovementStrategy.getRotVelocity();
-//                return estimatePositionFromDTheta.apply( (float) dTheta); //
-//            };
-//            return dTimeToPosition.apply(dTime); //
-//        };
+            Function<Double,Vector> dTimeToPosition = dTime1 -> {
+                double dTheta =  dTime1 * rotVelocity; // purePursuitMovementStrategy.getRotVelocity();
+                return estimatePositionFromDTheta.apply( (float) dTheta); //
+            };
+            return dTimeToPosition.apply(dTime);
+        };
 
 
         purePursuitMovementStrategy = new PurePursuitMovementStrategy(tankRobot, locationEstimator, waypoints, lookAheadDistance);
