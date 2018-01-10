@@ -111,7 +111,7 @@ public final class Log
             StackTraceElement element = elements[BASE_DEPTH + depth];
             if(element.getClassName().startsWith("kotlin.io.")) { element = elements[BASE_DEPTH + 2 + depth]; }
             else if(element.getClassName().startsWith("java.lang.Throwable")) { element = elements[BASE_DEPTH + 4 + depth]; }
-            return element.getClassName();
+            return new StringBuilder().append(element.getClassName()).append('#').append(element.getMethodName()).append(':').append(element.getLineNumber()).toString();
         }
 
         public static String getCallerClassName() { return getCallerClassName(1); }
