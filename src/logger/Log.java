@@ -103,7 +103,7 @@ public final class Log
     {
         private ClassGetter() {}
 
-        private static final int BASE_DEPTH = 4;
+        private static final int BASE_DEPTH = 3;
 
         public static String getCallerClassName(int depth)
         {

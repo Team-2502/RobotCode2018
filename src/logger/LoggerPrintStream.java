@@ -11,6 +11,7 @@ public class LoggerPrintStream extends PrintStream
     protected final boolean isOutputStream;
     private transient int depth;
     private final Queue<String> printBuffer;
+    private int length;
 
     public LoggerPrintStream(PrintStream original)
     {
@@ -21,13 +22,22 @@ public class LoggerPrintStream extends PrintStream
     }
 
     public void outputln(String s)
-    { printBuffer.offer(s); }
+    {
+        synchronized(printBuffer)
+        {
+            printBuffer.offer(s);
+            length += s.length();
+        }
+    }
 
     public void printBuffer()
     {
         synchronized(printBuffer)
         {
-            while(!printBuffer.isEmpty()) { super.println(printBuffer.poll()); }
+            StringBuilder sb = new StringBuilder(length);
+            length = 0;
+            while(!printBuffer.isEmpty()) { sb.append(printBuffer.poll()).append('\n'); }
+            super.println(sb.toString());
         }
     }
 
