@@ -1,9 +1,10 @@
 package com.team2502.robot2018.trajectory;
 
-import com.team2502.robot2018.data.Vector;
 import com.team2502.robot2018.utils.MathUtils;
+import logger.Log;
 import org.joml.Vector2f;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,12 +37,12 @@ import java.util.List;
  * memory accesses, and 2 memory saves.
  */
 @SuppressWarnings("unused")
-public class PurePursuitMovementStrategy implements TankMovementStrategy
+public class PurePursuitMovementStrategy implements ITankMovementStrategy
 {
     public final List<Vector2f> waypoints;
-    private final LocationEstimator estimator;
+    private final ILocationEstimator estimator;
     private Vector2f relativeGoalPoint;
-    private final TankRobot tankRobot;
+    private final ITankRobot tankRobot;
     private float pathRadius;
     private float rotVelocity;
     public final float lookAheadDistance;
@@ -60,7 +61,7 @@ public class PurePursuitMovementStrategy implements TankMovementStrategy
     private Vector2f absoluteGoalPoint;
     private float dThetaToRotate;
 
-    public PurePursuitMovementStrategy(TankRobot tankRobot, LocationEstimator estimator, List<Vector2f> waypoints, float lookAheadDistance)
+    public PurePursuitMovementStrategy(ITankRobot tankRobot, ILocationEstimator estimator, List<Vector2f> waypoints, float lookAheadDistance)
     {
         this.waypoints = waypoints;
         this.tankRobot = tankRobot;
@@ -126,11 +127,11 @@ public class PurePursuitMovementStrategy implements TankMovementStrategy
     public void update()
     {
         absoluteGoalPoint = calculateAbsoluteGoalPoint();
-        System.out.println(usedEstimatedLocation);
-        System.out.println("estimated location: " + usedEstimatedLocation + " estimated location");
-        System.out.println(usedHeading);
-        System.out.println(absoluteGoalPoint);
-        relativeGoalPoint = MathUtils.LinearAlgebra.absoluteToRelativeCoord(absoluteGoalPoint, usedEstimatedLocation, usedHeading); //
+        Log.debug(usedEstimatedLocation);
+        Log.debug("estimated location: {0}", usedEstimatedLocation);
+        Log.debug(usedHeading);
+        Log.debug(absoluteGoalPoint);
+        relativeGoalPoint = MathUtils.LinearAlgebra.absoluteToRelativeCoord(absoluteGoalPoint, usedEstimatedLocation, usedHeading);
         wheelVelocities = calculateWheelVelocities();
     }
 
@@ -146,7 +147,6 @@ public class PurePursuitMovementStrategy implements TankMovementStrategy
         int minVectorI = -1;
         for(int i = 0; i < possibleGoalPoints.size(); i++)
         {
-
             Vector2f vector = possibleGoalPoints.get(i);
 
             float magnitudeSquared = origin.sub(vector).lengthSquared(); // find dist squared
@@ -201,7 +201,7 @@ public class PurePursuitMovementStrategy implements TankMovementStrategy
         return usedEstimatedLocation;
     }
 
-    private Vector2f calculateWheelVelocities()
+    private Vector2f calculateWheelVelocities() throws NullPointerException
     {
         float curvature = curvatureToGoal();
         Vector2f bestVector = null;
@@ -266,6 +266,18 @@ public class PurePursuitMovementStrategy implements TankMovementStrategy
                 {
                     bestVector = new Vector2f(v_l, v_rMin);
                 }
+            }
+
+            if(bestVector == null)
+            {
+                throw new NullPointerException(MessageFormat.format("`bestVector` was equal to null.\n\t" +
+                                                                    "{\n\t\t\"curvature\" = \"{0}\",\n\t\t" +
+                                                                    "[ \"v_lMax\", \"v_lMin\", \"v_rMax\", \"v_rMin\" ] = [ \"{1}\", \"{2}\", \"{3}\", \"{4}\" ],\n\t\t" +
+                                                                    "\"c\" = \"{5}\",\n\t\t" +
+                                                                    "\"velLeftToRightRatio\" = \"{6}\",\n\t\t" +
+                                                                    "\"velRightToLeftRatio\" = \"{7}\",\n\t\t" +
+                                                                    "\"v_r\" = \"{8}\",\n\t\t" +
+                                                                    "\"v_l\" = \"{9}\"\n\t}", curvature, v_lMax, v_lMin, v_rMax, v_rMin, c, velLeftToRightRatio, velRightToLeftRatio, v_r, v_l));
             }
 
             rotVelocity = (bestVector.y - bestVector.x) / tankRobot.getLateralWheelDistance();

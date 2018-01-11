@@ -1,6 +1,7 @@
 package logger;
 
 import java.io.PrintStream;
+import java.text.MessageFormat;
 import java.util.Timer;
 
 @SuppressWarnings({ "WeakerAccess", "unused", "EmptyCatchBlock", "SameParameterValue" })
@@ -41,29 +42,29 @@ public final class Log
         setDebugMode(debug || (System.getProperty("debug") != null));
     }
 
-    public static <T> void log(LogType type, T msg, int depth)
+    public static <T> void log(LogType type, T msg, int depth, Object... args)
     {
         if((type == LogType.DEBUG) && !debug) { return; }
         if(pf == null) { createLogger(); }
-        String out = pf.getPrintString(type.toString(), ClassGetter.getCallerClassName(depth), msg);
+        String out = pf.getPrintString(type.toString(), ClassGetter.getCallerClassName(depth), MessageFormat.format(msg.toString(), args));
         if(type.output instanceof LoggerPrintStream) { ((LoggerPrintStream) type.output).outputln(out); }
         else { type.output.println(out); }
         type.output.flush();
     }
 
-    public static <T> void info(T msg) { log(LogType.INFO, msg); }
+    public static <T> void info(T msg, Object... args) { log(LogType.INFO, msg, args); }
 
-    public static <T> void warn(T msg) { log(LogType.WARN, msg); }
+    public static <T> void warn(T msg, Object... args) { log(LogType.WARN, msg, args); }
 
-    public static <T> void error(T msg) { log(LogType.ERROR, msg); }
+    public static <T> void error(T msg, Object... args) { log(LogType.ERROR, msg, args); }
 
-    public static <T> void trace(T msg) { log(LogType.TRACE, msg); }
+    public static <T> void trace(T msg, Object... args) { log(LogType.TRACE, msg, args); }
 
-    public static <T> void log(LogType type, T msg) { log(type, msg, 0); }
+    public static <T> void log(LogType type, T msg, Object... args) { log(type, msg, 0, args); }
 
-    static <T> void out(T msg) { log(LogType.STD_OUT, msg); }
+    static <T> void out(T msg, Object... args) { log(LogType.STD_OUT, msg, args); }
 
-    static <T> void err(T msg) { log(LogType.STD_ERR, msg); }
+    static <T> void err(T msg, Object... args) { log(LogType.STD_ERR, msg, args); }
 
     public static void trace(StackTraceElement[] e)
     {
@@ -72,16 +73,16 @@ public final class Log
         trace(sb.toString());
     }
 
-    public static <T> void trace(Exception e, T msg)
+    public static <T> void trace(Exception e, T msg, Object... args)
     {
-        trace(msg);
+        trace(msg, args);
         trace(e.toString());
         trace(e.getStackTrace());
     }
 
     public static void trace(Exception e) { trace(e, ""); }
 
-    public static <T> void debug(T msg) { log(LogType.DEBUG, msg); }
+    public static <T> void debug(T msg, Object... args) { log(LogType.DEBUG, msg, args); }
 
     public enum LogType
     {

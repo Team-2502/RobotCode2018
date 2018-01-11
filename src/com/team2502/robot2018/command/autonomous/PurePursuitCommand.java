@@ -2,11 +2,10 @@ package com.team2502.robot2018.command.autonomous;
 
 import com.kauailabs.navx.frc.AHRS;
 import com.team2502.robot2018.Robot;
-import com.team2502.robot2018.data.Vector;
 import com.team2502.robot2018.subsystem.DriveTrainSubsystem;
-import com.team2502.robot2018.trajectory.LocationEstimator;
+import com.team2502.robot2018.trajectory.ILocationEstimator;
 import com.team2502.robot2018.trajectory.PurePursuitMovementStrategy;
-import com.team2502.robot2018.trajectory.TankRobot;
+import com.team2502.robot2018.trajectory.ITankRobot;
 import com.team2502.robot2018.utils.MathUtils;
 import edu.wpi.first.wpilibj.command.Command;
 import logger.Log;
@@ -17,7 +16,7 @@ import java.util.function.Function;
 
 public class PurePursuitCommand extends Command
 {
-    private final TankRobot tankRobot;
+    private final ITankRobot tankRobot;
     public float lookAheadDistance;
     public static final float TAU = 2 * 3.1415F;
     private DriveTrainSubsystem driveTrain;
@@ -49,7 +48,7 @@ public class PurePursuitCommand extends Command
         requires(Robot.DRIVE_TRAIN);
         driveTrain = Robot.DRIVE_TRAIN;
 
-        tankRobot = new TankRobot()
+        tankRobot = new ITankRobot()
         {
             @Override
             public float getHeading()
@@ -79,7 +78,7 @@ public class PurePursuitCommand extends Command
             { return Robot.LATERAL_WHEEL_DISTANCE; }
         };
 
-        LocationEstimator locationEstimator = () ->
+        ILocationEstimator locationEstimator = () ->
         {
             // How many 100 ms intervals occured
             double dTime = getDTime() / 10F;

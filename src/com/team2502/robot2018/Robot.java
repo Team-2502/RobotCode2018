@@ -67,7 +67,7 @@ public final class Robot extends IterativeRobot
         Robot.write("tester");
         // System.out.println("writing tester");
 
-        Log.createLogger();
+        Log.createLogger(true);
         DRIVE_TRAIN = new DriveTrainSubsystem();
         CLIMBER = new ClimberSubsystem();
         NAVX = new AHRS(SPI.Port.kMXP);

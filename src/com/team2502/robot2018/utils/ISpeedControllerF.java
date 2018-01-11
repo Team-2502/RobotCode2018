@@ -2,6 +2,7 @@ package com.team2502.robot2018.utils;
 
 import edu.wpi.first.wpilibj.SpeedController;
 
+@Deprecated
 public interface ISpeedControllerF extends SpeedController
 {
     /**

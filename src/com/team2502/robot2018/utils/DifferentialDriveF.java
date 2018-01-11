@@ -1,11 +1,11 @@
 package com.team2502.robot2018.utils;
 
-import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.drive.RobotDriveBase;
 import edu.wpi.first.wpilibj.hal.FRCNetComm;
 import edu.wpi.first.wpilibj.hal.HAL;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 
+@Deprecated
 @SuppressWarnings("unused")
 public class DifferentialDriveF extends RobotDriveBase
 {
