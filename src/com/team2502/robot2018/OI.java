@@ -20,5 +20,5 @@ public final class OI
         else { return Math.abs(OI.JOYSTICK_DRIVE_RIGHT.getY()) < threshold && Math.abs(OI.JOYSTICK_DRIVE_LEFT.getY()) < threshold; }
     }
 
-    private OI() {}
+    private OI() { }
 }

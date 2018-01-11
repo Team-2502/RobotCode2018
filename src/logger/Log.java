@@ -52,6 +52,9 @@ public final class Log
         type.output.flush();
     }
 
+    public static <T> void log(LogType type, T msg, int depth)
+    { log(type, msg, depth, new Object[0]); }
+
     public static <T> void info(T msg, Object... args) { log(LogType.INFO, msg, args); }
 
     public static <T> void warn(T msg, Object... args) { log(LogType.WARN, msg, args); }

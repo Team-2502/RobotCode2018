@@ -6,6 +6,7 @@ import org.joml.Vector2f;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
         /*
@@ -88,7 +89,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
             Vector2f lineP1 = waypoints.get(i);
             Vector2f lineP2 = waypoints.get(i + 1);
 
-            List<Vector2f> vectorList = new ArrayList<>(MathUtils.Geometry.getCircleLineIntersectionPoint(lineP1, lineP2, usedEstimatedLocation, lookAheadDistance));
+            List<Vector2f> vectorList = new ArrayList<>(Arrays.asList(MathUtils.Geometry.getCircleLineIntersectionPoint(lineP1, lineP2, usedEstimatedLocation, lookAheadDistance)));
             // System.out.println("Vector list: " + vectorList.toString());
             vectorList.removeIf(vector -> !MathUtils.between(lineP1, vector, lineP2)); // remove if vectors not between next 2 waypoints
             // System.out.println("Vector list: " + vectorList.toString());
@@ -103,7 +104,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
             this.absoluteGoalPoint = waypoints.get(1);
         }
 
-        System.out.println("Intersections size: " + intersections.size());
+        Log.debug("Intersections size: {0}", intersections.size());
 
         int closestVectorI = bestGoalPoint(toCompare, intersections);
         if(closestVectorI == -1)
@@ -111,7 +112,6 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
             finishedPath = true;
             return null;
         }
-
 
         Vector2f closest = intersections.get(closestVectorI);
 

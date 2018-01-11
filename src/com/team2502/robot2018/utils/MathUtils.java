@@ -3,10 +3,6 @@ package com.team2502.robot2018.utils;
 import com.team2502.robot2018.data.Vector;
 import org.joml.Vector2f;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
 @SuppressWarnings("unused")
 public final class MathUtils
 {
@@ -58,8 +54,10 @@ public final class MathUtils
 
         public static Vector2f rotate2D(Vector2f vector, float theta)
         {
-            return new Vector2f((vector.x() * cos(theta) - vector.y() * sin(theta)),
-                                (vector.x() * sin(theta) + vector.y() * cos(theta)));
+            float sin = sin(theta);
+            float cos = cos(theta);
+            return new Vector2f((vector.x * cos - vector.y * sin),
+                                (vector.x * sin + vector.y * cos));
         }
 
         @Deprecated
@@ -72,10 +70,7 @@ public final class MathUtils
         }
 
         public static Vector2f absoluteToRelativeCoord(Vector2f relativeCoord, Vector2f absoluteLocation, float robotHeading)
-        {
-            Vector2f coordDif = new Vector2f(relativeCoord).sub(absoluteLocation);
-            return rotate2D(coordDif, -robotHeading);
-        }
+        { return rotate2D(new Vector2f(relativeCoord).sub(absoluteLocation), -robotHeading); }
     }
 
     public static class Algebra
@@ -101,9 +96,8 @@ public final class MathUtils
 
     public static class Geometry
     {
-        public static List<Vector2f> getCircleLineIntersectionPoint(Vector2f pointA, Vector2f pointB, Vector2f center, double radius)
+        public static Vector2f[] getCircleLineIntersectionPoint(Vector2f pointA, Vector2f pointB, Vector2f center, double radius)
         {
-
             float baX = pointB.x - pointA.x;
             float baY = pointB.y - pointA.y;
 
@@ -115,25 +109,20 @@ public final class MathUtils
             double c = caX * caX + caY * caY - radius * radius;
 
             float pBy2 = bBy2 / a;
-            float q = (float) c / a;
+            double q = c / a;
 
-            float disc = pBy2 * pBy2 - q;
-            if(disc < 0)
-            {
-                return Collections.emptyList();
-            }
+            double disc = pBy2 * pBy2 - q;
+            if(disc < 0) { return new Vector2f[0]; }
             // if disc == 0 ... dealt with later
             float tmpSqrt = (float) Math.sqrt(disc);
-            float abScalingFactor1 = -pBy2 + tmpSqrt;
-            float abScalingFactor2 = -pBy2 - tmpSqrt;
+            float abScalingFactor1 = tmpSqrt - pBy2;
 
             Vector2f p1 = new Vector2f(pointA.x - baX * abScalingFactor1, pointA.y - baY * abScalingFactor1);
-            if(disc == 0)
-            { // abScalingFactor1 == abScalingFactor2
-                return Collections.singletonList(p1);
-            }
+            if(disc == 0) { return new Vector2f[] { p1 }; }
+
+            float abScalingFactor2 = -pBy2 - tmpSqrt;
             Vector2f p2 = new Vector2f(pointA.x - baX * abScalingFactor2, pointA.y - baY * abScalingFactor2);
-            return Arrays.asList(p1, p2);
+            return new Vector2f[] { p1, p2 };
         }
 
         public static Vector2f[] circleLineIntersect(Vector2f lineP1, Vector2f lineP2, Vector2f circleCenter, float circleRadius)
@@ -146,20 +135,25 @@ public final class MathUtils
             float f = x_1 - x_0;
             float g = y_1 - y_0;
 
-            float t = f * (x_c - x_0) + g * (y_c - y_0);
-            float inRoot = (float) (circleRadius * circleRadius + (f * f + g * g) - Math.pow(f * (y_c - y_0) - g * (x_c - x_0), 2));
+            float xc0 = x_c - x_0;
+            float yc0 = y_c - y_0;
+
+            float t = f * xc0 + g * yc0;
+
+            float fg2 = f * f + g * g;
+
+            float inRoot = (circleRadius * circleRadius + fg2 - pow2f(f * yc0 - g * xc0));
             if(inRoot < 0) { return new Vector2f[0]; }
-            float denominator = (f * f + g * g);
             if(inRoot == 0)
             {
-                float intersectT = t / denominator;
+                float intersectT = t / fg2;
                 Vector2f intersection = new Vector2f(intersectT * f, intersectT * g);
                 if(between(lineP1, intersection, lineP2)) { return new Vector2f[] { intersection }; }
                 else { return new Vector2f[0]; }
             }
             float pm = (float) Math.sqrt(inRoot);
-            float intersectT1 = (t + pm) / denominator;
-            float intersectT2 = (t - pm) / denominator;
+            float intersectT1 = (t + pm) / fg2;
+            float intersectT2 = (t - pm) / fg2;
             Vector2f intersect1 = new Vector2f(intersectT1 * f + x_0, intersectT1 * g + y_0);
             Vector2f intersect2 = new Vector2f(intersectT2 * f + x_0, intersectT2 * g + y_0);
             if(between(lineP1, intersect1, lineP2))

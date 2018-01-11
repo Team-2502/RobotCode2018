@@ -32,7 +32,7 @@ public class DriveCommand extends Command
     private final AHRS navx;
     private final TransmissionSubsystem transmission;
     private final float initAngleRadians;
-    private final double initAngleDegrees;
+    private final float initAngleDegrees;
 
     public DriveCommand()
     {
@@ -41,8 +41,8 @@ public class DriveCommand extends Command
         driveTrainSubsystem = Robot.DRIVE_TRAIN;
         transmission = Robot.TRANSMISSION;
         navx = Robot.NAVX;
-        initAngleDegrees = navx.getAngle();
-        initAngleRadians = ((float) initAngleDegrees) / 180F * TAU;
+        initAngleDegrees = (float) navx.getAngle();
+        initAngleRadians = MathUtils.deg2Rad(initAngleDegrees);
     }
 
     @Override
@@ -54,13 +54,12 @@ public class DriveCommand extends Command
     @Override
     protected void execute()
     {
-        double radians = (navx.getAngle() - initAngleDegrees) / 180F * TAU;
-        double rad = radians % TAU;
-        Log.debug("{0,number,#.###}", rad);
+        double radians = MathUtils.deg2Rad(navx.getAngle() - initAngleDegrees) % TAU;
+        Log.debug("{0,number,#.###}", radians);
         //float encLeft = (float) -Robot.DRIVE_TRAIN.leftRearTalonEnc.get();
         //float encRight = (float) Robot.DRIVE_TRAIN.rightRearTalonEnc.get();
-//        System.out.printf("%.2f,%.2f\n",encLeft,encRight);
-//         System.out.println("NavX: "+Robot.NAVX.getDisplacementX()+","+Robot.NAVX.getDisplacementY()+","+Robot.NAVX.getDisplacementZ());
+//        System.out.printf("%.2f,%.2f\n", encLeft, encRight);
+//        System.out.println("NavX: " + Robot.NAVX.getDisplacementX() + "," + Robot.NAVX.getDisplacementY() + "," + Robot.NAVX.getDisplacementZ());
 //        System.out.println(MathUtils.LinearAlgebra.rotate2D(new Vector(navx.getDisplacementX(), navx.getDisplacementY()),-initAngleRadians));
         SmartDashboard.putBoolean("DT: AutoShifting Enabled?", !transmission.disabledAutoShifting);
         driveTrainSubsystem.drive();
@@ -79,23 +78,23 @@ public class DriveCommand extends Command
                 else // If the driver is cool with auto shifting doing its thing
                 {
                     // Make sure that we're going mostly straight
-                    if(driveTrainSubsystem.turningFactor() < 0.1)
+                    if(driveTrainSubsystem.turningFactor() < 0.1D)
                     {
                         double accel = navx.getRawAccelY();
                         double speed = driveTrainSubsystem.avgVel();
 
                         // Shift up if we are accelerating and going fast and the driver is putting the joystick at least 80% forward or backward
-                        if(Math.abs(accel) > 0.15 && speed > RobotMap.Motor.SHIFT_UP_THRESHOLD && OI.joysThreshold(0.8, true))
+                        if(Math.abs(accel) > 0.15D && speed > RobotMap.Motor.SHIFT_UP_THRESHOLD && OI.joysThreshold(0.8D, true))
                         {
                             if(!transmission.highGear) { Log.info("Shifting up."); }
                             transmission.setGear(true);
                         }
-                        else if(!transmission.signSame(accel, driveTrainSubsystem.rightRearTalonEnc.getSelectedSensorVelocity(0)) && OI.joysThreshold(0.8, false)) /* If we are not accelerating very fast but the driver is still pushing forward we shift down because it is probably a pushing match */
+                        else if(!transmission.signSame(accel, driveTrainSubsystem.rightRearTalonEnc.getSelectedSensorVelocity(0)) && OI.joysThreshold(0.8D, false)) /* If we are not accelerating very fast but the driver is still pushing forward we shift down because it is probably a pushing match */
                         {
                             if(transmission.highGear) { Log.info("Shifting down because you're a bad driver."); }
                             transmission.setGear(false);
                         }
-                        else if(OI.joysThreshold(30, false) && speed < RobotMap.Motor.SHIFT_DOWN_THRESHOLD) /* If we're going slow and the driver wants it to be that way we shift down */
+                        else if(OI.joysThreshold(30.0D, false) && speed < RobotMap.Motor.SHIFT_DOWN_THRESHOLD) /* If we're going slow and the driver wants it to be that way we shift down */
                         {
                             if(transmission.highGear) { Log.info("Shifting down because slow."); }
                             transmission.setGear(false);

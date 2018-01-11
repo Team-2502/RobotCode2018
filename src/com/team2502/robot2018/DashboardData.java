@@ -64,7 +64,7 @@ public final class DashboardData
         updateNavX();
     }
 
-    static void addUpdater(DashboardUpdater subsystem)
+    public static void addUpdater(DashboardUpdater subsystem)
     { updaters.add(subsystem); }
 
     private static void updateNavX()
@@ -75,5 +75,5 @@ public final class DashboardData
         SmartDashboard.putNumber("NavX: Z Displacement", Robot.NAVX.getDisplacementZ());
     }
 
-    // private DashboardData() { }
+     private DashboardData() { }
 }

@@ -18,7 +18,7 @@ import logger.Log;
  */
 public class DriveTrainSubsystem extends Subsystem implements DashboardData.DashboardUpdater
 {
-    private static final FloatPair SPEED_CONTAINER = new FloatPair();
+    private static final DoublePair SPEED_CONTAINER = new DoublePair();
 
     public final WPI_TalonSRX leftFrontTalon;
     public final WPI_TalonSRX leftRearTalonEnc;
@@ -28,8 +28,8 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     public final SpeedControllerGroup spgLeft;
     public final SpeedControllerGroup spgRight;
 
-    private float lastLeft;
-    private float lastRight;
+    private double lastLeft;
+    private double lastRight;
     private boolean isNegativePressed;
     private boolean negative;
 
@@ -54,6 +54,7 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
 
         drive.setSafetyEnabled(true);
         setTeleopSettings();
+        DashboardData.addUpdater(this);
     }
 
     public void stop()
@@ -61,11 +62,11 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
 
     private void setTeleopSettings(WPI_TalonSRX talon)
     {
-        talon.set(ControlMode.PercentOutput, 0);
-        talon.configNominalOutputForward(0, RobotMap.Motor.INIT_TIMEOUT);
-        talon.configNominalOutputReverse(0, RobotMap.Motor.INIT_TIMEOUT);
-        talon.configPeakOutputForward(1.0, RobotMap.Motor.INIT_TIMEOUT);
-        talon.configPeakOutputReverse(-1.0, RobotMap.Motor.INIT_TIMEOUT);
+        talon.set(ControlMode.PercentOutput, 0.0D);
+        talon.configNominalOutputForward(0.0D, RobotMap.Motor.INIT_TIMEOUT);
+        talon.configNominalOutputReverse(0.0D, RobotMap.Motor.INIT_TIMEOUT);
+        talon.configPeakOutputForward(1.0D, RobotMap.Motor.INIT_TIMEOUT);
+        talon.configPeakOutputReverse(-1.0D, RobotMap.Motor.INIT_TIMEOUT);
     }
 
     public void setTeleopSettings()
@@ -78,8 +79,8 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
 
     public void setAutonSettings()
     {
-        leftRearTalonEnc.set(ControlMode.Position, 0);
-        rightRearTalonEnc.set(ControlMode.Position, 0);
+        leftRearTalonEnc.set(ControlMode.Position, 0.0D);
+        rightRearTalonEnc.set(ControlMode.Position, 0.0D);
 
         leftFrontTalon.follow(leftRearTalonEnc);
         rightFrontTalon.follow(rightRearTalonEnc);
@@ -104,7 +105,7 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
      * @param x Units for the left side of drivetrain
      * @param y Units for the right side of drivetrain
      */
-    public void runMotors(float x, float y) // double z
+    public void runMotors(double x, double y) // double z
     {
         leftFrontTalon.set(x);
         leftRearTalonEnc.set(x);
@@ -113,9 +114,9 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         rightRearTalonEnc.set(-y);
     }
 
-    public float turningFactor()
+    public double turningFactor()
     {
-        return Math.abs((float) OI.JOYSTICK_DRIVE_LEFT.getY() - (float) OI.JOYSTICK_DRIVE_RIGHT.getY());
+        return Math.abs(OI.JOYSTICK_DRIVE_LEFT.getY() - OI.JOYSTICK_DRIVE_RIGHT.getY());
     }
 
     @Override
@@ -130,46 +131,46 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
      * @param out The object to store the data in
      * @return the speed of the robot
      */
-    private FloatPair getSpeed(FloatPair out)
+    private DoublePair getSpeed(DoublePair out)
     {
-        float joystickLevel;
+        double joystickLevel;
         // Get the base speed of the robot
-        if(negative) { joystickLevel = (float) -OI.JOYSTICK_DRIVE_RIGHT.getY(); }
-        else { joystickLevel = (float) -OI.JOYSTICK_DRIVE_LEFT.getY(); }
+        if(negative) { joystickLevel = -OI.JOYSTICK_DRIVE_RIGHT.getY(); }
+        else { joystickLevel = -OI.JOYSTICK_DRIVE_LEFT.getY(); }
 
         // Only increase the speed by a small amount
-        float diff = joystickLevel - lastLeft;
-        if(diff > 0.1D) { joystickLevel = lastLeft + 0.1F; }
-        else if(diff < 0.1D) { joystickLevel = lastLeft - 0.1F; }
+        double diff = joystickLevel - lastLeft;
+        if(diff > 0.1D) { joystickLevel = lastLeft + 0.1D; }
+        else if(diff < 0.1D) { joystickLevel = lastLeft - 0.1D; }
 
         lastLeft = joystickLevel;
         out.left = joystickLevel;
 
-        if(negative) { joystickLevel = (float) -OI.JOYSTICK_DRIVE_LEFT.getY(); }
-        else { joystickLevel = (float) -OI.JOYSTICK_DRIVE_RIGHT.getY(); }
+        if(negative) { joystickLevel = -OI.JOYSTICK_DRIVE_LEFT.getY(); }
+        else { joystickLevel = -OI.JOYSTICK_DRIVE_RIGHT.getY(); }
 
         diff = joystickLevel - lastRight;
-        if(diff > 0.1D) { joystickLevel = lastRight + 0.1F; }
-        else if(diff < 0.1D) { joystickLevel = lastRight - 0.1F; }
+        if(diff > 0.1D) { joystickLevel = lastRight + 0.1D; }
+        else if(diff < 0.1D) { joystickLevel = lastRight - 0.1D; }
 
         lastRight = joystickLevel;
         out.right = joystickLevel;
 
-        // Sets the speed to 0 if the speed is less than 0.05 or larger than -0.05
-        if(Math.abs(out.left) < 0.05D) { out.left = 0.0F; }
-        if(Math.abs(out.right) < 0.05D) { out.right = 0.0F; }
+        // Sets the speed to 0 if the speed is less than 0.05 and larger than -0.05
+        if(Math.abs(out.left) < 0.05D) { out.left = 0.0D; }
+        if(Math.abs(out.right) < 0.05D) { out.right = 0.0D; }
 
         return out;
     }
 
-    private FloatPair getSpeed()
+    private DoublePair getSpeed()
     {
         return getSpeed(SPEED_CONTAINER);
     }
 
     public void drive()
     {
-        FloatPair speed = getSpeed();
+        DoublePair speed = getSpeed();
 
         Log.debug("Left: {0,number,#.###}\t\t Right: {0,number,#.###}", speed.right, speed.left);
 
@@ -187,6 +188,7 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         return Math.abs((leftRearTalonEnc.getSelectedSensorVelocity(0) + rightRearTalonEnc.getSelectedSensorVelocity(0)) / 2.0F);
     }
 
+    @Override
     public void updateDashboard()
     {
         SmartDashboard.putNumber("Left Speed (ft/s)", leftRearTalonEnc.getSelectedSensorVelocity(0) * RobotMap.Motor.VEL_TO_FPS);
@@ -253,7 +255,7 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     }
 
     /**
-     * A generic data structure to store a pair of objects.
+     * A data structure to store a pair of floats.
      */
     private static class FloatPair
     {
@@ -280,6 +282,49 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         public int hashCode()
         {
             return (Float.floatToIntBits(left) * 31) + (Float.floatToIntBits(right) * 7);
+        }
+
+        @Override
+        public boolean equals(Object o)
+        {
+            if(this == o) { return true; }
+            if(o instanceof FloatPair)
+            {
+                FloatPair pair = (FloatPair) o;
+                return left == pair.left && right == pair.right;
+            }
+            return false;
+        }
+    }
+
+    /**
+     * A data structure to store a pair of doubles.
+     */
+    private static class DoublePair
+    {
+        public double left;
+        public double right;
+
+        public DoublePair(double left, double right)
+        {
+            this.left = left;
+            this.right = right;
+        }
+
+        public DoublePair() { }
+
+        @Override
+        public String toString()
+        {
+            return new StringBuilder(47).append("Pair: { \"left\": \"")
+                                        .append(String.format("%.05f", left)).append("\", \"right\": \"")
+                                        .append(String.format("%.05f", right)).append("\" }").toString();
+        }
+
+        @Override
+        public int hashCode()
+        {
+            return (int) (((Double.doubleToLongBits(left) * 31) + (Double.doubleToLongBits(right) * 7)) % Integer.MAX_VALUE);
         }
 
         @Override
