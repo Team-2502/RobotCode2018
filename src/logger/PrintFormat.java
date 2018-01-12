@@ -41,10 +41,10 @@ public class PrintFormat
 
     protected class Timer
     {
+        protected final long startTime;
         protected long[] times;
         protected long[] lastTimes;
         protected String[] stringTimes;
-        protected final long startTime;
 
         private Timer()
         {

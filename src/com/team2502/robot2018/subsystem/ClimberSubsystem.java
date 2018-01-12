@@ -1,6 +1,5 @@
 package com.team2502.robot2018.subsystem;
 
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.team2502.robot2018.OI;
 import com.team2502.robot2018.RobotMap;
 import com.team2502.robot2018.command.teleop.RunClimberCommand;

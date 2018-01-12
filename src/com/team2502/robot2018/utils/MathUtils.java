@@ -15,8 +15,8 @@ public final class MathUtils
     public static final float ROOT_2_F = 1.414213562F;
     public static final float ROOT_3_F = 1.732050808F;
 
-    public static final double TAU = 2 * Math.PI;
-    public static final float TAU_F = 2 * (float) Math.PI;
+    public static final double TAU_D = 2 * Math.PI;
+    public static final float TAU = 2 * (float) Math.PI;
 
     /**
      * A table of sin values computed from 0 (inclusive) to 2π (exclusive), with steps of 2π / 65536.
@@ -33,6 +33,8 @@ public final class MathUtils
         SIN_TABLE[49152] = -1;  /* 3π/2 */
     }
 
+    private MathUtils() { }
+
     /**
      * sin looked up in a table
      */
@@ -45,128 +47,9 @@ public final class MathUtils
     public static float cos(final float value)
     { return SIN_TABLE[(int) (value * 10430.378F + 16384.0F) & 65535]; }
 
-    public static class LinearAlgebra
-    {
-        @Deprecated
-        public static Vector rotate2D(Vector vector, float theta)
-        {
-            return new Vector(
-                    (vector.get(0) * cos(theta) - vector.get(1) * sin(theta)),
-                    (vector.get(0) * sin(theta) + vector.get(1) * cos(theta)));
-        }
-
-        public static Vector2f rotate2D(Vector2f vector, float theta)
-        {
-            float sin = sin(theta);
-            float cos = cos(theta);
-            return new Vector2f((vector.x * cos - vector.y * sin),
-                                (vector.x * sin + vector.y * cos));
-        }
-
-        @Deprecated
-        public static Vector absoluteToRelativeCoord(Vector relativeCoord, Vector absoluteLocation, float robotHeading)
-        {
-//            System.out.println(relativeCoord );
-            if(relativeCoord.dimensions() != 2) { throw new IllegalArgumentException("Must be in R2"); }
-            Vector coordDif = relativeCoord.clone().subtractBy(absoluteLocation);
-            return LinearAlgebra.rotate2D(coordDif, -robotHeading);
-        }
-
-        public static Vector2f absoluteToRelativeCoord(Vector2f relativeCoord, Vector2f absoluteLocation, float robotHeading)
-        { return rotate2D(new Vector2f(relativeCoord).sub(absoluteLocation), -robotHeading); }
-    }
-
-    public static class Algebra
-    {
-        /**
-         * @return if a <= x <= b or b<= x <= a
-         */
-        public static boolean between(final float a, final float x, final float b)
-        {
-            return (a <= x && x <= b) || (b <= x && x <= a);
-        }
-
-        public static boolean positiveMultiplication(final float a, final float b)
-        {
-            return a >= 0 && b >= 0 || a < 0 && b < 0;
-        }
-    }
-
     public static boolean between(final Vector2f a, final Vector2f x, final Vector2f c)
     {
         return Algebra.between(a.x, x.x, c.x) && Algebra.between(a.y, x.y, c.y);
-    }
-
-    public static class Geometry
-    {
-        public static Vector2f[] getCircleLineIntersectionPoint(Vector2f pointA, Vector2f pointB, Vector2f center, double radius)
-        {
-            float baX = pointB.x - pointA.x;
-            float baY = pointB.y - pointA.y;
-
-            float caX = center.x - pointA.x;
-            float caY = center.y - pointA.y;
-
-            float a = baX * baX + baY * baY;
-            float bBy2 = baX * caX + baY * caY;
-            double c = caX * caX + caY * caY - radius * radius;
-
-            float pBy2 = bBy2 / a;
-            double q = c / a;
-
-            double disc = pBy2 * pBy2 - q;
-            if(disc < 0) { return new Vector2f[0]; }
-            // if disc == 0 ... dealt with later
-            float tmpSqrt = (float) Math.sqrt(disc);
-            float abScalingFactor1 = tmpSqrt - pBy2;
-
-            Vector2f p1 = new Vector2f(pointA.x - baX * abScalingFactor1, pointA.y - baY * abScalingFactor1);
-            if(disc == 0) { return new Vector2f[] { p1 }; }
-
-            float abScalingFactor2 = -pBy2 - tmpSqrt;
-            Vector2f p2 = new Vector2f(pointA.x - baX * abScalingFactor2, pointA.y - baY * abScalingFactor2);
-            return new Vector2f[] { p1, p2 };
-        }
-
-        public static Vector2f[] circleLineIntersect(Vector2f lineP1, Vector2f lineP2, Vector2f circleCenter, float circleRadius)
-        {
-            // Circle-line intersection
-            float x_0 = lineP1.x, y_0 = lineP1.y;
-            float x_1 = lineP2.x, y_1 = lineP2.y;
-            float x_c = circleCenter.x, y_c = circleCenter.y;
-
-            float f = x_1 - x_0;
-            float g = y_1 - y_0;
-
-            float xc0 = x_c - x_0;
-            float yc0 = y_c - y_0;
-
-            float t = f * xc0 + g * yc0;
-
-            float fg2 = f * f + g * g;
-
-            float inRoot = (circleRadius * circleRadius + fg2 - pow2f(f * yc0 - g * xc0));
-            if(inRoot < 0) { return new Vector2f[0]; }
-            if(inRoot == 0)
-            {
-                float intersectT = t / fg2;
-                Vector2f intersection = new Vector2f(intersectT * f, intersectT * g);
-                if(between(lineP1, intersection, lineP2)) { return new Vector2f[] { intersection }; }
-                else { return new Vector2f[0]; }
-            }
-            float pm = (float) Math.sqrt(inRoot);
-            float intersectT1 = (t + pm) / fg2;
-            float intersectT2 = (t - pm) / fg2;
-            Vector2f intersect1 = new Vector2f(intersectT1 * f + x_0, intersectT1 * g + y_0);
-            Vector2f intersect2 = new Vector2f(intersectT2 * f + x_0, intersectT2 * g + y_0);
-            if(between(lineP1, intersect1, lineP2))
-            {
-                if(between(lineP1, intersect2, lineP2)) { return new Vector2f[] { intersect1, intersect2 }; }
-                else { return new Vector2f[] { intersect1 }; }
-            }
-            else if(between(lineP1, intersect2, lineP2)) { return new Vector2f[] { intersect2 }; }
-            return new Vector2f[0];
-        }
     }
 
     /**
@@ -299,8 +182,6 @@ public final class MathUtils
     public static float maxF(final float a, final int b)
     { return a > b ? a : b; }
 
-    //region Logarithmic Functions
-
     /**
      * Allows for the calculate of logX(in), may have minor performance boost from using direct call to StrictMath lowering stack overhead.
      *
@@ -329,6 +210,8 @@ public final class MathUtils
      */
     public static double log2(final double in)
     { return StrictMath.log(in) / 0.6931471806D; }
+
+    //region Logarithmic Functions
 
     /**
      * Use the predefined cube log instead of a custom implementation.
@@ -428,7 +311,6 @@ public final class MathUtils
      */
     public static double ln(final double in)
     { return StrictMath.log(in); }
-    //endregion
 
     //region Exponentiation Functions
     public static double pow2(final double x)
@@ -439,6 +321,7 @@ public final class MathUtils
 
     public static double pow4(final double x)
     { return x * x * x * x; }
+    //endregion
 
     public static double pow5(final double x)
     { return x * x * x * x * x; }
@@ -484,7 +367,174 @@ public final class MathUtils
 
     public static float pow10f(final float x)
     { return x * x * x * x * x * x * x * x * x * x; }
+
+    public static class LinearAlgebra
+    {
+        @Deprecated
+        public static Vector rotate2D(Vector vector, float theta)
+        {
+            return new Vector(
+                    (vector.get(0) * cos(theta) - vector.get(1) * sin(theta)),
+                    (vector.get(0) * sin(theta) + vector.get(1) * cos(theta)));
+        }
+
+        public static Vector2f rotate2D(Vector2f vector, float theta)
+        {
+            float sin = sin(theta);
+            float cos = cos(theta);
+            return new Vector2f((vector.x * cos - vector.y * sin),
+                                (vector.x * sin + vector.y * cos));
+        }
+
+        @Deprecated
+        public static Vector absoluteToRelativeCoord(Vector relativeCoord, Vector absoluteLocation, float robotHeading)
+        {
+//            System.out.println(relativeCoord );
+            if(relativeCoord.dimensions() != 2) { throw new IllegalArgumentException("Must be in R2"); }
+            Vector coordDif = relativeCoord.clone().subtractBy(absoluteLocation);
+            return LinearAlgebra.rotate2D(coordDif, -robotHeading);
+        }
+
+        public static Vector2f absoluteToRelativeCoord(Vector2f relativeCoord, Vector2f absoluteLocation, float robotHeading)
+        { return rotate2D(new Vector2f(relativeCoord).sub(absoluteLocation), -robotHeading); }
+    }
+
+    public static class Algebra
+    {
+        /**
+         * @return if a <= x <= b or b<= x <= a
+         */
+        public static boolean between(final float a, final float x, final float b)
+        {
+            return (a <= x && x <= b) || (b <= x && x <= a);
+        }
+
+        public static boolean positiveMultiplication(final float a, final float b)
+        {
+            return a >= 0 && b >= 0 || a < 0 && b < 0;
+        }
+    }
+
+    public static class Kinematics
+    {
+        public static float getAngularVel(float vL, float vR, float l)
+        {
+            return (vR - vL) / l;
+        }
+
+        public static float getTrajectoryRadius(float vL, float vR, float l)
+        {
+            return (l * (vR + vL)) / (2 * (vR - vL));
+        }
+
+        public static Vector2f getRelativeDPos(float vL, float vR, float l, float dt)
+        {
+            // To account for an infinite trajectory radius when going straight
+            if(Math.abs(vL - vR) <= (vL + vR) * 1E-2)
+            {
+                // Probably average is not needed, but it may be useful over long distances
+                return new Vector2f(0, (vL + vR) / 2F);
+            }
+            float w = getAngularVel(vL, vR, l);
+            float dTheta = w * dt;
+
+            float r = getTrajectoryRadius(vL, vR, l);
+
+            float dxRelative = -r * (1 - MathUtils.cos(-dTheta));
+            float dyRelative = -r * MathUtils.sin(-dTheta);
+
+            return new Vector2f(dxRelative, dyRelative);
+        }
+
+        public static Vector2f getAbsoluteDPos(float vL, float vR, float l, float dt, float robotHeading)
+        {
+            Vector2f relativeDPos = getRelativeDPos(vL, vR, l, dt);
+            Vector2f rotated = MathUtils.LinearAlgebra.rotate2D(relativeDPos, robotHeading);
+            return rotated;
+        }
+    }
     //endregion
 
-    private MathUtils() { }
+    public static class Geometry
+    {
+        /**
+         * @param initDegrees
+         * @param finalDegrees
+         * @return the difference in radians between the two degrees from [0,2pi). Increases counterclockwise.
+         */
+        public static float getDTheta(float initDegrees, float finalDegrees)
+        {
+            double radians = MathUtils.deg2Rad(finalDegrees - initDegrees);
+            return (float) -(radians % TAU);
+        }
+
+        public static Vector2f[] getCircleLineIntersectionPoint(Vector2f pointA, Vector2f pointB, Vector2f center, double radius)
+        {
+            float baX = pointB.x - pointA.x;
+            float baY = pointB.y - pointA.y;
+
+            float caX = center.x - pointA.x;
+            float caY = center.y - pointA.y;
+
+            float a = baX * baX + baY * baY;
+            float bBy2 = baX * caX + baY * caY;
+            double c = caX * caX + caY * caY - radius * radius;
+
+            float pBy2 = bBy2 / a;
+            double q = c / a;
+
+            double disc = pBy2 * pBy2 - q;
+            if(disc < 0) { return new Vector2f[0]; }
+            // if disc == 0 ... dealt with later
+            float tmpSqrt = (float) Math.sqrt(disc);
+            float abScalingFactor1 = tmpSqrt - pBy2;
+
+            Vector2f p1 = new Vector2f(pointA.x - baX * abScalingFactor1, pointA.y - baY * abScalingFactor1);
+            if(disc == 0) { return new Vector2f[] { p1 }; }
+
+            float abScalingFactor2 = -pBy2 - tmpSqrt;
+            Vector2f p2 = new Vector2f(pointA.x - baX * abScalingFactor2, pointA.y - baY * abScalingFactor2);
+            return new Vector2f[] { p1, p2 };
+        }
+
+        public static Vector2f[] circleLineIntersect(Vector2f lineP1, Vector2f lineP2, Vector2f circleCenter, float circleRadius)
+        {
+            // Circle-line intersection
+            float x_0 = lineP1.x, y_0 = lineP1.y;
+            float x_1 = lineP2.x, y_1 = lineP2.y;
+            float x_c = circleCenter.x, y_c = circleCenter.y;
+
+            float f = x_1 - x_0;
+            float g = y_1 - y_0;
+
+            float xc0 = x_c - x_0;
+            float yc0 = y_c - y_0;
+
+            float t = f * xc0 + g * yc0;
+
+            float fg2 = f * f + g * g;
+
+            float inRoot = (circleRadius * circleRadius + fg2 - pow2f(f * yc0 - g * xc0));
+            if(inRoot < 0) { return new Vector2f[0]; }
+            if(inRoot == 0)
+            {
+                float intersectT = t / fg2;
+                Vector2f intersection = new Vector2f(intersectT * f, intersectT * g);
+                if(between(lineP1, intersection, lineP2)) { return new Vector2f[] { intersection }; }
+                else { return new Vector2f[0]; }
+            }
+            float pm = (float) Math.sqrt(inRoot);
+            float intersectT1 = (t + pm) / fg2;
+            float intersectT2 = (t - pm) / fg2;
+            Vector2f intersect1 = new Vector2f(intersectT1 * f + x_0, intersectT1 * g + y_0);
+            Vector2f intersect2 = new Vector2f(intersectT2 * f + x_0, intersectT2 * g + y_0);
+            if(between(lineP1, intersect1, lineP2))
+            {
+                if(between(lineP1, intersect2, lineP2)) { return new Vector2f[] { intersect1, intersect2 }; }
+                else { return new Vector2f[] { intersect1 }; }
+            }
+            else if(between(lineP1, intersect2, lineP2)) { return new Vector2f[] { intersect2 }; }
+            return new Vector2f[0];
+        }
+    }
 }

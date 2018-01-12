@@ -8,6 +8,9 @@ import java.util.Timer;
 public final class Log
 {
     private static final Timer TIMER;
+    private static boolean debug = false;
+    private static PrintFormat pf = null;
+
     static
     {
         LoggerPrintStream ops = new LoggerPrintStream(System.out);
@@ -19,9 +22,7 @@ public final class Log
         TIMER.scheduleAtFixedRate(new LoggerPrintStream.PrintTimer(eps), 1000, 1000);
     }
 
-    private static boolean debug = false;
-
-    private static PrintFormat pf = null;
+    private Log() {}
 
     public static boolean isDebugMode() { return debug; }
 
@@ -105,9 +106,9 @@ public final class Log
     @SuppressWarnings("WeakerAccess")
     public static final class ClassGetter
     {
-        private ClassGetter() {}
-
         private static final int BASE_DEPTH = 5;
+
+        private ClassGetter() {}
 
         public static String getCallerClassName(int depth)
         {
@@ -120,6 +121,4 @@ public final class Log
 
         public static String getCallerClassName() { return getCallerClassName(1); }
     }
-
-    private Log() {}
 }

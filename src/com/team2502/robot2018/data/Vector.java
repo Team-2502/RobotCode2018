@@ -1,7 +1,6 @@
 package com.team2502.robot2018.data;
 
 import com.team2502.robot2018.utils.MathUtils;
-import edu.wpi.first.wpilibj.HLUsageReporting;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,6 +14,14 @@ public class Vector
     public Vector(float... elements)
     { this.elements = elements; }
 
+    public static List<Vector> genFromArray(float[][] vectorArray)
+    {
+        if(vectorArray.length == 0 || vectorArray[0].length == 0) { return new ArrayList<>(); }
+        List<Vector> vectorList = new ArrayList<>();
+        for(float[] vectorElements : vectorArray) { vectorList.add(new Vector(vectorElements)); }
+        return vectorList;
+    }
+
     public Vector add(Vector other) throws IndexOutOfBoundsException, NullPointerException
     {
         if(other.elements.length != elements.length) { throw new IndexOutOfBoundsException("Vector lengths must be equal."); }
@@ -22,14 +29,6 @@ public class Vector
         float[] vals = new float[elements.length];
         for(int i = 0; i < elements.length; ++i) { vals[i] = elements[i] + other.elements[i]; }
         return new Vector(vals);
-    }
-
-    public static List<Vector> genFromArray(float[][] vectorArray)
-    {
-        if(vectorArray.length == 0 || vectorArray[0].length == 0) { return new ArrayList<>(); }
-        List<Vector> vectorList = new ArrayList<>();
-        for(float[] vectorElements : vectorArray) { vectorList.add(new Vector(vectorElements)); }
-        return vectorList;
     }
 
     public boolean between(Vector a, Vector c)
@@ -87,16 +86,16 @@ public class Vector
     public String toString()
     {
         String vector = "(";
-        for (int i = 0; i < elements.length; i++)
+        for(int i = 0; i < elements.length; i++)
         {
             String toAppend = String.valueOf(elements[i]);
-            vector+=toAppend;
-            if(i!= elements.length-1)
+            vector += toAppend;
+            if(i != elements.length - 1)
             {
-                vector+=",";
+                vector += ",";
             }
         }
-        vector+=")";
+        vector += ")";
         return vector;
     }
 

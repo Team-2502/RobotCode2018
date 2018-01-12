@@ -13,6 +13,22 @@ class AutoSwitcher
 {
     private static SendableChooser<AutoMode> autoChooser;
 
+    static void putToSmartDashboard()
+    {
+        autoChooser = new SendableChooser<AutoMode>();
+
+        for(int i = 0; i < AutoMode.values().length; i++)
+        {
+            AutoMode mode = AutoMode.values()[i];
+            if(i == 0) { autoChooser.addDefault(mode.name, mode); }
+            else { autoChooser.addObject(mode.name, mode); }
+        }
+
+        SmartDashboard.putData("auto_modes", autoChooser);
+    }
+
+    static Command getAutoInstance() { return autoChooser.getSelected().getInstance(); }
+
     public enum AutoMode
     {
         PURE_PURSUIT("PurePursuit", PurePursuitCommand.class),
@@ -38,20 +54,4 @@ class AutoSwitcher
             return instance;
         }
     }
-
-    static void putToSmartDashboard()
-    {
-        autoChooser = new SendableChooser<AutoMode>();
-
-        for(int i = 0; i < AutoMode.values().length; i++)
-        {
-            AutoMode mode = AutoMode.values()[i];
-            if(i == 0) { autoChooser.addDefault(mode.name, mode); }
-            else { autoChooser.addObject(mode.name, mode); }
-        }
-
-        SmartDashboard.putData("auto_modes", autoChooser);
-    }
-
-    static Command getAutoInstance() { return autoChooser.getSelected().getInstance(); }
 }

@@ -40,16 +40,15 @@ import java.util.List;
 @SuppressWarnings("unused")
 public class PurePursuitMovementStrategy implements ITankMovementStrategy
 {
+    private static final float THRESHOLD_CURVATURE = 0.001F;
     public final List<Vector2f> waypoints;
+    public final float lookAheadDistance;
     private final ILocationEstimator estimator;
-    private Vector2f relativeGoalPoint;
     private final ITankRobot tankRobot;
+    private Vector2f relativeGoalPoint;
     private float pathRadius;
     private float rotVelocity;
-    public final float lookAheadDistance;
     private boolean finishedPath = false;
-    private static final float THRESHOLD_CURVATURE = 0.001F;
-
     private Vector2f usedEstimatedLocation = new Vector2f();
     private float usedHeading = 0.0F;
 
@@ -127,10 +126,13 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
     public void update()
     {
         absoluteGoalPoint = calculateAbsoluteGoalPoint();
-        Log.debug(usedEstimatedLocation);
-        Log.debug("estimated location: {0}", usedEstimatedLocation);
-        Log.debug(usedHeading);
-        Log.debug(absoluteGoalPoint);
+        Log.debug("uEL: " + usedEstimatedLocation);
+        Log.debug("uHeading: " + usedHeading);
+        if(absoluteGoalPoint == null)
+        {
+            Log.debug("Can't find absolute goal point!");
+        }
+        Log.debug("absGP: " + absoluteGoalPoint);
         relativeGoalPoint = MathUtils.LinearAlgebra.absoluteToRelativeCoord(absoluteGoalPoint, usedEstimatedLocation, usedHeading);
         wheelVelocities = calculateWheelVelocities();
     }

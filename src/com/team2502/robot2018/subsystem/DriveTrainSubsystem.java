@@ -172,7 +172,7 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     {
         FloatPair speed = getSpeed();
 
-        Log.debug("Left: {0,number,#.###}\t\t Right: {0,number,#.###}", speed.right, speed.left);
+        // Log.debug("Left: {0,number,#.###}\t\t Right: {0,number,#.###}", speed.right, speed.left);
 
         //reverse drive
         if(OI.JOYSTICK_DRIVE_LEFT.getRawButton(RobotMap.Joystick.Button.INVERSE_DRIVER_CONTROLS) && !isNegativePressed) { negative = !negative; }

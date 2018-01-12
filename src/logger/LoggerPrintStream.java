@@ -9,8 +9,8 @@ import java.util.TimerTask;
 public class LoggerPrintStream extends PrintStream
 {
     protected final boolean isOutputStream;
-    private transient int depth;
     private final Queue<String> printBuffer;
+    private transient int depth;
     private int length;
 
     public LoggerPrintStream(PrintStream original)

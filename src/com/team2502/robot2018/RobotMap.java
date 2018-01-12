@@ -27,6 +27,7 @@ public class RobotMap
             public static final int FORCE_LOW_GEAR = UNDEFINED;
             @Undefined(safe = true)
             public static final int INVERSE_DRIVER_CONTROLS = UNDEFINED;
+
             private Button() { }
         }
     }

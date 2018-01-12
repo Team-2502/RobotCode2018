@@ -12,6 +12,8 @@ public final class OI
     {
     }
 
+    private OI() { }
+
     public static void init() {}
 
     public static boolean joysThreshold(double threshold, boolean above)
@@ -19,6 +21,4 @@ public final class OI
         if(above) { return Math.abs(OI.JOYSTICK_DRIVE_RIGHT.getY()) > threshold && Math.abs(OI.JOYSTICK_DRIVE_LEFT.getY()) > threshold; }
         else { return Math.abs(OI.JOYSTICK_DRIVE_RIGHT.getY()) < threshold && Math.abs(OI.JOYSTICK_DRIVE_LEFT.getY()) < threshold; }
     }
-
-    private OI() { }
 }

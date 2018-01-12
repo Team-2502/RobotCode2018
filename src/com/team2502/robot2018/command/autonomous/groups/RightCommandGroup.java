@@ -3,13 +3,11 @@ package com.team2502.robot2018.command.autonomous.groups;
 import com.team2502.robot2018.Robot;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
-import java.util.Scanner;
-
 public class RightCommandGroup extends CommandGroup
 {
     public RightCommandGroup()
     {
-        String AUTO_GAME_DATA = Robot.GAME_DATA.substring(0,2);
+        String AUTO_GAME_DATA = Robot.GAME_DATA.substring(0, 2);
 
         switch(AUTO_GAME_DATA)
         {
