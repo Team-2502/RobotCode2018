@@ -127,10 +127,13 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
     public void update()
     {
         absoluteGoalPoint = calculateAbsoluteGoalPoint();
-        Log.debug(usedEstimatedLocation);
-        Log.debug("estimated location: {0}", usedEstimatedLocation);
-        Log.debug(usedHeading);
-        Log.debug(absoluteGoalPoint);
+        Log.debug("uEL: "+usedEstimatedLocation);
+        Log.debug("uHeading: "+usedHeading);
+        if(absoluteGoalPoint == null)
+        {
+            Log.debug("Can't find absolute goal point!");
+        }
+        Log.debug("absGP: "+absoluteGoalPoint);
         relativeGoalPoint = MathUtils.LinearAlgebra.absoluteToRelativeCoord(absoluteGoalPoint, usedEstimatedLocation, usedHeading);
         wheelVelocities = calculateWheelVelocities();
     }

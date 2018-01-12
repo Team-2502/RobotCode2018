@@ -29,18 +29,23 @@ public final class Robot extends IterativeRobot
     public static PrintWriter LOG_OUTPUT;
 
     // Currently the max percent voltage that can be given to each to each wheel
-    public static final float VR_MAX = .3F;
-    public static final float VL_MAX = .3F;
-    public static final float VR_MIN = -.3F;
-    public static final float VL_MIN = -.3F;
-    // The distance between wheels (laterally) in Raw Encoder Units. Measure from the centerpoints of the wheels.
-    public static final float LATERAL_WHEEL_DISTANCE = 7.6666666667F;
-    // The lookahead distance (Raw Encoder Units) for Pure Pursuit
-    public static final float LOOKAHEAD_DISTANCE = 1000F;
+    public static final float VR_MAX = .25F;
+    public static final float VL_MAX = .25F;
+    public static final float VR_MIN = -.25F;
+    public static final float VL_MIN = -.25F;
+    // The distance between wheels (laterally) in feet. Measure from the centerpoints of the wheels.
+    public static final float LATERAL_WHEEL_DISTANCE = 23.25F;
+    // The lookahead distance (feet) for Pure Pursuit
+    public static final float LOOKAHEAD_DISTANCE = 1F;
 
     // NavX Subsystem
     public static AHRS NAVX;
     private File logFile;
+
+    public static final class Physical {
+        public static final float WHEEL_DIAMETER_INCH = 4;
+        public static final float WHEEL_DIAMETER_FT = WHEEL_DIAMETER_INCH/12;
+    }
 
     public static void write(String string)
     {
@@ -118,7 +123,7 @@ public final class Robot extends IterativeRobot
 //        Scheduler.getInstance().add(AutoSwitcher.getAutoInstance());
         ArrayList<Vector2f> waypoints = new ArrayList<>();
         waypoints.add(new Vector2f(0, 0));
-        waypoints.add(new Vector2f(7, 7));
+        waypoints.add(new Vector2f(0, 4));
         Scheduler.getInstance().add(new PurePursuitCommand(waypoints, LOOKAHEAD_DISTANCE));
         // Scheduler.getInstance().add(AutoSwitcher.getAutoInstance());
         NAVX.reset();

@@ -15,6 +15,8 @@ public final class MathUtils
     public static final float ROOT_2_F = 1.414213562F;
     public static final float ROOT_3_F = 1.732050808F;
 
+    public static final float TAU = 6.2831853071F;
+
     /**
      * A table of sin values computed from 0 (inclusive) to 2π (exclusive), with steps of 2π / 65536.
      */
@@ -94,8 +96,52 @@ public final class MathUtils
         return Algebra.between(a.x, x.x, c.x) && Algebra.between(a.y, x.y, c.y);
     }
 
+    public static class Kinematics {
+        public static float getAngularVel(float vL, float vR, float l){
+            return (vR-vL)/l;
+        }
+
+        public static float getTrajectoryRadius(float vL, float vR, float l){
+            return (l*(vR+vL))/(2*(vR-vL));
+        }
+
+        public static Vector2f getRelativeDPos(float vL, float vR, float l, float dt){
+            // To account for an infinite trajectory radius when going straight
+            if(Math.abs(vL-vR)<=(vL+vR)*1E-2)
+            {
+                // Probably average is not needed, but it may be useful over long distances
+                return new Vector2f(0,(vL+vR)/2F);
+            }
+            float w = getAngularVel(vL,vR,l);
+            float dTheta = w*dt;
+
+            float r = getTrajectoryRadius(vL, vR, l);
+
+            float dxRelative = -r * (1 - MathUtils.cos(-dTheta));
+            float dyRelative = -r * MathUtils.sin(-dTheta);
+
+            return new Vector2f(dxRelative, dyRelative);
+        }
+
+        public static Vector2f getAbsoluteDPos(float vL, float vR, float l, float dt, float robotHeading){
+            Vector2f relativeDPos = getRelativeDPos(vL, vR, l, dt);
+            Vector2f rotated = MathUtils.LinearAlgebra.rotate2D(relativeDPos, robotHeading);
+            return rotated;
+        }
+    }
     public static class Geometry
     {
+        /**
+         *
+         * @param initDegrees
+         * @param finalDegrees
+         * @return the difference in radians between the two degrees from [0,2pi). Increases counterclockwise.
+         */
+        public static float getDTheta(float initDegrees, float finalDegrees){
+            double radians = MathUtils.deg2Rad(finalDegrees - initDegrees);
+            return (float) -(radians % TAU);
+        }
+
         public static Vector2f[] getCircleLineIntersectionPoint(Vector2f pointA, Vector2f pointB, Vector2f center, double radius)
         {
             float baX = pointB.x - pointA.x;
