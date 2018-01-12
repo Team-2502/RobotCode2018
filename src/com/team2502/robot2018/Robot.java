@@ -12,17 +12,35 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import logger.Log;
 
+import java.io.*;
+
 public final class Robot extends IterativeRobot
 {
+    // Currently the max percent voltage that can be given to each to each wheel
+    public static final float VR_MAX = .25F;
+    public static final float VL_MAX = .25F;
+    public static final float VR_MIN = -.25F;
+    public static final float VL_MIN = -.25F;
+    // The distance between wheels (laterally) in feet. Measure from the centerpoints of the wheels.
+    public static final float LATERAL_WHEEL_DISTANCE = 23.25F;
+    // The lookahead distance (feet) for Pure Pursuit
+    public static final float LOOKAHEAD_DISTANCE = 1F;
     public static DriveTrainSubsystem DRIVE_TRAIN;
     public static TransmissionSubsystem TRANSMISSION;
     public static ClimberSubsystem CLIMBER;
     public static long SHIFTED;
     public static Compressor COMPRESSOR;
     public static String GAME_DATA; //TODO: Have better name
-
+    public static PrintWriter LOG_OUTPUT;
     // NavX Subsystem
     public static AHRS NAVX;
+    private File logFile;
+
+    public static void write(String string)
+    {
+        LOG_OUTPUT.println(string);
+        // System.out.println("I am writing something ");
+    }
 
     /**
      * This function is run when the robot is first started up and should be
@@ -30,7 +48,20 @@ public final class Robot extends IterativeRobot
      */
     public void robotInit()
     {
-        Log.createLogger();
+        logFile = new File("/home/lvuser/log.txt");
+        FileWriter fileWriter = null;
+        try
+        {
+            logFile.createNewFile();
+            fileWriter = new FileWriter(logFile);
+        }
+        catch(IOException e) { e.printStackTrace(); }
+        LOG_OUTPUT = new PrintWriter(fileWriter == null ? new OutputStreamWriter(System.out) : fileWriter, true);
+
+        Robot.write("tester");
+        // System.out.println("writing tester");
+
+        Log.createLogger(true);
         DRIVE_TRAIN = new DriveTrainSubsystem();
         CLIMBER = new ClimberSubsystem();
         NAVX = new AHRS(SPI.Port.kMXP);
@@ -42,8 +73,7 @@ public final class Robot extends IterativeRobot
         OI.init();
 
         NAVX.resetDisplacement();
-
-        DashboardData.addUpdater(DRIVE_TRAIN);
+        // DashboardData.addUpdater(DRIVE_TRAIN);
     }
 
     /**
@@ -51,7 +81,12 @@ public final class Robot extends IterativeRobot
      * You can use it to reset any subsystem information you want to clear when
      * the robot is disabled.
      */
-    public void disabledInit() { }
+
+    public void disabledInit()
+    {
+        CLIMBER.stop();
+        LOG_OUTPUT.close();
+    }
 
     public void disabledPeriodic()
     {
@@ -73,7 +108,9 @@ public final class Robot extends IterativeRobot
      */
     public void autonomousInit()
     {
-        Scheduler.getInstance().add(AutoSwitcher.getAutoInstance());
+        DRIVE_TRAIN.setAutonSettings();
+//        Scheduler.getInstance().add(AutoSwitcher.getAutoInstance());
+        // Scheduler.getInstance().add(AutoSwitcher.getAutoInstance());
         NAVX.reset();
     }
 
@@ -104,5 +141,11 @@ public final class Robot extends IterativeRobot
     {
         LiveWindow.run();
         DashboardData.update();
+    }
+
+    public static final class Physical
+    {
+        public static final float WHEEL_DIAMETER_INCH = 4;
+        public static final float WHEEL_DIAMETER_FT = WHEEL_DIAMETER_INCH / 12;
     }
 }

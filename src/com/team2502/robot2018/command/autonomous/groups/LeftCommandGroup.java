@@ -7,7 +7,7 @@ public class LeftCommandGroup extends CommandGroup
 {
     public LeftCommandGroup()
     {
-        String AUTO_GAME_DATA = Robot.GAME_DATA.substring(0,2);
+        String AUTO_GAME_DATA = Robot.GAME_DATA.substring(0, 2);
 
         switch(AUTO_GAME_DATA)
         {
@@ -25,6 +25,7 @@ public class LeftCommandGroup extends CommandGroup
 
             default:
                 break;
-        }    }
+        }
+    }
 
 }

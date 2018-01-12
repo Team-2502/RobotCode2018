@@ -26,9 +26,7 @@ public class TransmissionSubsystem extends Subsystem
     }
 
     @Override
-    protected void initDefaultCommand()
-    {
-    }
+    protected void initDefaultCommand() {}
 
     /**
      * Switch the gear from its current state

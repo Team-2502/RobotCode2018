@@ -39,6 +39,7 @@ public class RobotMap
 
     public static final class Motor
     {
+
         public static final float WHEEL_DIAMETER = 6.0F;
         public static final float POS_TO_FEET = (WHEEL_DIAMETER * (float) Math.PI) / (4096.0F * 12.0F);
         public static final float VEL_TO_RPM = (600.0F / 4096.0F);
@@ -51,6 +52,7 @@ public class RobotMap
         public static final double SHIFT_UP_THRESHOLD = UNDEFINED;
         @Undefined(safe = true)
         public static final double SHIFT_DOWN_THRESHOLD = UNDEFINED;
+
 
         // TODO: Set proper values.
         public static final int DRIVE_TRAIN_FRONT_LEFT = 8;
@@ -69,6 +71,7 @@ public class RobotMap
     public class Solenoid
     {
         public static final int TRANSMISSION_SWITCH = 0;
+
 
         private Solenoid() { }
     }

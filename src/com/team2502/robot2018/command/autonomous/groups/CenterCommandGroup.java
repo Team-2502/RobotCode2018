@@ -7,7 +7,7 @@ public class CenterCommandGroup extends CommandGroup
 {
     public CenterCommandGroup()
     {
-        String AUTO_GAME_DATA = Robot.GAME_DATA.substring(0,2);
+        String AUTO_GAME_DATA = Robot.GAME_DATA.substring(0, 2);
 
         switch(AUTO_GAME_DATA)
         {
@@ -22,7 +22,7 @@ public class CenterCommandGroup extends CommandGroup
 
             case "RR":
                 break;
-                
+
             default:
                 break;
         }
