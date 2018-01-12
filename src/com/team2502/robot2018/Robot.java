@@ -19,15 +19,6 @@ import java.util.ArrayList;
 
 public final class Robot extends IterativeRobot
 {
-    public static DriveTrainSubsystem DRIVE_TRAIN;
-    public static TransmissionSubsystem TRANSMISSION;
-    public static ClimberSubsystem CLIMBER;
-    public static long SHIFTED;
-    public static Compressor COMPRESSOR;
-    public static String GAME_DATA; //TODO: Have better name
-
-    public static PrintWriter LOG_OUTPUT;
-
     // Currently the max percent voltage that can be given to each to each wheel
     public static final float VR_MAX = .25F;
     public static final float VL_MAX = .25F;
@@ -37,15 +28,16 @@ public final class Robot extends IterativeRobot
     public static final float LATERAL_WHEEL_DISTANCE = 23.25F;
     // The lookahead distance (feet) for Pure Pursuit
     public static final float LOOKAHEAD_DISTANCE = 1F;
-
+    public static DriveTrainSubsystem DRIVE_TRAIN;
+    public static TransmissionSubsystem TRANSMISSION;
+    public static ClimberSubsystem CLIMBER;
+    public static long SHIFTED;
+    public static Compressor COMPRESSOR;
+    public static String GAME_DATA; //TODO: Have better name
+    public static PrintWriter LOG_OUTPUT;
     // NavX Subsystem
     public static AHRS NAVX;
     private File logFile;
-
-    public static final class Physical {
-        public static final float WHEEL_DIAMETER_INCH = 4;
-        public static final float WHEEL_DIAMETER_FT = WHEEL_DIAMETER_INCH/12;
-    }
 
     public static void write(String string)
     {
@@ -156,5 +148,11 @@ public final class Robot extends IterativeRobot
     {
         LiveWindow.run();
         DashboardData.update();
+    }
+
+    public static final class Physical
+    {
+        public static final float WHEEL_DIAMETER_INCH = 4;
+        public static final float WHEEL_DIAMETER_FT = WHEEL_DIAMETER_INCH / 12;
     }
 }

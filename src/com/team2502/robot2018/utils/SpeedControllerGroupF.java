@@ -6,9 +6,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 
 public class SpeedControllerGroupF extends SendableBase implements ISpeedControllerF
 {
-    private boolean m_isInverted = false;
-    private final ISpeedControllerF[] m_speedControllers;
     private static int instances = 0;
+    private final ISpeedControllerF[] m_speedControllers;
+    private boolean m_isInverted = false;
 
     /**
      * Create a new SpeedControllerGroup with the provided SpeedControllers.
@@ -43,12 +43,12 @@ public class SpeedControllerGroupF extends SendableBase implements ISpeedControl
     }
 
     @Override
-    public void setInverted(boolean isInverted)
-    { m_isInverted = isInverted; }
-
-    @Override
     public boolean getInverted()
     { return m_isInverted; }
+
+    @Override
+    public void setInverted(boolean isInverted)
+    { m_isInverted = isInverted; }
 
     @Override
     public void disable()

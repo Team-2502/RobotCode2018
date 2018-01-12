@@ -4,7 +4,6 @@ import com.kauailabs.navx.frc.AHRS;
 import com.team2502.robot2018.OI;
 import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.RobotMap;
-import com.team2502.robot2018.data.Vector;
 import com.team2502.robot2018.subsystem.DriveTrainSubsystem;
 import com.team2502.robot2018.subsystem.TransmissionSubsystem;
 import com.team2502.robot2018.trajectory.ILocationEstimator;
@@ -15,6 +14,7 @@ import logger.Log;
 import org.joml.Vector2f;
 
 import static com.team2502.robot2018.command.autonomous.PurePursuitCommand.RAW_UNIT_PER_ROT;
+
 /**
  * Takes care of all Drivetrain related operations during Teleop, including automatic shifting
  * Automatic shifting will:
@@ -30,35 +30,21 @@ import static com.team2502.robot2018.command.autonomous.PurePursuitCommand.RAW_U
 public class DriveCommand extends Command
 {
     private final DriveTrainSubsystem driveTrainSubsystem;
-    private AHRS navx;
     private final TransmissionSubsystem transmission;
-    private final Vector2f estimatedLocation = new Vector2f(0,0);
-
-    private long lastTime = -1;
+    private final Vector2f estimatedLocation = new Vector2f(0, 0);
     public float heading = 0;
+    private AHRS navx;
+    private long lastTime = -1;
     private float initAngleDegrees;
-
-    /**
-     * @return difference in seconds since last time the method was called
-     */
-    double getDTime()
-    {
-        long nanoTime = System.nanoTime();
-        double dTime;
-        dTime = lastTime == -1 ? 0 : nanoTime - lastTime;
-        lastTime = nanoTime;
-        return (dTime / 1E6);
-    }
-
     ILocationEstimator locationEstimator = () ->
     {
         // How many 100 ms intervals occured
         float dTime = (float) (getDTime() / 10F);
 
         // talon inversed
-        float leftRevPer100ms = -Robot.DRIVE_TRAIN.leftRearTalonEnc.getSelectedSensorVelocity(0)/RAW_UNIT_PER_ROT;
+        float leftRevPer100ms = -Robot.DRIVE_TRAIN.leftRearTalonEnc.getSelectedSensorVelocity(0) / RAW_UNIT_PER_ROT;
 
-        float rightRevPer100ms = Robot.DRIVE_TRAIN.rightRearTalonEnc.getSelectedSensorVelocity(0)/RAW_UNIT_PER_ROT;
+        float rightRevPer100ms = Robot.DRIVE_TRAIN.rightRearTalonEnc.getSelectedSensorVelocity(0) / RAW_UNIT_PER_ROT;
 
         float leftVel = leftRevPer100ms * Robot.Physical.WHEEL_DIAMETER_FT;
 
@@ -67,10 +53,10 @@ public class DriveCommand extends Command
         Vector2f absoluteDPos = MathUtils.Kinematics.getAbsoluteDPos(
                 leftVel, rightVel, Robot.LATERAL_WHEEL_DISTANCE, dTime
                 , heading);
-        Log.debug("adpp: "+absoluteDPos);
+        Log.debug("adpp: " + absoluteDPos);
         Vector2f absLoc = estimatedLocation.add(absoluteDPos);
 
-        heading=MathUtils.Geometry.getDTheta(initAngleDegrees, (float) navx.getAngle());
+        heading = MathUtils.Geometry.getDTheta(initAngleDegrees, (float) navx.getAngle());
         return absLoc;
     };
 
@@ -82,6 +68,18 @@ public class DriveCommand extends Command
         transmission = Robot.TRANSMISSION;
         navx = Robot.NAVX;
         initAngleDegrees = (float) navx.getAngle();
+    }
+
+    /**
+     * @return difference in seconds since last time the method was called
+     */
+    double getDTime()
+    {
+        long nanoTime = System.nanoTime();
+        double dTime;
+        dTime = lastTime == -1 ? 0 : nanoTime - lastTime;
+        lastTime = nanoTime;
+        return (dTime / 1E6);
     }
 
     @Override

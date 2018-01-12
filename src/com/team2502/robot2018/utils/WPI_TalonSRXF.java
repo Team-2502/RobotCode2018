@@ -16,6 +16,9 @@ public class WPI_TalonSRXF extends TalonSRX implements ISpeedControllerF, Sendab
     protected float m_speed;
     protected MotorSafetyHelper m_safetyHelper;
     protected ControlMode m_controlMode = ControlMode.PercentOutput;
+    // ---- essentially a copy of SendableBase -------//
+    private String m_name = "";
+    private String m_subsystem = "Ungrouped";
 
     /**
      * Constructor
@@ -184,18 +187,19 @@ public class WPI_TalonSRXF extends TalonSRX implements ISpeedControllerF, Sendab
         m_safetyHelper.feed();
     }
 
+    @Override
+    public boolean getInverted()
+    {
+        return super.getInverted();
+    }
+
     // ----------------------- Invert routines -------------------//
     @Override
     public void setInverted(boolean isInverted)
     {
         super.setInverted(isInverted);
     }
-
-    @Override
-    public boolean getInverted()
-    {
-        return super.getInverted();
-    }
+    // -------- Motor Safety--------//
 
     // ----------------------- turn-motor-off routines-------------------//
     @Override
@@ -212,18 +216,6 @@ public class WPI_TalonSRXF extends TalonSRX implements ISpeedControllerF, Sendab
     {
         neutralOutput();
     }
-    // -------- Motor Safety--------//
-
-    /**
-     * Set the safety expiration time.
-     *
-     * @param timeout The timeout (in seconds) for this motor object
-     */
-    @Override
-    public void setExpiration(double timeout)
-    {
-        m_safetyHelper.setExpiration(timeout);
-    }
 
     /**
      * Return the safety expiration time.
@@ -234,6 +226,17 @@ public class WPI_TalonSRXF extends TalonSRX implements ISpeedControllerF, Sendab
     public double getExpiration()
     {
         return m_safetyHelper.getExpiration();
+    }
+
+    /**
+     * Set the safety expiration time.
+     *
+     * @param timeout The timeout (in seconds) for this motor object
+     */
+    @Override
+    public void setExpiration(double timeout)
+    {
+        m_safetyHelper.setExpiration(timeout);
     }
 
     /**
@@ -264,10 +267,6 @@ public class WPI_TalonSRXF extends TalonSRX implements ISpeedControllerF, Sendab
     {
         m_safetyHelper.setSafetyEnabled(enabled);
     }
-
-    // ---- essentially a copy of SendableBase -------//
-    private String m_name = "";
-    private String m_subsystem = "Ungrouped";
 
     /**
      * Free the resources used by this object.

@@ -12,16 +12,13 @@ public class DifferentialDriveF extends RobotDriveBase
     public static final float kDefaultQuickStopAlpha = 0.1F;
 
     private static int instances = 0;
-
+    protected float m_deadbandF = (float) kDefaultDeadband;
+    protected float m_maxOutputF = (float) kDefaultMaxOutput;
     private ISpeedControllerF m_leftMotor;
     private ISpeedControllerF m_rightMotor;
-
     private float m_quickStopThreshold = kDefaultQuickStopThreshold;
     private float m_quickStopAlpha = kDefaultQuickStopAlpha;
     private float m_quickStopAccumulator = 0.0F;
-
-    protected float m_deadbandF = (float) kDefaultDeadband;
-    protected float m_maxOutputF = (float) kDefaultMaxOutput;
     private boolean m_reported = false;
 
     /**

@@ -4,40 +4,27 @@ import com.kauailabs.navx.frc.AHRS;
 import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.subsystem.DriveTrainSubsystem;
 import com.team2502.robot2018.trajectory.ILocationEstimator;
-import com.team2502.robot2018.trajectory.PurePursuitMovementStrategy;
 import com.team2502.robot2018.trajectory.ITankRobot;
+import com.team2502.robot2018.trajectory.PurePursuitMovementStrategy;
 import com.team2502.robot2018.utils.MathUtils;
 import edu.wpi.first.wpilibj.command.Command;
 import logger.Log;
 import org.joml.Vector2f;
 
 import java.util.List;
-import java.util.function.Function;
 
 public class PurePursuitCommand extends Command
 {
-    private final ITankRobot tankRobot;
-    public float lookAheadDistance;
     public static final float TAU = 2 * 3.1415F;
     public static final float RAW_UNIT_PER_ROT = 4096F;
+    private final ITankRobot tankRobot;
+    public float lookAheadDistance;
     private DriveTrainSubsystem driveTrain;
     private AHRS navx;
     private PurePursuitMovementStrategy purePursuitMovementStrategy;
     private long lastTime = -1;
     private float initAngleDegrees;
     private float initAngleRadians;
-
-    /**
-     * @return difference in seconds since last time the method was called
-     */
-    double getDTime()
-    {
-        long nanoTime = System.nanoTime();
-        double dTime;
-        dTime = lastTime == -1 ? 0 : nanoTime - lastTime;
-        lastTime = nanoTime;
-        return (dTime / 1E6);
-    }
 
     public PurePursuitCommand(List<Vector2f> waypoints, float lookAheadDistance)
     {
@@ -109,9 +96,9 @@ public class PurePursuitCommand extends Command
             float dTime = (float) (getDTime() / 10F);
 
             // talon inversed
-            float leftRevPer100ms = -Robot.DRIVE_TRAIN.leftRearTalonEnc.getSelectedSensorVelocity(0)/RAW_UNIT_PER_ROT;
+            float leftRevPer100ms = -Robot.DRIVE_TRAIN.leftRearTalonEnc.getSelectedSensorVelocity(0) / RAW_UNIT_PER_ROT;
 
-            float rightRevPer100ms = Robot.DRIVE_TRAIN.rightRearTalonEnc.getSelectedSensorVelocity(0)/RAW_UNIT_PER_ROT;
+            float rightRevPer100ms = Robot.DRIVE_TRAIN.rightRearTalonEnc.getSelectedSensorVelocity(0) / RAW_UNIT_PER_ROT;
 
             float leftVel = leftRevPer100ms * Robot.Physical.WHEEL_DIAMETER_FT;
 
@@ -120,9 +107,9 @@ public class PurePursuitCommand extends Command
             return purePursuitMovementStrategy.getUsedEstimatedLocation()
                                               .add(
                                                       MathUtils.Kinematics.getAbsoluteDPos(
-                                                              leftVel,rightVel,Robot.LATERAL_WHEEL_DISTANCE,dTime
-                                                              ,purePursuitMovementStrategy.getUsedHeading())
-                                                      );
+                                                              leftVel, rightVel, Robot.LATERAL_WHEEL_DISTANCE, dTime
+                                                              , purePursuitMovementStrategy.getUsedHeading())
+                                                  );
 
             /*
             float rotVelocity = (leftVel - rightVel) / tankRobot.getLateralWheelDistance();
@@ -147,6 +134,18 @@ public class PurePursuitCommand extends Command
 
 
         purePursuitMovementStrategy = new PurePursuitMovementStrategy(tankRobot, locationEstimator, waypoints, lookAheadDistance);
+    }
+
+    /**
+     * @return difference in seconds since last time the method was called
+     */
+    double getDTime()
+    {
+        long nanoTime = System.nanoTime();
+        double dTime;
+        dTime = lastTime == -1 ? 0 : nanoTime - lastTime;
+        lastTime = nanoTime;
+        return (dTime / 1E6);
     }
 
     @Override
