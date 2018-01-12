@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj.hal.HAL;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 
-@Deprecated
 public class WPI_TalonSRXF extends TalonSRX implements ISpeedControllerF, Sendable, MotorSafety
 {
     protected String m_description;

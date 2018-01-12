@@ -5,7 +5,6 @@ import edu.wpi.first.wpilibj.hal.FRCNetComm;
 import edu.wpi.first.wpilibj.hal.HAL;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 
-@Deprecated
 @SuppressWarnings("unused")
 public class DifferentialDriveF extends RobotDriveBase
 {
