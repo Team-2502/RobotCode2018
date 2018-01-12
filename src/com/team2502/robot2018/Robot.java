@@ -1,7 +1,6 @@
 package com.team2502.robot2018;
 
 import com.kauailabs.navx.frc.AHRS;
-import com.team2502.robot2018.command.autonomous.PurePursuitCommand;
 import com.team2502.robot2018.subsystem.ClimberSubsystem;
 import com.team2502.robot2018.subsystem.DriveTrainSubsystem;
 import com.team2502.robot2018.subsystem.TransmissionSubsystem;
@@ -12,10 +11,8 @@ import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import logger.Log;
-import org.joml.Vector2f;
 
 import java.io.*;
-import java.util.ArrayList;
 
 public final class Robot extends IterativeRobot
 {
@@ -113,10 +110,6 @@ public final class Robot extends IterativeRobot
     {
         DRIVE_TRAIN.setAutonSettings();
 //        Scheduler.getInstance().add(AutoSwitcher.getAutoInstance());
-        ArrayList<Vector2f> waypoints = new ArrayList<>();
-        waypoints.add(new Vector2f(0, 0));
-        waypoints.add(new Vector2f(0, 4));
-        Scheduler.getInstance().add(new PurePursuitCommand(waypoints, LOOKAHEAD_DISTANCE));
         // Scheduler.getInstance().add(AutoSwitcher.getAutoInstance());
         NAVX.reset();
     }

@@ -6,14 +6,11 @@ import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.RobotMap;
 import com.team2502.robot2018.subsystem.DriveTrainSubsystem;
 import com.team2502.robot2018.subsystem.TransmissionSubsystem;
-import com.team2502.robot2018.trajectory.ILocationEstimator;
 import com.team2502.robot2018.utils.MathUtils;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import logger.Log;
 import org.joml.Vector2f;
-
-import static com.team2502.robot2018.command.autonomous.PurePursuitCommand.RAW_UNIT_PER_ROT;
 
 /**
  * Takes care of all Drivetrain related operations during Teleop, including automatic shifting
@@ -36,29 +33,6 @@ public class DriveCommand extends Command
     private AHRS navx;
     private long lastTime = -1;
     private float initAngleDegrees;
-    ILocationEstimator locationEstimator = () ->
-    {
-        // How many 100 ms intervals occured
-        float dTime = (float) (getDTime() / 10F);
-
-        // talon inversed
-        float leftRevPer100ms = -Robot.DRIVE_TRAIN.leftRearTalonEnc.getSelectedSensorVelocity(0) / RAW_UNIT_PER_ROT;
-
-        float rightRevPer100ms = Robot.DRIVE_TRAIN.rightRearTalonEnc.getSelectedSensorVelocity(0) / RAW_UNIT_PER_ROT;
-
-        float leftVel = leftRevPer100ms * Robot.Physical.WHEEL_DIAMETER_FT;
-
-        float rightVel = rightRevPer100ms * Robot.Physical.WHEEL_DIAMETER_FT;
-
-        Vector2f absoluteDPos = MathUtils.Kinematics.getAbsoluteDPos(
-                leftVel, rightVel, Robot.LATERAL_WHEEL_DISTANCE, dTime
-                , heading);
-        Log.debug("adpp: " + absoluteDPos);
-        Vector2f absLoc = estimatedLocation.add(absoluteDPos);
-
-        heading = MathUtils.Geometry.getDTheta(initAngleDegrees, (float) navx.getAngle());
-        return absLoc;
-    };
 
     public DriveCommand()
     {
@@ -91,7 +65,6 @@ public class DriveCommand extends Command
     @Override
     protected void execute()
     {
-        Vector2f estimateLocation = locationEstimator.estimateLocation();
         // double radians = - MathUtils.deg2Rad(navx.getAngle() - initAngleDegrees) % TAU;
         // Log.debug("{0,number,#.###}", radians);
         //float encLeft = (float) -Robot.DRIVE_TRAIN.leftRearTalonEnc.get();
