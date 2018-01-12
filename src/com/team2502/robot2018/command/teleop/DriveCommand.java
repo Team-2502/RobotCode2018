@@ -14,11 +14,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import logger.Log;
 import org.joml.Vector2f;
 
-import java.util.function.Function;
-
 import static com.team2502.robot2018.command.autonomous.PurePursuitCommand.RAW_UNIT_PER_ROT;
-import static com.team2502.robot2018.command.autonomous.PurePursuitCommand.TAU;
-
 /**
  * Takes care of all Drivetrain related operations during Teleop, including automatic shifting
  * Automatic shifting will:
@@ -100,7 +96,6 @@ public class DriveCommand extends Command
         Vector2f estimateLocation = locationEstimator.estimateLocation();
         // double radians = - MathUtils.deg2Rad(navx.getAngle() - initAngleDegrees) % TAU;
         // Log.debug("{0,number,#.###}", radians);
-
         //float encLeft = (float) -Robot.DRIVE_TRAIN.leftRearTalonEnc.get();
         //float encRight = (float) Robot.DRIVE_TRAIN.rightRearTalonEnc.get();
 //        System.out.printf("%.2f,%.2f\n", encLeft, encRight);
@@ -123,13 +118,13 @@ public class DriveCommand extends Command
                 else // If the driver is cool with auto shifting doing its thing
                 {
                     // Make sure that we're going mostly straight
-                    if(driveTrainSubsystem.turningFactor() < 0.1D)
+                    if(driveTrainSubsystem.turningFactor() < 0.1F)
                     {
-                        double accel = navx.getRawAccelY();
-                        double speed = driveTrainSubsystem.avgVel();
+                        float accel = navx.getRawAccelY();
+                        float speed = driveTrainSubsystem.avgVel();
 
                         // Shift up if we are accelerating and going fast and the driver is putting the joystick at least 80% forward or backward
-                        if(Math.abs(accel) > 0.15D && speed > RobotMap.Motor.SHIFT_UP_THRESHOLD && OI.joysThreshold(0.8D, true))
+                        if(Math.abs(accel) > 0.15F && speed > RobotMap.Motor.SHIFT_UP_THRESHOLD && OI.joysThreshold(0.8D, true))
                         {
                             if(!transmission.highGear) { Log.info("Shifting up."); }
                             transmission.setGear(true);
