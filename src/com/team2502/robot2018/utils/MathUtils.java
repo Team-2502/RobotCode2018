@@ -323,7 +323,6 @@ public final class MathUtils
 
     public static double pow4(final double x)
     { return x * x * x * x; }
-    //endregion
 
     public static double pow5(final double x)
     { return x * x * x * x * x; }
@@ -342,6 +341,7 @@ public final class MathUtils
 
     public static double pow10(final double x)
     { return x * x * x * x * x * x * x * x * x * x; }
+    //endregion
 
     public static float pow2f(final float x)
     { return x * x; }

@@ -1,6 +1,7 @@
 package com.team2502.robot2018.utils;
 
-import edu.wpi.first.wpilibj.SpeedController;
+import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.buttons.Button;
 
 /**
  * Reason for this class: Single Precision Floating Point Numbers.
@@ -43,26 +44,33 @@ import edu.wpi.first.wpilibj.SpeedController;
  * And even if it did this shows that single precision will out
  * perform double precision.
  * <p>
- * The Talon's also don't take in doubles when setting the speed.
- * CTRE PhoenixLib converts the floating point numbers to integral
- * types using specific operations depending on what the control
- * mode is. This mean we can very easily write up some code to
- * use single precision instead of double precision floating
- * point numbers.
+ * The default Joystick classes return doubles for the joystick
+ * positions. But the value eventually delegates back to a float
+ * array. So why not just make the functions return floats.
  */
-public interface ISpeedControllerF extends SpeedController
+public class JoystickButtonF extends Button
 {
-    /**
-     * Common interface for setting the speed of a speed controller.
-     *
-     * @param speed The speed to set. Value should be between -1.0 and 1.0.
-     */
-    void set(float speed);
+    public final GenericHIDF joystick;
+    public final int buttonNumber;
 
     /**
-     * Common interface for getting the current set speed of a speed controller.
+     * Create a joystick button for triggering commands.
      *
-     * @return The current set speed. Value is between -1.0 and 1.0.
+     * @param joystick     The GenericHID object that has the button (e.g. Joystick, KinectStick,
+     *                     etc)
+     * @param buttonNumber The button number (see {@link GenericHID#getRawButton(int) }
      */
-    float getF();
+    public JoystickButtonF(GenericHIDF joystick, int buttonNumber)
+    {
+        this.joystick = joystick;
+        this.buttonNumber = buttonNumber;
+    }
+
+    /**
+     * Gets the value of the joystick button.
+     *
+     * @return The value of the joystick button
+     */
+    public boolean get()
+    { return joystick.getRawButton(buttonNumber); }
 }
