@@ -327,16 +327,5 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
             return (int) (((Double.doubleToLongBits(left) * 31) + (Double.doubleToLongBits(right) * 7)) % Integer.MAX_VALUE);
         }
 
-        @Override
-        public boolean equals(Object o)
-        {
-            if(this == o) { return true; }
-            if(o instanceof FloatPair)
-            {
-                FloatPair pair = (FloatPair) o;
-                return left == pair.left && right == pair.right;
-            }
-            return false;
-        }
     }
 }

@@ -6,10 +6,10 @@ import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.RobotMap;
 import com.team2502.robot2018.subsystem.DriveTrainSubsystem;
 import com.team2502.robot2018.subsystem.TransmissionSubsystem;
+import com.team2502.robot2018.trajectory.EncoderLocationEstimator;
 import com.team2502.robot2018.trajectory.ILocationEstimator;
 import com.team2502.robot2018.utils.MathUtils;
 import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import logger.Log;
 import org.joml.Vector2f;
 
@@ -36,29 +36,9 @@ public class DriveCommand extends Command
     private AHRS navx;
     private long lastTime = -1;
     private float initAngleDegrees;
-    ILocationEstimator locationEstimator = () ->
-    {
-        // How many 100 ms intervals occured
-        float dTime = (float) (getDTime() / 10F);
+    ILocationEstimator locationEstimator;
 
-        // talon inversed
-        float leftRevPer100ms = -Robot.DRIVE_TRAIN.leftRearTalonEnc.getSelectedSensorVelocity(0) / RAW_UNIT_PER_ROT;
-
-        float rightRevPer100ms = Robot.DRIVE_TRAIN.rightRearTalonEnc.getSelectedSensorVelocity(0) / RAW_UNIT_PER_ROT;
-
-        float leftVel = leftRevPer100ms * Robot.Physical.WHEEL_DIAMETER_FT;
-
-        float rightVel = rightRevPer100ms * Robot.Physical.WHEEL_DIAMETER_FT;
-
-        Vector2f absoluteDPos = MathUtils.Kinematics.getAbsoluteDPos(
-                leftVel, rightVel, Robot.LATERAL_WHEEL_DISTANCE, dTime
-                , heading);
-        Log.debug("adpp: " + absoluteDPos);
-        Vector2f absLoc = estimatedLocation.add(absoluteDPos);
-
-        heading = MathUtils.Geometry.getDTheta(initAngleDegrees, (float) navx.getAngle());
-        return absLoc;
-    };
+    private EncoderLocationEstimator encoderLocationEstimator;
 
     public DriveCommand()
     {
@@ -68,6 +48,30 @@ public class DriveCommand extends Command
         transmission = Robot.TRANSMISSION;
         navx = Robot.NAVX;
         initAngleDegrees = (float) navx.getAngle();
+
+        locationEstimator = () ->
+        {
+            // How many 100 ms intervals occured
+            float dTime = (float) (getDTime() / 10F);
+
+            // talon inversed
+            float leftRevPer100ms = -Robot.DRIVE_TRAIN.leftRearTalonEnc.getSelectedSensorVelocity(0) / RAW_UNIT_PER_ROT;
+
+            float rightRevPer100ms = Robot.DRIVE_TRAIN.rightRearTalonEnc.getSelectedSensorVelocity(0) / RAW_UNIT_PER_ROT;
+
+            float leftVel = leftRevPer100ms * Robot.Physical.WHEEL_DIAMETER_FT;
+
+            float rightVel = rightRevPer100ms * Robot.Physical.WHEEL_DIAMETER_FT;
+
+            Vector2f absoluteDPos = MathUtils.Kinematics.getAbsoluteDPos(
+                    leftVel, rightVel, Robot.LATERAL_WHEEL_DISTANCE, dTime
+                    , heading);
+//        Log.debug("adpp: " + absoluteDPos);
+            Vector2f absLoc = estimatedLocation.add(absoluteDPos);
+
+            heading = MathUtils.Geometry.getDTheta(initAngleDegrees, (float) navx.getAngle());
+            return absLoc;
+        };
     }
 
     /**
@@ -85,21 +89,22 @@ public class DriveCommand extends Command
     @Override
     protected void initialize()
     {
-//        driveTrainSubsystem.setTeleopSettings();
+        encoderLocationEstimator = new EncoderLocationEstimator();
+        encoderLocationEstimator.initialize();
+    }
+
+    private Vector2f lastEstimatedLocation = new Vector2f();
+
+    private static float compare(Vector2f a, Vector2f b)
+    {
+        float xDiff = Math.abs(a.x - b.x);
+        float yDiff = Math.abs(a.y - b.y);
+        return (xDiff + yDiff) / 2.0F;
     }
 
     @Override
     protected void execute()
     {
-        Vector2f estimateLocation = locationEstimator.estimateLocation();
-        // double radians = - MathUtils.deg2Rad(navx.getAngle() - initAngleDegrees) % TAU;
-        // Log.debug("{0,number,#.###}", radians);
-        //float encLeft = (float) -Robot.DRIVE_TRAIN.leftRearTalonEnc.get();
-        //float encRight = (float) Robot.DRIVE_TRAIN.rightRearTalonEnc.get();
-//        System.out.printf("%.2f,%.2f\n", encLeft, encRight);
-//        System.out.println("NavX: " + Robot.NAVX.getDisplacementX() + "," + Robot.NAVX.getDisplacementY() + "," + Robot.NAVX.getDisplacementZ());
-//        System.out.println(MathUtils.LinearAlgebra.rotate2D(new Vector(navx.getDisplacementX(), navx.getDisplacementY()),-initAngleRadians));
-        SmartDashboard.putBoolean("DT: AutoShifting Enabled?", !transmission.disabledAutoShifting);
         driveTrainSubsystem.drive();
 
         if(!transmission.disabledAutoShifting)

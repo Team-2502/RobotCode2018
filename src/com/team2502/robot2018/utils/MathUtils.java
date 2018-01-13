@@ -1,6 +1,8 @@
 package com.team2502.robot2018.utils;
 
+import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.data.Vector;
+import logger.Log;
 import org.joml.Vector2f;
 
 @SuppressWarnings("unused")
@@ -389,7 +391,6 @@ public final class MathUtils
         @Deprecated
         public static Vector absoluteToRelativeCoord(Vector relativeCoord, Vector absoluteLocation, float robotHeading)
         {
-//            System.out.println(relativeCoord );
             if(relativeCoord.dimensions() != 2) { throw new IllegalArgumentException("Must be in R2"); }
             Vector coordDif = relativeCoord.clone().subtractBy(absoluteLocation);
             return LinearAlgebra.rotate2D(coordDif, -robotHeading);
@@ -446,6 +447,17 @@ public final class MathUtils
             return new Vector2f(dxRelative, dyRelative);
         }
 
+        /**
+         * @deprecated
+         * @return
+         */
+        public static float getHeadingAbsolute()
+        {
+            float navx = (float) Robot.NAVX.getAngle();
+            float heading = Geometry.getDTheta(0, navx);
+            return heading;
+        }
+
         public static Vector2f getAbsoluteDPos(float vL, float vR, float l, float dt, float robotHeading)
         {
             Vector2f relativeDPos = getRelativeDPos(vL, vR, l, dt);
@@ -464,8 +476,13 @@ public final class MathUtils
          */
         public static float getDTheta(float initDegrees, float finalDegrees)
         {
-            double radians = MathUtils.deg2Rad(finalDegrees - initDegrees);
-            return (float) -(radians % TAU);
+//            System.out.println("Init degrees "+ initDegrees);
+            float degDif = finalDegrees - initDegrees;
+            double radians = MathUtils.deg2Rad(degDif);
+            double radBounded = (radians % TAU);
+            System.out.println("\nNAVX: " + finalDegrees + "\nNAVXD: " + degDif + "\nRadians: " + radians + "\nRadBounded: " + radBounded + "\n");
+            if(radBounded < 0) { return (float) (TAU - radBounded); }
+            return (float) radBounded;
         }
 
         public static Vector2f[] getCircleLineIntersectionPoint(Vector2f pointA, Vector2f pointB, Vector2f center, double radius)

@@ -103,7 +103,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
             this.absoluteGoalPoint = waypoints.get(1);
         }
 
-        Log.debug("Intersections size: {0}", intersections.size());
+//        Log.debug("Intersections size: {0}", intersections.size());
 
         int closestVectorI = bestGoalPoint(toCompare, intersections);
         if(closestVectorI == -1)
@@ -115,7 +115,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         Vector2f closest = intersections.get(closestVectorI);
 
         if(closestVectorI >= nextPathI) { ++lastPath; }
-        System.out.println(closest);
+//        System.out.println(closest);
         this.absoluteGoalPoint = closest;
         return closest;
     }
@@ -126,13 +126,14 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
     public void update()
     {
         absoluteGoalPoint = calculateAbsoluteGoalPoint();
-        Log.debug("uEL: " + usedEstimatedLocation);
-        Log.debug("uHeading: " + usedHeading);
+//        Log.debug("uEL: " + usedEstimatedLocation);
+//        Log.debug("uHeading: " + usedHeading);
         if(absoluteGoalPoint == null)
         {
             Log.debug("Can't find absolute goal point!");
+            return;
         }
-        Log.debug("absGP: " + absoluteGoalPoint);
+//        Log.debug("absGP: " + absoluteGoalPoint);
         relativeGoalPoint = MathUtils.LinearAlgebra.absoluteToRelativeCoord(absoluteGoalPoint, usedEstimatedLocation, usedHeading);
         wheelVelocities = calculateWheelVelocities();
     }
@@ -339,7 +340,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
      */
     public boolean isFinishedPath()
     {
-        return finishedPath;
+        return finishedPath || waypoints.size() < 1;
     }
 
     /**
