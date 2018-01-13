@@ -30,7 +30,7 @@ public final class Robot extends IterativeRobot
     public static ClimberSubsystem CLIMBER;
     public static long SHIFTED;
     public static Compressor COMPRESSOR;
-    public static String GAME_DATA; //TODO: Have better name
+    public static String GAME_DATA;
     public static PrintWriter LOG_OUTPUT;
     // NavX Subsystem
     public static AHRS NAVX;
