@@ -1,7 +1,6 @@
 package com.team2502.robot2018.trajectory;
 
 import com.team2502.robot2018.utils.MathUtils;
-import logger.Log;
 import org.joml.Vector2f;
 
 import java.text.MessageFormat;
@@ -52,7 +51,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
     private Vector2f usedEstimatedLocation = new Vector2f();
     private float usedHeading = 0.0F;
 
-    private int lastPath = 0;
+    private int lastSegmentSearched = 0;
 
     private Vector2f wheelVelocities;
     private float tangentialSpeed;
@@ -74,39 +73,58 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
      */
     public Vector2f calculateAbsoluteGoalPoint()
     {
-        if(finishedPath) { return null; }
+        // The path is finished — there are no more goal points to compute
+        if (finishedPath) { return null; }
 
         List<Vector2f> intersections = new ArrayList<>();
+
+        // We have intersections.get(nextPathI) as the first goal intersection on the next segment.
+        // This is Integer.MAX_VALUE as there might not be any.
+
         int nextPathI = Integer.MAX_VALUE;
+
         usedEstimatedLocation = estimator.estimateLocation();
         usedHeading = tankRobot.getHeading();
 
-        for(int i = lastPath; i <= lastPath + 1; ++i)
+
+        // Loop looks for intersections on last segment searched and one after that
+        for (int i = lastSegmentSearched; i <= lastSegmentSearched + 1; ++i)
         {
-            if(i + 1 >= waypoints.size()) { continue; }
+            // There is no _next_ segment to search
+            if (i + 1 >= waypoints.size()) { continue; }
 
             Vector2f lineP1 = waypoints.get(i);
             Vector2f lineP2 = waypoints.get(i + 1);
 
+            // Get intersections of r=lookAheadDistance circle and segments between waypoints
             List<Vector2f> vectorList = new ArrayList<>(Arrays.asList(MathUtils.Geometry.getCircleLineIntersectionPoint(lineP1, lineP2, usedEstimatedLocation, lookAheadDistance)));
-            // System.out.println("Vector list: " + vectorList.toString());
+
+            // above statement assumes lineP1 lineP2 defines a (non-segment) line. This is to define it as a segment
+            // (we are removing points that are not between lineP1 and lineP2)
             vectorList.removeIf(vector -> !MathUtils.between(lineP1, vector, lineP2)); // remove if vectors not between next 2 waypoints
-            // System.out.println("Vector list: " + vectorList.toString());
-            if(i == lastPath + 1 && !vectorList.isEmpty()) { nextPathI = intersections.size(); }
+
+            if (i == lastSegmentSearched + 1 && !vectorList.isEmpty()) { nextPathI = intersections.size(); }
+
+            // We are adding all circle-line intersections to be checked. The best (and valid ones) will be selected.
             intersections.addAll(vectorList);
         }
 
+        // The last goal point we are comparing the intersections to. We will want to chose the one closest to last intersection
         Vector2f toCompare = absoluteGoalPoint;
-        if(toCompare == null)
+
+        // if there is no last goal point, then just chose the first intersection
+        if (toCompare == null)
         {
             toCompare = waypoints.get(1);
             this.absoluteGoalPoint = waypoints.get(1);
         }
 
-//        Log.debug("Intersections size: {0}", intersections.size());
 
+        // Finds i where ||\vec{toCompare} - \vec{intersections_i}|| is minimized
         int closestVectorI = bestGoalPoint(toCompare, intersections);
-        if(closestVectorI == -1)
+
+        // There is no closest vector ==> finish path
+        if (closestVectorI == -1)
         {
             finishedPath = true;
             return null;
@@ -114,8 +132,10 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
 
         Vector2f closest = intersections.get(closestVectorI);
 
-        if(closestVectorI >= nextPathI) { ++lastPath; }
-//        System.out.println(closest);
+        // If the closest vector is on the next segment, set that segment as the current segment
+        if (closestVectorI >= nextPathI) { ++lastSegmentSearched; }
+
+        // closest is our new goal point
         this.absoluteGoalPoint = closest;
         return closest;
     }
@@ -126,14 +146,15 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
     public void update()
     {
         absoluteGoalPoint = calculateAbsoluteGoalPoint();
-//        Log.debug("uEL: " + usedEstimatedLocation);
-//        Log.debug("uHeading: " + usedHeading);
-        if(absoluteGoalPoint == null)
-        {
-            Log.debug("Can't find absolute goal point!");
+
+        // Sometimes the above method will cause isFinished to return true if no more goal points are found.
+        if(isFinishedPath())
             return;
-        }
-//        Log.debug("absGP: " + absoluteGoalPoint);
+
+        System.out.println(usedEstimatedLocation);
+        System.out.println("estimated location: " + usedEstimatedLocation + " estimated location");
+        System.out.println(usedHeading);
+        System.out.println(absoluteGoalPoint);
         relativeGoalPoint = MathUtils.LinearAlgebra.absoluteToRelativeCoord(absoluteGoalPoint, usedEstimatedLocation, usedHeading);
         wheelVelocities = calculateWheelVelocities();
     }
@@ -229,8 +250,9 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
             float c = 2 / (tankRobot.getLateralWheelDistance() * curvature);
             float velLeftToRightRatio = -(c + 1) / (1 - c);
             float velRightToLeftRatio = 1 / velLeftToRightRatio;
+
+            // This first big repetitive section is just finding the largest possible velocities while maintaining a ratio.
             float score = Float.MIN_VALUE;
-            //TODO: fix clumsy way of optimizing :(
 
             float v_r = v_lMax * velLeftToRightRatio;
             if(MathUtils.Algebra.between(v_rMin, v_r, v_rMax))
