@@ -461,7 +461,7 @@ public final class MathUtils
         public static Vector2f getAbsoluteDPos(float vL, float vR, float l, float dt, float robotHeading)
         {
             Vector2f relativeDPos = getRelativeDPos(vL, vR, l, dt);
-            Vector2f rotated = MathUtils.LinearAlgebra.rotate2D(relativeDPos, robotHeading);
+            Vector2f rotated = MathUtils.LinearAlgebra.rotate2D(relativeDPos, -robotHeading);
             return rotated;
         }
     }
@@ -477,11 +477,11 @@ public final class MathUtils
         public static float getDTheta(float initDegrees, float finalDegrees)
         {
 //            System.out.println("Init degrees "+ initDegrees);
-            float degDif = finalDegrees - initDegrees;
+            float degDif = -(finalDegrees - initDegrees);
             double radians = MathUtils.deg2Rad(degDif);
             double radBounded = (radians % TAU);
-            System.out.println("\nNAVX: " + finalDegrees + "\nNAVXD: " + degDif + "\nRadians: " + radians + "\nRadBounded: " + radBounded + "\n");
-            if(radBounded < 0) { return (float) (TAU - radBounded); }
+//            System.out.println("\nNAVX: " + finalDegrees + "\nNAVXD: " + degDif + "\nRadians: " + radians + "\nRadBounded: " + radBounded + "\n");
+            if(radBounded < 0) { return (float) (TAU + radBounded); }
             return (float) radBounded;
         }
 

@@ -135,8 +135,8 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     {
         float joystickLevel;
         // Get the base speed of the robot
-        if(negative) { joystickLevel = (float) -OI.JOYSTICK_DRIVE_RIGHT.getY(); }
-        else { joystickLevel = (float) -OI.JOYSTICK_DRIVE_LEFT.getY(); }
+        if(negative) { joystickLevel = -OI.JOYSTICK_DRIVE_RIGHT.getY(); }
+        else { joystickLevel = -OI.JOYSTICK_DRIVE_LEFT.getY(); }
 
         // Only increase the speed by a small amount
         float diff = joystickLevel - lastLeft;
@@ -146,8 +146,8 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         lastLeft = joystickLevel;
         out.left = joystickLevel;
 
-        if(negative) { joystickLevel = (float) -OI.JOYSTICK_DRIVE_LEFT.getY(); }
-        else { joystickLevel = (float) -OI.JOYSTICK_DRIVE_RIGHT.getY(); }
+        if(negative) { joystickLevel = -OI.JOYSTICK_DRIVE_LEFT.getY(); }
+        else { joystickLevel = -OI.JOYSTICK_DRIVE_RIGHT.getY(); }
 
         diff = joystickLevel - lastRight;
         if(diff > 0.1F) { joystickLevel = lastRight + 0.1F; }
@@ -179,8 +179,8 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
 
         isNegativePressed = OI.JOYSTICK_DRIVE_LEFT.getRawButton(RobotMap.Joystick.Button.INVERSE_DRIVER_CONTROLS);
 
-        if(!negative) { drive.tankDrive(-speed.left, -speed.right, true); }
-        else { drive.tankDrive(speed.left, speed.right, true); }
+        if(!negative) { drive.tankDrive(speed.left, speed.right, true); }
+        else { drive.tankDrive(-speed.left, -speed.right, true); }
     }
 
     public float avgVel()

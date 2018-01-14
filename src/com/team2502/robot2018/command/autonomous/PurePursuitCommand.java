@@ -1,15 +1,14 @@
 package com.team2502.robot2018.command.autonomous;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.kauailabs.navx.frc.AHRS;
 import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.subsystem.DriveTrainSubsystem;
 import com.team2502.robot2018.trajectory.EncoderLocationEstimator;
-import com.team2502.robot2018.trajectory.ILocationEstimator;
 import com.team2502.robot2018.trajectory.ITankRobot;
 import com.team2502.robot2018.trajectory.PurePursuitMovementStrategy;
 import com.team2502.robot2018.utils.MathUtils;
 import edu.wpi.first.wpilibj.command.Command;
-import logger.Log;
 import org.joml.Vector2f;
 
 import java.util.List;
@@ -44,7 +43,8 @@ public class PurePursuitCommand extends Command
             @Override
             public float getHeading()
             {
-                return MathUtils.Geometry.getDTheta(initAngleDegrees, (float) navx.getAngle());
+                float rad = MathUtils.Geometry.getDTheta(initAngleDegrees, (float) navx.getAngle());
+                return rad;
             }
 
             /**
@@ -117,21 +117,24 @@ public class PurePursuitCommand extends Command
     protected void execute()
     {
         purePursuitMovementStrategy.update();
-//        Log.debug("Used EL: "+purePursuitMovementStrategy.getUsedEstimatedLocation());
-//        Log.debug(purePursuitMovementStrategy.getdThetaToRotate());
+
         Vector2f wheelVelocities = purePursuitMovementStrategy.getWheelVelocities();
         float x = wheelVelocities.x;
         float y = wheelVelocities.y;
-//        Log.info("Wheel velocities: " + x + " ::: " + y + " ::: Wheel velocities");
-//        Log.info("Unmoded Loc: " + navx.getDisplacementX() + "," + navx.getDisplacementY());
-//        Log.info("Heading: " + tankRobot.getHeadingAbsolute());
+        driveTrain.
         driveTrain.runMotors(x, y);
     }
 
     @Override
     protected boolean isFinished()
     {
-        return purePursuitMovementStrategy.isFinishedPath();
+        boolean finishedPath = purePursuitMovementStrategy.isFinishedPath();
+        if(finishedPath){
+            System.out.println("\n!!!\nBRAKING\n!!!!\n");
+            Robot.DRIVE_TRAIN.leftRearTalonEnc.set(ControlMode.Disabled, 0.0F);
+            Robot.DRIVE_TRAIN.rightRearTalonEnc.set(ControlMode.Disabled, 0.0F);
+        }
+        return finishedPath;
 
     }
 

@@ -7,13 +7,9 @@ import com.team2502.robot2018.RobotMap;
 import com.team2502.robot2018.subsystem.DriveTrainSubsystem;
 import com.team2502.robot2018.subsystem.TransmissionSubsystem;
 import com.team2502.robot2018.trajectory.EncoderLocationEstimator;
-import com.team2502.robot2018.trajectory.ILocationEstimator;
-import com.team2502.robot2018.utils.MathUtils;
 import edu.wpi.first.wpilibj.command.Command;
 import logger.Log;
 import org.joml.Vector2f;
-
-import static com.team2502.robot2018.command.autonomous.PurePursuitCommand.RAW_UNIT_PER_ROT;
 
 /**
  * Takes care of all Drivetrain related operations during Teleop, including automatic shifting
@@ -36,7 +32,6 @@ public class DriveCommand extends Command
     private AHRS navx;
     private long lastTime = -1;
     private float initAngleDegrees;
-    ILocationEstimator locationEstimator;
 
     private EncoderLocationEstimator encoderLocationEstimator;
 
@@ -48,42 +43,6 @@ public class DriveCommand extends Command
         transmission = Robot.TRANSMISSION;
         navx = Robot.NAVX;
         initAngleDegrees = (float) navx.getAngle();
-
-        locationEstimator = () ->
-        {
-            // How many 100 ms intervals occured
-            float dTime = (float) (getDTime() / 10F);
-
-            // talon inversed
-            float leftRevPer100ms = -Robot.DRIVE_TRAIN.leftRearTalonEnc.getSelectedSensorVelocity(0) / RAW_UNIT_PER_ROT;
-
-            float rightRevPer100ms = Robot.DRIVE_TRAIN.rightRearTalonEnc.getSelectedSensorVelocity(0) / RAW_UNIT_PER_ROT;
-
-            float leftVel = leftRevPer100ms * Robot.Physical.WHEEL_DIAMETER_FT;
-
-            float rightVel = rightRevPer100ms * Robot.Physical.WHEEL_DIAMETER_FT;
-
-            Vector2f absoluteDPos = MathUtils.Kinematics.getAbsoluteDPos(
-                    leftVel, rightVel, Robot.LATERAL_WHEEL_DISTANCE, dTime
-                    , heading);
-//        Log.debug("adpp: " + absoluteDPos);
-            Vector2f absLoc = estimatedLocation.add(absoluteDPos);
-
-            heading = MathUtils.Geometry.getDTheta(initAngleDegrees, (float) navx.getAngle());
-            return absLoc;
-        };
-    }
-
-    /**
-     * @return difference in seconds since last time the method was called
-     */
-    double getDTime()
-    {
-        long nanoTime = System.nanoTime();
-        double dTime;
-        dTime = lastTime == -1 ? 0 : nanoTime - lastTime;
-        lastTime = nanoTime;
-        return (dTime / 1E6);
     }
 
     @Override
@@ -105,6 +64,8 @@ public class DriveCommand extends Command
     @Override
     protected void execute()
     {
+        Vector2f estimateLocation = encoderLocationEstimator.estimateLocation();
+//        System.out.println(estimateLocation);
         driveTrainSubsystem.drive();
 
         if(!transmission.disabledAutoShifting)

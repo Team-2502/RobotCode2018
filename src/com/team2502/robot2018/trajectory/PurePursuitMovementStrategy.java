@@ -42,7 +42,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
     private static final float THRESHOLD_CURVATURE = 0.001F;
     public final List<Vector2f> waypoints;
     public final float lookAheadDistance;
-    private final ILocationEstimator estimator;
+    private final ITranslationalLocationEstimator estimator;
     private final ITankRobot tankRobot;
     private Vector2f relativeGoalPoint;
     private float pathRadius;
@@ -60,7 +60,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
     private Vector2f absoluteGoalPoint;
     private float dThetaToRotate;
 
-    public PurePursuitMovementStrategy(ITankRobot tankRobot, ILocationEstimator estimator, List<Vector2f> waypoints, float lookAheadDistance)
+    public PurePursuitMovementStrategy(ITankRobot tankRobot, ITranslationalLocationEstimator estimator, List<Vector2f> waypoints, float lookAheadDistance)
     {
         this.waypoints = waypoints;
         this.tankRobot = tankRobot;
@@ -126,6 +126,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         // There is no closest vector ==> finish path
         if (closestVectorI == -1)
         {
+            System.out.println("closest vector not found!");
             finishedPath = true;
             return null;
         }
@@ -149,14 +150,17 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
 
         // Sometimes the above method will cause isFinished to return true if no more goal points are found.
         if(isFinishedPath())
+        {
+            System.out.println("\nFinished path!!!!\n");
             return;
+        }
 
-        System.out.println(usedEstimatedLocation);
-        System.out.println("estimated location: " + usedEstimatedLocation + " estimated location");
-        System.out.println(usedHeading);
-        System.out.println(absoluteGoalPoint);
+        System.out.printf("estimated location: %.2f,%.2f\n", usedEstimatedLocation.x,usedEstimatedLocation.y);
+        System.out.printf("usedHeading: %.2f\n",usedHeading);
+        System.out.printf("absGP: %.2f,%.2f\n",absoluteGoalPoint.x,absoluteGoalPoint.y);
         relativeGoalPoint = MathUtils.LinearAlgebra.absoluteToRelativeCoord(absoluteGoalPoint, usedEstimatedLocation, usedHeading);
         wheelVelocities = calculateWheelVelocities();
+        System.out.printf("wheelVelocities %.2f,%.2f\n\n",wheelVelocities.x,wheelVelocities.y);
     }
 
     /**

@@ -20,14 +20,14 @@ import java.util.ArrayList;
 public final class Robot extends IterativeRobot
 {
     // Currently the max percent voltage that can be given to each to each wheel
-    public static final float VR_MAX = .25F;
-    public static final float VL_MAX = .25F;
-    public static final float VR_MIN = -.25F;
-    public static final float VL_MIN = -.25F;
+    public static final float VR_MAX = .5F;
+    public static final float VL_MAX = .5F;
+    public static final float VR_MIN = -.5F;
+    public static final float VL_MIN = -.5F;
     // The distance between wheels (laterally) in feet. Measure from the centerpoints of the wheels.
-    public static final float LATERAL_WHEEL_DISTANCE = 23.25F;
+    public static final float LATERAL_WHEEL_DISTANCE = 23.25F/12F;
     // The lookahead distance (feet) for Pure Pursuit
-    public static final float LOOKAHEAD_DISTANCE = 1F;
+    public static final float LOOKAHEAD_DISTANCE = 2F;
     public static DriveTrainSubsystem DRIVE_TRAIN;
     public static TransmissionSubsystem TRANSMISSION;
     public static ClimberSubsystem CLIMBER;
@@ -51,6 +51,7 @@ public final class Robot extends IterativeRobot
      */
     public void robotInit()
     {
+        System.out.println("\n\nRobot enabled!\n\n");
         logFile = new File("/home/lvuser/log.txt");
         FileWriter fileWriter = null;
         try
@@ -114,8 +115,10 @@ public final class Robot extends IterativeRobot
         DRIVE_TRAIN.setAutonSettings();
 //        Scheduler.getInstance().add(AutoSwitcher.getAutoInstance());
         ArrayList<Vector2f> waypoints = new ArrayList<>();
-        waypoints.add(new Vector2f(0, 0));
-        waypoints.add(new Vector2f(0, 4));
+
+        waypoints.add(new Vector2f(0,0));
+        waypoints.add(new Vector2f(3,3));
+        waypoints.add(new Vector2f(6,21));
         Scheduler.getInstance().add(new PurePursuitCommand(waypoints, LOOKAHEAD_DISTANCE));
         // Scheduler.getInstance().add(AutoSwitcher.getAutoInstance());
         NAVX.reset();
@@ -152,7 +155,7 @@ public final class Robot extends IterativeRobot
 
     public static final class Physical
     {
-        public static final float WHEEL_DIAMETER_INCH = 4;
-        public static final float WHEEL_DIAMETER_FT = WHEEL_DIAMETER_INCH / 12;
+        public static final float WHEEL_DIAMETER_INCH = 4F;
+        public static final float WHEEL_DIAMETER_FT = WHEEL_DIAMETER_INCH / 12F;
     }
 }
