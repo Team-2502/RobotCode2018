@@ -20,10 +20,10 @@ import java.util.ArrayList;
 public final class Robot extends IterativeRobot
 {
     // Currently the max percent voltage that can be given to each to each wheel
-    public static final float VR_MAX = .5F;
-    public static final float VL_MAX = .5F;
-    public static final float VR_MIN = -.5F;
-    public static final float VL_MIN = -.5F;
+    public static final float VR_MAX = .75F;
+    public static final float VL_MAX = .75F;
+    public static final float VR_MIN = -.75F;
+    public static final float VL_MIN = -.75F;
     // The distance between wheels (laterally) in feet. Measure from the centerpoints of the wheels.
     public static final float LATERAL_WHEEL_DISTANCE = 23.25F/12F;
     // The lookahead distance (feet) for Pure Pursuit
@@ -117,7 +117,7 @@ public final class Robot extends IterativeRobot
         ArrayList<Vector2f> waypoints = new ArrayList<>();
 
         waypoints.add(new Vector2f(0,0));
-        waypoints.add(new Vector2f(3,3));
+        waypoints.add(new Vector2f(5,5));
         waypoints.add(new Vector2f(6,21));
         Scheduler.getInstance().add(new PurePursuitCommand(waypoints, LOOKAHEAD_DISTANCE));
         // Scheduler.getInstance().add(AutoSwitcher.getAutoInstance());

@@ -121,7 +121,7 @@ public class PurePursuitCommand extends Command
         Vector2f wheelVelocities = purePursuitMovementStrategy.getWheelVelocities();
         float x = wheelVelocities.x;
         float y = wheelVelocities.y;
-        driveTrain.
+//        driveTrain.run
         driveTrain.runMotors(x, y);
     }
 

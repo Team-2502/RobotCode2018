@@ -4,6 +4,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.team2502.robot2018.DashboardData;
 import com.team2502.robot2018.OI;
+import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.RobotMap;
 import com.team2502.robot2018.command.teleop.DriveCommand;
 import com.team2502.robot2018.utils.DifferentialDriveF;
@@ -113,6 +114,10 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         rightFrontTalon.set(-y);
         rightRearTalonEnc.set(-y);
     }
+
+    // public void runMotorVelocity(float x, float y){
+//      Robot.get
+    // }
 
     public double turningFactor()
     {

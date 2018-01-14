@@ -20,6 +20,8 @@ public final class MathUtils
     public static final double TAU_D = 2 * Math.PI;
     public static final float TAU = 2 * (float) Math.PI;
 
+    public static final float PI_F = (float) Math.PI;
+
     /**
      * A table of sin values computed from 0 (inclusive) to 2π (exclusive), with steps of 2π / 65536.
      */

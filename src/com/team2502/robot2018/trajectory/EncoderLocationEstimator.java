@@ -10,13 +10,10 @@ import static com.team2502.robot2018.command.autonomous.PurePursuitCommand.RAW_U
 
 public class EncoderLocationEstimator implements ITranslationalLocationEstimator, IRotationalLocationEstimator
 {
-    private final Random random;
-    // float headingStartDegrees;
     Vector2f location;
     float heading = 0;
 
     public void initialize(){
-        // headingStartDegrees = Robot.NAVX.getCompassHeading();
         location = new Vector2f(0, 0);
     }
 
@@ -32,7 +29,7 @@ public class EncoderLocationEstimator implements ITranslationalLocationEstimator
 
     public EncoderLocationEstimator()
     {
-        random = new Random();
+
     }
 
     @Override
@@ -44,13 +41,13 @@ public class EncoderLocationEstimator implements ITranslationalLocationEstimator
 //        System.out.printf("dTime: %.2f\n",dTime);
 
         // talon inversed
-        float leftRevPerS = Robot.DRIVE_TRAIN.leftRearTalonEnc.getSelectedSensorVelocity(0) *10F / RAW_UNIT_PER_ROT;
+        float leftRevPerS = -Robot.DRIVE_TRAIN.leftRearTalonEnc.getSelectedSensorVelocity(0) *10F / RAW_UNIT_PER_ROT;
 
-        float rightRevPerS = -Robot.DRIVE_TRAIN.rightRearTalonEnc.getSelectedSensorVelocity(0)*10F / RAW_UNIT_PER_ROT;
+        float rightRevPerS = Robot.DRIVE_TRAIN.rightRearTalonEnc.getSelectedSensorVelocity(0)*10F / RAW_UNIT_PER_ROT;
 
-        float leftVel = leftRevPerS * Robot.Physical.WHEEL_DIAMETER_FT;
+        float leftVel = leftRevPerS * Robot.Physical.WHEEL_DIAMETER_FT / 2F * MathUtils.PI_F;
 
-        float rightVel = rightRevPerS * Robot.Physical.WHEEL_DIAMETER_FT;
+        float rightVel = rightRevPerS * Robot.Physical.WHEEL_DIAMETER_FT * MathUtils.PI_F;
 
         System.out.printf("Left: %.2f Right: %.2f\n",leftVel,rightVel);
 
@@ -65,26 +62,15 @@ public class EncoderLocationEstimator implements ITranslationalLocationEstimator
         Vector2f absLoc = location.add(absoluteDPos);
         // float angle = (float) Robot.NAVX.getYaw();
         heading+= angularVel*dTime;
+        System.out.printf("absLoc: %.2f, %.2f\n",absLoc.x,absLoc.y);
+        System.out.printf("heading: %.2f\n",heading);
+        System.out.println();
         return absLoc;
     }
 
     @Override
     public float estimateHeading()
     {
-        return 0;
-    }
-
-    interface IRobotState {
-        /**
-         * @return Heading in radians from (0,2pi)
-         */
-        default float getHeading()
-        {
-            double radians = MathUtils.deg2Rad(Robot.NAVX.getAngle());
-            return (float) -(radians % MathUtils.TAU);
-        }
-
-        float getEncoderLeft();
-        float getEncoderRight();
+        return heading;
     }
 }
