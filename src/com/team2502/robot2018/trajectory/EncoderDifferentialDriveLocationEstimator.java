@@ -6,7 +6,7 @@ import org.joml.Vector2f;
 
 import static com.team2502.robot2018.command.autonomous.PurePursuitCommand.RAW_UNIT_PER_ROT;
 
-public class EncoderLocationEstimator implements ITranslationalLocationEstimator, IRotationalLocationEstimator
+public class EncoderDifferentialDriveLocationEstimator implements ITranslationalLocationEstimator, IRotationalLocationEstimator
 {
     Vector2f location;
     float heading = 0;
@@ -26,7 +26,7 @@ public class EncoderLocationEstimator implements ITranslationalLocationEstimator
         return (float) (dTime / 1E9);
     }
 
-    public EncoderLocationEstimator()
+    public EncoderDifferentialDriveLocationEstimator()
     {
 
     }
@@ -44,25 +44,20 @@ public class EncoderLocationEstimator implements ITranslationalLocationEstimator
 
         float rightRevPerS = Robot.DRIVE_TRAIN.rightRearTalonEnc.getSelectedSensorVelocity(0)*10F / RAW_UNIT_PER_ROT;
 
-        float a = (Robot.Physical.WHEEL_ROLLING_RADIUS_FT * angularVel);
+        float leftVel = leftRevPerS * Robot.Physical.WHEEL_DIAMETER_FT * MathUtils.PI_F;
 
-        float iL = leftRevPerS/a;
-        float iR = rightRevPerS/a;
+        float rightVel =  rightRevPerS * Robot.Physical.WHEEL_DIAMETER_FT * MathUtils.PI_F;
 
-        float leftVelAdjusted = iL*leftRevPerS * Robot.Physical.WHEEL_DIAMETER_FT / 2F * MathUtils.PI_F;
-
-        float rightVel =  iR*rightRevPerS * Robot.Physical.WHEEL_DIAMETER_FT * MathUtils.PI_F;
-
-        angularVel = MathUtils.Kinematics.getAngularVel(leftVelAdjusted, rightVel, Robot.LATERAL_WHEEL_DISTANCE);
+        angularVel = MathUtils.Kinematics.getAngularVel(leftVel, rightVel, Robot.LATERAL_WHEEL_DISTANCE);
 
 
 
-        System.out.printf("Left: %.2f Right: %.2f\n",leftVelAdjusted,rightVel);
+        System.out.printf("Left: %.2f Right: %.2f\n",leftVel,rightVel);
 
 //        Log.debug("wheel vels: L: {0,number,#.###} \t\t R: {1,number,#.###}", leftVel, rightVel);
 
         Vector2f absoluteDPos = MathUtils.Kinematics.getAbsoluteDPos(
-                leftVelAdjusted, rightVel, Robot.LATERAL_WHEEL_DISTANCE, dTime
+                leftVel, rightVel, Robot.LATERAL_WHEEL_DISTANCE, dTime
                 , heading);
         // Log.debug("adpp: " + absoluteDPos);
         Vector2f absLoc = location.add(absoluteDPos);
