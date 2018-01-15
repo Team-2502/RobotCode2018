@@ -24,11 +24,6 @@ public class LoggerPrintStream extends PrintStream
     public synchronized void outputln(String s)
     {
         super.println(s);
-//        synchronized(printBuffer)
-//        {
-//            printBuffer.offer(s);
-//            length += s.length();
-//        }
     }
 
     public synchronized void printBuffer()
@@ -70,8 +65,6 @@ public class LoggerPrintStream extends PrintStream
 
         @Override
         public void run()
-        {
-//            lps.printBuffer();
-        }
+        { lps.printBuffer(); }
     }
 }

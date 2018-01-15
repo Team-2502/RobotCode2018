@@ -1,8 +1,7 @@
 package com.team2502.robot2018.utils;
 
+
 import com.team2502.robot2018.Robot;
-import com.team2502.robot2018.data.Vector;
-import logger.Log;
 import org.joml.Vector2f;
 
 @SuppressWarnings("unused")
@@ -374,14 +373,6 @@ public final class MathUtils
 
     public static class LinearAlgebra
     {
-        @Deprecated
-        public static Vector rotate2D(Vector vector, float theta)
-        {
-            return new Vector(
-                    (vector.get(0) * cos(theta) - vector.get(1) * sin(theta)),
-                    (vector.get(0) * sin(theta) + vector.get(1) * cos(theta)));
-        }
-
         public static Vector2f rotate2D(Vector2f vector, float theta)
         {
             float sin = sin(theta);
@@ -390,13 +381,6 @@ public final class MathUtils
                                 (vector.x * sin + vector.y * cos));
         }
 
-        @Deprecated
-        public static Vector absoluteToRelativeCoord(Vector relativeCoord, Vector absoluteLocation, float robotHeading)
-        {
-            if(relativeCoord.dimensions() != 2) { throw new IllegalArgumentException("Must be in R2"); }
-            Vector coordDif = relativeCoord.clone().subtractBy(absoluteLocation);
-            return LinearAlgebra.rotate2D(coordDif, -robotHeading);
-        }
 
         public static Vector2f absoluteToRelativeCoord(Vector2f relativeCoord, Vector2f absoluteLocation, float robotHeading)
         { return rotate2D(new Vector2f(relativeCoord).sub(absoluteLocation), -robotHeading); }

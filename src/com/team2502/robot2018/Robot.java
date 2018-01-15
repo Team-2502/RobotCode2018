@@ -17,6 +17,8 @@ import org.joml.Vector2f;
 import java.io.*;
 import java.util.ArrayList;
 
+import java.io.*;
+
 public final class Robot extends IterativeRobot
 {
     // Currently the max percent voltage that can be given to each to each wheel
@@ -28,12 +30,15 @@ public final class Robot extends IterativeRobot
     public static final float LATERAL_WHEEL_DISTANCE = 23.25F/12F;
     // The lookahead distance (feet) for Pure Pursuit
     public static final float LOOKAHEAD_DISTANCE = 2F;
+
     public static DriveTrainSubsystem DRIVE_TRAIN;
     public static TransmissionSubsystem TRANSMISSION;
     public static ClimberSubsystem CLIMBER;
     public static long SHIFTED;
     public static Compressor COMPRESSOR;
-    public static String GAME_DATA; //TODO: Have better name
+
+    public static String GAME_DATA;
+
     public static PrintWriter LOG_OUTPUT;
     // NavX Subsystem
     public static AHRS NAVX;
@@ -51,7 +56,6 @@ public final class Robot extends IterativeRobot
      */
     public void robotInit()
     {
-        System.out.println("\n\nRobot enabled!\n\n");
         logFile = new File("/home/lvuser/log.txt");
         FileWriter fileWriter = null;
         try
@@ -113,7 +117,6 @@ public final class Robot extends IterativeRobot
     public void autonomousInit()
     {
         DRIVE_TRAIN.setAutonSettings();
-//        Scheduler.getInstance().add(AutoSwitcher.getAutoInstance());
         ArrayList<Vector2f> waypoints = new ArrayList<>();
 
         waypoints.add(new Vector2f(0,0));

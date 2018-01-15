@@ -8,6 +8,7 @@ import com.team2502.robot2018.subsystem.DriveTrainSubsystem;
 import com.team2502.robot2018.subsystem.TransmissionSubsystem;
 import com.team2502.robot2018.trajectory.EncoderDifferentialDriveLocationEstimator;
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import logger.Log;
 import org.joml.Vector2f;
 
@@ -32,8 +33,8 @@ public class DriveCommand extends Command
     private AHRS navx;
     private long lastTime = -1;
     private float initAngleDegrees;
-
     private EncoderDifferentialDriveLocationEstimator encoderLocationEstimator;
+
 
     public DriveCommand()
     {
@@ -43,6 +44,18 @@ public class DriveCommand extends Command
         transmission = Robot.TRANSMISSION;
         navx = Robot.NAVX;
         initAngleDegrees = (float) navx.getAngle();
+    }
+
+    /**
+     * @return difference in seconds since last time the method was called
+     */
+    double getDTime()
+    {
+        long nanoTime = System.nanoTime();
+        double dTime;
+        dTime = lastTime == -1 ? 0 : nanoTime - lastTime;
+        lastTime = nanoTime;
+        return (dTime / 1E6);
     }
 
     @Override
@@ -65,7 +78,7 @@ public class DriveCommand extends Command
     protected void execute()
     {
         Vector2f estimateLocation = encoderLocationEstimator.estimateLocation();
-//        System.out.println(estimateLocation);
+        SmartDashboard.putBoolean("DT: AutoShifting Enabled?", !transmission.disabledAutoShifting);
         driveTrainSubsystem.drive();
 
         if(!transmission.disabledAutoShifting)
