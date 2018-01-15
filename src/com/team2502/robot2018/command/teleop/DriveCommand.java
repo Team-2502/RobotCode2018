@@ -6,7 +6,7 @@ import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.RobotMap;
 import com.team2502.robot2018.subsystem.DriveTrainSubsystem;
 import com.team2502.robot2018.subsystem.TransmissionSubsystem;
-import com.team2502.robot2018.trajectory.EncoderLocationEstimator;
+import com.team2502.robot2018.trajectory.EncoderDifferentialDriveLocationEstimator;
 import edu.wpi.first.wpilibj.command.Command;
 import logger.Log;
 import org.joml.Vector2f;
@@ -33,7 +33,7 @@ public class DriveCommand extends Command
     private long lastTime = -1;
     private float initAngleDegrees;
 
-    private EncoderLocationEstimator encoderLocationEstimator;
+    private EncoderDifferentialDriveLocationEstimator encoderLocationEstimator;
 
     public DriveCommand()
     {
@@ -48,7 +48,7 @@ public class DriveCommand extends Command
     @Override
     protected void initialize()
     {
-        encoderLocationEstimator = new EncoderLocationEstimator();
+        encoderLocationEstimator = new EncoderDifferentialDriveLocationEstimator();
         encoderLocationEstimator.initialize();
     }
 

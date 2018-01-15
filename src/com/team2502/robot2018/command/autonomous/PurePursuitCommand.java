@@ -4,7 +4,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.kauailabs.navx.frc.AHRS;
 import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.subsystem.DriveTrainSubsystem;
-import com.team2502.robot2018.trajectory.EncoderLocationEstimator;
+import com.team2502.robot2018.trajectory.EncoderDifferentialDriveLocationEstimator;
 import com.team2502.robot2018.trajectory.ITankRobot;
 import com.team2502.robot2018.trajectory.PurePursuitMovementStrategy;
 import com.team2502.robot2018.utils.MathUtils;
@@ -17,7 +17,7 @@ public class PurePursuitCommand extends Command
 {
     public static final float RAW_UNIT_PER_ROT = 4096F;
     private final ITankRobot tankRobot;
-    private final EncoderLocationEstimator locationEstimator;
+    private final EncoderDifferentialDriveLocationEstimator locationEstimator;
     public float lookAheadDistance;
     private DriveTrainSubsystem driveTrain;
     private AHRS navx;
@@ -88,7 +88,7 @@ public class PurePursuitCommand extends Command
             { return Robot.LATERAL_WHEEL_DISTANCE; }
         };
 
-        locationEstimator = new EncoderLocationEstimator();
+        locationEstimator = new EncoderDifferentialDriveLocationEstimator();
         purePursuitMovementStrategy = new PurePursuitMovementStrategy(tankRobot, locationEstimator, waypoints, lookAheadDistance);
         System.out.println("initAngleDegrees:\n\n\n\n "+initAngleDegrees);
         locationEstimator.initialize();
