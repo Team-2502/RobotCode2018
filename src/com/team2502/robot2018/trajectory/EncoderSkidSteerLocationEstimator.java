@@ -6,6 +6,10 @@ import org.joml.Vector2f;
 
 import static com.team2502.robot2018.command.autonomous.PurePursuitCommand.RAW_UNIT_PER_ROT;
 
+/**
+ * WIP, do not use yet!!
+ * @deprecated 
+ */
 public class EncoderSkidSteerLocationEstimator implements ITranslationalLocationEstimator, IRotationalLocationEstimator
 {
     Vector2f location;
@@ -51,8 +55,8 @@ public class EncoderSkidSteerLocationEstimator implements ITranslationalLocation
         // longitudinal slip proportion
         float i = 1-vTan/(Robot.Physical.WHEEL_ROLLING_RADIUS_FT * angularVel);
 
-        float iL = leftRevPerS/a;
-        float iR = rightRevPerS/a;
+//        float iL = leftRevPerS/a;
+//        float iR = rightRevPerS/a;
 
 
         angularVel = MathUtils.Kinematics.getAngularVel(leftVelNoSlide, rightVelNoSlide, Robot.LATERAL_WHEEL_DISTANCE);
