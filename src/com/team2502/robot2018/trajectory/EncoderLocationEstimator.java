@@ -4,14 +4,13 @@ import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.utils.MathUtils;
 import org.joml.Vector2f;
 
-import java.util.Random;
-
 import static com.team2502.robot2018.command.autonomous.PurePursuitCommand.RAW_UNIT_PER_ROT;
 
 public class EncoderLocationEstimator implements ITranslationalLocationEstimator, IRotationalLocationEstimator
 {
     Vector2f location;
     float heading = 0;
+    float angularVel = 0;
 
     public void initialize(){
         location = new Vector2f(0, 0);
@@ -45,18 +44,25 @@ public class EncoderLocationEstimator implements ITranslationalLocationEstimator
 
         float rightRevPerS = Robot.DRIVE_TRAIN.rightRearTalonEnc.getSelectedSensorVelocity(0)*10F / RAW_UNIT_PER_ROT;
 
-        float leftVel = leftRevPerS * Robot.Physical.WHEEL_DIAMETER_FT / 2F * MathUtils.PI_F;
+        float a = (Robot.Physical.WHEEL_ROLLING_RADIUS_FT * angularVel);
 
-        float rightVel = rightRevPerS * Robot.Physical.WHEEL_DIAMETER_FT * MathUtils.PI_F;
+        float iL = leftRevPerS/a;
+        float iR = rightRevPerS/a;
 
-        System.out.printf("Left: %.2f Right: %.2f\n",leftVel,rightVel);
+        float leftVelAdjusted = iL*leftRevPerS * Robot.Physical.WHEEL_DIAMETER_FT / 2F * MathUtils.PI_F;
 
-        float angularVel = MathUtils.Kinematics.getAngularVel(leftVel, rightVel, Robot.LATERAL_WHEEL_DISTANCE);
+        float rightVel =  iR*rightRevPerS * Robot.Physical.WHEEL_DIAMETER_FT * MathUtils.PI_F;
+
+        angularVel = MathUtils.Kinematics.getAngularVel(leftVelAdjusted, rightVel, Robot.LATERAL_WHEEL_DISTANCE);
+
+
+
+        System.out.printf("Left: %.2f Right: %.2f\n",leftVelAdjusted,rightVel);
 
 //        Log.debug("wheel vels: L: {0,number,#.###} \t\t R: {1,number,#.###}", leftVel, rightVel);
 
         Vector2f absoluteDPos = MathUtils.Kinematics.getAbsoluteDPos(
-                leftVel, rightVel, Robot.LATERAL_WHEEL_DISTANCE, dTime
+                leftVelAdjusted, rightVel, Robot.LATERAL_WHEEL_DISTANCE, dTime
                 , heading);
         // Log.debug("adpp: " + absoluteDPos);
         Vector2f absLoc = location.add(absoluteDPos);
