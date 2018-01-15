@@ -8,7 +8,7 @@ import static com.team2502.robot2018.command.autonomous.PurePursuitCommand.RAW_U
 
 /**
  * WIP, do not use yet!!
- * @deprecated 
+ * @deprecated
  */
 public class EncoderSkidSteerLocationEstimator implements ITranslationalLocationEstimator, IRotationalLocationEstimator
 {
