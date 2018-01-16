@@ -41,7 +41,7 @@ dependencies {
 
     compile "com.team2502.ctannotationprocessor:CTAnnotationProcessor:1.0"
     apt     "com.team2502.ctannotationprocessor:CTAnnotationProcessor:1.0"
-    compile "org.joml:joml:1.9.7"
+    compile "org.joml:joml:1.9.8-SNAPSHOT"
 
 //    compile "org.jetbrains:annotations:15.0" // Provides useful annotations like @NotNull & @Nullable
 

@@ -1,6 +1,7 @@
 package com.team2502.robot2018.utils;
 
-import com.team2502.robot2018.data.Vector;
+
+import com.team2502.robot2018.Robot;
 import org.joml.Vector2f;
 
 @SuppressWarnings("unused")
@@ -17,6 +18,8 @@ public final class MathUtils
 
     public static final double TAU_D = 2 * Math.PI;
     public static final float TAU = 2 * (float) Math.PI;
+
+    public static final float PI_F = (float) Math.PI;
 
     /**
      * A table of sin values computed from 0 (inclusive) to 2π (exclusive), with steps of 2π / 65536.
@@ -371,14 +374,6 @@ public final class MathUtils
 
     public static class LinearAlgebra
     {
-        @Deprecated
-        public static Vector rotate2D(Vector vector, float theta)
-        {
-            return new Vector(
-                    (vector.get(0) * cos(theta) - vector.get(1) * sin(theta)),
-                    (vector.get(0) * sin(theta) + vector.get(1) * cos(theta)));
-        }
-
         public static Vector2f rotate2D(Vector2f vector, float theta)
         {
             float sin = sin(theta);
@@ -387,14 +382,6 @@ public final class MathUtils
                                 (vector.x * sin + vector.y * cos));
         }
 
-        @Deprecated
-        public static Vector absoluteToRelativeCoord(Vector relativeCoord, Vector absoluteLocation, float robotHeading)
-        {
-//            System.out.println(relativeCoord );
-            if(relativeCoord.dimensions() != 2) { throw new IllegalArgumentException("Must be in R2"); }
-            Vector coordDif = relativeCoord.clone().subtractBy(absoluteLocation);
-            return LinearAlgebra.rotate2D(coordDif, -robotHeading);
-        }
 
         public static Vector2f absoluteToRelativeCoord(Vector2f relativeCoord, Vector2f absoluteLocation, float robotHeading)
         { return rotate2D(new Vector2f(relativeCoord).sub(absoluteLocation), -robotHeading); }
@@ -447,10 +434,21 @@ public final class MathUtils
             return new Vector2f(dxRelative, dyRelative);
         }
 
+        /**
+         * @deprecated
+         * @return
+         */
+        public static float getHeadingAbsolute()
+        {
+            float navx = (float) Robot.NAVX.getAngle();
+            float heading = Geometry.getDTheta(0, navx);
+            return heading;
+        }
+
         public static Vector2f getAbsoluteDPos(float vL, float vR, float l, float dt, float robotHeading)
         {
             Vector2f relativeDPos = getRelativeDPos(vL, vR, l, dt);
-            Vector2f rotated = MathUtils.LinearAlgebra.rotate2D(relativeDPos, robotHeading);
+            Vector2f rotated = MathUtils.LinearAlgebra.rotate2D(relativeDPos, -robotHeading);
             return rotated;
         }
     }
@@ -464,8 +462,13 @@ public final class MathUtils
          */
         public static float getDTheta(float initDegrees, float finalDegrees)
         {
-            double radians = MathUtils.deg2Rad(finalDegrees - initDegrees);
-            return (float) -(radians % TAU);
+//            System.out.println("Init degrees "+ initDegrees);
+            float degDif = -(finalDegrees - initDegrees);
+            double radians = MathUtils.deg2Rad(degDif);
+            double radBounded = (radians % TAU);
+//            System.out.println("\nNAVX: " + finalDegrees + "\nNAVXD: " + degDif + "\nRadians: " + radians + "\nRadBounded: " + radBounded + "\n");
+            if(radBounded < 0) { return (float) (TAU + radBounded); }
+            return (float) radBounded;
         }
 
         public static Vector2f[] getCircleLineIntersectionPoint(Vector2f pointA, Vector2f pointB, Vector2f center, double radius)
