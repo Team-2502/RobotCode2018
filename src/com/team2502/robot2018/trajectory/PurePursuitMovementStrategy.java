@@ -1,6 +1,7 @@
 package com.team2502.robot2018.trajectory;
 
 import com.team2502.robot2018.utils.MathUtils;
+import logger.Log;
 import org.joml.Vector2f;
 
 import java.text.MessageFormat;
@@ -74,7 +75,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
     public Vector2f calculateAbsoluteGoalPoint()
     {
         // The path is finished — there are no more goal points to compute
-        if (finishedPath) { return null; }
+        if(finishedPath) { return null; }
 
         List<Vector2f> intersections = new ArrayList<>();
 
@@ -88,10 +89,10 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
 
 
         // Loop looks for intersections on last segment searched and one after that
-        for (int i = lastSegmentSearched; i <= lastSegmentSearched + 1; ++i)
+        for(int i = lastSegmentSearched; i <= lastSegmentSearched + 1; ++i)
         {
             // There is no _next_ segment to search
-            if (i + 1 >= waypoints.size()) { continue; }
+            if(i + 1 >= waypoints.size()) { continue; }
 
             Vector2f lineP1 = waypoints.get(i);
             Vector2f lineP2 = waypoints.get(i + 1);
@@ -103,7 +104,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
             // (we are removing points that are not between lineP1 and lineP2)
             vectorList.removeIf(vector -> !MathUtils.between(lineP1, vector, lineP2)); // remove if vectors not between next 2 waypoints
 
-            if (i == lastSegmentSearched + 1 && !vectorList.isEmpty()) { nextPathI = intersections.size(); }
+            if(i == lastSegmentSearched + 1 && !vectorList.isEmpty()) { nextPathI = intersections.size(); }
 
             // We are adding all circle-line intersections to be checked. The best (and valid ones) will be selected.
             intersections.addAll(vectorList);
@@ -113,7 +114,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         Vector2f toCompare = absoluteGoalPoint;
 
         // if there is no last goal point, then just chose the first intersection
-        if (toCompare == null)
+        if(toCompare == null)
         {
             toCompare = waypoints.get(1);
             this.absoluteGoalPoint = waypoints.get(1);
@@ -124,9 +125,9 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         int closestVectorI = bestGoalPoint(toCompare, intersections);
 
         // There is no closest vector ==> finish path
-        if (closestVectorI == -1)
+        if(closestVectorI == -1)
         {
-            System.out.println("closest vector not found!");
+            Log.info("closest vector not found!");
             finishedPath = true;
             return null;
         }
@@ -134,7 +135,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         Vector2f closest = intersections.get(closestVectorI);
 
         // If the closest vector is on the next segment, set that segment as the current segment
-        if (closestVectorI >= nextPathI) { ++lastSegmentSearched; }
+        if(closestVectorI >= nextPathI) { ++lastSegmentSearched; }
 
         // closest is our new goal point
         this.absoluteGoalPoint = closest;
@@ -151,16 +152,16 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         // Sometimes the above method will cause isFinished to return true if no more goal points are found.
         if(isFinishedPath())
         {
-            System.out.println("\nFinished path!!!!\n");
+            Log.info("\nFinished path!!!!\n");
             return;
         }
 
-        System.out.printf("estimated location: %.2f,%.2f\n", usedEstimatedLocation.x,usedEstimatedLocation.y);
-        System.out.printf("usedHeading: %.2f\n",usedHeading);
-        System.out.printf("absGP: %.2f,%.2f\n",absoluteGoalPoint.x,absoluteGoalPoint.y);
+        Log.info("estimated location: '{' {0,number,0.00}, {1,number,0.00} '}'", usedEstimatedLocation.x, usedEstimatedLocation.y);
+        Log.info("usedHeading: {0,number,0.00}", usedHeading);
+        Log.info("absGP: '{' {0,number,0.00}, {1,number,0.00} '}'", absoluteGoalPoint.x, absoluteGoalPoint.y);
         relativeGoalPoint = MathUtils.LinearAlgebra.absoluteToRelativeCoord(absoluteGoalPoint, usedEstimatedLocation, usedHeading);
         wheelVelocities = calculateWheelVelocities();
-        System.out.printf("wheelVelocities %.2f,%.2f\n\n",wheelVelocities.x,wheelVelocities.y);
+        System.out.printf("wheelVelocities '{' {0,number,0.00}, {1,number,0.00} '}'\n", wheelVelocities.x, wheelVelocities.y);
     }
 
     /**
@@ -205,28 +206,6 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         Vector2f circleRelativeCenter = new Vector2f(-pathRadius, 0.0F);
         Vector2f circleRelativeCenterRotated = MathUtils.LinearAlgebra.rotate2D(circleRelativeCenter, usedHeading);
         return usedEstimatedLocation.add(circleRelativeCenterRotated);
-    }
-
-    /**
-     * @return The radius of the circle that the robot is traveling across. Positive if the robot is turning left, negative if right.
-     */
-    public float getPathRadius()
-    {
-        return pathRadius;
-    }
-
-    /**
-     * @return The velocities (left,right) of the wheels. If you are setting input as voltage, "velocities" will actually be voltages. Magnitude doesn't matter the most; ratio does.
-     */
-    public Vector2f getWheelVelocities()
-    {
-        return wheelVelocities;
-    }
-
-
-    public Vector2f getUsedEstimatedLocation()
-    {
-        return usedEstimatedLocation;
     }
 
     private Vector2f calculateWheelVelocities() throws NullPointerException
@@ -321,75 +300,72 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
     }
 
     /**
+     * @return The radius of the circle that the robot is traveling across. Positive if the robot is turning left, negative if right.
+     */
+    public float getPathRadius()
+    { return pathRadius; }
+
+    /**
+     * @return The velocities (left,right) of the wheels. If you are setting input as voltage, "velocities" will actually be voltages. Magnitude doesn't matter the most; ratio does.
+     */
+    public Vector2f getWheelVelocities()
+    { return wheelVelocities; }
+
+    public Vector2f getUsedEstimatedLocation()
+    { return usedEstimatedLocation; }
+
+    /**
      * @return The tangential speed of the robot
      */
     public float getTangentialSpeed()
-    {
-        return tangentialSpeed;
-    }
+    { return tangentialSpeed; }
 
     /**
      * @return The tangential speed of the left wheels
      */
     public float getLeftWheelTanVel()
-    {
-        return leftWheelTanVel;
-    }
+    { return leftWheelTanVel; }
 
     /**
      * @return The tangential speed of the right wheels
      */
     public float getRightWheelTanVel()
-    {
-        return rightWheelTanVel;
-    }
+    { return rightWheelTanVel; }
 
     /**
      * @return The goal point with respect to the robot
      */
     public Vector2f getRelativeGoalPoint()
-    {
-        return relativeGoalPoint;
-    }
+    { return relativeGoalPoint; }
 
     /**
      * @return The rotational velocity of the robot. WARNING: will not work if you are inputting voltage instead of actual velocities
      * @deprecated
      */
     public float getRotVelocity()
-    {
-        return rotVelocity;
-    }
+    { return rotVelocity; }
 
     /**
      * @return If the robot is finished traveling the path
      */
     public boolean isFinishedPath()
-    {
-        return finishedPath || waypoints.size() < 1;
-    }
+    { return finishedPath || waypoints.size() < 1; }
 
     /**
      * @return Get the heading (angle) of the robot
      */
     public float getUsedHeading()
-    {
-        return usedHeading;
-    }
+    { return usedHeading; }
 
     /**
      * @return The absolute location of the goal point
      */
     public Vector2f getAbsoluteGoalPoint()
-    {
-        return absoluteGoalPoint;
-    }
+    { return absoluteGoalPoint; }
 
     /**
      * @return The distance (theta) robot must rotate to face directly at goal point
      */
     public float getdThetaToRotate()
-    {
-        return dThetaToRotate;
-    }
+    { return dThetaToRotate; }
 }

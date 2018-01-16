@@ -23,7 +23,8 @@ public class LoggerPrintStream extends PrintStream
 
     public synchronized void outputln(String s)
     {
-        super.println(s);
+        printBuffer.offer(s);
+//        super.println(s);
     }
 
     public synchronized void printBuffer()

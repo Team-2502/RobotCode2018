@@ -2,6 +2,8 @@ package logger;
 
 import java.io.PrintStream;
 import java.text.MessageFormat;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Timer;
 
 @SuppressWarnings({ "WeakerAccess", "unused", "EmptyCatchBlock", "SameParameterValue" })
@@ -10,6 +12,7 @@ public final class Log
     private static final Timer TIMER;
     private static boolean debug = false;
     private static PrintFormat pf = null;
+    private static Map<String, MessageFormat> formatMap = new HashMap<>();
 
     static
     {
@@ -18,8 +21,12 @@ public final class Log
         System.setOut(ops);
         System.setErr(eps);
         TIMER = new Timer();
-        TIMER.scheduleAtFixedRate(new LoggerPrintStream.PrintTimer(ops), 1000, 1000);
-        TIMER.scheduleAtFixedRate(new LoggerPrintStream.PrintTimer(eps), 1000, 1000);
+        TIMER.scheduleAtFixedRate(new LoggerPrintStream.PrintTimer(ops), 200, 200);
+        TIMER.scheduleAtFixedRate(new LoggerPrintStream.PrintTimer(eps), 50, 50);
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            ops.printBuffer();
+            eps.printBuffer();
+        }));
     }
 
     private Log() {}
@@ -47,7 +54,14 @@ public final class Log
     {
         if((type == LogType.DEBUG) && !debug) { return; }
         if(pf == null) { createLogger(); }
-        String out = pf.getPrintString(type.toString(), ClassGetter.getCallerClassName(depth), MessageFormat.format(msg.toString(), args));
+        String formatStr = msg.toString();
+        MessageFormat mf = formatMap.get(formatStr);
+        if(mf == null)
+        {
+            mf = new MessageFormat(formatStr);
+            formatMap.put(formatStr, mf);
+        }
+        String out = pf.getPrintString(type.toString(), ClassGetter.getCallerClassName(depth), mf.format(args));
         if(type.output instanceof LoggerPrintStream) { ((LoggerPrintStream) type.output).outputln(out); }
         else { type.output.println(out); }
         type.output.flush();

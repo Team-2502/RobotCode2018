@@ -9,6 +9,7 @@ import com.team2502.robot2018.trajectory.ITankRobot;
 import com.team2502.robot2018.trajectory.PurePursuitMovementStrategy;
 import com.team2502.robot2018.utils.MathUtils;
 import edu.wpi.first.wpilibj.command.Command;
+import logger.Log;
 import org.joml.Vector2f;
 
 import java.util.List;
@@ -90,8 +91,7 @@ public class PurePursuitCommand extends Command
 
         locationEstimator = new EncoderDifferentialDriveLocationEstimator();
         purePursuitMovementStrategy = new PurePursuitMovementStrategy(tankRobot, locationEstimator, waypoints, lookAheadDistance);
-        System.out.println("initAngleDegrees:\n\n\n\n "+initAngleDegrees);
-        locationEstimator.initialize();
+        Log.info("initAngleDegrees: {0,number,0.00}\n" + initAngleDegrees);
     }
 
     /**

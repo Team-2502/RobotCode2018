@@ -62,7 +62,6 @@ public class DriveCommand extends Command
     protected void initialize()
     {
         encoderLocationEstimator = new EncoderDifferentialDriveLocationEstimator();
-        encoderLocationEstimator.initialize();
     }
 
     private Vector2f lastEstimatedLocation = new Vector2f();
