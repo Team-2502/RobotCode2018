@@ -40,10 +40,12 @@ public class RobotMap
     public static final class Motor
     {
 
-        public static final float WHEEL_DIAMETER = 6.0F;
+//        public static final float WHEEL_DIAMETER = 6.0F;
+        public static final float WHEEL_DIAMETER = 4.0F;
         public static final float POS_TO_FEET = (WHEEL_DIAMETER * (float) Math.PI) / (4096.0F * 12.0F);
         public static final float VEL_TO_RPM = (600.0F / 4096.0F);
-        public static final float VEL_TO_FPS = VEL_TO_RPM * ((float) Math.PI / 2.0F); // VEL_TO_RPM * (6 * (float) Math.PI / 12)
+        public static final float VEL_TO_FPS = VEL_TO_RPM / 60 * (WHEEL_DIAMETER * (float) Math.PI) / 12.0F ;
+
 
         public static final int INIT_TIMEOUT = 10; // When initializing a sensor/whatever, the timeout will be 10 ms
         public static final int LOOP_TIMEOUT = 0; // When doing things in a loop, there won't be a timeout

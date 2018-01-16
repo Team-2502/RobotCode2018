@@ -10,7 +10,10 @@ import java.util.function.DoubleConsumer;
 import java.util.function.DoubleSupplier;
 
 /**
- * Created by 64009334 on 1/16/18.
+ * There is a gyro widget in Shuffleboard
+ * One may only use it if you send a Sendable to the SmartDashboard.
+ * While AHRS implements Sendable, the getAngle goes from -180 degrees to 180 degrees. The gyro widget only supports 0 to 360 degrees.
+ * This class rectifies that issue.
  */
 public class SendableNavX implements Sendable, DashboardData.DashboardUpdater
 {
@@ -19,13 +22,23 @@ public class SendableNavX implements Sendable, DashboardData.DashboardUpdater
     DoubleSupplier getAngle = () -> 180 + Robot.NAVX.getAngle();
     DoubleConsumer takeAngle = (double value) -> {};
 
+    /**
+     * This class is a Singleton
+     */
     private SendableNavX() {}
 
+    /**
+     * Activate all the static items
+     */
     public static void init()
     {
 
     }
 
+    /**
+     * Grab the one and only instance of SendableNavX
+     * @return the one and only instance of SendableNavX
+     */
     public static SendableNavX getInstance() { return instance; }
 
     public String name = "Sendibble NavX";
@@ -60,13 +73,12 @@ public class SendableNavX implements Sendable, DashboardData.DashboardUpdater
     {
         builder.setSmartDashboardType("Gyro");
         builder.addDoubleProperty("Value", getAngle, takeAngle);
-
     }
 
     @Override
     public void updateDashboard()
     {
         SmartDashboard.putData(name,this);
-        System.out.println("Angle: " + getAngle.getAsDouble());
+//        System.out.println("Angle: " + getAngle.getAsDouble());
     }
 }

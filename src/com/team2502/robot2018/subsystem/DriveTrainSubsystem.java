@@ -65,8 +65,12 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         talon.set(ControlMode.PercentOutput, 0.0F);
         talon.configNominalOutputForward(0.0D, RobotMap.Motor.INIT_TIMEOUT);
         talon.configNominalOutputReverse(0.0D, RobotMap.Motor.INIT_TIMEOUT);
+
         talon.configPeakOutputForward(1.0D, RobotMap.Motor.INIT_TIMEOUT);
         talon.configPeakOutputReverse(-1.0D, RobotMap.Motor.INIT_TIMEOUT);
+
+
+        talon.setInverted(true);
     }
 
     public void setTeleopSettings()
@@ -75,6 +79,9 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         setTeleopSettings(rightFrontTalon);
         setTeleopSettings(leftRearTalonEnc);
         setTeleopSettings(rightRearTalonEnc);
+
+        leftRearTalonEnc.setSensorPhase(false);
+        rightRearTalonEnc.setSensorPhase(true);
     }
 
     public void setAutonSettings()
@@ -85,7 +92,7 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         leftFrontTalon.follow(leftRearTalonEnc);
         rightFrontTalon.follow(rightRearTalonEnc);
 
-        leftRearTalonEnc.setSensorPhase(true);
+        leftRearTalonEnc.setSensorPhase(false);
         rightRearTalonEnc.setSensorPhase(true);
 
         if(leftRearTalonEnc.getControlMode() != ControlMode.Position || rightRearTalonEnc.getControlMode() != ControlMode.Position || leftFrontTalon.getControlMode() != ControlMode.Follower || rightFrontTalon.getControlMode() != ControlMode.Follower)
@@ -135,8 +142,8 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     {
         float joystickLevel;
         // Get the base speed of the robot
-        if(negative) { joystickLevel = -OI.JOYSTICK_DRIVE_RIGHT.getY(); }
-        else { joystickLevel = -OI.JOYSTICK_DRIVE_LEFT.getY(); }
+        if(negative) { joystickLevel = OI.JOYSTICK_DRIVE_RIGHT.getY(); }
+        else { joystickLevel = OI.JOYSTICK_DRIVE_LEFT.getY(); }
 
         // Only increase the speed by a small amount
         float diff = joystickLevel - lastLeft;
@@ -146,8 +153,8 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         lastLeft = joystickLevel;
         out.left = joystickLevel;
 
-        if(negative) { joystickLevel = -OI.JOYSTICK_DRIVE_LEFT.getY(); }
-        else { joystickLevel = -OI.JOYSTICK_DRIVE_RIGHT.getY(); }
+        if(negative) { joystickLevel = OI.JOYSTICK_DRIVE_LEFT.getY(); }
+        else { joystickLevel = OI.JOYSTICK_DRIVE_RIGHT.getY(); }
 
         diff = joystickLevel - lastRight;
         if(diff > 0.1F) { joystickLevel = lastRight + 0.1F; }
