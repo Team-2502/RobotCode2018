@@ -40,6 +40,8 @@ public class RobotMap
     public static final class Motor
     {
 
+        public static final float MAX_FPS_SPEED = 18.0F;
+
 //        public static final float WHEEL_DIAMETER = 6.0F;
         public static final float WHEEL_DIAMETER = 4.0F;
         public static final float POS_TO_FEET = (WHEEL_DIAMETER * (float) Math.PI) / (4096.0F * 12.0F);
