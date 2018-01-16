@@ -195,6 +195,17 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         return Math.abs((leftRearTalonEnc.getSelectedSensorVelocity(0) + rightRearTalonEnc.getSelectedSensorVelocity(0)) / 2.0F);
     }
 
+
+    /**
+     * @return Velocity as read by left encoder in Feet per Second
+     */
+    public float getLeftVel() { return leftRearTalonEnc.getSelectedSensorVelocity(0) * RobotMap.Motor.VEL_TO_FPS; }
+
+    /**
+     * @return Velocity as ready by right encoder in Feet per Second
+     */
+    public float getRightVel() { return rightRearTalonEnc.getSelectedSensorVelocity(0) * RobotMap.Motor.VEL_TO_FPS; }
+
     @Override
     public void updateDashboard()
     {

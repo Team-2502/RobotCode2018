@@ -1,4 +1,4 @@
-package com.team2502.robot2018.subsystem;
+package com.team2502.robot2018.sendables;
 
 import com.team2502.robot2018.DashboardData;
 import com.team2502.robot2018.Robot;

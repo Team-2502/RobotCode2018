@@ -4,7 +4,7 @@ import com.kauailabs.navx.frc.AHRS;
 import com.team2502.robot2018.command.autonomous.PurePursuitCommand;
 import com.team2502.robot2018.subsystem.ClimberSubsystem;
 import com.team2502.robot2018.subsystem.DriveTrainSubsystem;
-import com.team2502.robot2018.subsystem.SendableNavX;
+import com.team2502.robot2018.sendables.SendableNavX;
 import com.team2502.robot2018.subsystem.TransmissionSubsystem;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -17,8 +17,6 @@ import org.joml.Vector2f;
 
 import java.io.*;
 import java.util.ArrayList;
-
-import java.io.*;
 
 public final class Robot extends IterativeRobot
 {
