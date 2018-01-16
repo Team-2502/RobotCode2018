@@ -367,6 +367,7 @@ public final class MathUtils
 
     public static float pow10f(final float x)
     { return x * x * x * x * x * x * x * x * x * x; }
+    //endregion
 
     public static class LinearAlgebra
     {
@@ -453,7 +454,6 @@ public final class MathUtils
             return rotated;
         }
     }
-    //endregion
 
     public static class Geometry
     {
