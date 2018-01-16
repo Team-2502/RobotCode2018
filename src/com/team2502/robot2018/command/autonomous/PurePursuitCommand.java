@@ -38,18 +38,13 @@ public class PurePursuitCommand extends Command
         tankRobot = new ITankRobot()
         {
             /**
-             *
              * @return The heading (angle) of the robot. In radians from [0,2pi). Increases counterclockwise.
              */
             @Override
             public float getHeading()
-            {
-                float rad = MathUtils.Geometry.getDTheta(initAngleDegrees, (float) navx.getAngle());
-                return rad;
-            }
+            { return MathUtils.Geometry.getDTheta(initAngleDegrees, (float) navx.getAngle()); }
 
             /**
-             *
              * @return The max velocity the right wheels can travel
              */
             @Override
@@ -57,7 +52,6 @@ public class PurePursuitCommand extends Command
             { return Robot.VR_MAX; }
 
             /**
-             *
              * @return The max velocity the left wheels can travel
              */
             @Override
@@ -65,7 +59,6 @@ public class PurePursuitCommand extends Command
             { return Robot.VL_MAX; }
 
             /**
-             *
              * @return The min velocity the left wheels can travel
              */
             @Override
@@ -73,7 +66,6 @@ public class PurePursuitCommand extends Command
             { return Robot.VL_MIN; }
 
             /**
-             *
              * @return The min velocity the right wheels can travel
              */
             @Override
@@ -81,7 +73,6 @@ public class PurePursuitCommand extends Command
             { return Robot.VR_MIN; }
 
             /**
-             *
              * @return The lateral distance between wheels
              */
             @Override
