@@ -13,6 +13,7 @@ public class PrintFormat
 
     private String format;
     private int[] timeOrganizer;
+    private String[] formats;
     private Timer timer;
 
     public PrintFormat(String format, String timeFormat)
@@ -27,6 +28,12 @@ public class PrintFormat
             else if(spl.contains("h")) { timeOrganizer[3] = spl.length(); }
             else if(spl.contains("d")) { timeOrganizer[4] = spl.length(); }
         }
+        formats = new String[5];
+        formats[0] = new StringBuilder("%0").append(timeOrganizer[0]).append('d').toString();
+        formats[1] = new StringBuilder("%0").append(timeOrganizer[1]).append('d').toString();
+        formats[2] = new StringBuilder("%0").append(timeOrganizer[2]).append('d').toString();
+        formats[3] = new StringBuilder("%0").append(timeOrganizer[3]).append('d').toString();
+        formats[4] = new StringBuilder("%0").append(timeOrganizer[4]).append('d').toString();
         timer = new Timer();
     }
 
@@ -34,27 +41,28 @@ public class PrintFormat
 
     protected class Timer
     {
+        protected final long startTime;
         protected long[] times;
         protected long[] lastTimes;
         protected String[] stringTimes;
-        protected final long startTime;
 
         private Timer()
         {
             times = new long[5];
             lastTimes = new long[] { -1, -1, -1, -1, -1 };
             stringTimes = new String[5];
+            for(int i = 0; i < stringTimes.length; ++i) { stringTimes[i] = "00"; }
             startTime = System.currentTimeMillis();
         }
 
         protected String formatTime()
         {
             StringBuilder out = new StringBuilder();
-            for(int i = 0; i < timeOrganizer.length; ++i)
+            for(int i = timeOrganizer.length - 1; i >= 0; --i)
             {
                 if(timeOrganizer[i] == 0) { continue; }
                 if(times[i] == lastTimes[i]) { out.append(stringTimes[i]); }
-                else { out.append(String.format(new StringBuilder("%0").append(timeOrganizer[i]).append('d').toString(), times[i])); }
+                else { out.append(stringTimes[i] = String.format(formats[i], times[i])); }
                 out.append(':');
             }
             return out.toString().substring(0, out.length() - 1);
@@ -62,13 +70,16 @@ public class PrintFormat
 
         protected String getTime()
         {
-            times[0] = System.currentTimeMillis() - startTime;
-            long thousand = times[2] / 1000;
-            times[0] %= 1000;
-            times[1] = thousand % 60;
-            times[2] = (thousand / 60) % 60;
-            times[3] = (thousand / 3600) % 24;
-            times[4] = thousand / 86400;
+            System.arraycopy(times, 0, lastTimes, 0, times.length);
+            long time = System.currentTimeMillis() - startTime;
+            times[0] = time % 1000;
+            time /= 1000;
+            times[1] = time % 60;
+            time /= 60;
+            times[2] = time % 60;
+            time /= 60;
+            times[3] = time % 24;
+            times[4] = time / 24;
             return formatTime();
         }
     }

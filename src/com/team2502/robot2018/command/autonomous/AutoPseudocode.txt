@@ -8,23 +8,29 @@ Left start position:
     RLx:
         1. score in scale
     RRx:
-        1. cross line
-        2. rush scale (pure pursuit?)
+        1. cross line, position for scale (attempt score?)
+        2. cross line, position for switch, attempt score
+        3. rush scale (pure pursuit?)
 
 Center start position:
     LLx:
         1. score in switch
+        2. cross line (stay out of way)
     LRx:
         1. score in switch
+        2. cross line (stay out of way)
     RLx:
         1. score in switch
+        2. cross line (stay out of way)
     RRx:
         1. score in switch
+        2. cross line (stay out of way)
 
 Right start position:
     LLx:
-        1. cross line
-        2. rush scale (pure pursuit?)
+        1. cross line position for scale (attempt score?)
+        2. cross line, position for switch, attempt score
+        3. rush scale (pure pursuit?)
     LRx:
         1. score in scale
     RLx:

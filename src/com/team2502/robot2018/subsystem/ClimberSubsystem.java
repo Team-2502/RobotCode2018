@@ -1,46 +1,41 @@
 package com.team2502.robot2018.subsystem;
 
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.team2502.robot2018.OI;
 import com.team2502.robot2018.RobotMap;
 import com.team2502.robot2018.command.teleop.RunClimberCommand;
+import com.team2502.robot2018.utils.WPI_TalonSRXF;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 @Deprecated
 public class ClimberSubsystem extends Subsystem
 {
-    public final WPI_TalonSRX climbMotorLeft;
-    public final WPI_TalonSRX climbMotorRight;
+    public final WPI_TalonSRXF climbMotorLeft;
+    public final WPI_TalonSRXF climbMotorRight;
 
     public ClimberSubsystem()
     {
-        climbMotorLeft = new WPI_TalonSRX(RobotMap.Motor.CLIMBER_LEFT);
-        climbMotorRight = new WPI_TalonSRX(RobotMap.Motor.CLIMBER_RIGHT);
+        climbMotorLeft = new WPI_TalonSRXF(RobotMap.Motor.CLIMBER_LEFT);
+        climbMotorRight = new WPI_TalonSRXF(RobotMap.Motor.CLIMBER_RIGHT);
     }
 
     @Override
     protected void initDefaultCommand()
-    {
-        setDefaultCommand(new RunClimberCommand());
-    }
+    { setDefaultCommand(new RunClimberCommand()); }
 
     public void climb()
     {
-        double speed = Math.abs(OI.JOYSTICK_FUNCTION.getY());
+        float speed = Math.abs((float) OI.JOYSTICK_FUNCTION.getY());
 
         /*
          * Prevent motors from going backwards and
          * stop if speed is below a certain threshold.
          */
-        if(speed <= 0.01D)
-        {
-            speed = 0.0D;
-        }
+        if(speed <= 0.01F) { speed = 0.0F; }
 
         runMotors(speed);
     }
 
-    public void runMotors(double speed)
+    public void runMotors(float speed)
     {
         // TODO: Verify that these settings are correct.
         /*
@@ -53,7 +48,7 @@ public class ClimberSubsystem extends Subsystem
 
     public void stop()
     {
-        climbMotorLeft.set(0.0D);
-        climbMotorRight.set(0.0D);
+        climbMotorLeft.set(0.0F);
+        climbMotorRight.set(0.0F);
     }
 }
