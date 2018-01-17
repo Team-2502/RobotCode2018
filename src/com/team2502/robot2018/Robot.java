@@ -2,13 +2,12 @@ package com.team2502.robot2018;
 
 import com.kauailabs.navx.frc.AHRS;
 import com.team2502.robot2018.command.autonomous.PurePursuitCommand;
+import com.team2502.robot2018.sendables.SendableDriveTrain;
 import com.team2502.robot2018.subsystem.ClimberSubsystem;
 import com.team2502.robot2018.subsystem.DriveTrainSubsystem;
+import com.team2502.robot2018.sendables.SendableNavX;
 import com.team2502.robot2018.subsystem.TransmissionSubsystem;
-import edu.wpi.first.wpilibj.Compressor;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.IterativeRobot;
-import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import logger.Log;
@@ -16,8 +15,6 @@ import org.joml.Vector2f;
 
 import java.io.*;
 import java.util.ArrayList;
-
-import java.io.*;
 
 public final class Robot extends IterativeRobot
 {
@@ -77,6 +74,12 @@ public final class Robot extends IterativeRobot
         COMPRESSOR = new Compressor();
 
         AutoSwitcher.putToSmartDashboard();
+
+        SendableNavX.init();
+        SendableDriveTrain.init();
+
+        DashboardData.addUpdater(SendableDriveTrain.getInstance());
+        DashboardData.addUpdater(SendableNavX.getInstance());
 
         OI.init();
 
