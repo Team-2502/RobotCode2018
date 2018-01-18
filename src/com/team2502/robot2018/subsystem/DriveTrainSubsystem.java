@@ -112,13 +112,18 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
      * @param x Units for the left side of drivetrain
      * @param y Units for the right side of drivetrain
      */
+    public void runMotors(ControlMode controlMode, float x, float y) // double z
+    {
+        leftFrontTalon.set(controlMode,x);
+        leftRearTalonEnc.set(controlMode,x);
+
+        rightFrontTalon.set(controlMode,-y);
+        rightRearTalonEnc.set(controlMode,-y);
+    }
+
     public void runMotors(float x, float y) // double z
     {
-        leftFrontTalon.set(x);
-        leftRearTalonEnc.set(x);
-
-        rightFrontTalon.set(-y);
-        rightRearTalonEnc.set(-y);
+        runMotors(ControlMode.PercentOutput,x,y);
     }
 
     public double turningFactor()
