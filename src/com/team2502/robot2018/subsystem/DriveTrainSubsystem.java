@@ -111,6 +111,7 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
      *
      * @param x Units for the left side of drivetrain
      * @param y Units for the right side of drivetrain
+     * @param controlMode The mode that the motors are being driven in
      */
     public void runMotors(ControlMode controlMode, float x, float y) // double z
     {
@@ -121,6 +122,14 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         rightRearTalonEnc.set(controlMode,-y);
     }
 
+    /**
+     * Drive the robot using ControlMode.PercentOutput. The equation x=-y must be true for the robot to drive straight.
+     * <br>
+     * Make sure to set the motors according to the control mode. In auton, it's position. In teleop, it's percent voltage.
+     *
+     * @param x Units for the left side of drivetrain
+     * @param y Units for the right side of drivetrain
+     */
     public void runMotors(float x, float y) // double z
     {
         runMotors(ControlMode.PercentOutput,x,y);
