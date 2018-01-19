@@ -5,6 +5,7 @@ import com.team2502.robot2018.command.autonomous.groups.CenterCommandGroup;
 import com.team2502.robot2018.command.autonomous.groups.LeftCommandGroup;
 import com.team2502.robot2018.command.autonomous.groups.RightCommandGroup;
 import com.team2502.robot2018.command.autonomous.ingredients.DriveTime;
+import com.team2502.robot2018.command.teleop.CalibrateRobotCommand;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -32,6 +33,7 @@ class AutoSwitcher
     public enum AutoMode
     {
         PURE_PURSUIT("PurePursuit", PurePursuitCommand.class),
+        CALIBRATE("Calibrate", CalibrateRobotCommand.class),
         DEMO("Demo", DriveTime.class),
         CENTERCOMMANDGROUP("Center Line Up", CenterCommandGroup.class),
         LEFTCOMMANDGROUP("Left Line Up", LeftCommandGroup.class),
