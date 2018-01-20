@@ -41,6 +41,7 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
 
         leftFrontTalon = new WPI_TalonSRXF(RobotMap.Motor.DRIVE_TRAIN_FRONT_LEFT);
         leftRearTalonEnc = new WPI_TalonSRXF(RobotMap.Motor.DRIVE_TRAIN_BACK_LEFT);
+
         rightFrontTalon = new WPI_TalonSRXF(RobotMap.Motor.DRIVE_TRAIN_FRONT_RIGHT);
         rightRearTalonEnc = new WPI_TalonSRXF(RobotMap.Motor.DRIVE_TRAIN_BACK_RIGHT);
 
@@ -58,8 +59,7 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         DashboardData.addUpdater(this);
     }
 
-    public void stop()
-    { drive.stopMotor(); }
+    public void stop() { drive.stopMotor(); }
 
     private void setTeleopSettings(WPI_TalonSRXF talon)
     {
@@ -74,6 +74,9 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         talon.setInverted(true);
     }
 
+    /**
+     * This class sets the correct nominal/peak values for the talon and also sets the correct inversion settings on the encoders.
+     */
     public void setTeleopSettings()
     {
         setTeleopSettings(leftFrontTalon);
@@ -87,6 +90,9 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         rightRearTalonEnc.setSensorPhase(true);
     }
 
+    /**
+     * This method makes sure that the non-encoder talons are following their encoder-equipped brethren.
+     */
     public void setAutonSettings()
     {
         leftRearTalonEnc.set(ControlMode.Position, 0.0F);
@@ -97,12 +103,40 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
 
         leftRearTalonEnc.setSensorPhase(false);
         rightRearTalonEnc.setSensorPhase(true);
+    }
 
-        if(leftRearTalonEnc.getControlMode() != ControlMode.Position || rightRearTalonEnc.getControlMode() != ControlMode.Position || leftFrontTalon.getControlMode() != ControlMode.Follower || rightFrontTalon.getControlMode() != ControlMode.Follower)
-        {
-            Log.warn("setAutonSettings: One or more of the talons did not retain their control mode!\n" +
-                     "Using the .set(int x) method will yield undesirable results!");
-        }
+    /**
+     * Sets the PID for left AND right motors. If the descriptions below confuse you, go look up a better
+     * explanation of PID.
+     * @param kP Proportional constant. Makes the motor go faster proportional to the error.
+     * @param kI Integral constant. Makes the motor go faster proportional to the integral of the error.
+     * @param kD Derivative constant. Makes the motor go faster proportional to the derivative of the error.
+     */
+    public void setPID(double kP, double kI, double kD)
+    {
+        leftRearTalonEnc.config_kP(0, kP, Constants.INIT_TIMEOUT);
+        leftRearTalonEnc.config_kI(0, kI, Constants.INIT_TIMEOUT);
+        leftRearTalonEnc.config_kD(0, kD, Constants.INIT_TIMEOUT);
+
+        rightRearTalonEnc.config_kP(0, kP, Constants.INIT_TIMEOUT);
+        rightRearTalonEnc.config_kI(0, kI, Constants.INIT_TIMEOUT);
+        rightRearTalonEnc.config_kD(0, kD, Constants.INIT_TIMEOUT);
+    }
+
+    /**
+     * Sets the PID for left AND right motors. If the descriptions below confuse you, go look up a better
+     * explanation of PID.
+     * @param kP Proportional constant. Makes the motor go faster proportional to the error.
+     * @param kI Integral constant. Makes the motor go faster proportional to the integral of the error
+     * @param kD Derivative constant. Makes the motor go faster proportional to the derivative of the error
+     * @param iZone Integral Zone. If the integral of the error is bigger than this, the integral is reset to 0.
+     */
+    public void setPID(double kP, double kI, double kD, int iZone)
+    {
+        setPID(kP, kI, kD);
+
+        leftRearTalonEnc.config_IntegralZone(0, iZone, Constants.INIT_TIMEOUT);
+        rightRearTalonEnc.config_IntegralZone(0, iZone, Constants.INIT_TIMEOUT);
     }
 
     /**

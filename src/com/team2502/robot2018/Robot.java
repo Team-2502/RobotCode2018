@@ -176,7 +176,4 @@ public final class Robot extends IterativeRobot
         DashboardData.update();
     }
 
-    public static final class Physical
-    {
-    }
 }
