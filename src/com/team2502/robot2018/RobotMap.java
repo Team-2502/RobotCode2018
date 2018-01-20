@@ -2,6 +2,10 @@ package com.team2502.robot2018;
 
 import com.team2502.ctannotationprocessor.Undefined;
 
+/**
+ * Exclusively for defining Button ID's, Solenoid ID's, Motor ID's, and other kinds of ID's
+ * Stuff like conversion constants DO NOT belong here
+ */
 public class RobotMap
 {
     /**
@@ -39,25 +43,6 @@ public class RobotMap
 
     public static final class Motor
     {
-
-        public static final float MAX_FPS_SPEED = 18.0F;
-
-//        public static final float WHEEL_DIAMETER = 6.0F;
-        public static final float WHEEL_DIAMETER = 4.0F;
-        public static final float POS_TO_FEET = (WHEEL_DIAMETER * (float) Math.PI) / (4096.0F * 12.0F);
-        public static final float VEL_TO_RPM = (600.0F / 4096.0F);
-        public static final float VEL_TO_FPS = VEL_TO_RPM / 60 * (WHEEL_DIAMETER * (float) Math.PI) / 12.0F ;
-
-
-        public static final int INIT_TIMEOUT = 10; // When initializing a sensor/whatever, the timeout will be 10 ms
-        public static final int LOOP_TIMEOUT = 0; // When doing things in a loop, there won't be a timeout
-
-        @Undefined(safe = true)
-        public static final double SHIFT_UP_THRESHOLD = UNDEFINED;
-        @Undefined(safe = true)
-        public static final double SHIFT_DOWN_THRESHOLD = UNDEFINED;
-
-
         // TODO: Set proper values.
         public static final int DRIVE_TRAIN_FRONT_LEFT = 8;
         public static final int DRIVE_TRAIN_BACK_LEFT = 7;

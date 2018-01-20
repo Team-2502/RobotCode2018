@@ -2,6 +2,7 @@ package com.team2502.robot2018.subsystem;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.team2502.robot2018.Constants;
 import com.team2502.robot2018.DashboardData;
 import com.team2502.robot2018.OI;
 import com.team2502.robot2018.RobotMap;
@@ -44,8 +45,8 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         rightRearTalonEnc = new WPI_TalonSRXF(RobotMap.Motor.DRIVE_TRAIN_BACK_RIGHT);
 
         // Add encoders (ask nicely for encoders on drivetrain)
-        leftRearTalonEnc.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, RobotMap.Motor.INIT_TIMEOUT);
-        rightRearTalonEnc.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, RobotMap.Motor.INIT_TIMEOUT);
+        leftRearTalonEnc.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, Constants.INIT_TIMEOUT);
+        rightRearTalonEnc.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, Constants.INIT_TIMEOUT);
 
         spgLeft = new SpeedControllerGroupF(leftFrontTalon, leftRearTalonEnc);
         spgRight = new SpeedControllerGroupF(rightFrontTalon, rightRearTalonEnc);
@@ -63,11 +64,11 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     private void setTeleopSettings(WPI_TalonSRXF talon)
     {
         talon.set(ControlMode.PercentOutput, 0.0F);
-        talon.configNominalOutputForward(0.0D, RobotMap.Motor.INIT_TIMEOUT);
-        talon.configNominalOutputReverse(0.0D, RobotMap.Motor.INIT_TIMEOUT);
+        talon.configNominalOutputForward(0.0D, Constants.INIT_TIMEOUT);
+        talon.configNominalOutputReverse(0.0D, Constants.INIT_TIMEOUT);
 
-        talon.configPeakOutputForward(1.0D, RobotMap.Motor.INIT_TIMEOUT);
-        talon.configPeakOutputReverse(-1.0D, RobotMap.Motor.INIT_TIMEOUT);
+        talon.configPeakOutputForward(1.0D, Constants.INIT_TIMEOUT);
+        talon.configPeakOutputReverse(-1.0D, Constants.INIT_TIMEOUT);
 
 
         talon.setInverted(true);
@@ -229,21 +230,21 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     /**
      * @return Velocity as read by left encoder in Feet per Second
      */
-    public float getLeftVel() { return leftRearTalonEnc.getSelectedSensorVelocity(0) * RobotMap.Motor.VEL_TO_FPS; }
+    public float getLeftVel() { return leftRearTalonEnc.getSelectedSensorVelocity(0) * Constants.VEL_TO_FPS; }
 
     /**
      * @return Velocity as ready by right encoder in Feet per Second
      */
-    public float getRightVel() { return rightRearTalonEnc.getSelectedSensorVelocity(0) * RobotMap.Motor.VEL_TO_FPS; }
+    public float getRightVel() { return rightRearTalonEnc.getSelectedSensorVelocity(0) * Constants.VEL_TO_FPS; }
 
     @Override
     public void updateDashboard()
     {
-        SmartDashboard.putNumber("Left Speed (ft/s)", leftRearTalonEnc.getSelectedSensorVelocity(0) * RobotMap.Motor.VEL_TO_FPS);
-        SmartDashboard.putNumber("Left Pos (ft)", leftRearTalonEnc.getSelectedSensorPosition(0) * RobotMap.Motor.POS_TO_FEET);
+        SmartDashboard.putNumber("Left Speed (ft/s)", leftRearTalonEnc.getSelectedSensorVelocity(0) * Constants.VEL_TO_FPS);
+        SmartDashboard.putNumber("Left Pos (ft)", leftRearTalonEnc.getSelectedSensorPosition(0) * Constants.POS_TO_FEET);
 
-        SmartDashboard.putNumber("Right Speed (ft/s)", rightRearTalonEnc.getSelectedSensorVelocity(0) * RobotMap.Motor.VEL_TO_FPS);
-        SmartDashboard.putNumber("Right Pos (ft)", rightRearTalonEnc.getSelectedSensorPosition(0) * RobotMap.Motor.POS_TO_FEET);
+        SmartDashboard.putNumber("Right Speed (ft/s)", rightRearTalonEnc.getSelectedSensorVelocity(0) * Constants.VEL_TO_FPS);
+        SmartDashboard.putNumber("Right Pos (ft)", rightRearTalonEnc.getSelectedSensorPosition(0) * Constants.POS_TO_FEET);
     }
 
     /**
