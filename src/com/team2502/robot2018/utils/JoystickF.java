@@ -61,59 +61,6 @@ public class JoystickF extends GenericHIDF
     static final byte kDefaultZAxis = 2;
     static final byte kDefaultTwistAxis = 2;
     static final byte kDefaultThrottleAxis = 3;
-
-    /**
-     * Represents an analog axis on a joystick.
-     */
-    public enum AxisType
-    {
-        kX(0), kY(1), kZ(2), kTwist(3), kThrottle(4);
-
-        public final int value;
-
-        AxisType(int value)
-        { this.value = value; }
-    }
-
-    /**
-     * Represents a digital button on a joystick.
-     */
-    public enum ButtonType
-    {
-        kTrigger(1), kTop(2);
-
-        public final int value;
-
-        ButtonType(int value)
-        { this.value = value; }
-    }
-
-    /**
-     * Represents a digital button on a joystick.
-     */
-    private enum Button
-    {
-        kTrigger(1), kTop(2);
-
-        public final int value;
-
-        Button(int value)
-        { this.value = value; }
-    }
-
-    /**
-     * Represents an analog axis on a joystick.
-     */
-    private enum Axis
-    {
-        kX(0), kY(1), kZ(2), kTwist(3), kThrottle(4), kNumAxes(5);
-
-        public final int value;
-
-        Axis(int value)
-        { this.value = value; }
-    }
-
     private final byte[] m_axes = new byte[Axis.kNumAxes.value];
 
     /**
@@ -136,46 +83,6 @@ public class JoystickF extends GenericHIDF
     }
 
     /**
-     * Set the channel associated with the X axis.
-     *
-     * @param channel The channel to set the axis to.
-     */
-    public void setXChannel(int channel)
-    { m_axes[Axis.kX.value] = (byte) channel; }
-
-    /**
-     * Set the channel associated with the Y axis.
-     *
-     * @param channel The channel to set the axis to.
-     */
-    public void setYChannel(int channel)
-    { m_axes[Axis.kY.value] = (byte) channel; }
-
-    /**
-     * Set the channel associated with the Z axis.
-     *
-     * @param channel The channel to set the axis to.
-     */
-    public void setZChannel(int channel)
-    { m_axes[Axis.kZ.value] = (byte) channel; }
-
-    /**
-     * Set the channel associated with the throttle axis.
-     *
-     * @param channel The channel to set the axis to.
-     */
-    public void setThrottleChannel(int channel)
-    { m_axes[Axis.kThrottle.value] = (byte) channel; }
-
-    /**
-     * Set the channel associated with the twist axis.
-     *
-     * @param channel The channel to set the axis to.
-     */
-    public void setTwistChannel(int channel)
-    { m_axes[Axis.kTwist.value] = (byte) channel; }
-
-    /**
      * Set the channel associated with a specified axis.
      *
      * @param axis    The axis to set the channel for.
@@ -195,12 +102,28 @@ public class JoystickF extends GenericHIDF
     { return m_axes[Axis.kX.value]; }
 
     /**
+     * Set the channel associated with the X axis.
+     *
+     * @param channel The channel to set the axis to.
+     */
+    public void setXChannel(int channel)
+    { m_axes[Axis.kX.value] = (byte) channel; }
+
+    /**
      * Get the channel currently associated with the Y axis.
      *
      * @return The channel for the axis.
      */
     public int getYChannel()
     { return m_axes[Axis.kY.value]; }
+
+    /**
+     * Set the channel associated with the Y axis.
+     *
+     * @param channel The channel to set the axis to.
+     */
+    public void setYChannel(int channel)
+    { m_axes[Axis.kY.value] = (byte) channel; }
 
     /**
      * Get the channel currently associated with the Z axis.
@@ -211,6 +134,14 @@ public class JoystickF extends GenericHIDF
     { return m_axes[Axis.kZ.value]; }
 
     /**
+     * Set the channel associated with the Z axis.
+     *
+     * @param channel The channel to set the axis to.
+     */
+    public void setZChannel(int channel)
+    { m_axes[Axis.kZ.value] = (byte) channel; }
+
+    /**
      * Get the channel currently associated with the twist axis.
      *
      * @return The channel for the axis.
@@ -219,12 +150,28 @@ public class JoystickF extends GenericHIDF
     { return m_axes[Axis.kTwist.value]; }
 
     /**
+     * Set the channel associated with the twist axis.
+     *
+     * @param channel The channel to set the axis to.
+     */
+    public void setTwistChannel(int channel)
+    { m_axes[Axis.kTwist.value] = (byte) channel; }
+
+    /**
      * Get the channel currently associated with the throttle axis.
      *
      * @return The channel for the axis.
      */
     public int getThrottleChannel()
     { return m_axes[Axis.kThrottle.value]; }
+
+    /**
+     * Set the channel associated with the throttle axis.
+     *
+     * @param channel The channel to set the axis to.
+     */
+    public void setThrottleChannel(int channel)
+    { m_axes[Axis.kThrottle.value] = (byte) channel; }
 
     /**
      * Get the channel currently associated with the specified axis.
@@ -416,4 +363,56 @@ public class JoystickF extends GenericHIDF
      */
     public float getDirectionDegreesF()
     { return MathUtils.rad2Deg(getDirectionRadiansF()); }
+
+    /**
+     * Represents an analog axis on a joystick.
+     */
+    public enum AxisType
+    {
+        kX(0), kY(1), kZ(2), kTwist(3), kThrottle(4);
+
+        public final int value;
+
+        AxisType(int value)
+        { this.value = value; }
+    }
+
+    /**
+     * Represents a digital button on a joystick.
+     */
+    public enum ButtonType
+    {
+        kTrigger(1), kTop(2);
+
+        public final int value;
+
+        ButtonType(int value)
+        { this.value = value; }
+    }
+
+    /**
+     * Represents a digital button on a joystick.
+     */
+    private enum Button
+    {
+        kTrigger(1), kTop(2);
+
+        public final int value;
+
+        Button(int value)
+        { this.value = value; }
+    }
+
+    /**
+     * Represents an analog axis on a joystick.
+     */
+    private enum Axis
+    {
+        kX(0), kY(1), kZ(2), kTwist(3), kThrottle(4), kNumAxes(5);
+
+        public final int value;
+
+        Axis(int value)
+        { this.value = value; }
+    }
 }

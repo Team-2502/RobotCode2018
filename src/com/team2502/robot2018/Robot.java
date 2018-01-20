@@ -28,7 +28,7 @@ public final class Robot extends IterativeRobot
     public static final float VR_MIN = -.75F;
     public static final float VL_MIN = -.75F;
     // The distance between wheels (laterally) in feet. Measure from the centerpoints of the wheels.
-    public static final float LATERAL_WHEEL_DISTANCE = 23.25F/12F;
+    public static final float LATERAL_WHEEL_DISTANCE = 23.25F / 12F;
     // The lookahead distance (feet) for Pure Pursuit
     public static final float LOOKAHEAD_DISTANCE = 2F;
     public static double CAL_VELOCITY = 0D;
@@ -136,9 +136,9 @@ public final class Robot extends IterativeRobot
         DRIVE_TRAIN.setAutonSettings();
         ArrayList<Vector2f> waypoints = new ArrayList<>();
 
-        waypoints.add(new Vector2f(0,0));
-        waypoints.add(new Vector2f(5,5));
-        waypoints.add(new Vector2f(6,21));
+        waypoints.add(new Vector2f(0, 0));
+        waypoints.add(new Vector2f(5, 5));
+        waypoints.add(new Vector2f(6, 21));
         Scheduler.getInstance().add(new PurePursuitCommand(waypoints, LOOKAHEAD_DISTANCE));
         // Scheduler.getInstance().add(AutoSwitcher.getAutoInstance());
         NAVX.reset();
@@ -153,7 +153,8 @@ public final class Robot extends IterativeRobot
         DashboardData.update();
     }
 
-    public void teleopInit() {
+    public void teleopInit()
+    {
         DRIVE_TRAIN.setTeleopSettings();
     }
 

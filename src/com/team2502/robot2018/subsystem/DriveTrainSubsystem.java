@@ -110,17 +110,17 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
      * <br>
      * Make sure to set the motors according to the control mode. In auton, it's position. In teleop, it's percent voltage.
      *
-     * @param x Units for the left side of drivetrain
-     * @param y Units for the right side of drivetrain
+     * @param x           Units for the left side of drivetrain
+     * @param y           Units for the right side of drivetrain
      * @param controlMode The mode that the motors are being driven in
      */
     public void runMotors(ControlMode controlMode, float x, float y) // double z
     {
-        leftFrontTalon.set(controlMode,x);
-        leftRearTalonEnc.set(controlMode,x);
+        leftFrontTalon.set(controlMode, x);
+        leftRearTalonEnc.set(controlMode, x);
 
-        rightFrontTalon.set(controlMode,-y);
-        rightRearTalonEnc.set(controlMode,-y);
+        rightFrontTalon.set(controlMode, -y);
+        rightRearTalonEnc.set(controlMode, -y);
     }
 
     /**
@@ -132,11 +132,11 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
      */
     public void runMotors(ControlMode controlMode) // double z
     {
-        leftFrontTalon.set(controlMode,0);
-        leftRearTalonEnc.set(controlMode,0);
+        leftFrontTalon.set(controlMode, 0);
+        leftRearTalonEnc.set(controlMode, 0);
 
-        rightFrontTalon.set(controlMode,0);
-        rightRearTalonEnc.set(controlMode,0);
+        rightFrontTalon.set(controlMode, 0);
+        rightRearTalonEnc.set(controlMode, 0);
     }
 
     /**
@@ -149,7 +149,7 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
      */
     public void runMotors(float x, float y) // double z
     {
-        runMotors(ControlMode.PercentOutput,x,y);
+        runMotors(ControlMode.PercentOutput, x, y);
     }
 
     public double turningFactor()

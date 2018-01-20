@@ -8,13 +8,11 @@ import java.util.List;
 
 public final class DashboardData
 {
-   
 
-
-    private DashboardData() { }
 
     private static List<DashboardUpdater> updaters = new ArrayList<DashboardUpdater>(4);
 
+    private DashboardData() { }
 
     static void update()
     {

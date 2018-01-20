@@ -16,13 +16,12 @@ public class EncoderSkidSteerLocationEstimator implements ITranslationalLocation
     Vector2f location;
     float heading = 0;
     float angularVel = 0;
+    private long lastTime = -1;
 
     public EncoderSkidSteerLocationEstimator()
     {
         location = new Vector2f(0, 0);
     }
-
-    private long lastTime = -1;
 
     private float getDTime()
     {

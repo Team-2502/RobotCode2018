@@ -435,8 +435,8 @@ public final class MathUtils
         }
 
         /**
-         * @deprecated
          * @return
+         * @deprecated
          */
         public static float getHeadingAbsolute()
         {

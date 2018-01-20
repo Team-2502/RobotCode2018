@@ -35,7 +35,7 @@ public class DriveCommand extends Command
     private long lastTime = -1;
     private float initAngleDegrees;
     private EncoderDifferentialDriveLocationEstimator encoderLocationEstimator;
-
+    private Vector2f lastEstimatedLocation = new Vector2f();
 
     public DriveCommand()
     {
@@ -45,6 +45,13 @@ public class DriveCommand extends Command
         transmission = Robot.TRANSMISSION;
         navx = Robot.NAVX;
         initAngleDegrees = (float) navx.getAngle();
+    }
+
+    private static float compare(Vector2f a, Vector2f b)
+    {
+        float xDiff = Math.abs(a.x - b.x);
+        float yDiff = Math.abs(a.y - b.y);
+        return (xDiff + yDiff) / 2.0F;
     }
 
     /**
@@ -63,15 +70,6 @@ public class DriveCommand extends Command
     protected void initialize()
     {
         encoderLocationEstimator = new EncoderDifferentialDriveLocationEstimator();
-    }
-
-    private Vector2f lastEstimatedLocation = new Vector2f();
-
-    private static float compare(Vector2f a, Vector2f b)
-    {
-        float xDiff = Math.abs(a.x - b.x);
-        float yDiff = Math.abs(a.y - b.y);
-        return (xDiff + yDiff) / 2.0F;
     }
 
     @Override

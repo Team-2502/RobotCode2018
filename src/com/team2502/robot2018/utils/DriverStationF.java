@@ -57,96 +57,37 @@ public class DriverStationF implements RobotStateF.Interface
      * Number of Joystick Ports.
      */
     public static final int kJoystickPorts = 6;
-
-    public static class HALJoystickButtons
-    {
-        public int m_buttons;
-        public byte m_count;
-    }
-
-    public static class HALJoystickAxes
-    {
-        public float[] m_axes;
-        public short m_count;
-
-        HALJoystickAxes(int count)
-        { m_axes = new float[count]; }
-    }
-
-    public static class HALJoystickPOVs
-    {
-        public short[] m_povs;
-        public short m_count;
-
-        HALJoystickPOVs(int count)
-        { m_povs = new short[count]; }
-    }
-
-    /**
-     * The robot alliance that the robot is a part of.
-     */
-    public enum Alliance
-    {
-        Red, Blue, Invalid
-    }
-
-    public enum MatchType
-    {
-        None, Practice, Qualification, Elimination
-    }
-
-    private static final double JOYSTICK_UNPLUGGED_MESSAGE_INTERVAL = 1.0F;
-    private double m_nextMessageTime = 0.0F;
-
-    private static class DriverStationTask implements Runnable
-    {
-        private DriverStationF m_ds;
-
-        DriverStationTask(DriverStationF ds)
-        { m_ds = ds; }
-
-        public void run()
-        { m_ds.run(); }
-    }
-
     public static final DriverStationF INSTANCE = new DriverStationF();
-
+    private static final double JOYSTICK_UNPLUGGED_MESSAGE_INTERVAL = 1.0F;
+    private final Object m_cacheDataMutex;
+    // Control word variables
+    private final Object m_controlWordMutex;
+    // Joystick button rising/falling edge flags
+    HALJoystickButtons[] m_joystickButtonsPressed = new HALJoystickButtons[kJoystickPorts];
+    HALJoystickButtons[] m_joystickButtonsReleased = new HALJoystickButtons[kJoystickPorts];
+    private double m_nextMessageTime = 0.0F;
     // Joystick User Data
     private HALJoystickAxes[] m_joystickAxes = new HALJoystickAxes[kJoystickPorts];
     private HALJoystickPOVs[] m_joystickPOVs = new HALJoystickPOVs[kJoystickPorts];
     private HALJoystickButtons[] m_joystickButtons = new HALJoystickButtons[kJoystickPorts];
     private MatchInfoData m_matchInfo = new MatchInfoData();
-
     // Joystick Cached Data
     private HALJoystickAxes[] m_joystickAxesCache = new HALJoystickAxes[kJoystickPorts];
     private HALJoystickPOVs[] m_joystickPOVsCache = new HALJoystickPOVs[kJoystickPorts];
     private HALJoystickButtons[] m_joystickButtonsCache = new HALJoystickButtons[kJoystickPorts];
     private MatchInfoData m_matchInfoCache = new MatchInfoData();
-
-    // Joystick button rising/falling edge flags
-    HALJoystickButtons[] m_joystickButtonsPressed = new HALJoystickButtons[kJoystickPorts];
-    HALJoystickButtons[] m_joystickButtonsReleased = new HALJoystickButtons[kJoystickPorts];
-
     // preallocated byte buffer for button count
     private ByteBuffer m_buttonCountBuffer = ByteBuffer.allocateDirect(1);
-
     // Internal Driver Station thread
     private Thread m_thread;
     private volatile boolean m_threadKeepAlive = true;
-
-    private final Object m_cacheDataMutex;
-
     // Robot state status variables
     private boolean m_userInDisabled = false;
     private boolean m_userInAutonomous = false;
     private boolean m_userInTeleop = false;
     private boolean m_userInTest = false;
-
-    // Control word variables
-    private final Object m_controlWordMutex;
     private ControlWord m_controlWordCache;
     private long m_lastControlWordUpdate;
-
     /**
      * DriverStation constructor.
      * <p>
@@ -179,12 +120,6 @@ public class DriverStationF implements RobotStateF.Interface
 
         m_thread.start();
     }
-
-    /**
-     * Kill the thread.
-     */
-    public void release()
-    { m_threadKeepAlive = false; }
 
     /**
      * Report error to Driver Station. Optionally appends Stack trace
@@ -251,6 +186,12 @@ public class DriverStationF implements RobotStateF.Interface
         }
         HAL.sendError(isError, code, false, error, locString, traceString.toString(), true);
     }
+
+    /**
+     * Kill the thread.
+     */
+    public void release()
+    { m_threadKeepAlive = false; }
 
     /**
      * The state of one joystick button. Button indexes begin at 1.
@@ -1021,5 +962,53 @@ public class DriverStationF implements RobotStateF.Interface
                 m_lastControlWordUpdate = now;
             }
         }
+    }
+
+    /**
+     * The robot alliance that the robot is a part of.
+     */
+    public enum Alliance
+    {
+        Red, Blue, Invalid
+    }
+
+    public enum MatchType
+    {
+        None, Practice, Qualification, Elimination
+    }
+
+    public static class HALJoystickButtons
+    {
+        public int m_buttons;
+        public byte m_count;
+    }
+
+    public static class HALJoystickAxes
+    {
+        public float[] m_axes;
+        public short m_count;
+
+        HALJoystickAxes(int count)
+        { m_axes = new float[count]; }
+    }
+
+    public static class HALJoystickPOVs
+    {
+        public short[] m_povs;
+        public short m_count;
+
+        HALJoystickPOVs(int count)
+        { m_povs = new short[count]; }
+    }
+
+    private static class DriverStationTask implements Runnable
+    {
+        private DriverStationF m_ds;
+
+        DriverStationTask(DriverStationF ds)
+        { m_ds = ds; }
+
+        public void run()
+        { m_ds.run(); }
     }
 }
