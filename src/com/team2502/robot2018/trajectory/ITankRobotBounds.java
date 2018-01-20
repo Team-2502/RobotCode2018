@@ -1,9 +1,7 @@
 package com.team2502.robot2018.trajectory;
 
-public interface ITankRobot
+public interface ITankRobotBounds
 {
-
-    float getHeading();
 
     float getV_rMax();
 
