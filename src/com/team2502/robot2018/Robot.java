@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import logger.Log;
 import org.joml.Vector2f;
 
@@ -30,6 +31,7 @@ public final class Robot extends IterativeRobot
     public static final float LATERAL_WHEEL_DISTANCE = 23.25F/12F;
     // The lookahead distance (feet) for Pure Pursuit
     public static final float LOOKAHEAD_DISTANCE = 2F;
+    public static double CAL_VELOCITY = 0D;
 
     public static DriveTrainSubsystem DRIVE_TRAIN;
     public static TransmissionSubsystem TRANSMISSION;
@@ -84,10 +86,19 @@ public final class Robot extends IterativeRobot
         DashboardData.addUpdater(SendableDriveTrain.getInstance());
         DashboardData.addUpdater(SendableNavX.getInstance());
 
+        SmartDashboard.putNumber("calibration_velocity", 0);
+
+        DashboardData.addUpdater(() -> {
+            Robot.CAL_VELOCITY = SmartDashboard.getNumber("calibration_velocity", 0);
+            SmartDashboard.putNumber("calibration_velocity", Robot.CAL_VELOCITY);
+        });
+
         OI.init();
 
         NAVX.resetDisplacement();
         // DashboardData.addUpdater(DRIVE_TRAIN);
+
+
     }
 
     /**

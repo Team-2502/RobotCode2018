@@ -1,5 +1,6 @@
 package com.team2502.robot2018;
 
+import com.team2502.robot2018.command.teleop.CalibrateRobotCommand;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import java.util.ArrayList;
@@ -30,6 +31,8 @@ public final class DashboardData
         SmartDashboard.putNumber("NavX: X Displacement", Robot.NAVX.getDisplacementX());
         SmartDashboard.putNumber("NavX: Y Displacement", Robot.NAVX.getDisplacementY());
         SmartDashboard.putNumber("NavX: Z Displacement", Robot.NAVX.getDisplacementZ());
+        SmartDashboard.putData(new CalibrateRobotCommand());
+
     }
 
     /**
