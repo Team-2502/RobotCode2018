@@ -19,7 +19,7 @@ public class SendableNavX implements Sendable, DashboardData.DashboardUpdater
 {
     private static SendableNavX instance = new SendableNavX();
 
-    DoubleSupplier getAngle = () -> 180 + Robot.NAVX.getAngle();
+    DoubleSupplier getAngle = () -> 180 + Robot.NAVX.getYaw();
     DoubleConsumer takeAngle = (double value) -> {};
 
     /**
