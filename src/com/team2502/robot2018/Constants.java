@@ -43,7 +43,13 @@ public class Constants
 
     // 600 = amount of 100 ms in a minute
     public static final float EVEL_TO_RPM = (600.0F / ENC_RES);
-    public static final float EVEL_TO_FPS = EVEL_TO_RPM / 60 * (WHEEL_DIAMETER_FT * (float) Math.PI);
+    public static final float RPM_TO_FPS = (WHEEL_DIAMETER_FT * (float) Math.PI) / 60F;
+    public static final float EVEL_TO_FPS = EVEL_TO_RPM * RPM_TO_FPS;
+
+    public static final float FPS_TO_RPM = 60F/(WHEEL_DIAMETER_FT * (float) Math.PI);
+    public static final float RPM_TO_EVEL = ENC_RES/600F;
+    public static final float FPS_TO_EVEL = FPS_TO_RPM * RPM_TO_EVEL;
+
 
     public static final int INIT_TIMEOUT = 10; // When initializing a sensor/whatever, the timeout will be 10 ms
     public static final int LOOP_TIMEOUT = 0; // When doing things in a loop, there won't be a timeout
