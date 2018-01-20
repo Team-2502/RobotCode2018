@@ -26,6 +26,7 @@ public class CalibrateRobotCommand extends Command
 
         // One of the left motors lacks an enocder
         Robot.DRIVE_TRAIN.leftFrontTalon.follow(Robot.DRIVE_TRAIN.rightFrontTalon);
+        Robot.DRIVE_TRAIN.setPID(1, 0, 0);
 
     }
 
