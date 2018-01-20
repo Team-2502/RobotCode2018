@@ -28,6 +28,9 @@ public class CalibrateRobotCommand extends Command
     {
         if(Robot.NAVX.getAngle() - initAngle < ROT_UNTIL_STOP)
         {
+
+            // We want to run robot wheels at x ft/s.
+            // We have x ft /s = 12 in /s = 
             Robot.DRIVE_TRAIN.leftRearTalonEnc.set(ControlMode.Velocity, -4096F * velocity / 10F);
             Robot.DRIVE_TRAIN.leftFrontTalon.set(ControlMode.Velocity, -4096F * velocity / 10F);
         }

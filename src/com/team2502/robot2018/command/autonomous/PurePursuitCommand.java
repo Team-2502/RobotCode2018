@@ -2,12 +2,12 @@ package com.team2502.robot2018.command.autonomous;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.kauailabs.navx.frc.AHRS;
+import com.team2502.robot2018.Constants;
 import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.subsystem.DriveTrainSubsystem;
 import com.team2502.robot2018.trajectory.EncoderDifferentialDriveLocationEstimator;
 import com.team2502.robot2018.trajectory.ITankRobotBounds;
 import com.team2502.robot2018.trajectory.PurePursuitMovementStrategy;
-import com.team2502.robot2018.utils.MathUtils;
 import edu.wpi.first.wpilibj.command.Command;
 import logger.Log;
 import org.joml.Vector2f;
@@ -42,35 +42,35 @@ public class PurePursuitCommand extends Command
              */
             @Override
             public float getV_rMax()
-            { return Robot.VR_MAX; }
+            { return Constants.VR_MAX; }
 
             /**
              * @return The max velocity the left wheels can travel
              */
             @Override
             public float getV_lMax()
-            { return Robot.VL_MAX; }
+            { return Constants.VL_MAX; }
 
             /**
              * @return The min velocity the left wheels can travel
              */
             @Override
             public float getV_lMin()
-            { return Robot.VL_MIN; }
+            { return Constants.VL_MIN; }
 
             /**
              * @return The min velocity the right wheels can travel
              */
             @Override
             public float getV_rMin()
-            { return Robot.VR_MIN; }
+            { return Constants.VR_MIN; }
 
             /**
              * @return The lateral distance between wheels
              */
             @Override
             public float getLateralWheelDistance()
-            { return Robot.LATERAL_WHEEL_DISTANCE; }
+            { return Constants.LATERAL_WHEEL_DISTANCE_INCH; }
         };
 
         locationEstimator = new EncoderDifferentialDriveLocationEstimator();
