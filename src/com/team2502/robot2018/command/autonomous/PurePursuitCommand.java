@@ -5,7 +5,7 @@ import com.kauailabs.navx.frc.AHRS;
 import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.subsystem.DriveTrainSubsystem;
 import com.team2502.robot2018.trajectory.EncoderDifferentialDriveLocationEstimator;
-import com.team2502.robot2018.trajectory.ITankRobot;
+import com.team2502.robot2018.trajectory.ITankRobotBounds;
 import com.team2502.robot2018.trajectory.PurePursuitMovementStrategy;
 import com.team2502.robot2018.utils.MathUtils;
 import edu.wpi.first.wpilibj.command.Command;
@@ -17,7 +17,7 @@ import java.util.List;
 public class PurePursuitCommand extends Command
 {
     public static final float RAW_UNIT_PER_ROT = 4096F;
-    private final ITankRobot tankRobot;
+    private final ITankRobotBounds tankRobot;
     private final EncoderDifferentialDriveLocationEstimator locationEstimator;
     public float lookAheadDistance;
     private DriveTrainSubsystem driveTrain;
@@ -35,15 +35,8 @@ public class PurePursuitCommand extends Command
         driveTrain = Robot.DRIVE_TRAIN;
         initAngleDegrees = (float) navx.getAngle();
 
-        tankRobot = new ITankRobot()
+        tankRobot = new ITankRobotBounds()
         {
-            /**
-             * @return The heading (angle) of the robot. In radians from [0,2pi). Increases counterclockwise.
-             */
-            @Override
-            public float getHeading()
-            { return MathUtils.Geometry.getDTheta(initAngleDegrees, (float) navx.getAngle()); }
-
             /**
              * @return The max velocity the right wheels can travel
              */
@@ -81,7 +74,7 @@ public class PurePursuitCommand extends Command
         };
 
         locationEstimator = new EncoderDifferentialDriveLocationEstimator();
-        purePursuitMovementStrategy = new PurePursuitMovementStrategy(tankRobot, locationEstimator, waypoints, lookAheadDistance);
+        purePursuitMovementStrategy = new PurePursuitMovementStrategy(tankRobot, locationEstimator, locationEstimator, waypoints, lookAheadDistance);
         Log.info("initAngleDegrees: {0,number,0.00}\n" + initAngleDegrees);
     }
 

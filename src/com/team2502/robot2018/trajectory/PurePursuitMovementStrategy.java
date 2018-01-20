@@ -43,8 +43,9 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
     private static final float THRESHOLD_CURVATURE = 0.001F;
     public final List<Vector2f> waypoints;
     public final float lookAheadDistance;
-    private final ITranslationalLocationEstimator estimator;
-    private final ITankRobot tankRobot;
+    private final ITranslationalLocationEstimator transEstimator;
+    private final ITankRobotBounds tankRobot;
+    private final IRotationalLocationEstimator rotEstimator;
     private Vector2f relativeGoalPoint;
     private float pathRadius;
     private float rotVelocity;
@@ -61,12 +62,13 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
     private Vector2f absoluteGoalPoint;
     private float dThetaToRotate;
 
-    public PurePursuitMovementStrategy(ITankRobot tankRobot, ITranslationalLocationEstimator estimator, List<Vector2f> waypoints, float lookAheadDistance)
+    public PurePursuitMovementStrategy(ITankRobotBounds tankRobot, ITranslationalLocationEstimator transEstimator, IRotationalLocationEstimator rotEstimator, List<Vector2f> waypoints, float lookAheadDistance)
     {
         this.waypoints = waypoints;
         this.tankRobot = tankRobot;
         this.lookAheadDistance = lookAheadDistance;
-        this.estimator = estimator;
+        this.transEstimator = transEstimator;
+        this.rotEstimator = rotEstimator;
     }
 
     /**
@@ -83,9 +85,6 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         // This is Integer.MAX_VALUE as there might not be any.
 
         int nextPathI = Integer.MAX_VALUE;
-
-        usedEstimatedLocation = estimator.estimateLocation();
-        usedHeading = tankRobot.getHeading();
 
 
         // Loop looks for intersections on last segment searched and one after that
@@ -147,6 +146,10 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
      */
     public void update()
     {
+
+        usedEstimatedLocation = transEstimator.estimateLocation();
+        usedHeading = rotEstimator.estimateHeading();
+
         absoluteGoalPoint = calculateAbsoluteGoalPoint();
 
         // Sometimes the above method will cause isFinished to return true if no more goal points are found.
@@ -156,12 +159,8 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
             return;
         }
 
-        Log.info("estimated location: '{' {0,number,0.00}, {1,number,0.00} '}'", usedEstimatedLocation.x, usedEstimatedLocation.y);
-        Log.info("usedHeading: {0,number,0.00}", usedHeading);
-        Log.info("absGP: '{' {0,number,0.00}, {1,number,0.00} '}'", absoluteGoalPoint.x, absoluteGoalPoint.y);
         relativeGoalPoint = MathUtils.LinearAlgebra.absoluteToRelativeCoord(absoluteGoalPoint, usedEstimatedLocation, usedHeading);
         wheelVelocities = calculateWheelVelocities();
-        System.out.printf("wheelVelocities '{' {0,number,0.00}, {1,number,0.00} '}'\n", wheelVelocities.x, wheelVelocities.y);
     }
 
     /**
