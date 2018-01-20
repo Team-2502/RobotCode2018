@@ -9,7 +9,7 @@ public class CalibrateRobotCommand extends Command
 
     public static final float ROT_UNTIL_STOP = 1080F;
     double velocity = 0;
-    float initYaw = 0;
+    float initAngle = 0;
     private boolean finished = false;
 
     @Override
@@ -20,7 +20,7 @@ public class CalibrateRobotCommand extends Command
         // We are blocking the right wheels
         Robot.DRIVE_TRAIN.rightRearTalonEnc.set(ControlMode.Disabled, 0.0F);
         Robot.DRIVE_TRAIN.rightFrontTalon.set(ControlMode.Disabled, 0.0F);
-        initYaw = Robot.NAVX.getYaw();
+        initAngle = (float) Robot.NAVX.getAngle();
     }
 
     @Override
