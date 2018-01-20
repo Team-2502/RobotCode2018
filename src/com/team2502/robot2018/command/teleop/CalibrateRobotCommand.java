@@ -3,6 +3,7 @@ package com.team2502.robot2018.command.teleop;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.team2502.robot2018.Robot;
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class CalibrateRobotCommand extends Command
 {
@@ -26,7 +27,7 @@ public class CalibrateRobotCommand extends Command
     @Override
     protected void execute()
     {
-        if(Robot.NAVX.getYaw() - initYaw < ROT_UNTIL_STOP)
+        if(Robot.NAVX.getAngle() - initYaw < ROT_UNTIL_STOP)
         {
             Robot.DRIVE_TRAIN.leftRearTalonEnc.set(ControlMode.Velocity, -4096F * velocity /10F);
             Robot.DRIVE_TRAIN.leftFrontTalon.set(ControlMode.Velocity, -4096F * velocity/10F);
