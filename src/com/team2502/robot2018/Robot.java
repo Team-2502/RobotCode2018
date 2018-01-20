@@ -153,7 +153,9 @@ public final class Robot extends IterativeRobot
         DashboardData.update();
     }
 
-    public void teleopInit() { }
+    public void teleopInit() {
+        DRIVE_TRAIN.setTeleopSettings();
+    }
 
     /**
      * This function is called periodically during operator control
@@ -175,9 +177,5 @@ public final class Robot extends IterativeRobot
 
     public static final class Physical
     {
-        public static final float WHEEL_DIAMETER_INCH = 4F;
-        public static final float WHEEL_ROLLING_RADIUS_INCH = 1.5F;
-        public static final float WHEEL_ROLLING_RADIUS_FT = WHEEL_ROLLING_RADIUS_INCH * 1.5F / 12F;
-        public static final float WHEEL_DIAMETER_FT = WHEEL_DIAMETER_INCH / 12F;
     }
 }

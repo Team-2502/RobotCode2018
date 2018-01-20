@@ -1,6 +1,7 @@
 package com.team2502.robot2018.command.teleop;
 
 import com.kauailabs.navx.frc.AHRS;
+import com.team2502.robot2018.Constants;
 import com.team2502.robot2018.OI;
 import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.RobotMap;
@@ -100,7 +101,7 @@ public class DriveCommand extends Command
                         float speed = driveTrainSubsystem.avgVel();
 
                         // Shift up if we are accelerating and going fast and the driver is putting the joystick at least 80% forward or backward
-                        if(Math.abs(accel) > 0.15F && speed > RobotMap.Motor.SHIFT_UP_THRESHOLD && OI.joysThreshold(0.8D, true))
+                        if(Math.abs(accel) > 0.15F && speed > Constants.SHIFT_UP_THRESHOLD && OI.joysThreshold(0.8D, true))
                         {
                             if(!transmission.highGear) { Log.info("Shifting up."); }
                             transmission.setGear(true);
@@ -110,7 +111,7 @@ public class DriveCommand extends Command
                             if(transmission.highGear) { Log.info("Shifting down because you're a bad driver."); }
                             transmission.setGear(false);
                         }
-                        else if(OI.joysThreshold(30.0D, false) && speed < RobotMap.Motor.SHIFT_DOWN_THRESHOLD) /* If we're going slow and the driver wants it to be that way we shift down */
+                        else if(OI.joysThreshold(30.0D, false) && speed < Constants.SHIFT_DOWN_THRESHOLD) /* If we're going slow and the driver wants it to be that way we shift down */
                         {
                             if(transmission.highGear) { Log.info("Shifting down because slow."); }
                             transmission.setGear(false);

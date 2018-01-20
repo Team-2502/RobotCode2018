@@ -1,5 +1,6 @@
 package com.team2502.robot2018.trajectory;
 
+import com.team2502.robot2018.Constants;
 import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.utils.MathUtils;
 import org.joml.Vector2f;
@@ -42,14 +43,14 @@ public class EncoderSkidSteerLocationEstimator implements ITranslationalLocation
 
         float rightRevPerS = Robot.DRIVE_TRAIN.rightRearTalonEnc.getSelectedSensorVelocity(0) * 10F / RAW_UNIT_PER_ROT;
 
-        float leftVelNoSlide = leftRevPerS * Robot.Physical.WHEEL_DIAMETER_FT * MathUtils.PI_F;
+        float leftVelNoSlide = leftRevPerS * Constants.WHEEL_DIAMETER_FT * MathUtils.PI_F;
 
-        float rightVelNoSlide = rightRevPerS * Robot.Physical.WHEEL_DIAMETER_FT * MathUtils.PI_F;
+        float rightVelNoSlide = rightRevPerS * Constants.WHEEL_DIAMETER_FT * MathUtils.PI_F;
 
         float vTan = (leftVelNoSlide + rightVelNoSlide) / 2;
 
         // longitudinal slip proportion
-        float i = 1 - vTan / (Robot.Physical.WHEEL_ROLLING_RADIUS_FT * angularVel);
+        float i = 1 - vTan / (Constants.WHEEL_ROLLING_RADIUS_FT * angularVel);
 
 //        float iL = leftRevPerS/a;
 //        float iR = rightRevPerS/a;

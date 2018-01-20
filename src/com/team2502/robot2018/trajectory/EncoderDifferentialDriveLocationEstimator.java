@@ -1,5 +1,6 @@
 package com.team2502.robot2018.trajectory;
 
+import com.team2502.robot2018.Constants;
 import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.utils.MathUtils;
 import logger.Log;
@@ -39,9 +40,9 @@ public class EncoderDifferentialDriveLocationEstimator implements ITranslational
 
         float rightRevPerS = Robot.DRIVE_TRAIN.rightRearTalonEnc.getSelectedSensorVelocity(0) * 10F / RAW_UNIT_PER_ROT;
 
-        float leftVel = leftRevPerS * Robot.Physical.WHEEL_DIAMETER_FT * MathUtils.PI_F;
+        float leftVel = leftRevPerS * Constants.WHEEL_DIAMETER_FT * MathUtils.PI_F;
 
-        float rightVel = rightRevPerS * Robot.Physical.WHEEL_DIAMETER_FT * MathUtils.PI_F;
+        float rightVel = rightRevPerS * Constants.WHEEL_DIAMETER_FT * MathUtils.PI_F;
 
         angularVel = MathUtils.Kinematics.getAngularVel(leftVel, rightVel, Robot.LATERAL_WHEEL_DISTANCE);
 
