@@ -1,6 +1,7 @@
 package com.team2502.robot2018.command.teleop;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.team2502.robot2018.Constants;
 import com.team2502.robot2018.Robot;
 import edu.wpi.first.wpilibj.command.Command;
 
@@ -30,9 +31,9 @@ public class CalibrateRobotCommand extends Command
         {
 
             // We want to run robot wheels at x ft/s.
-            // We have x ft /s = 12 in /s = 
-            Robot.DRIVE_TRAIN.leftRearTalonEnc.set(ControlMode.Velocity, -4096F * velocity / 10F);
-            Robot.DRIVE_TRAIN.leftFrontTalon.set(ControlMode.Velocity, -4096F * velocity / 10F);
+            // We have x ft /s = 12 in /s =
+            Robot.DRIVE_TRAIN.leftRearTalonEnc.set(ControlMode.Velocity, -Constants.FPS_TO_EVEL*velocity);
+            Robot.DRIVE_TRAIN.leftFrontTalon.set(ControlMode.Velocity, -Constants.FPS_TO_EVEL*velocity);
         }
         else
         {
