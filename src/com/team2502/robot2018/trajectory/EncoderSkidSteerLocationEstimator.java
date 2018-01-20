@@ -55,7 +55,7 @@ public class EncoderSkidSteerLocationEstimator implements ITranslationalLocation
 //        float iR = rightRevPerS/a;
 
 
-        angularVel = MathUtils.Kinematics.getAngularVel(leftVelNoSlide, rightVelNoSlide, Robot.LATERAL_WHEEL_DISTANCE);
+        angularVel = MathUtils.Kinematics.getAngularVel(leftVelNoSlide, rightVelNoSlide, Constants.LATERAL_WHEEL_DISTANCE_INCH);
 
 
         System.out.printf("Left: %.2f Right: %.2f\n", leftVelNoSlide, rightVelNoSlide);
@@ -63,7 +63,7 @@ public class EncoderSkidSteerLocationEstimator implements ITranslationalLocation
 //        Log.debug("wheel vels: L: {0,number,#.###} \t\t R: {1,number,#.###}", leftVel, rightVel);
 
         Vector2f absoluteDPos = MathUtils.Kinematics.getAbsoluteDPos(
-                leftVelNoSlide, rightVelNoSlide, Robot.LATERAL_WHEEL_DISTANCE, dTime
+                leftVelNoSlide, rightVelNoSlide, Constants.LATERAL_WHEEL_DISTANCE_INCH, dTime
                 , heading);
         // Log.debug("adpp: " + absoluteDPos);
         Vector2f absLoc = location.add(absoluteDPos);

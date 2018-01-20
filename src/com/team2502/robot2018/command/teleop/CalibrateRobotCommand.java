@@ -33,7 +33,8 @@ public class CalibrateRobotCommand extends Command
     @Override
     protected void execute()
     {
-            Robot.DRIVE_TRAIN.leftRearTalonEnc.set(ControlMode.Velocity, velocity / Constants.VEL_TO_RPM);
+
+            Robot.DRIVE_TRAIN.leftRearTalonEnc.set(ControlMode.Velocity, velocity / Constants.EVEL_TO_RPM);
 
     }
 
