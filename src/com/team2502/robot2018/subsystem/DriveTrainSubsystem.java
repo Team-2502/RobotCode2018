@@ -81,6 +81,8 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         setTeleopSettings(leftRearTalonEnc);
         setTeleopSettings(rightRearTalonEnc);
 
+
+        // Required for correct readings
         leftRearTalonEnc.setSensorPhase(false);
         rightRearTalonEnc.setSensorPhase(true);
     }
@@ -100,9 +102,7 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         {
             Log.warn("setAutonSettings: One or more of the talons did not retain their control mode!\n" +
                      "Using the .set(int x) method will yield undesirable results!");
-
         }
-
     }
 
     /**

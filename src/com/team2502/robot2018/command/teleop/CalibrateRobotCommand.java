@@ -1,6 +1,7 @@
 package com.team2502.robot2018.command.teleop;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.team2502.robot2018.Constants;
 import com.team2502.robot2018.Robot;
 import edu.wpi.first.wpilibj.command.Command;
 
@@ -20,27 +21,31 @@ public class CalibrateRobotCommand extends Command
         // We are blocking the right wheels
         Robot.DRIVE_TRAIN.rightRearTalonEnc.set(ControlMode.Disabled, 0.0F);
         Robot.DRIVE_TRAIN.rightFrontTalon.set(ControlMode.Disabled, 0.0F);
+
         initAngle = (float) Robot.NAVX.getAngle();
+
+        // One of the left motors lacks an enocder
+        Robot.DRIVE_TRAIN.leftFrontTalon.follow(Robot.DRIVE_TRAIN.rightFrontTalon);
+
     }
 
     @Override
     protected void execute()
     {
-        if(Robot.NAVX.getAngle() - initAngle < ROT_UNTIL_STOP)
-        {
-            Robot.DRIVE_TRAIN.leftRearTalonEnc.set(ControlMode.Velocity, -4096F * velocity / 10F);
-            Robot.DRIVE_TRAIN.leftFrontTalon.set(ControlMode.Velocity, -4096F * velocity / 10F);
-        }
-        else
-        {
-            finished = true;
-        }
+            Robot.DRIVE_TRAIN.leftRearTalonEnc.set(ControlMode.Velocity, velocity / Constants.VEL_TO_RPM);
+
     }
 
     @Override
     protected boolean isFinished()
     {
-        return finished;
+        return Robot.NAVX.getYaw() - initAngle >= ROT_UNTIL_STOP;
+    }
+
+    @Override
+    protected void end()
+    {
+        Robot.DRIVE_TRAIN.setTeleopSettings();
     }
 
 }
