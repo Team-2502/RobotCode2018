@@ -26,7 +26,7 @@ public class CalibrateRobotCommand extends Command
     @Override
     protected void execute()
     {
-        if(Robot.NAVX.getAngle() - initYaw < ROT_UNTIL_STOP)
+        if(Robot.NAVX.getAngle() - initAngle < ROT_UNTIL_STOP)
         {
             Robot.DRIVE_TRAIN.leftRearTalonEnc.set(ControlMode.Velocity, -4096F * velocity / 10F);
             Robot.DRIVE_TRAIN.leftFrontTalon.set(ControlMode.Velocity, -4096F * velocity / 10F);
