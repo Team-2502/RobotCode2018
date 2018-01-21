@@ -20,6 +20,7 @@ public class Constants
 
     // The lookahead distance (feet) for Pure Pursuit
     public static final float LOOKAHEAD_DISTANCE_FT = 4F;
+    public static final float STOP_DIST_TOLERANCE_FT = 0.3F;
 
     /*
     Physical / Other

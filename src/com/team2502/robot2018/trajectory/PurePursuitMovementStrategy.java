@@ -48,6 +48,8 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
     private final ITranslationalLocationEstimator transEstimator;
     private final ITankRobotBounds tankRobot;
     private final IRotationalLocationEstimator rotEstimator;
+    private final float lookAheadDistanceSquared;
+    private final float distanceStopSq;
     private Vector2f relativeGoalPoint;
     private float pathRadius;
     private float rotVelocity;
@@ -63,14 +65,17 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
     private float rightWheelTanVel;
     private Vector2f absoluteGoalPoint;
     private float dThetaToRotate;
+    private boolean isClose = false;
 
-    public PurePursuitMovementStrategy(ITankRobotBounds tankRobot, ITranslationalLocationEstimator transEstimator, IRotationalLocationEstimator rotEstimator, List<Vector2f> waypoints, float lookAheadDistance)
+    public PurePursuitMovementStrategy(ITankRobotBounds tankRobot, ITranslationalLocationEstimator transEstimator, IRotationalLocationEstimator rotEstimator, List<Vector2f> waypoints, float lookAheadDistance, float distanceStop)
     {
         this.waypoints = waypoints;
         this.tankRobot = tankRobot;
         this.lookAheadDistance = lookAheadDistance;
         this.transEstimator = transEstimator;
         this.rotEstimator = rotEstimator;
+        lookAheadDistanceSquared = lookAheadDistance * lookAheadDistance;
+        distanceStopSq = distanceStop * distanceStop;
     }
 
     /**
@@ -92,11 +97,30 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         // Loop looks for intersections on last segment searched and one after that
         for(int i = lastSegmentSearched; i <= lastSegmentSearched + 1; ++i)
         {
-            // There is no _next_ segment to search
+            // We are on the last segment. There is no _next_ segment to search
             if(i + 1 >= waypoints.size()) { continue; }
 
             Vector2f lineP1 = waypoints.get(i);
             Vector2f lineP2 = waypoints.get(i + 1);
+
+            // Since goal points are within radius LOOK_AHEAD_DISTANCE from us, the robot would normally stop
+            // when the distance from the last waypoint < LOOK_AHEAD_DISTANCE. However, we prevent this
+            // by setting the last waypoint as a goal point when this happens.
+            // TODO: test this to see if the robot is jerky near the end
+            if(i+2 == waypoints.size())
+            {
+                float distanceWaypointSq = lineP2.distanceSquared(usedEstimatedLocation);
+                if(distanceWaypointSq <= lookAheadDistanceSquared)
+                {
+                    isClose = true;
+                    // We want to stop if the distance is within the desired amount
+                    if(distanceWaypointSq < distanceStopSq){
+                        finishedPath = true;
+                        return null;
+                    }
+                    return lineP2;
+                }
+            }
 
             // Get intersections of r=lookAheadDistance circle and segments between waypoints
             List<Vector2f> vectorList = new ArrayList<>(Arrays.asList(MathUtils.Geometry.getCircleLineIntersectionPoint(lineP1, lineP2, usedEstimatedLocation, lookAheadDistance)));
@@ -139,8 +163,16 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         if(closestVectorI >= nextPathI) { ++lastSegmentSearched; }
 
         // closest is our new goal point
-        this.absoluteGoalPoint = closest;
         return closest;
+    }
+
+    /**
+     *
+     * @return true If the robot is close (within lookahead distance) of the last waypoint.
+     */
+    public boolean isClose()
+    {
+        return isClose;
     }
 
     /**

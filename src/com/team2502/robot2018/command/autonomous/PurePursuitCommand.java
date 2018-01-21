@@ -25,6 +25,7 @@ public class PurePursuitCommand extends Command
     private final EncoderDifferentialDriveLocationEstimator transLocEstimator;
     private final NavXLocationEstimator rotLocEstimator;
     private final SendableNavX sendableNavX;
+    private final float stopDistance;
     public float lookAheadDistance;
     private DriveTrainSubsystem driveTrain;
     private AHRS navx;
@@ -32,7 +33,7 @@ public class PurePursuitCommand extends Command
     private long lastTime = -1;
     private float initAngleDegrees;
 
-    public PurePursuitCommand(List<Vector2f> waypoints, float lookAheadDistance)
+    public PurePursuitCommand(List<Vector2f> waypoints, float lookAheadDistance, float stopDistance)
     {
         navx = Robot.NAVX;
         navx.resetDisplacement();
@@ -40,6 +41,7 @@ public class PurePursuitCommand extends Command
         requires(Robot.DRIVE_TRAIN);
         driveTrain = Robot.DRIVE_TRAIN;
         initAngleDegrees = (float) navx.getAngle();
+        this.stopDistance = stopDistance;
 
         tankRobot = new ITankRobotBounds()
         {
@@ -83,7 +85,7 @@ public class PurePursuitCommand extends Command
         transLocEstimator = new EncoderDifferentialDriveLocationEstimator(rotLocEstimator);
 
         sendableNavX = new SendableNavX(() -> MathUtils.rad2Deg(-rotLocEstimator.estimateHeading()), "purePursuitHeading");
-        purePursuitMovementStrategy = new PurePursuitMovementStrategy(tankRobot, transLocEstimator, rotLocEstimator, waypoints, lookAheadDistance);
+        purePursuitMovementStrategy = new PurePursuitMovementStrategy(tankRobot, transLocEstimator, rotLocEstimator, waypoints, lookAheadDistance, stopDistance);
         Log.info("initAngleDegrees: {0,number,0.00}\n" + initAngleDegrees);
     }
 

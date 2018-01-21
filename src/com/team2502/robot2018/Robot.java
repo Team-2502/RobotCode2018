@@ -134,7 +134,7 @@ public final class Robot extends IterativeRobot
         waypoints.add(new Vector2f(0, 0));
         waypoints.add(new Vector2f(5, 5));
         waypoints.add(new Vector2f(6, 21));
-        Scheduler.getInstance().add(new PurePursuitCommand(waypoints, Constants.LOOKAHEAD_DISTANCE_FT));
+        Scheduler.getInstance().add(new PurePursuitCommand(waypoints, Constants.LOOKAHEAD_DISTANCE_FT,Constants.STOP_DIST_TOLERANCE_FT ));
         // Scheduler.getInstance().add(AutoSwitcher.getAutoInstance());
         NAVX.reset();
     }
