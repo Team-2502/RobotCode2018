@@ -7,6 +7,8 @@ import com.team2502.robot2018.DashboardData;
 import com.team2502.robot2018.OI;
 import com.team2502.robot2018.RobotMap;
 import com.team2502.robot2018.command.teleop.DriveCommand;
+import com.team2502.robot2018.sendables.PIDTunable;
+import com.team2502.robot2018.sendables.SendablePIDTuner;
 import com.team2502.robot2018.utils.DifferentialDriveF;
 import com.team2502.robot2018.utils.SpeedControllerGroupF;
 import com.team2502.robot2018.utils.WPI_TalonSRXF;
@@ -17,7 +19,7 @@ import logger.Log;
 /**
  * Example Implementation, Many changes needed.
  */
-public class DriveTrainSubsystem extends Subsystem implements DashboardData.DashboardUpdater
+public class DriveTrainSubsystem extends Subsystem implements DashboardData.DashboardUpdater, PIDTunable
 {
     private static final FloatPair SPEED_CONTAINER = new FloatPair();
 
@@ -29,13 +31,22 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     public final SpeedControllerGroupF spgLeft;
     public final SpeedControllerGroupF spgRight;
 
+    private final SendablePIDTuner pidTuner;
+
     private float lastLeft;
     private float lastRight;
     private boolean isNegativePressed;
     private boolean negative;
+    double kP;
+    double kI;
+    double kD;
+    double kF;
 
     public DriveTrainSubsystem()
     {
+
+        setName("DriveTrainSubsystem");
+
         lastLeft = 0.0F;
         lastRight = 0.0F;
 
@@ -46,13 +57,15 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         rightRearTalonEnc = new WPI_TalonSRXF(RobotMap.Motor.DRIVE_TRAIN_BACK_RIGHT);
 
         // Add encoders (ask nicely for encoders on drivetrain)
-        leftRearTalonEnc.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, Constants.INIT_TIMEOUT);
-        rightRearTalonEnc.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, Constants.INIT_TIMEOUT);
+        leftRearTalonEnc.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute, 0, Constants.INIT_TIMEOUT);
+        rightRearTalonEnc.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute, 0, Constants.INIT_TIMEOUT);
 
         spgLeft = new SpeedControllerGroupF(leftFrontTalon, leftRearTalonEnc);
         spgRight = new SpeedControllerGroupF(rightFrontTalon, rightRearTalonEnc);
 
         drive = new DifferentialDriveF(spgLeft, spgRight);
+
+        pidTuner = new SendablePIDTuner(this, this);
 
         drive.setSafetyEnabled(true);
         setTeleopSettings();
@@ -79,6 +92,7 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
      */
     public void setTeleopSettings()
     {
+
         setTeleopSettings(leftFrontTalon);
         setTeleopSettings(rightFrontTalon);
         setTeleopSettings(leftRearTalonEnc);
@@ -95,9 +109,6 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
      */
     public void setAutonSettings()
     {
-        leftRearTalonEnc.set(ControlMode.Position, 0.0F);
-        rightRearTalonEnc.set(ControlMode.Position, 0.0F);
-
         leftFrontTalon.follow(leftRearTalonEnc);
         rightFrontTalon.follow(rightRearTalonEnc);
 
@@ -114,6 +125,10 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
      */
     public void setPID(double kP, double kI, double kD)
     {
+        this.kP = kP;
+        this.kI = kI;
+        this.kD = kD;
+
         leftRearTalonEnc.config_kP(0, kP, Constants.INIT_TIMEOUT);
         leftRearTalonEnc.config_kI(0, kI, Constants.INIT_TIMEOUT);
         leftRearTalonEnc.config_kD(0, kD, Constants.INIT_TIMEOUT);
@@ -279,7 +294,12 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
 
         SmartDashboard.putNumber("Right Speed (ft/s)", rightRearTalonEnc.getSelectedSensorVelocity(0) * Constants.EVEL_TO_FPS);
         SmartDashboard.putNumber("Right Pos (ft)", rightRearTalonEnc.getSelectedSensorPosition(0) * Constants.EPOS_TO_FEET);
+
+
+        pidTuner.updateDashboard();
     }
+
+
 
     /**
      * A generic data structure to store a pair of objects.
@@ -421,5 +441,59 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
             }
             return false;
         }
+    }
+
+    @Override
+    public void setkP(double kP)
+    {
+        this.kP = kP;
+        setPID(this.kP, kI, kD);
+
+    }
+
+    @Override
+    public void setkI(double kI)
+    {
+        this.kI = kI;
+        setPID(kP, this.kI, kD);
+    }
+
+    @Override
+    public void setkD(double kD)
+    {
+        this.kD = kD;
+        setPID(kP, kI, this.kD);
+    }
+
+    @Override
+    public void setkF(double kF)
+    {
+        this.kF = kF;
+        leftRearTalonEnc.config_kF(0, kF, Constants.INIT_TIMEOUT);
+        rightRearTalonEnc.config_kF(0, kF, Constants.INIT_TIMEOUT);
+    }
+
+    @Override
+    public double getkP()
+    {
+        return kP;
+    }
+
+    @Override
+    public double getkI()
+    {
+        return kI;
+    }
+
+    @Override
+    public double getkD()
+    {
+        return kD;
+    }
+
+    @Override
+    public double getkF()
+    {
+        return kF;
     }
 }

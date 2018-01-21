@@ -46,7 +46,7 @@ public class EncoderDifferentialDriveLocationEstimator implements ITranslational
         angularVel = MathUtils.Kinematics.getAngularVel(leftVel, rightVel, Constants.LATERAL_WHEEL_DISTANCE_INCH);
 
 
-        Log.info("Left: {0,number,0.00} Right: {1,number,0.00}", leftVel, rightVel);
+//        Log.info("Left: {0,number,0.00} Right: {1,number,0.00}", leftVel, rightVel);
 
 //        Log.debug("wheel vels: L: {0,number,#.###} \t\t R: {1,number,#.###}", leftVel, rightVel);
 
@@ -57,8 +57,8 @@ public class EncoderDifferentialDriveLocationEstimator implements ITranslational
         Vector2f absLoc = location.add(absoluteDPos);
         // float angle = (float) Robot.NAVX.getYaw();
         heading += angularVel * dTime;
-        Log.debug("absLoc: '{' {0,number,0.00}, {1,number,0.00} '}'", absLoc.x, absLoc.y);
-        Log.debug("heading: {0,number,0.00}\n", heading);
+//        Log.debug("absLoc: '{' {0,number,0.00}, {1,number,0.00} '}'", absLoc.x, absLoc.y);
+//        Log.debug("heading: {0,number,0.00}\n", heading);
         return absLoc;
     }
 
