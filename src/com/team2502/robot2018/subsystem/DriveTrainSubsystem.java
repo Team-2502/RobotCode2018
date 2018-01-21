@@ -44,6 +44,9 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
 
     public DriveTrainSubsystem()
     {
+
+        setName("DriveTrainSubsystem");
+
         lastLeft = 0.0F;
         lastRight = 0.0F;
 
@@ -54,8 +57,8 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         rightRearTalonEnc = new WPI_TalonSRXF(RobotMap.Motor.DRIVE_TRAIN_BACK_RIGHT);
 
         // Add encoders (ask nicely for encoders on drivetrain)
-        leftRearTalonEnc.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, Constants.INIT_TIMEOUT);
-        rightRearTalonEnc.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, Constants.INIT_TIMEOUT);
+        leftRearTalonEnc.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute, 0, Constants.INIT_TIMEOUT);
+        rightRearTalonEnc.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute, 0, Constants.INIT_TIMEOUT);
 
         spgLeft = new SpeedControllerGroupF(leftFrontTalon, leftRearTalonEnc);
         spgRight = new SpeedControllerGroupF(rightFrontTalon, rightRearTalonEnc);
@@ -89,6 +92,7 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
      */
     public void setTeleopSettings()
     {
+
         setTeleopSettings(leftFrontTalon);
         setTeleopSettings(rightFrontTalon);
         setTeleopSettings(leftRearTalonEnc);
@@ -105,9 +109,6 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
      */
     public void setAutonSettings()
     {
-        leftRearTalonEnc.set(ControlMode.Position, 0.0F);
-        rightRearTalonEnc.set(ControlMode.Position, 0.0F);
-
         leftFrontTalon.follow(leftRearTalonEnc);
         rightFrontTalon.follow(rightRearTalonEnc);
 
@@ -295,7 +296,7 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         SmartDashboard.putNumber("Right Pos (ft)", rightRearTalonEnc.getSelectedSensorPosition(0) * Constants.EPOS_TO_FEET);
 
 
-        SmartDashboard.putData("DTTuner", pidTuner);
+        pidTuner.updateDashboard();
     }
 
 

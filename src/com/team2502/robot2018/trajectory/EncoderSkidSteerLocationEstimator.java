@@ -58,7 +58,7 @@ public class EncoderSkidSteerLocationEstimator implements ITranslationalLocation
         angularVel = MathUtils.Kinematics.getAngularVel(leftVelNoSlide, rightVelNoSlide, Constants.LATERAL_WHEEL_DISTANCE_INCH);
 
 
-        System.out.printf("Left: %.2f Right: %.2f\n", leftVelNoSlide, rightVelNoSlide);
+//        System.out.printf("Left: %.2f Right: %.2f\n", leftVelNoSlide, rightVelNoSlide);
 
 //        Log.debug("wheel vels: L: {0,number,#.###} \t\t R: {1,number,#.###}", leftVel, rightVel);
 
@@ -69,9 +69,9 @@ public class EncoderSkidSteerLocationEstimator implements ITranslationalLocation
         Vector2f absLoc = location.add(absoluteDPos);
         // float angle = (float) Robot.NAVX.getYaw();
         heading += angularVel * dTime;
-        System.out.printf("absLoc: %.2f, %.2f\n", absLoc.x, absLoc.y);
-        System.out.printf("heading: %.2f\n", heading);
-        System.out.println();
+//        System.out.printf("absLoc: %.2f, %.2f\n", absLoc.x, absLoc.y);
+//        System.out.printf("heading: %.2f\n", heading);
+//        System.out.println();
         return absLoc;
     }
 

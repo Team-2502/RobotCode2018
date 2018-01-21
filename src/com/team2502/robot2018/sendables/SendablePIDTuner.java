@@ -2,12 +2,10 @@ package com.team2502.robot2018.sendables;
 
 
 import com.team2502.robot2018.DashboardData;
-import com.team2502.robot2018.Robot;
 import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.command.PIDCommand
 
 public class SendablePIDTuner implements Sendable, DashboardData.DashboardUpdater
 {
@@ -56,13 +54,12 @@ public class SendablePIDTuner implements Sendable, DashboardData.DashboardUpdate
         builder.addDoubleProperty("i", pid_values::getkI, pid_values::setkI);
         builder.addDoubleProperty("d", pid_values::getkD, pid_values::setkD);
         builder.addDoubleProperty("f", pid_values::getkF, pid_values::setkF);
-//        builder.addDoubleProperty("setpoint", this::getSetpoint, this::setSetpoint);
-//        builder.addBooleanProperty("enabled", this::isEnabled, this::setEnabled);
     }
 
     @Override
     public void updateDashboard()
     {
-
+        // TODO: should this be name or subsystem? The subsystem will allow us to differentiate it.
+        SmartDashboard.putData(subsystem,this);
     }
 }

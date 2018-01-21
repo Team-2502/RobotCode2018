@@ -41,7 +41,7 @@ public class SendableNavX implements Sendable, DashboardData.DashboardUpdater
      */
     public static SendableNavX getInstance() { return instance; }
 
-    public String name = "Sendibble NavX";
+    public String name = "Sendable NavX";
 
     @Override
     public String getName()

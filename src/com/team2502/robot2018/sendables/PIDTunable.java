@@ -13,7 +13,6 @@ public interface PIDTunable
 
     void setkF(double kF);
 
-//    void setiZone(double iZone);
 
     double getkP();
 
@@ -23,5 +22,4 @@ public interface PIDTunable
 
     double getkF();
 
-//    double getiZone();
 }
