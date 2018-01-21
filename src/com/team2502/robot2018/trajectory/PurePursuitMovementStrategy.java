@@ -1,5 +1,7 @@
 package com.team2502.robot2018.trajectory;
 
+import com.team2502.robot2018.trajectory.localization.IRotationalLocationEstimator;
+import com.team2502.robot2018.trajectory.localization.ITranslationalLocationEstimator;
 import com.team2502.robot2018.utils.MathUtils;
 import logger.Log;
 import org.joml.Vector2f;

@@ -13,13 +13,13 @@ public class Constants
      */
 
     // Currently the max percent VOLTAGE that can be given to each to each wheel
-    public static final float VR_MAX = .75F;
-    public static final float VL_MAX = .75F;
-    public static final float VR_MIN = -.75F;
-    public static final float VL_MIN = -.75F;
+    public static final float VR_MAX = .3F;
+    public static final float VL_MAX = .3F;
+    public static final float VR_MIN = -.3F;
+    public static final float VL_MIN = -.3F;
 
     // The lookahead distance (feet) for Pure Pursuit
-    public static final float LOOKAHEAD_DISTANCE_FT = 2F;
+    public static final float LOOKAHEAD_DISTANCE_FT = 4F;
 
     /*
     Physical / Other
@@ -33,7 +33,7 @@ public class Constants
     public static final float WHEEL_ROLLING_RADIUS_FT = WHEEL_ROLLING_RADIUS_INCH * 1.5F / 12F;
 
     // The distance between wheels (laterally) in feet. Measure from the centerpoints of the wheels.
-    public static final float LATERAL_WHEEL_DISTANCE_INCH = 23.25F / 12F;
+    public static final float LATERAL_WHEEL_DISTANCE_FT = 23.25F / 12F;
 
     public static final float MAX_FPS_SPEED = 18.0F;
 

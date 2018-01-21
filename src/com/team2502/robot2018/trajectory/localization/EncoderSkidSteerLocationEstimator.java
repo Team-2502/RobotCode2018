@@ -1,23 +1,32 @@
-package com.team2502.robot2018.trajectory;
+package com.team2502.robot2018.trajectory.localization;
 
 import com.team2502.robot2018.Constants;
 import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.utils.MathUtils;
-import logger.Log;
 import org.joml.Vector2f;
 
 import static com.team2502.robot2018.command.autonomous.PurePursuitCommand.RAW_UNIT_PER_ROT;
 
-public class EncoderDifferentialDriveLocationEstimator implements ITranslationalLocationEstimator, IRotationalLocationEstimator
+/**
+ * WIP, do not use yet!!
+ */
+@Deprecated
+public class EncoderSkidSteerLocationEstimator implements ITranslationalLocationEstimator, IRotationalLocationEstimator
 {
     Vector2f location;
-    float heading = 0;
+    float encHeading = 0;
     float angularVel = 0;
     private long lastTime = -1;
+    private IRotationalLocationEstimator rotEstimator;
 
-    public EncoderDifferentialDriveLocationEstimator()
+    public EncoderSkidSteerLocationEstimator()
     {
         location = new Vector2f(0, 0);
+    }
+
+    public EncoderSkidSteerLocationEstimator(IRotationalLocationEstimator rotEstimator)
+    {
+        this.rotEstimator = rotEstimator;
     }
 
     private float getDTime()
@@ -39,32 +48,28 @@ public class EncoderDifferentialDriveLocationEstimator implements ITranslational
 
         float rightRevPerS = Robot.DRIVE_TRAIN.rightRearTalonEnc.getSelectedSensorVelocity(0) * 10F / RAW_UNIT_PER_ROT;
 
-        float leftVel = leftRevPerS * Constants.WHEEL_DIAMETER_FT * MathUtils.PI_F;
+        float leftVelNoSlide = leftRevPerS * Constants.WHEEL_DIAMETER_FT * MathUtils.PI_F;
 
-        float rightVel = rightRevPerS * Constants.WHEEL_DIAMETER_FT * MathUtils.PI_F;
+        float rightVelNoSlide = rightRevPerS * Constants.WHEEL_DIAMETER_FT * MathUtils.PI_F;
 
-        angularVel = MathUtils.Kinematics.getAngularVel(leftVel, rightVel, Constants.LATERAL_WHEEL_DISTANCE_INCH);
+        float vTan = (leftVelNoSlide + rightVelNoSlide) / 2;
 
+        // longitudinal slip proportion
+        float i = 1 - vTan / (Constants.WHEEL_ROLLING_RADIUS_FT * angularVel);
 
-//        Log.info("Left: {0,number,0.00} Right: {1,number,0.00}", leftVel, rightVel);
-
-//        Log.debug("wheel vels: L: {0,number,#.###} \t\t R: {1,number,#.###}", leftVel, rightVel);
+        angularVel = MathUtils.Kinematics.getAngularVel(leftVelNoSlide, rightVelNoSlide, Constants.LATERAL_WHEEL_DISTANCE_FT);
 
         Vector2f absoluteDPos = MathUtils.Kinematics.getAbsoluteDPos(
-                leftVel, rightVel, Constants.LATERAL_WHEEL_DISTANCE_INCH, dTime
-                , heading);
-        // Log.debug("adpp: " + absoluteDPos);
+                leftVelNoSlide, rightVelNoSlide, Constants.LATERAL_WHEEL_DISTANCE_FT, dTime
+                , encHeading);
         Vector2f absLoc = location.add(absoluteDPos);
-        // float angle = (float) Robot.NAVX.getYaw();
-        heading += angularVel * dTime;
-//        Log.debug("absLoc: '{' {0,number,0.00}, {1,number,0.00} '}'", absLoc.x, absLoc.y);
-//        Log.debug("heading: {0,number,0.00}\n", heading);
+            encHeading += angularVel * dTime;
         return absLoc;
     }
 
     @Override
     public float estimateHeading()
     {
-        return heading;
+        return encHeading;
     }
 }

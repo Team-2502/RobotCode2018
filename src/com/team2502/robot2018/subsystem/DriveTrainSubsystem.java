@@ -165,11 +165,11 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
      */
     public void runMotors(ControlMode controlMode, float x, float y) // double z
     {
-        leftFrontTalon.set(controlMode, x);
-        leftRearTalonEnc.set(controlMode, x);
+        leftFrontTalon.set(controlMode, -x);
+        leftRearTalonEnc.set(controlMode, -x);
 
-        rightFrontTalon.set(controlMode, -y);
-        rightRearTalonEnc.set(controlMode, -y);
+        rightFrontTalon.set(controlMode, y);
+        rightRearTalonEnc.set(controlMode, y);
     }
 
     /**
