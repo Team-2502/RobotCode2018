@@ -1,14 +1,14 @@
 package com.team2502.robot2018.trajectory.localization;
 
 import com.team2502.robot2018.Robot;
+import com.team2502.robot2018.data.Vector;
 import com.team2502.robot2018.utils.MathUtils;
-import org.joml.Vector2f;
 
 public class NavXLocationEstimator implements IRotationalLocationEstimator, ITranslationalLocationEstimator
 {
 
     float initHeading;
-    Vector2f initPosition;
+    Vector initPosition;
 
     public NavXLocationEstimator(){
         initHeading = estimateHeading();
@@ -20,6 +20,10 @@ public class NavXLocationEstimator implements IRotationalLocationEstimator, ITra
     {
         // switch direction of increase
         float yawDeg = -Robot.NAVX.getYaw();
+        return navXToRad(yawDeg);
+    }
+
+    float navXToRad(float yawDeg){
         if(yawDeg < 0)
         {
             yawDeg = 360 + yawDeg;
@@ -32,8 +36,8 @@ public class NavXLocationEstimator implements IRotationalLocationEstimator, ITra
      * @return
      */
     @Override
-    public Vector2f estimateLocation()
+    public Vector estimateLocation()
     {
-        return new Vector2f(Robot.NAVX.getDisplacementX(),Robot.NAVX.getDisplacementY());
+        return new Vector(Robot.NAVX.getDisplacementX(),Robot.NAVX.getDisplacementY());
     }
 }

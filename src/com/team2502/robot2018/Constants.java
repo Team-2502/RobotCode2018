@@ -19,8 +19,8 @@ public class Constants
     public static final float VL_MIN = -.3F;
 
     // The lookahead distance (feet) for Pure Pursuit
-    public static final float LOOKAHEAD_DISTANCE_FT = 4F;
-    public static final float STOP_DIST_TOLERANCE_FT = 0.3F;
+    public static final float LOOKAHEAD_DISTANCE_FT = 5F;
+    public static final float STOP_DIST_TOLERANCE_FT = 1.5F;
 
     /*
     Physical / Other
@@ -34,7 +34,7 @@ public class Constants
     public static final float WHEEL_ROLLING_RADIUS_FT = WHEEL_ROLLING_RADIUS_INCH * 1.5F / 12F;
 
     // The distance between wheels (laterally) in feet. Measure from the centerpoints of the wheels.
-    public static final float LATERAL_WHEEL_DISTANCE_FT = 23.25F / 12F;
+    public static final float LATERAL_WHEEL_DISTANCE_FT = 23.25F / 12F*10F;
 
     public static final float MAX_FPS_SPEED = 18.0F;
 

@@ -2,11 +2,14 @@ package com.team2502.robot2018;
 
 import com.kauailabs.navx.frc.AHRS;
 import com.team2502.robot2018.command.autonomous.PurePursuitCommand;
+import com.team2502.robot2018.command.teleop.CalibrateRobotCommand;
+import com.team2502.robot2018.data.Vector;
 import com.team2502.robot2018.sendables.SendableDriveTrain;
 import com.team2502.robot2018.sendables.SendableNavX;
 import com.team2502.robot2018.subsystem.ClimberSubsystem;
 import com.team2502.robot2018.subsystem.DriveTrainSubsystem;
 import com.team2502.robot2018.subsystem.TransmissionSubsystem;
+import com.team2502.robot2018.utils.MathUtils;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -15,10 +18,10 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import logger.Log;
-import org.joml.Vector2f;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.List;
 
 public final class Robot extends IterativeRobot
 {
@@ -128,13 +131,29 @@ public final class Robot extends IterativeRobot
     {
         DRIVE_TRAIN.setAutonSettings();
 
-//        Scheduler.getInstance().add(new CalibrateRobotCommand());
-        ArrayList<Vector2f> waypoints = new ArrayList<>();
+        Scheduler.getInstance().add(new CalibrateRobotCommand());
+//        ArrayList<Vector> waypoints = new ArrayList<>();
+//
+//        waypoints.add(new Vector(0, 0));
+//        waypoints.add(new Vector(0, 10));
+//        waypoints.add(new Vector(10, 10));
+//        waypoints.add(new Vector(0, 0));
 
-        waypoints.add(new Vector2f(0, 0));
-        waypoints.add(new Vector2f(5, 5));
-        waypoints.add(new Vector2f(6, 21));
-        Scheduler.getInstance().add(new PurePursuitCommand(waypoints, Constants.LOOKAHEAD_DISTANCE_FT,Constants.STOP_DIST_TOLERANCE_FT ));
+//        ArrayList<Vector> rotatedWaypoints = new ArrayList<>();
+
+//        for(Vector waypoint : waypoints)
+//        {
+//            float theta = MathUtils.deg2Rad(30);
+//            Vector vec = MathUtils.LinearAlgebra.rotate2D(waypoint, theta);
+//
+////            System.out.printf("waypoint: %.2f,%.2f\n",vec.get(0),vec.get(1));
+//            //TODO: why does this not work?
+//            //System.out.println("waypoint: "+vec);
+//            rotatedWaypoints.add(vec);
+//
+//        }
+//        Scheduler.getInstance().add(new PurePursuitCommand(waypoints, Constants.LOOKAHEAD_DISTANCE_FT,Constants.STOP_DIST_TOLERANCE_FT ));
+
         // Scheduler.getInstance().add(AutoSwitcher.getAutoInstance());
         NAVX.reset();
     }

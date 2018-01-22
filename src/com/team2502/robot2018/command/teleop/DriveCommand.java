@@ -5,6 +5,7 @@ import com.team2502.robot2018.Constants;
 import com.team2502.robot2018.OI;
 import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.RobotMap;
+import com.team2502.robot2018.data.Vector;
 import com.team2502.robot2018.subsystem.DriveTrainSubsystem;
 import com.team2502.robot2018.subsystem.TransmissionSubsystem;
 import com.team2502.robot2018.trajectory.localization.EncoderDifferentialDriveLocationEstimator;
@@ -29,13 +30,13 @@ public class DriveCommand extends Command
 {
     private final DriveTrainSubsystem driveTrainSubsystem;
     private final TransmissionSubsystem transmission;
-    private final Vector2f estimatedLocation = new Vector2f(0, 0);
+    private final Vector estimatedLocation = new Vector(0, 0);
     public float heading = 0;
     private AHRS navx;
     private long lastTime = -1;
     private float initAngleDegrees;
     private EncoderDifferentialDriveLocationEstimator encoderLocationEstimator;
-    private Vector2f lastEstimatedLocation = new Vector2f();
+    private Vector lastEstimatedLocation = new Vector();
 
     public DriveCommand()
     {
@@ -75,7 +76,7 @@ public class DriveCommand extends Command
     @Override
     protected void execute()
     {
-        Vector2f estimateLocation = encoderLocationEstimator.estimateLocation();
+        Vector estimateLocation = encoderLocationEstimator.estimateLocation();
         SmartDashboard.putBoolean("DT: AutoShifting Enabled?", !transmission.disabledAutoShifting);
         driveTrainSubsystem.drive();
 

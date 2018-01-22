@@ -1,8 +1,9 @@
 package com.team2502.robot2018.trajectory.localization;
 
-import org.joml.Vector2f;
+
+import com.team2502.robot2018.data.Vector;
 
 public interface ITranslationalLocationEstimator
 {
-    Vector2f estimateLocation();
+    Vector estimateLocation();
 }

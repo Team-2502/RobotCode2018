@@ -165,8 +165,8 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
      */
     public void runMotors(ControlMode controlMode, float x, float y) // double z
     {
-        leftFrontTalon.set(controlMode, -x);
-        leftRearTalonEnc.set(controlMode, -x);
+        leftFrontTalon.set(controlMode, x);
+        leftRearTalonEnc.set(controlMode, x);
 
         rightFrontTalon.set(controlMode, y);
         rightRearTalonEnc.set(controlMode, y);
@@ -262,7 +262,7 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         // Log.debug("Left: {0,number,#.###}\t\t Right: {0,number,#.###}", speed.right, speed.left);
 
         //reverse drive
-        if(OI.JOYSTICK_DRIVE_LEFT.getRawButton(RobotMap.Joystick.Button.INVERSE_DRIVER_CONTROLS) && !isNegativePressed) { negative = !negative; }
+        if((OI.JOYSTICK_DRIVE_LEFT.getRawButton(RobotMap.Joystick.Button.INVERSE_DRIVER_CONTROLS) && !isNegativePressed)) { negative = !negative; }
 
         isNegativePressed = OI.JOYSTICK_DRIVE_LEFT.getRawButton(RobotMap.Joystick.Button.INVERSE_DRIVER_CONTROLS);
 

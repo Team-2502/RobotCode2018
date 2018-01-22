@@ -1,10 +1,10 @@
 package com.team2502.robot2018.trajectory;
 
+import com.team2502.robot2018.data.Vector;
 import com.team2502.robot2018.trajectory.localization.IRotationalLocationEstimator;
 import com.team2502.robot2018.trajectory.localization.ITranslationalLocationEstimator;
 import com.team2502.robot2018.utils.MathUtils;
 import logger.Log;
-import org.joml.Vector2f;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -43,31 +43,32 @@ import java.util.List;
 public class PurePursuitMovementStrategy implements ITankMovementStrategy
 {
     private static final float THRESHOLD_CURVATURE = 0.001F;
-    public final List<Vector2f> waypoints;
+    public final List<Vector> waypoints;
     public final float lookAheadDistance;
     private final ITranslationalLocationEstimator transEstimator;
     private final ITankRobotBounds tankRobot;
     private final IRotationalLocationEstimator rotEstimator;
     private final float lookAheadDistanceSquared;
     private final float distanceStopSq;
-    private Vector2f relativeGoalPoint;
+    private Vector relativeGoalPoint;
     private float pathRadius;
     private float rotVelocity;
     private boolean finishedPath = false;
-    private Vector2f usedEstimatedLocation = new Vector2f();
+    private Vector usedEstimatedLocation = new Vector();
     private float usedHeading = 0.0F;
 
     private int lastSegmentSearched = 0;
 
-    private Vector2f wheelVelocities;
+    private Vector wheelVelocities;
     private float tangentialSpeed;
     private float leftWheelTanVel;
     private float rightWheelTanVel;
-    private Vector2f absoluteGoalPoint;
+    private Vector absoluteGoalPoint;
     private float dThetaToRotate;
     private boolean isClose = false;
+    private boolean isSuccessfullyFinished;
 
-    public PurePursuitMovementStrategy(ITankRobotBounds tankRobot, ITranslationalLocationEstimator transEstimator, IRotationalLocationEstimator rotEstimator, List<Vector2f> waypoints, float lookAheadDistance, float distanceStop)
+    public PurePursuitMovementStrategy(ITankRobotBounds tankRobot, ITranslationalLocationEstimator transEstimator, IRotationalLocationEstimator rotEstimator, List<Vector> waypoints, float lookAheadDistance, float distanceStop)
     {
         this.waypoints = waypoints;
         this.tankRobot = tankRobot;
@@ -81,12 +82,12 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
     /**
      * @return The absolute location of the selected goal point
      */
-    public Vector2f calculateAbsoluteGoalPoint()
+    public Vector calculateAbsoluteGoalPoint()
     {
         // The path is finished — there are no more goal points to compute
         if(finishedPath) { return null; }
 
-        List<Vector2f> intersections = new ArrayList<>();
+        List<Vector> intersections = new ArrayList<>();
 
         // We have intersections.get(nextPathI) as the first goal intersection on the next segment.
         // This is Integer.MAX_VALUE as there might not be any.
@@ -100,8 +101,8 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
             // We are on the last segment. There is no _next_ segment to search
             if(i + 1 >= waypoints.size()) { continue; }
 
-            Vector2f lineP1 = waypoints.get(i);
-            Vector2f lineP2 = waypoints.get(i + 1);
+            Vector lineP1 = waypoints.get(i);
+            Vector lineP2 = waypoints.get(i + 1);
 
             // Since goal points are within radius LOOK_AHEAD_DISTANCE from us, the robot would normally stop
             // when the distance from the last waypoint < LOOK_AHEAD_DISTANCE. However, we prevent this
@@ -109,12 +110,15 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
             // TODO: test this to see if the robot is jerky near the end
             if(i+2 == waypoints.size())
             {
-                float distanceWaypointSq = lineP2.distanceSquared(usedEstimatedLocation);
+                float distanceWaypointSq = lineP2.subtractBy(usedEstimatedLocation).getMagnitudeSquared();
                 if(distanceWaypointSq <= lookAheadDistanceSquared)
                 {
+//                    System.out.println("is close to: "+lineP2);
                     isClose = true;
                     // We want to stop if the distance is within the desired amount
                     if(distanceWaypointSq < distanceStopSq){
+                        isSuccessfullyFinished = true;
+//                        System.out.println("is finished w/: "+lineP2);
                         finishedPath = true;
                         return null;
                     }
@@ -123,7 +127,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
             }
 
             // Get intersections of r=lookAheadDistance circle and segments between waypoints
-            List<Vector2f> vectorList = new ArrayList<>(Arrays.asList(MathUtils.Geometry.getCircleLineIntersectionPoint(lineP1, lineP2, usedEstimatedLocation, lookAheadDistance)));
+            List<Vector> vectorList = new ArrayList<>(Arrays.asList(MathUtils.Geometry.getCircleLineIntersectionPoint(lineP1, lineP2, usedEstimatedLocation, lookAheadDistance)));
 
             // above statement assumes lineP1 lineP2 defines a (non-segment) line. This is to define it as a segment
             // (we are removing points that are not between lineP1 and lineP2)
@@ -136,7 +140,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         }
 
         // The last goal point we are comparing the intersections to. We will want to chose the one closest to last intersection
-        Vector2f toCompare = absoluteGoalPoint;
+        Vector toCompare = absoluteGoalPoint;
 
         // if there is no last goal point, then just chose the first intersection
         if(toCompare == null)
@@ -153,11 +157,12 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         if(closestVectorI == -1)
         {
             Log.info("closest vector not found!");
+            System.out.printf("loc: %.2f, %.2f",usedEstimatedLocation.get(0),usedEstimatedLocation.get(1));
             finishedPath = true;
             return null;
         }
 
-        Vector2f closest = intersections.get(closestVectorI);
+        Vector closest = intersections.get(closestVectorI);
 
         // If the closest vector is on the next segment, set that segment as the current segment
         if(closestVectorI >= nextPathI) { ++lastSegmentSearched; }
@@ -203,15 +208,15 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
      * @param origin             the absolute location of the robot
      * @param possibleGoalPoints the absolute location of goal points
      */
-    int bestGoalPoint(Vector2f origin, List<Vector2f> possibleGoalPoints)
+    int bestGoalPoint(Vector origin, List<Vector> possibleGoalPoints)
     {
         float minMagSquared = Float.MAX_VALUE;
         int minVectorI = -1;
         for(int i = 0; i < possibleGoalPoints.size(); i++)
         {
-            Vector2f vector = possibleGoalPoints.get(i);
+            Vector vector = possibleGoalPoints.get(i);
 
-            float magnitudeSquared = origin.sub(vector).lengthSquared(); // find dist squared
+            float magnitudeSquared = origin.subtractBy(vector).getMagnitudeSquared(); // find dist squared
 
             if(magnitudeSquared < minMagSquared)
             {
@@ -227,24 +232,24 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
      */
     private float curvatureToGoal()
     {
-        float lSquared = relativeGoalPoint.lengthSquared(); // x^2 + y^2 = l^2 (length)
-        return -2 * relativeGoalPoint.x / lSquared;
+        float lSquared = relativeGoalPoint.getMagnitudeSquared(); // x^2 + y^2 = l^2 (length)
+        return -2 * relativeGoalPoint.get(0) / lSquared;
     }
 
     /**
      * @return The center of the circle that the robot is travelling on
      */
-    public Vector2f getCircleCenter()
+    public Vector getCircleCenter()
     {
-        Vector2f circleRelativeCenter = new Vector2f(-pathRadius, 0.0F);
-        Vector2f circleRelativeCenterRotated = MathUtils.LinearAlgebra.rotate2D(circleRelativeCenter, usedHeading);
+        Vector circleRelativeCenter = new Vector(-pathRadius, 0.0F);
+        Vector circleRelativeCenterRotated = MathUtils.LinearAlgebra.rotate2D(circleRelativeCenter, usedHeading);
         return usedEstimatedLocation.add(circleRelativeCenterRotated);
     }
 
-    private Vector2f calculateWheelVelocities() throws NullPointerException
+    private Vector calculateWheelVelocities() throws NullPointerException
     {
         float curvature = curvatureToGoal();
-        Vector2f bestVector = null;
+        Vector bestVector = null;
 
         float v_lMax = tankRobot.getV_lMax();
         float v_rMax = tankRobot.getV_rMax();
@@ -253,11 +258,11 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
 
         if(Math.abs(curvature) < THRESHOLD_CURVATURE)
         {
-            bestVector = new Vector2f(v_lMax, v_rMax);
-            rotVelocity = (bestVector.y - bestVector.x) / tankRobot.getLateralWheelDistance();
+            bestVector = new Vector(v_lMax, v_rMax);
+            rotVelocity = (bestVector.get(1)- bestVector.get(0)) / tankRobot.getLateralWheelDistance();
             pathRadius = Float.MAX_VALUE;
-            leftWheelTanVel = bestVector.x;
-            rightWheelTanVel = bestVector.y;
+            leftWheelTanVel = bestVector.get(0);
+            rightWheelTanVel = bestVector.get(1);
             tangentialSpeed = leftWheelTanVel;
             dThetaToRotate = 0;
         }
@@ -274,7 +279,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
             if(MathUtils.Algebra.between(v_rMin, v_r, v_rMax))
             {
                 score = Math.abs(v_lMax + v_r);
-                bestVector = new Vector2f(v_lMax, v_r);
+                bestVector = new Vector(v_lMax, v_r);
             }
 
             v_r = v_lMin * velLeftToRightRatio;
@@ -284,7 +289,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
                 if(tempScore > score)
                 {
                     score = tempScore;
-                    bestVector = new Vector2f(v_lMin, v_r);
+                    bestVector = new Vector(v_lMin, v_r);
                 }
             }
 
@@ -295,7 +300,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
                 if(tempScore > score)
                 {
                     score = tempScore;
-                    bestVector = new Vector2f(v_l, v_rMax);
+                    bestVector = new Vector(v_l, v_rMax);
                 }
             }
 
@@ -305,7 +310,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
                 float tempScore = Math.abs(v_lMin + v_l);
                 if(tempScore > score)
                 {
-                    bestVector = new Vector2f(v_l, v_rMin);
+                    bestVector = new Vector(v_l, v_rMin);
                 }
             }
 
@@ -321,12 +326,12 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
                                                                     "\"v_l\" = \"{9}\"\n\t}", curvature, v_lMax, v_lMin, v_rMax, v_rMin, c, velLeftToRightRatio, velRightToLeftRatio, v_r, v_l));
             }
 
-            rotVelocity = (bestVector.y - bestVector.x) / tankRobot.getLateralWheelDistance();
+            rotVelocity = (bestVector.get(1) - bestVector.get(0)) / tankRobot.getLateralWheelDistance();
             pathRadius = 1 / curvature;
             leftWheelTanVel = Math.abs((pathRadius - tankRobot.getLateralWheelDistance() / 2) * rotVelocity);
             rightWheelTanVel = Math.abs((pathRadius + tankRobot.getLateralWheelDistance() / 2) * rotVelocity);
             tangentialSpeed = Math.abs(pathRadius * rotVelocity);
-            dThetaToRotate = (float) (Math.signum(rotVelocity) * Math.atan(relativeGoalPoint.y / (Math.abs(pathRadius) - relativeGoalPoint.x)));
+            dThetaToRotate = (float) (Math.signum(rotVelocity) * Math.atan(relativeGoalPoint.get(1) / (Math.abs(pathRadius) - relativeGoalPoint.get(0))));
         }
 
         return bestVector;
@@ -341,10 +346,10 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
     /**
      * @return The velocities (left,right) of the wheels. If you are setting input as voltage, "velocities" will actually be voltages. Magnitude doesn't matter the most; ratio does.
      */
-    public Vector2f getWheelVelocities()
+    public Vector getWheelVelocities()
     { return wheelVelocities; }
 
-    public Vector2f getUsedEstimatedLocation()
+    public Vector getUsedEstimatedLocation()
     { return usedEstimatedLocation; }
 
     /**
@@ -368,7 +373,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
     /**
      * @return The goal point with respect to the robot
      */
-    public Vector2f getRelativeGoalPoint()
+    public Vector getRelativeGoalPoint()
     { return relativeGoalPoint; }
 
     /**
@@ -377,6 +382,11 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
      */
     public float getRotVelocity()
     { return rotVelocity; }
+
+    public boolean isSuccessfullyFinished()
+    {
+        return isSuccessfullyFinished;
+    }
 
     /**
      * @return If the robot is finished traveling the path
@@ -393,7 +403,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
     /**
      * @return The absolute location of the goal point
      */
-    public Vector2f getAbsoluteGoalPoint()
+    public Vector getAbsoluteGoalPoint()
     { return absoluteGoalPoint; }
 
     /**
