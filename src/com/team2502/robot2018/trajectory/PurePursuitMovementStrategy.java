@@ -11,37 +11,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-/*
- * aaaa   xxxx
- * bbbb   yyyy
- * -----------
- *        zzzz
- *      C
- * cccc
- */
-
-/**
- * Why 64 bit arithmetic is slow on a 32 bit processor,
- * explained with 8 bit arithmetic on a 4 bit processor. <br><br>
- * <p>
- * aaaa &nbsp &nbsp xxxx<br>
- * bbbb &nbsp &nbsp yyyy<br>
- * -----------<br>
- * &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp zzzz<br>
- * &nbsp &nbsp &nbsp &nbsp &nbsp C<br>
- * cccc<br>
- * <br>
- * First you have to perform the mathematical operation
- * on the lower half of the bits (xyz), then you need
- * to take the carry (C) and pass it into the operation
- * of the upper half of the bits (abc).
- * <br><br>
- * This leaves you with 2 arithmetic operations, 2
- * memory accesses, and 2 memory saves.
- */
-@SuppressWarnings("unused")
 public class PurePursuitMovementStrategy implements ITankMovementStrategy
 {
+    /**
+     * This represents the threshold curvature beyond which it's basically a straight line.
+     */
     private static final float THRESHOLD_CURVATURE = 0.001F;
     public final List<Vector> waypoints;
     public final float lookAheadDistance;
@@ -68,6 +42,16 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
     private boolean isClose = false;
     private boolean isSuccessfullyFinished;
 
+    /**
+     * Strategize your movement!
+     *
+     * @param tankRobot An instance of ITanRobotBounds, an interface that has getters for robot max speed and accel.
+     * @param transEstimator An estimator for the absolute position of the robot
+     * @param rotEstimator An estimator for the heading of the robot
+     * @param waypoints A list of waypoints for the robot to drive through
+     * @param lookAheadDistance The lookahead distance for the pure pursuit algorithm
+     * @param distanceStop
+     */
     public PurePursuitMovementStrategy(ITankRobotBounds tankRobot, ITranslationalLocationEstimator transEstimator, IRotationalLocationEstimator rotEstimator, List<Vector> waypoints, float lookAheadDistance, float distanceStop)
     {
         this.waypoints = waypoints;
@@ -80,7 +64,9 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
     }
 
     /**
-     * @return The absolute location of the selected goal point
+     * @return The absolute location of the selected goal point.
+     * The goal point is a point on the path 1 lookahead distance away from us.
+     * We want to drive at it.
      */
     public Vector calculateAbsoluteGoalPoint()
     {
@@ -150,7 +136,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         }
 
 
-        // Finds i where ||\vec{toCompare} - \vec{intersections_i}|| is minimized
+        // Finds i where ||\vec{toCompare} - \vec{intersections_i}|| (the distance between the 2 vectors) is minimized
         int closestVectorI = bestGoalPoint(toCompare, intersections);
 
         // There is no closest vector ==> finish path
@@ -181,7 +167,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
     }
 
     /**
-     * Recalculates values
+     * Recalculates position, heading, and goalpoint.
      */
     public void update()
     {
@@ -246,18 +232,26 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         return usedEstimatedLocation.add(circleRelativeCenterRotated);
     }
 
+    /**
+     *
+     * @return The vector to drive along. first component = left speed, second component = right speed
+     * @throws NullPointerException only if it gets confused and doesn't know what vector to drive along
+     */
     private Vector calculateWheelVelocities() throws NullPointerException
     {
         float curvature = curvatureToGoal();
         Vector bestVector = null;
+
 
         float v_lMax = tankRobot.getV_lMax();
         float v_rMax = tankRobot.getV_rMax();
         float v_lMin = tankRobot.getV_lMin();
         float v_rMin = tankRobot.getV_rMin();
 
-        if(Math.abs(curvature) < THRESHOLD_CURVATURE)
+
+        if(Math.abs(curvature) < THRESHOLD_CURVATURE) // if we are a straight line ish (lines are not curvy -> low curvature)
         {
+
             bestVector = new Vector(v_lMax, v_rMax);
             rotVelocity = (bestVector.get(1)- bestVector.get(0)) / tankRobot.getLateralWheelDistance();
             pathRadius = Float.MAX_VALUE;
@@ -266,11 +260,11 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
             tangentialSpeed = leftWheelTanVel;
             dThetaToRotate = 0;
         }
-        else
+        else // if we need to go in a circle
         {
             float c = 2 / (tankRobot.getLateralWheelDistance() * curvature);
-            float velLeftToRightRatio = -(c + 1) / (1 - c);
-            float velRightToLeftRatio = 1 / velLeftToRightRatio;
+            float velLeftToRightRatio = -(c + 1) / (1 - c); // an equation pulled out of some paper probably
+            float velRightToLeftRatio = 1 / velLeftToRightRatio; // invert the ratio
 
             // This first big repetitive section is just finding the largest possible velocities while maintaining a ratio.
             float score = Float.MIN_VALUE;

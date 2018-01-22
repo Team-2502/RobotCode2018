@@ -5,7 +5,7 @@ import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.data.Vector;
 import com.team2502.robot2018.utils.MathUtils;
 
-import static com.team2502.robot2018.command.autonomous.PurePursuitCommand.RAW_UNIT_PER_ROT;
+import static com.team2502.robot2018.Constants.RAW_UNIT_PER_ROT;
 
 /**
  * WIP, do not use yet!!

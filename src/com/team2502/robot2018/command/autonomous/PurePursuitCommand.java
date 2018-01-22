@@ -20,13 +20,12 @@ import java.util.List;
 
 public class PurePursuitCommand extends Command
 {
-    public static final float RAW_UNIT_PER_ROT = 4096F;
     private final ITankRobotBounds tankRobot;
     private final EncoderDifferentialDriveLocationEstimator transLocEstimator;
     private final NavXLocationEstimator rotLocEstimator;
     private final SendableNavX sendableNavX;
     private final float stopDistance;
-    public float lookAheadDistance;
+    private float lookAheadDistance;
     private DriveTrainSubsystem driveTrain;
     private AHRS navx;
     private PurePursuitMovementStrategy purePursuitMovementStrategy;
@@ -37,6 +36,7 @@ public class PurePursuitCommand extends Command
     {
         navx = Robot.NAVX;
         navx.resetDisplacement();
+
         this.lookAheadDistance = lookAheadDistance;
         requires(Robot.DRIVE_TRAIN);
         driveTrain = Robot.DRIVE_TRAIN;

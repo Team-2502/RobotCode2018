@@ -59,4 +59,5 @@ public class Constants
     public static final double SHIFT_UP_THRESHOLD = RobotMap.UNDEFINED;
     @Undefined(safe = true)
     public static final double SHIFT_DOWN_THRESHOLD = RobotMap.UNDEFINED;
+    public static final float RAW_UNIT_PER_ROT = 4096F;
 }
