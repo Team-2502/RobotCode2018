@@ -132,26 +132,8 @@ public final class Robot extends IterativeRobot
         DRIVE_TRAIN.setAutonSettings();
 
         Scheduler.getInstance().add(new CalibrateRobotCommand());
-//        ArrayList<Vector> waypoints = new ArrayList<>();
-//
-//        waypoints.add(new Vector(0, 0));
-//        waypoints.add(new Vector(0, 10));
-//        waypoints.add(new Vector(10, 10));
-//        waypoints.add(new Vector(0, 0));
 
-//        ArrayList<Vector> rotatedWaypoints = new ArrayList<>();
 
-//        for(Vector waypoint : waypoints)
-//        {
-//            float theta = MathUtils.deg2Rad(30);
-//            Vector vec = MathUtils.LinearAlgebra.rotate2D(waypoint, theta);
-//
-////            System.out.printf("waypoint: %.2f,%.2f\n",vec.get(0),vec.get(1));
-//            //TODO: why does this not work?
-//            //System.out.println("waypoint: "+vec);
-//            rotatedWaypoints.add(vec);
-//
-//        }
 //        Scheduler.getInstance().add(new PurePursuitCommand(waypoints, Constants.LOOKAHEAD_DISTANCE_FT,Constants.STOP_DIST_TOLERANCE_FT ));
 
         // Scheduler.getInstance().add(AutoSwitcher.getAutoInstance());
