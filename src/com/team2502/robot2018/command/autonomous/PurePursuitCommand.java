@@ -32,6 +32,11 @@ public class PurePursuitCommand extends Command
     private long lastTime = -1;
     private float initAngleDegrees;
 
+    public PurePursuitCommand(List<Vector> waypoints)
+    {
+        this(waypoints, Constants.LOOKAHEAD_DISTANCE_FT,Constants.STOP_DIST_TOLERANCE_FT);
+    }
+
     public PurePursuitCommand(List<Vector> waypoints, float lookAheadDistance, float stopDistance)
     {
         navx = Robot.NAVX;
