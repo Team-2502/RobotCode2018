@@ -55,7 +55,7 @@ jar {
         attributes("branch": branch())
         attributes("commit": hash())
         attributes("version": version)
-        attributes("time": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"))
+        attributes("time": new Date().format("yyyy-MM-dd HH:mm:ss"))
         attributes("blame": System.getProperty("user.name"))
     }
 }
