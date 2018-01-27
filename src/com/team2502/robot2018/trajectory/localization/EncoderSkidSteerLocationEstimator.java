@@ -63,7 +63,7 @@ public class EncoderSkidSteerLocationEstimator implements ITranslationalLocation
                 leftVelNoSlide, rightVelNoSlide, Constants.LATERAL_WHEEL_DISTANCE_FT, dTime
                 , encHeading);
         Vector absLoc = location.add(absoluteDPos);
-            encHeading += angularVel * dTime;
+        encHeading += angularVel * dTime;
         return absLoc;
     }
 

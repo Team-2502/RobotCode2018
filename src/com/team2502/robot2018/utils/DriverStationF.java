@@ -88,6 +88,7 @@ public class DriverStationF implements RobotStateF.Interface
     private boolean m_userInTest = false;
     private ControlWord m_controlWordCache;
     private long m_lastControlWordUpdate;
+
     /**
      * DriverStation constructor.
      * <p>

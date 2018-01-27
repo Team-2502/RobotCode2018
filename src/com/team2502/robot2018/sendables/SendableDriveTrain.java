@@ -16,14 +16,14 @@ public class SendableDriveTrain implements Sendable, DashboardData.DashboardUpda
 {
 
     private static SendableDriveTrain instance = new SendableDriveTrain();
+    DoubleConsumer doNothing = (double value) -> {};
+    String name = "EncoderDriveTrain";
 
     private SendableDriveTrain() {}
 
     public static void init() {}
-    public static SendableDriveTrain getInstance() {return instance;}
 
-    DoubleConsumer doNothing = (double value) -> {};
-    String name = "EncoderDriveTrain";
+    public static SendableDriveTrain getInstance() {return instance;}
 
     @Override
     public String getName()

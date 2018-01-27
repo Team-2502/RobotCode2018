@@ -26,7 +26,8 @@ public class SendableNavX implements Sendable, DashboardData.DashboardUpdater
     /**
      * This class is a Singleton
      */
-    public SendableNavX(){
+    public SendableNavX()
+    {
         this.getAngle = () -> 180 + Robot.NAVX.getYaw();
         this.name = "Sendable NavX";
     }
@@ -36,7 +37,6 @@ public class SendableNavX implements Sendable, DashboardData.DashboardUpdater
         this.getAngle = getAngle;
         this.name = name;
     }
-
 
 
     /**
@@ -49,6 +49,7 @@ public class SendableNavX implements Sendable, DashboardData.DashboardUpdater
 
     /**
      * Grab the one and only instance of SendableNavX
+     *
      * @return the one and only instance of SendableNavX
      */
     public static SendableNavX getInstance() { return instance; }
@@ -88,6 +89,6 @@ public class SendableNavX implements Sendable, DashboardData.DashboardUpdater
     @Override
     public void updateDashboard()
     {
-        SmartDashboard.putData(name,this);
+        SmartDashboard.putData(name, this);
     }
 }

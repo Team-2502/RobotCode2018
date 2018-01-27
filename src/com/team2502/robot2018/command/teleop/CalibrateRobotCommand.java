@@ -29,7 +29,7 @@ public class CalibrateRobotCommand extends Command
     @Override
     protected void execute()
     {
-        if(SmartDashboard.getBoolean("calibration_enabled",false))
+        if(SmartDashboard.getBoolean("calibration_enabled", false))
         {
             velocity = Robot.CAL_VELOCITY;
             SmartDashboard.putNumber("enc_velocity", Robot.DRIVE_TRAIN.leftRearTalonEnc.getSelectedSensorVelocity(0));

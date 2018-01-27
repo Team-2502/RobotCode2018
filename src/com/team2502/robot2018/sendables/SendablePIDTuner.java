@@ -17,7 +17,7 @@ public class SendablePIDTuner implements Sendable, DashboardData.DashboardUpdate
 
     public SendablePIDTuner(Subsystem subsystem, PIDTunable pid_values)
     {
-        this.subsystem = subsystem.getName()+"Tuner";
+        this.subsystem = subsystem.getName() + "Tuner";
         this.pid_values = pid_values;
     }
 
@@ -60,6 +60,6 @@ public class SendablePIDTuner implements Sendable, DashboardData.DashboardUpdate
     public void updateDashboard()
     {
         // TODO: should this be name or subsystem? The subsystem will allow us to differentiate it.
-        SmartDashboard.putData(subsystem,this);
+        SmartDashboard.putData(subsystem, this);
     }
 }

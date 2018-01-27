@@ -5,21 +5,20 @@ package com.team2502.robot2018.sendables;
  */
 public interface PIDTunable
 {
-    void setkP(double kP);
-
-    void setkI(double kI);
-
-    void setkD(double kD);
-
-    void setkF(double kF);
-
-
     double getkP();
+
+    void setkP(double kP);
 
     double getkI();
 
+    void setkI(double kI);
+
     double getkD();
 
+    void setkD(double kD);
+
     double getkF();
+
+    void setkF(double kF);
 
 }

@@ -45,10 +45,10 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
     /**
      * Strategize your movement!
      *
-     * @param tankRobot An instance of ITanRobotBounds, an interface that has getters for robot max speed and accel.
-     * @param transEstimator An estimator for the absolute position of the robot
-     * @param rotEstimator An estimator for the heading of the robot
-     * @param waypoints A list of waypoints for the robot to drive through
+     * @param tankRobot         An instance of ITanRobotBounds, an interface that has getters for robot max speed and accel.
+     * @param transEstimator    An estimator for the absolute position of the robot
+     * @param rotEstimator      An estimator for the heading of the robot
+     * @param waypoints         A list of waypoints for the robot to drive through
      * @param lookAheadDistance The lookahead distance for the pure pursuit algorithm
      * @param distanceStop
      */
@@ -94,7 +94,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
             // when the distance from the last waypoint < LOOK_AHEAD_DISTANCE. However, we prevent this
             // by setting the last waypoint as a goal point when this happens.
             // TODO: test this to see if the robot is jerky near the end
-            if(i+2 == waypoints.size())
+            if(i + 2 == waypoints.size())
             {
                 float distanceWaypointSq = lineP2.subtractBy(usedEstimatedLocation).getMagnitudeSquared();
                 if(distanceWaypointSq <= lookAheadDistanceSquared)
@@ -102,7 +102,8 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
 //                    System.out.println("is close to: "+lineP2);
                     isClose = true;
                     // We want to stop if the distance is within the desired amount
-                    if(distanceWaypointSq < distanceStopSq){
+                    if(distanceWaypointSq < distanceStopSq)
+                    {
                         isSuccessfullyFinished = true;
 //                        System.out.println("is finished w/: "+lineP2);
                         finishedPath = true;
@@ -143,7 +144,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         if(closestVectorI == -1)
         {
             Log.info("closest vector not found!");
-            System.out.printf("loc: %.2f, %.2f",usedEstimatedLocation.get(0),usedEstimatedLocation.get(1));
+            System.out.printf("loc: %.2f, %.2f", usedEstimatedLocation.get(0), usedEstimatedLocation.get(1));
             finishedPath = true;
             return null;
         }
@@ -158,7 +159,6 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
     }
 
     /**
-     *
      * @return true If the robot is close (within lookahead distance) of the last waypoint.
      */
     public boolean isClose()
@@ -233,7 +233,6 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
     }
 
     /**
-     *
      * @return The vector to drive along. first component = left speed, second component = right speed
      * @throws NullPointerException only if it gets confused and doesn't know what vector to drive along
      */
@@ -253,7 +252,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         {
 
             bestVector = new Vector(v_lMax, v_rMax);
-            rotVelocity = (bestVector.get(1)- bestVector.get(0)) / tankRobot.getLateralWheelDistance();
+            rotVelocity = (bestVector.get(1) - bestVector.get(0)) / tankRobot.getLateralWheelDistance();
             pathRadius = Float.MAX_VALUE;
             leftWheelTanVel = bestVector.get(0);
             rightWheelTanVel = bestVector.get(1);

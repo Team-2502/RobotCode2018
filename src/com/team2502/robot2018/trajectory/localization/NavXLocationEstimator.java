@@ -10,7 +10,8 @@ public class NavXLocationEstimator implements IRotationalLocationEstimator, ITra
     float initHeading;
     Vector initPosition;
 
-    public NavXLocationEstimator(){
+    public NavXLocationEstimator()
+    {
         initHeading = estimateHeading();
         initPosition = estimateLocation();
     }
@@ -23,7 +24,8 @@ public class NavXLocationEstimator implements IRotationalLocationEstimator, ITra
         return navXToRad(yawDeg);
     }
 
-    float navXToRad(float yawDeg){
+    float navXToRad(float yawDeg)
+    {
         if(yawDeg < 0)
         {
             yawDeg = 360 + yawDeg;
@@ -32,12 +34,12 @@ public class NavXLocationEstimator implements IRotationalLocationEstimator, ITra
     }
 
     /**
-     * @deprecated bad! Accurate to 1m
      * @return
+     * @deprecated bad! Accurate to 1m
      */
     @Override
     public Vector estimateLocation()
     {
-        return new Vector(Robot.NAVX.getDisplacementX(),Robot.NAVX.getDisplacementY());
+        return new Vector(Robot.NAVX.getDisplacementX(), Robot.NAVX.getDisplacementY());
     }
 }

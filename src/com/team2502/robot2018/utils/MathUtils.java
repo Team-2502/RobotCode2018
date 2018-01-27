@@ -379,7 +379,7 @@ public final class MathUtils
             float sin = sin(theta);
             float cos = cos(theta);
             return new Vector((vector.get(0) * cos - vector.get(1) * sin),
-                                (vector.get(0) * sin + vector.get(1) * cos));
+                              (vector.get(0) * sin + vector.get(1) * cos));
         }
 
 

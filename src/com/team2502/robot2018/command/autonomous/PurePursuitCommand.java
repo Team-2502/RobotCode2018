@@ -7,9 +7,9 @@ import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.data.Vector;
 import com.team2502.robot2018.sendables.SendableNavX;
 import com.team2502.robot2018.subsystem.DriveTrainSubsystem;
-import com.team2502.robot2018.trajectory.localization.EncoderDifferentialDriveLocationEstimator;
 import com.team2502.robot2018.trajectory.ITankRobotBounds;
 import com.team2502.robot2018.trajectory.PurePursuitMovementStrategy;
+import com.team2502.robot2018.trajectory.localization.EncoderDifferentialDriveLocationEstimator;
 import com.team2502.robot2018.trajectory.localization.NavXLocationEstimator;
 import com.team2502.robot2018.utils.MathUtils;
 import edu.wpi.first.wpilibj.command.Command;
@@ -34,7 +34,7 @@ public class PurePursuitCommand extends Command
 
     public PurePursuitCommand(List<Vector> waypoints)
     {
-        this(waypoints, Constants.LOOKAHEAD_DISTANCE_FT,Constants.STOP_DIST_TOLERANCE_FT);
+        this(waypoints, Constants.LOOKAHEAD_DISTANCE_FT, Constants.STOP_DIST_TOLERANCE_FT);
     }
 
     public PurePursuitCommand(List<Vector> waypoints, float lookAheadDistance, float stopDistance)
@@ -119,7 +119,7 @@ public class PurePursuitCommand extends Command
 
         sendableNavX.updateDashboard();
 
-        SmartDashboard.putNumber("purePursuitHeadingRad",purePursuitMovementStrategy.getUsedHeading());
+        SmartDashboard.putNumber("purePursuitHeadingRad", purePursuitMovementStrategy.getUsedHeading());
 
         Vector usedEstimatedLocation = purePursuitMovementStrategy.getUsedEstimatedLocation();
 
@@ -131,8 +131,8 @@ public class PurePursuitCommand extends Command
         float wheelL = wheelVelocities.get(0);
         float wheelR = wheelVelocities.get(1);
 
-        SmartDashboard.putNumber("PPwheelL",wheelVelocities.get(0));
-        SmartDashboard.putNumber("PPwheelR",wheelVelocities.get(1));
+        SmartDashboard.putNumber("PPwheelL", wheelVelocities.get(0));
+        SmartDashboard.putNumber("PPwheelR", wheelVelocities.get(1));
 
         Vector relativeGoalPoint = purePursuitMovementStrategy.getRelativeGoalPoint();
         if(relativeGoalPoint != null)

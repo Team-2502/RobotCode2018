@@ -54,6 +54,7 @@ public abstract class GenericHIDF
     private int m_outputs;
     private short m_leftRumble;
     private short m_rightRumble;
+
     public GenericHIDF(int port)
     {
         m_ds = DriverStationF.INSTANCE;

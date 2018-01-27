@@ -14,7 +14,6 @@ import com.team2502.robot2018.utils.SpeedControllerGroupF;
 import com.team2502.robot2018.utils.WPI_TalonSRXF;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import logger.Log;
 
 /**
  * Example Implementation, Many changes needed.
@@ -32,15 +31,14 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     public final SpeedControllerGroupF spgRight;
 
     private final SendablePIDTuner pidTuner;
-
-    private float lastLeft;
-    private float lastRight;
-    private boolean isNegativePressed;
-    private boolean negative;
     double kP;
     double kI;
     double kD;
     double kF;
+    private float lastLeft;
+    private float lastRight;
+    private boolean isNegativePressed;
+    private boolean negative;
 
     public DriveTrainSubsystem()
     {
@@ -119,6 +117,7 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     /**
      * Sets the PID for left AND right motors. If the descriptions below confuse you, go look up a better
      * explanation of PID.
+     *
      * @param kP Proportional constant. Makes the motor go faster proportional to the error.
      * @param kI Integral constant. Makes the motor go faster proportional to the integral of the error.
      * @param kD Derivative constant. Makes the motor go faster proportional to the derivative of the error.
@@ -141,9 +140,10 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     /**
      * Sets the PID for left AND right motors. If the descriptions below confuse you, go look up a better
      * explanation of PID.
-     * @param kP Proportional constant. Makes the motor go faster proportional to the error.
-     * @param kI Integral constant. Makes the motor go faster proportional to the integral of the error
-     * @param kD Derivative constant. Makes the motor go faster proportional to the derivative of the error
+     *
+     * @param kP    Proportional constant. Makes the motor go faster proportional to the error.
+     * @param kI    Integral constant. Makes the motor go faster proportional to the integral of the error
+     * @param kD    Derivative constant. Makes the motor go faster proportional to the derivative of the error
      * @param iZone Integral Zone. If the integral of the error is bigger than this, the integral is reset to 0.
      */
     public void setPID(double kP, double kI, double kD, int iZone)
@@ -299,7 +299,59 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         pidTuner.updateDashboard();
     }
 
+    @Override
+    public double getkP()
+    {
+        return kP;
+    }
 
+    @Override
+    public void setkP(double kP)
+    {
+        this.kP = kP;
+        setPID(this.kP, kI, kD);
+
+    }
+
+    @Override
+    public double getkI()
+    {
+        return kI;
+    }
+
+    @Override
+    public void setkI(double kI)
+    {
+        this.kI = kI;
+        setPID(kP, this.kI, kD);
+    }
+
+    @Override
+    public double getkD()
+    {
+        return kD;
+    }
+
+    @Override
+    public void setkD(double kD)
+    {
+        this.kD = kD;
+        setPID(kP, kI, this.kD);
+    }
+
+    @Override
+    public double getkF()
+    {
+        return kF;
+    }
+
+    @Override
+    public void setkF(double kF)
+    {
+        this.kF = kF;
+        leftRearTalonEnc.config_kF(0, kF, Constants.INIT_TIMEOUT);
+        rightRearTalonEnc.config_kF(0, kF, Constants.INIT_TIMEOUT);
+    }
 
     /**
      * A generic data structure to store a pair of objects.
@@ -441,59 +493,5 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
             }
             return false;
         }
-    }
-
-    @Override
-    public void setkP(double kP)
-    {
-        this.kP = kP;
-        setPID(this.kP, kI, kD);
-
-    }
-
-    @Override
-    public void setkI(double kI)
-    {
-        this.kI = kI;
-        setPID(kP, this.kI, kD);
-    }
-
-    @Override
-    public void setkD(double kD)
-    {
-        this.kD = kD;
-        setPID(kP, kI, this.kD);
-    }
-
-    @Override
-    public void setkF(double kF)
-    {
-        this.kF = kF;
-        leftRearTalonEnc.config_kF(0, kF, Constants.INIT_TIMEOUT);
-        rightRearTalonEnc.config_kF(0, kF, Constants.INIT_TIMEOUT);
-    }
-
-    @Override
-    public double getkP()
-    {
-        return kP;
-    }
-
-    @Override
-    public double getkI()
-    {
-        return kI;
-    }
-
-    @Override
-    public double getkD()
-    {
-        return kD;
-    }
-
-    @Override
-    public double getkF()
-    {
-        return kF;
     }
 }

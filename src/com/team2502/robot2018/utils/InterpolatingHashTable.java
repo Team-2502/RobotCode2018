@@ -2,7 +2,10 @@ package com.team2502.robot2018.utils;
 
 import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Set;
 
 //TODO: Single precision floats
 
@@ -46,7 +49,8 @@ public class InterpolatingHashTable
 
     /**
      * Add a pair that you know is correct
-     * @param key The "x" value that you put in
+     *
+     * @param key   The "x" value that you put in
      * @param value The "f(x)" value that you got out
      */
     public void put(Number key, Number value)
@@ -56,6 +60,7 @@ public class InterpolatingHashTable
 
     /**
      * Use linear regression to estimate what your "f(x)" will give when evaluated at the number `key`
+     *
      * @param key The number to evaluate "f(x)" at
      * @return The estimated value of "f(key)"
      */
@@ -89,11 +94,11 @@ public class InterpolatingHashTable
             i++;
         }
 
-        if (upperBound == null) // i.e all the keys are smaller
+        if(upperBound == null) // i.e all the keys are smaller
         {
             return table.get(keys.get(keys.size() - 1)).doubleValue(); // get the f(x) for the biggest x. we can't do real interpolation
         }
-        else if (lowerBound == null) // i.e all the keys are bigger
+        else if(lowerBound == null) // i.e all the keys are bigger
         {
             return table.get(keys.get(0)).doubleValue(); // get the f(x) for the smallest x. we can't do real interpolation.
         }
@@ -102,7 +107,7 @@ public class InterpolatingHashTable
             double dx = upperBound.doubleValue() - lowerBound.doubleValue();
             double dy = table.get(upperBound).doubleValue() - table.get(lowerBound).doubleValue();
 
-            double slope = dy/dx; // remember? rise over run. change in y over change in x.
+            double slope = dy / dx; // remember? rise over run. change in y over change in x.
 
             // the following equation comes from the point slope form of a line
             // reminder: it's y - y1 = m (x - x1)

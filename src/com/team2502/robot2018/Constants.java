@@ -34,7 +34,7 @@ public class Constants
     public static final float WHEEL_ROLLING_RADIUS_FT = WHEEL_ROLLING_RADIUS_INCH * 1.5F / 12F;
 
     // The distance between wheels (laterally) in feet. Measure from the centerpoints of the wheels.
-    public static final float LATERAL_WHEEL_DISTANCE_FT = 23.25F / 12F*10F;
+    public static final float LATERAL_WHEEL_DISTANCE_FT = 23.25F / 12F * 10F;
 
     public static final float MAX_FPS_SPEED = 18.0F;
 
@@ -47,8 +47,8 @@ public class Constants
     public static final float RPM_TO_FPS = (WHEEL_DIAMETER_FT * (float) Math.PI) / 60F;
     public static final float EVEL_TO_FPS = EVEL_TO_RPM * RPM_TO_FPS;
 
-    public static final float FPS_TO_RPM = 60F/(WHEEL_DIAMETER_FT * (float) Math.PI);
-    public static final float RPM_TO_EVEL = ENC_RES/600F;
+    public static final float FPS_TO_RPM = 60F / (WHEEL_DIAMETER_FT * (float) Math.PI);
+    public static final float RPM_TO_EVEL = ENC_RES / 600F;
     public static final float FPS_TO_EVEL = FPS_TO_RPM * RPM_TO_EVEL;
 
 

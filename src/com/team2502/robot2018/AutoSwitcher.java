@@ -17,6 +17,7 @@ class AutoSwitcher
 {
     private static SendableChooser<AutoMode> autoChooser;
     private static ArrayList<Vector> waypoints;
+
     static
     {
 
