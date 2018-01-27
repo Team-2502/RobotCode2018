@@ -20,13 +20,11 @@ class AutoSwitcher
 
     static
     {
-
         waypoints = new ArrayList<>();
         waypoints.add(new Vector(0, 0));
         waypoints.add(new Vector(0, 10));
         waypoints.add(new Vector(10, 10));
         waypoints.add(new Vector(0, 0));
-
     }
 
     static void putToSmartDashboard()

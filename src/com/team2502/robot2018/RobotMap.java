@@ -27,7 +27,6 @@ public class RobotMap
 
         public static final class Button
         {
-
             public static final int FORCE_LOW_GEAR = 1;
             @Undefined(safe = true)
             public static final int INVERSE_DRIVER_CONTROLS = UNDEFINED;
@@ -60,7 +59,6 @@ public class RobotMap
     public class Solenoid
     {
         public static final int TRANSMISSION_SWITCH = 0;
-
 
         private Solenoid() { }
     }
