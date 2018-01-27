@@ -28,7 +28,7 @@ public final class Robot extends IterativeRobot
     public static long SHIFTED;
     public static Compressor COMPRESSOR;
 
-    public static String GAME_DATA;
+    public static String GAME_DATA="    ";
 
     public static PrintWriter LOG_OUTPUT;
     // NavX Subsystem
@@ -107,6 +107,10 @@ public final class Robot extends IterativeRobot
         Scheduler.getInstance().run();
         DashboardData.update();
         GAME_DATA = DriverStation.getInstance().getGameSpecificMessage();
+        if(GAME_DATA == null)
+        {
+            GAME_DATA = "___";
+        }
     }
 
     /**
