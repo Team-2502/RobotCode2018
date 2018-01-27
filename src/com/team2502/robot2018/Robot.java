@@ -75,7 +75,6 @@ public final class Robot extends IterativeRobot
         DashboardData.addUpdater(SendableDriveTrain.getInstance());
         DashboardData.addUpdater(SendableNavX.getInstance());
 
-
         SmartDashboard.putBoolean("calibration_enabled", false);
         SmartDashboard.putNumber("calibration_velocity", 0);
 
@@ -88,8 +87,7 @@ public final class Robot extends IterativeRobot
 
         NAVX.resetDisplacement();
         // DashboardData.addUpdater(DRIVE_TRAIN);
-
-
+        DashboardData.versioning();
     }
 
     /**
@@ -127,11 +125,9 @@ public final class Robot extends IterativeRobot
         DRIVE_TRAIN.setAutonSettings();
 
         Scheduler.getInstance().add(new CalibrateRobotCommand());
+        //Scheduler.getInstance().add(new PurePursuitCommand(waypoints, Constants.LOOKAHEAD_DISTANCE_FT,Constants.STOP_DIST_TOLERANCE_FT ));
+        //Scheduler.getInstance().add(AutoSwitcher.getAutoInstance());
 
-
-//        Scheduler.getInstance().add(new PurePursuitCommand(waypoints, Constants.LOOKAHEAD_DISTANCE_FT,Constants.STOP_DIST_TOLERANCE_FT ));
-
-        // Scheduler.getInstance().add(AutoSwitcher.getAutoInstance());
         NAVX.reset();
     }
 
@@ -166,5 +162,4 @@ public final class Robot extends IterativeRobot
         LiveWindow.run();
         DashboardData.update();
     }
-
 }
