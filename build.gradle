@@ -26,7 +26,7 @@ dependencies {
     compile navx()
     compile "com.team2502.ctannotationprocessor:CTAnnotationProcessor:1.0"
     apt     "com.team2502.ctannotationprocessor:CTAnnotationProcessor:1.0"
-    compile "org.joml:joml:1.9.8-SNAPSHOT"
+    compile "org.joml:joml:1.9.9:beta0"
     compile group: 'org.apache.commons', name: 'commons-math3', version: '3.6.1'
 }
 

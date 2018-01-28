@@ -12,6 +12,7 @@ import com.team2502.robot2018.trajectory.localization.EncoderDifferentialDriveLo
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import logger.Log;
+import org.joml.ImmutableVector2f;
 import org.joml.Vector2f;
 
 /**
@@ -30,13 +31,13 @@ public class DriveCommand extends Command
 {
     private final DriveTrainSubsystem driveTrainSubsystem;
     private final TransmissionSubsystem transmission;
-    private final Vector estimatedLocation = new Vector(0, 0);
+    private final ImmutableVector2f estimatedLocation = new ImmutableVector2f(0, 0);
     public float heading = 0;
     private AHRS navx;
     private long lastTime = -1;
     private float initAngleDegrees;
     private EncoderDifferentialDriveLocationEstimator encoderLocationEstimator;
-    private Vector lastEstimatedLocation = new Vector();
+    private ImmutableVector2f lastEstimatedLocation = new ImmutableVector2f();
 
     public DriveCommand()
     {
@@ -76,7 +77,7 @@ public class DriveCommand extends Command
     @Override
     protected void execute()
     {
-        Vector estimateLocation = encoderLocationEstimator.estimateLocation();
+        ImmutableVector2f estimateLocation = encoderLocationEstimator.estimateLocation();
         SmartDashboard.putBoolean("DT: AutoShifting Enabled?", !transmission.disabledAutoShifting);
         driveTrainSubsystem.drive();
 

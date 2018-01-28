@@ -15,6 +15,7 @@ import com.team2502.robot2018.utils.MathUtils;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import logger.Log;
+import org.joml.ImmutableVector2f;
 
 import java.util.List;
 
@@ -32,12 +33,12 @@ public class PurePursuitCommand extends Command
     private long lastTime = -1;
     private float initAngleDegrees;
 
-    public PurePursuitCommand(List<Vector> waypoints)
+    public PurePursuitCommand(List<ImmutableVector2f> waypoints)
     {
         this(waypoints, Constants.LOOKAHEAD_DISTANCE_FT, Constants.STOP_DIST_TOLERANCE_FT);
     }
 
-    public PurePursuitCommand(List<Vector> waypoints, float lookAheadDistance, float stopDistance)
+    public PurePursuitCommand(List<ImmutableVector2f> waypoints, float lookAheadDistance, float stopDistance)
     {
         navx = Robot.NAVX;
         navx.resetDisplacement();
@@ -121,12 +122,12 @@ public class PurePursuitCommand extends Command
 
         SmartDashboard.putNumber("purePursuitHeadingRad", purePursuitMovementStrategy.getUsedHeading());
 
-        Vector usedEstimatedLocation = purePursuitMovementStrategy.getUsedEstimatedLocation();
+        ImmutableVector2f usedEstimatedLocation = purePursuitMovementStrategy.getUsedEstimatedLocation();
 
         SmartDashboard.putNumber("purePursuitLocX", usedEstimatedLocation.get(0));
         SmartDashboard.putNumber("purePursuitLocY", usedEstimatedLocation.get(1));
 
-        Vector wheelVelocities = purePursuitMovementStrategy.getWheelVelocities();
+        ImmutableVector2f wheelVelocities = purePursuitMovementStrategy.getWheelVelocities();
 
         float wheelL = wheelVelocities.get(0);
         float wheelR = wheelVelocities.get(1);
@@ -134,14 +135,14 @@ public class PurePursuitCommand extends Command
         SmartDashboard.putNumber("PPwheelL", wheelVelocities.get(0));
         SmartDashboard.putNumber("PPwheelR", wheelVelocities.get(1));
 
-        Vector relativeGoalPoint = purePursuitMovementStrategy.getRelativeGoalPoint();
+        ImmutableVector2f relativeGoalPoint = purePursuitMovementStrategy.getRelativeGoalPoint();
         if(relativeGoalPoint != null)
         {
             SmartDashboard.putNumber("rGPx", relativeGoalPoint.get(0));
             SmartDashboard.putNumber("rGPy", relativeGoalPoint.get(1));
         }
 
-        Vector absGP = purePursuitMovementStrategy.getAbsoluteGoalPoint();
+        ImmutableVector2f absGP = purePursuitMovementStrategy.getAbsoluteGoalPoint();
         if(absGP != null)
         {
             SmartDashboard.putNumber("GPx", absGP.get(0));

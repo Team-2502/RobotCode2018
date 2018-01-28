@@ -3,6 +3,7 @@ package com.team2502.robot2018.utils;
 
 import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.data.Vector;
+import org.joml.ImmutableVector2f;
 
 @SuppressWarnings("unused")
 public final class MathUtils
@@ -50,7 +51,7 @@ public final class MathUtils
     public static float cos(final float value)
     { return SIN_TABLE[(int) (value * 10430.378F + 16384.0F) & 65535]; }
 
-    public static boolean between(final Vector a, final Vector x, final Vector c)
+    public static boolean between(final ImmutableVector2f a, final ImmutableVector2f x, final ImmutableVector2f c)
     {
         return Algebra.between(a.get(0), x.get(0), c.get(0)) && Algebra.between(a.get(1), x.get(1), c.get(1));
     }
@@ -374,17 +375,16 @@ public final class MathUtils
 
     public static class LinearAlgebra
     {
-        public static Vector rotate2D(Vector vector, float theta)
+        public static ImmutableVector2f rotate2D(ImmutableVector2f vector, float theta)
         {
             float sin = sin(theta);
             float cos = cos(theta);
-            return new Vector((vector.get(0) * cos - vector.get(1) * sin),
-                              (vector.get(0) * sin + vector.get(1) * cos));
+            return new ImmutableVector2f((vector.get(0) * cos - vector.get(1) * sin),
+                                         (vector.get(0) * sin + vector.get(1) * cos));
         }
 
-
-        public static Vector absoluteToRelativeCoord(Vector relativeCoord, Vector absoluteLocation, float robotHeading)
-        { return rotate2D(relativeCoord.subtractBy(absoluteLocation), -robotHeading); }
+        public static ImmutableVector2f absoluteToRelativeCoord(ImmutableVector2f relativeCoord, ImmutableVector2f absoluteLocation, float robotHeading)
+        { return rotate2D(relativeCoord.sub(absoluteLocation), -robotHeading); }
     }
 
     public static class Algebra
@@ -415,13 +415,13 @@ public final class MathUtils
             return (l * (vR + vL)) / (2 * (vR - vL));
         }
 
-        public static Vector getRelativeDPos(float vL, float vR, float l, float dt)
+        public static ImmutableVector2f getRelativeDPos(float vL, float vR, float l, float dt)
         {
             // To account for an infinite trajectory radius when going straight
             if(Math.abs(vL - vR) <= (vL + vR) * 1E-2)
             {
                 // Probably average is not needed, but it may be useful over long distances
-                return new Vector(0, (vL + vR) / 2F * dt);
+                return new ImmutableVector2f(0, (vL + vR) / 2F * dt);
             }
             float w = getAngularVel(vL, vR, l);
             float dTheta = w * dt;
@@ -431,7 +431,7 @@ public final class MathUtils
             float dxRelative = -r * (1 - MathUtils.cos(-dTheta));
             float dyRelative = -r * MathUtils.sin(-dTheta);
 
-            return new Vector(dxRelative, dyRelative);
+            return new ImmutableVector2f(dxRelative, dyRelative);
         }
 
         /**
@@ -445,10 +445,10 @@ public final class MathUtils
             return heading;
         }
 
-        public static Vector getAbsoluteDPos(float vL, float vR, float l, float dt, float robotHeading)
+        public static ImmutableVector2f getAbsoluteDPos(float vL, float vR, float l, float dt, float robotHeading)
         {
-            Vector relativeDPos = getRelativeDPos(vL, vR, l, dt);
-            Vector rotated = MathUtils.LinearAlgebra.rotate2D(relativeDPos, robotHeading);
+            ImmutableVector2f relativeDPos = getRelativeDPos(vL, vR, l, dt);
+            ImmutableVector2f rotated = MathUtils.LinearAlgebra.rotate2D(relativeDPos, robotHeading);
             return rotated;
         }
     }
@@ -471,7 +471,7 @@ public final class MathUtils
             return (float) radBounded;
         }
 
-        public static Vector[] getCircleLineIntersectionPoint(Vector pointA, Vector pointB, Vector center, double radius)
+        public static ImmutableVector2f[] getCircleLineIntersectionPoint(ImmutableVector2f pointA, ImmutableVector2f pointB, ImmutableVector2f center, double radius)
         {
             float baX = pointB.get(0) - pointA.get(0);
             float baY = pointB.get(1) - pointA.get(1);
@@ -487,20 +487,20 @@ public final class MathUtils
             double q = c / a;
 
             double disc = pBy2 * pBy2 - q;
-            if(disc < 0) { return new Vector[0]; }
+            if(disc < 0) { return new ImmutableVector2f[0]; }
             // if disc == 0 ... dealt with later
             float tmpSqrt = (float) Math.sqrt(disc);
             float abScalingFactor1 = tmpSqrt - pBy2;
 
-            Vector p1 = new Vector(pointA.get(0) - baX * abScalingFactor1, pointA.get(1) - baY * abScalingFactor1);
-            if(disc == 0) { return new Vector[] { p1 }; }
+            ImmutableVector2f p1 = new ImmutableVector2f(pointA.get(0) - baX * abScalingFactor1, pointA.get(1) - baY * abScalingFactor1);
+            if(disc == 0) { return new ImmutableVector2f[] { p1 }; }
 
             float abScalingFactor2 = -pBy2 - tmpSqrt;
-            Vector p2 = new Vector(pointA.get(0) - baX * abScalingFactor2, pointA.get(1) - baY * abScalingFactor2);
-            return new Vector[] { p1, p2 };
+            ImmutableVector2f p2 = new ImmutableVector2f(pointA.get(0) - baX * abScalingFactor2, pointA.get(1) - baY * abScalingFactor2);
+            return new ImmutableVector2f[] { p1, p2 };
         }
 
-        public static Vector[] circleLineIntersect(Vector lineP1, Vector lineP2, Vector circleCenter, float circleRadius)
+        public static ImmutableVector2f[] circleLineIntersect(ImmutableVector2f lineP1, ImmutableVector2f lineP2, ImmutableVector2f circleCenter, float circleRadius)
         {
             // Circle-line intersection
             float x_0 = lineP1.get(0), y_0 = lineP1.get(1);
@@ -518,26 +518,26 @@ public final class MathUtils
             float fg2 = f * f + g * g;
 
             float inRoot = (circleRadius * circleRadius + fg2 - pow2f(f * yc0 - g * xc0));
-            if(inRoot < 0) { return new Vector[0]; }
+            if(inRoot < 0) { return new ImmutableVector2f[0]; }
             if(inRoot == 0)
             {
                 float intersectT = t / fg2;
-                Vector intersection = new Vector(intersectT * f, intersectT * g);
-                if(between(lineP1, intersection, lineP2)) { return new Vector[] { intersection }; }
-                else { return new Vector[0]; }
+                ImmutableVector2f intersection = new ImmutableVector2f(intersectT * f, intersectT * g);
+                if(between(lineP1, intersection, lineP2)) { return new ImmutableVector2f[] { intersection }; }
+                else { return new ImmutableVector2f[0]; }
             }
             float pm = (float) Math.sqrt(inRoot);
             float intersectT1 = (t + pm) / fg2;
             float intersectT2 = (t - pm) / fg2;
-            Vector intersect1 = new Vector(intersectT1 * f + x_0, intersectT1 * g + y_0);
-            Vector intersect2 = new Vector(intersectT2 * f + x_0, intersectT2 * g + y_0);
+            ImmutableVector2f intersect1 = new ImmutableVector2f(intersectT1 * f + x_0, intersectT1 * g + y_0);
+            ImmutableVector2f intersect2 = new ImmutableVector2f(intersectT2 * f + x_0, intersectT2 * g + y_0);
             if(between(lineP1, intersect1, lineP2))
             {
-                if(between(lineP1, intersect2, lineP2)) { return new Vector[] { intersect1, intersect2 }; }
-                else { return new Vector[] { intersect1 }; }
+                if(between(lineP1, intersect2, lineP2)) { return new ImmutableVector2f[] { intersect1, intersect2 }; }
+                else { return new ImmutableVector2f[] { intersect1 }; }
             }
-            else if(between(lineP1, intersect2, lineP2)) { return new Vector[] { intersect2 }; }
-            return new Vector[0];
+            else if(between(lineP1, intersect2, lineP2)) { return new ImmutableVector2f[] { intersect2 }; }
+            return new ImmutableVector2f[0];
         }
     }
 }

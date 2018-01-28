@@ -10,21 +10,22 @@ import com.team2502.robot2018.data.Vector;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import org.joml.ImmutableVector2f;
 
 import java.util.ArrayList;
 
 class AutoSwitcher
 {
     private static SendableChooser<AutoMode> autoChooser;
-    private static ArrayList<Vector> waypoints;
+    private static ArrayList<ImmutableVector2f> waypoints;
 
     static
     {
         waypoints = new ArrayList<>();
-        waypoints.add(new Vector(0, 0));
-        waypoints.add(new Vector(0, 10));
-        waypoints.add(new Vector(10, 10));
-        waypoints.add(new Vector(0, 0));
+        waypoints.add(new ImmutableVector2f(0.0F, 0.0F));
+        waypoints.add(new ImmutableVector2f(0.0F, 10.0F));
+        waypoints.add(new ImmutableVector2f(10.0F, 10.0F));
+        waypoints.add(new ImmutableVector2f(0.0F, 0.0F));
     }
 
     static void putToSmartDashboard()

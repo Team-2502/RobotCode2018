@@ -4,9 +4,9 @@ import com.team2502.robot2018.utils.MathUtils;
 
 import java.util.Arrays;
 
+@Deprecated
 public class Vector
 {
-
     private final float[] x;
 
     public Vector(float... x)
