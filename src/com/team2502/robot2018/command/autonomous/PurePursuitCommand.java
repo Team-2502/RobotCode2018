@@ -58,12 +58,24 @@ public class PurePursuitCommand extends Command
             public float getV_rMax()
             { return Constants.VR_MAX; }
 
+            @Override
+            public float getA_rMax()
+            {
+                return Constants.AR_MAX;
+            }
+
             /**
              * @return The max velocity the left wheels can travel
              */
             @Override
             public float getV_lMax()
             { return Constants.VL_MAX; }
+
+            @Override
+            public float getA_lMax()
+            {
+                return Constants.AL_MAX;
+            }
 
             /**
              * @return The min velocity the left wheels can travel
@@ -72,12 +84,24 @@ public class PurePursuitCommand extends Command
             public float getV_lMin()
             { return Constants.VL_MIN; }
 
+            @Override
+            public float getA_lMin()
+            {
+                return Constants.AL_MIN;
+            }
+
             /**
              * @return The min velocity the right wheels can travel
              */
             @Override
             public float getV_rMin()
             { return Constants.VR_MIN; }
+
+            @Override
+            public float getA_rMin()
+            {
+                return Constants.AR_MIN;
+            }
 
             /**
              * @return The lateral distance between wheels
