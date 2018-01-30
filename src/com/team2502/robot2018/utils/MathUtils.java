@@ -22,6 +22,8 @@ public final class MathUtils
 
     public static final float PI_F = (float) Math.PI;
 
+    public static final ImmutableVector2f VECTOR_STRAIGHT = new ImmutableVector2f(0,1);
+
     /**
      * A table of sin values computed from 0 (inclusive) to 2π (exclusive), with steps of 2π / 65536.
      */
@@ -469,6 +471,10 @@ public final class MathUtils
 //            System.out.println("\nNAVX: " + finalDegrees + "\nNAVXD: " + degDif + "\nRadians: " + radians + "\nRadBounded: " + radBounded + "\n");
             if(radBounded < 0) { return (float) (TAU + radBounded); }
             return (float) radBounded;
+        }
+
+        public static ImmutableVector2f getVector(float speed, float angle){
+            return MathUtils.LinearAlgebra.rotate2D(VECTOR_STRAIGHT,angle);
         }
 
         public static ImmutableVector2f[] getCircleLineIntersectionPoint(ImmutableVector2f pointA, ImmutableVector2f pointB, ImmutableVector2f center, double radius)

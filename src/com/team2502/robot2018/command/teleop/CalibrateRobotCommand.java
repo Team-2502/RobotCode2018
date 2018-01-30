@@ -17,8 +17,8 @@ public class CalibrateRobotCommand extends Command
     {
         System.out.println("initialized");
         // We are blocking the right wheels
-        Robot.DRIVE_TRAIN.rightRearTalonEnc.set(ControlMode.Disabled, 0.0F);
-        Robot.DRIVE_TRAIN.rightFrontTalon.set(ControlMode.Disabled, 0.0F);
+//        Robot.DRIVE_TRAIN.rightRearTalonEnc.set(ControlMode.Disabled, 0.0F);
+//        Robot.DRIVE_TRAIN.rightFrontTalon.set(ControlMode.Disabled, 0.0F);
 
         initAngle = (float) Robot.NAVX.getAngle();
 
@@ -31,9 +31,11 @@ public class CalibrateRobotCommand extends Command
     {
         if(SmartDashboard.getBoolean("calibration_enabled", false))
         {
+            System.out.println("enabled!");
             velocity = Robot.CAL_VELOCITY;
             SmartDashboard.putNumber("enc_velocity", Robot.DRIVE_TRAIN.leftRearTalonEnc.getSelectedSensorVelocity(0));
             Robot.DRIVE_TRAIN.leftRearTalonEnc.set(ControlMode.Velocity, velocity); // this
+            Robot.DRIVE_TRAIN.rightRearTalonEnc.set(ControlMode.Velocity, -velocity); // this
         }
     }
 

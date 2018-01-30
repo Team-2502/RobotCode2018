@@ -2,6 +2,7 @@ package com.team2502.robot2018.trajectory;
 
 import com.team2502.robot2018.trajectory.localization.IRotationalLocationEstimator;
 import com.team2502.robot2018.trajectory.localization.ITranslationalLocationEstimator;
+import com.team2502.robot2018.trajectory.localization.ITranslationalVelocityEstimator;
 import com.team2502.robot2018.utils.MathUtils;
 import logger.Log;
 import org.joml.ImmutableVector2f;
@@ -24,6 +25,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
     private final IRotationalLocationEstimator rotEstimator;
     private final float lookAheadDistanceSquared;
     private final float distanceStopSq;
+    private final ITranslationalVelocityEstimator velocityEstimator;
     private ImmutableVector2f relativeGoalPoint;
     private float pathRadius;
     private float rotVelocity;
@@ -52,13 +54,14 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
      * @param lookAheadDistance The lookahead distance for the pure pursuit algorithm
      * @param distanceStop
      */
-    public PurePursuitMovementStrategy(ITankRobotBounds tankRobot, ITranslationalLocationEstimator transEstimator, IRotationalLocationEstimator rotEstimator, List<ImmutableVector2f> waypoints, float lookAheadDistance, float distanceStop)
+    public PurePursuitMovementStrategy(ITankRobotBounds tankRobot, ITranslationalLocationEstimator transEstimator, IRotationalLocationEstimator rotEstimator, ITranslationalVelocityEstimator velocityEstimator, List<ImmutableVector2f> waypoints, float lookAheadDistance, float distanceStop)
     {
         this.waypoints = waypoints;
         this.tankRobot = tankRobot;
         this.lookAheadDistance = lookAheadDistance;
         this.transEstimator = transEstimator;
         this.rotEstimator = rotEstimator;
+        this.velocityEstimator = velocityEstimator;
         lookAheadDistanceSquared = lookAheadDistance * lookAheadDistance;
         distanceStopSq = distanceStop * distanceStop;
     }
@@ -156,6 +159,8 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         return closest;
     }
 
+//    public
+
     /**
      * @return true If the robot is close (within lookahead distance) of the last waypoint.
      */
@@ -252,11 +257,16 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
 
 
         // TODO: get max acceleration from actual wheel velocities
-        float v_lMax = Math.min(getWheelVelocities().get(0)+tankRobot.getA_lMax(), tankRobot.getV_lMax());
-        float v_rMax = Math.min(getWheelVelocities().get(1)+tankRobot.getA_rMax(), tankRobot.getV_rMax());
-        float v_lMin = Math.max(getWheelVelocities().get(0)+tankRobot.getA_lMin(), tankRobot.getV_lMax());
-        float v_rMin = Math.max(getWheelVelocities().get(1)+tankRobot.getA_rMin(), tankRobot.getV_rMin());
+//        ImmutableVector2f velEst = velocityEstimator.estimateAbsoluteVelocity();
+//        float v_lMax = Math.min(velocityEstimator.getLeftWheelSpeed()+ tankRobot.getA_lMax(), tankRobot.getV_lMax());
+//        float v_rMax = Math.min(velocityEstimator.getRightWheelSpeed()+tankRobot.getA_rMax(), tankRobot.getV_rMax());
+//        float v_lMin = Math.max(velocityEstimator.getLeftWheelSpeed()+tankRobot.getA_lMin(), tankRobot.getV_lMax());
+//        float v_rMin = Math.max(velocityEstimator.getRightWheelSpeed()+tankRobot.getA_rMin(), tankRobot.getV_rMin());
 
+        float v_lMax = tankRobot.getV_lMax();
+        float v_rMax = tankRobot.getV_rMax();
+        float v_lMin = tankRobot.getV_lMin();
+        float v_rMin = tankRobot.getV_rMin();
 
         if(Math.abs(curvature) < THRESHOLD_CURVATURE) // if we are a straight line ish (lines are not curvy -> low curvature)
         {
@@ -319,14 +329,15 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
 
             if(bestVector == null)
             {
-                throw new NullPointerException(MessageFormat.format("`bestVector` was equal to null.\n\t" +
-                                                                    "{\n\t\t\"curvature\" = \"{0}\",\n\t\t" +
-                                                                    "[ \"v_lMax\", \"v_lMin\", \"v_rMax\", \"v_rMin\" ] = [ \"{1}\", \"{2}\", \"{3}\", \"{4}\" ],\n\t\t" +
-                                                                    "\"c\" = \"{5}\",\n\t\t" +
-                                                                    "\"velLeftToRightRatio\" = \"{6}\",\n\t\t" +
-                                                                    "\"velRightToLeftRatio\" = \"{7}\",\n\t\t" +
-                                                                    "\"v_r\" = \"{8}\",\n\t\t" +
-                                                                    "\"v_l\" = \"{9}\"\n\t}", curvature, v_lMax, v_lMin, v_rMax, v_rMin, c, velLeftToRightRatio, velRightToLeftRatio, v_r, v_l));
+                throw new NullPointerException("bestVector is null!");
+//                throw new NullPointerException(MessageFormat.format("`bestVector` was equal to null.\n\t" +
+//                                                                    "{\n\t\t\"curvature\" = \"{0}\",\n\t\t" +
+//                                                                    "[ \"v_lMax\", \"v_lMin\", \"v_rMax\", \"v_rMin\" ] = [ \"{1}\", \"{2}\", \"{3}\", \"{4}\" ],\n\t\t" +
+//                                                                    "\"c\" = \"{5}\",\n\t\t" +
+//                                                                    "\"velLeftToRightRatio\" = \"{6}\",\n\t\t" +
+//                                                                    "\"velRightToLeftRatio\" = \"{7}\",\n\t\t" +
+//                                                                    "\"v_r\" = \"{8}\",\n\t\t" +
+//                                                                    "\"v_l\" = \"{9}\"\n\t}", curvature, v_lMax, v_lMin, v_rMax, v_rMin, c, velLeftToRightRatio, velRightToLeftRatio, v_r, v_l));
             }
 
             rotVelocity = (bestVector.get(1) - bestVector.get(0)) / tankRobot.getLateralWheelDistance();

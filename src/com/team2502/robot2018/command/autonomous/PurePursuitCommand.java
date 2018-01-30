@@ -4,7 +4,6 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.kauailabs.navx.frc.AHRS;
 import com.team2502.robot2018.Constants;
 import com.team2502.robot2018.Robot;
-import com.team2502.robot2018.data.Vector;
 import com.team2502.robot2018.sendables.SendableNavX;
 import com.team2502.robot2018.subsystem.DriveTrainSubsystem;
 import com.team2502.robot2018.trajectory.ITankRobotBounds;
@@ -115,7 +114,7 @@ public class PurePursuitCommand extends Command
         transLocEstimator = new EncoderDifferentialDriveLocationEstimator(rotLocEstimator);
 
         sendableNavX = new SendableNavX(() -> MathUtils.rad2Deg(-rotLocEstimator.estimateHeading()), "purePursuitHeading");
-        purePursuitMovementStrategy = new PurePursuitMovementStrategy(tankRobot, transLocEstimator, rotLocEstimator, waypoints, lookAheadDistance, stopDistance);
+        purePursuitMovementStrategy = new PurePursuitMovementStrategy(tankRobot, transLocEstimator, rotLocEstimator, transLocEstimator,waypoints, lookAheadDistance, stopDistance);
         Log.info("initAngleDegrees: {0,number,0.00}\n" + initAngleDegrees);
     }
 
@@ -177,7 +176,8 @@ public class PurePursuitCommand extends Command
 
         SmartDashboard.putBoolean("PPisSuccess", purePursuitMovementStrategy.isSuccessfullyFinished());
 
-        driveTrain.runMotors(wheelL, wheelR);
+        driveTrain.runMotors(ControlMode.Velocity,wheelL*Constants.FPS_TO_EVEL,wheelR*Constants.FPS_TO_EVEL);
+//        driveTrain.runMotors(wheelL, wheelR);
     }
 
     @Override
