@@ -2,7 +2,6 @@ package com.team2502.robot2018;
 
 import com.kauailabs.navx.frc.AHRS;
 import com.team2502.robot2018.command.autonomous.PurePursuitCommand;
-import com.team2502.robot2018.command.teleop.CalibrateRobotCommand;
 import com.team2502.robot2018.sendables.SendableDriveTrain;
 import com.team2502.robot2018.sendables.SendableNavX;
 import com.team2502.robot2018.subsystem.ClimberSubsystem;
@@ -17,6 +16,7 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import logger.Log;
 import org.joml.ImmutableVector2f;
+import com.team2502.robot2018.utils.Files;
 
 import java.io.*;
 import java.util.Arrays;
@@ -37,7 +37,6 @@ public final class Robot extends IterativeRobot
     public static PrintWriter LOG_OUTPUT;
     // NavX Subsystem
     public static AHRS NAVX;
-    private File logFile;
 
     public static void write(String string)
     {
@@ -51,18 +50,6 @@ public final class Robot extends IterativeRobot
      */
     public void robotInit()
     {
-        logFile = new File("/home/lvuser/log.txt");
-        FileWriter fileWriter = null;
-        try
-        {
-            logFile.createNewFile();
-            fileWriter = new FileWriter(logFile);
-        }
-        catch(IOException e) { e.printStackTrace(); }
-        LOG_OUTPUT = new PrintWriter(fileWriter == null ? new OutputStreamWriter(System.out) : fileWriter, true);
-
-        Robot.write("tester");
-        // System.out.println("writing tester");
 
         Log.createLogger(true);
         DRIVE_TRAIN = new DriveTrainSubsystem();
@@ -92,6 +79,8 @@ public final class Robot extends IterativeRobot
         NAVX.resetDisplacement();
         // DashboardData.addUpdater(DRIVE_TRAIN);
         DashboardData.versioning();
+
+        fileWriting();
     }
 
     /**
@@ -174,5 +163,17 @@ public final class Robot extends IterativeRobot
     {
         LiveWindow.run();
         DashboardData.update();
+    }
+
+    private void fileWriting() {
+
+        String fileName = "/home/lvuser/FILES";
+        if ((System.currentTimeMillis() % 10000) == 0) { Files.newFile(fileName); }
+        Files.setFileName(fileName);
+        Files.setTime(System.currentTimeMillis());
+        Files.writeToFile();
+        Files.setNameAndValue("Loop Error", 5);
+
+//        Files.writeTimeAndValuesToFile(Files.FileName, System.currentT imeMillis(), "LOOP ERROR", RobotMap.Files.LoopErrorArray);
     }
 }
