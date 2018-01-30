@@ -1,6 +1,5 @@
 package com.team2502.robot2018.trajectory;
 
-import com.team2502.robot2018.data.Vector;
 import com.team2502.robot2018.trajectory.localization.IRotationalLocationEstimator;
 import com.team2502.robot2018.trajectory.localization.ITranslationalLocationEstimator;
 import com.team2502.robot2018.utils.MathUtils;
@@ -215,10 +214,21 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
     /**
      * @return The curvature (1/radius) to the goal point
      */
-    private float curvatureToGoal()
+    private float calcCurvatureToGoal()
     {
         float lSquared = relativeGoalPoint.lengthSquared(); // x^2 + y^2 = l^2 (length)
+
+        // curvature = 2x / l^2 (from Pure Pursuit paper)
+        // added - so it is positive when counterclockwise
         return -2 * relativeGoalPoint.get(0) / lSquared;
+    }
+
+    /**
+     *
+     * @return The lateral distance (with respect to the robot) between the robot and the goal point.
+     */
+    public float getCrossTrackError(){
+        return relativeGoalPoint.get(0);
     }
 
     /**
@@ -237,14 +247,15 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
      */
     private ImmutableVector2f calculateWheelVelocities() throws NullPointerException
     {
-        float curvature = curvatureToGoal();
+        float curvature = calcCurvatureToGoal();
         ImmutableVector2f bestVector = null;
 
 
-        float v_lMax = tankRobot.getV_lMax();
-        float v_rMax = tankRobot.getV_rMax();
-        float v_lMin = tankRobot.getV_lMin();
-        float v_rMin = tankRobot.getV_rMin();
+        // TODO: get max acceleration from actual wheel velocities
+        float v_lMax = Math.min(getWheelVelocities().get(0)+tankRobot.getA_lMax(), tankRobot.getV_lMax());
+        float v_rMax = Math.min(getWheelVelocities().get(1)+tankRobot.getA_rMax(), tankRobot.getV_rMax());
+        float v_lMin = Math.max(getWheelVelocities().get(0)+tankRobot.getA_lMin(), tankRobot.getV_lMax());
+        float v_rMin = Math.max(getWheelVelocities().get(1)+tankRobot.getA_rMin(), tankRobot.getV_rMin());
 
 
         if(Math.abs(curvature) < THRESHOLD_CURVATURE) // if we are a straight line ish (lines are not curvy -> low curvature)

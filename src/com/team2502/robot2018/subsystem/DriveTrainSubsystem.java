@@ -81,7 +81,6 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         talon.configPeakOutputForward(1.0D, Constants.INIT_TIMEOUT);
         talon.configPeakOutputReverse(-1.0D, Constants.INIT_TIMEOUT);
 
-
         talon.setInverted(true);
     }
 
