@@ -7,7 +7,6 @@ import com.team2502.robot2018.utils.MathUtils;
 import logger.Log;
 import org.joml.ImmutableVector2f;
 
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -229,10 +228,10 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
     }
 
     /**
-     *
      * @return The lateral distance (with respect to the robot) between the robot and the goal point.
      */
-    public float getCrossTrackError(){
+    public float getCrossTrackError()
+    {
         return relativeGoalPoint.get(0);
     }
 

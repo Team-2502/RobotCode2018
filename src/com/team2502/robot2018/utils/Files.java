@@ -7,22 +7,18 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 
-
 public class Files
 {
+    public static String FileName = "";
     static File file;
     static long Time = 0;
     static Object Object;
     static Map<String, Object> fileMap = new HashMap<String, Object>();
-
-    public static String FileName = "";
-
-    static String[] Names = {"Loop Error"};
+    static String[] Names = { "Loop Error" };
 
     /**
      * @param fileName add directory (Always a .txt file)
@@ -38,6 +34,7 @@ public class Files
     {
         Time = time;
     }
+
     public static void setFileName(String fileName)
     {
         FileName = fileName;
@@ -56,7 +53,7 @@ public class Files
         long minutes = TimeUnit.MILLISECONDS.toMinutes(time);
         long seconds = TimeUnit.MILLISECONDS.toSeconds(time);
         String newTime;
-        if (time < 1000)
+        if(time < 1000)
         {
             newTime = String.valueOf(time);
         }
@@ -68,7 +65,7 @@ public class Files
         {
             newTime = String.valueOf(minutes) + ": " + String.valueOf(seconds) + ": " + String.valueOf(time % 1000);
         }
-        for(int i=0; i< Names.length-1; i++)
+        for(int i = 0; i < Names.length - 1; i++)
         {
             try
             {
@@ -87,10 +84,11 @@ class WriteToFile
     private String path;
     private boolean append_to_file = false;
 
-    public WriteToFile (String file_path)
+    public WriteToFile(String file_path)
     {
         path = file_path;
     }
+
     public WriteToFile(String file_path, boolean append_value)
     {
         path = file_path;

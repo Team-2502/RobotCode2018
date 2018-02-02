@@ -2,8 +2,6 @@ package com.team2502.robot2018;
 
 import com.team2502.ctannotationprocessor.Undefined;
 
-import java.util.ArrayList;
-
 /**
  * Exclusively for defining Button ID's, Solenoid ID's, Motor ID's, and other kinds of ID's
  * Stuff like conversion constants DO NOT belong here
@@ -58,17 +56,17 @@ public class RobotMap
         private Motor() { }
     }
 
-    public class Solenoid
-    {
-        public static final int TRANSMISSION_SWITCH = 0;
-
-        private Solenoid() { }
-    }
-
     public static final class Files
     {
         public static int FilesMade = 0;
 
         private Files() {}
+    }
+
+    public class Solenoid
+    {
+        public static final int TRANSMISSION_SWITCH = 0;
+
+        private Solenoid() { }
     }
 }
