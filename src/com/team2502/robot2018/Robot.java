@@ -4,6 +4,7 @@ import com.kauailabs.navx.frc.AHRS;
 import com.team2502.robot2018.command.autonomous.PurePursuitCommand;
 import com.team2502.robot2018.sendables.SendableDriveTrain;
 import com.team2502.robot2018.sendables.SendableNavX;
+import com.team2502.robot2018.sendables.SendableVersioning;
 import com.team2502.robot2018.subsystem.ClimberSubsystem;
 import com.team2502.robot2018.subsystem.DriveTrainSubsystem;
 import com.team2502.robot2018.subsystem.TransmissionSubsystem;
@@ -59,10 +60,11 @@ public final class Robot extends IterativeRobot
 
         AutoSwitcher.putToSmartDashboard();
 
-        DashboardData.versioning();
-
         SendableDriveTrain.init();
         DashboardData.addUpdater(SendableDriveTrain.getInstance());
+
+        SendableVersioning.getInstance().init();
+        SmartDashboard.putData(SendableVersioning.getInstance());
 
         SendableNavX.init();
         DashboardData.addUpdater(SendableNavX.getInstance());
