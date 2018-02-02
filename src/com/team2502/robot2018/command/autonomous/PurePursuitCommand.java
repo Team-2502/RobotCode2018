@@ -114,7 +114,7 @@ public class PurePursuitCommand extends Command
         transLocEstimator = new EncoderDifferentialDriveLocationEstimator(rotLocEstimator);
 
         sendableNavX = new SendableNavX(() -> MathUtils.rad2Deg(-rotLocEstimator.estimateHeading()), "purePursuitHeading");
-        purePursuitMovementStrategy = new PurePursuitMovementStrategy(tankRobot, transLocEstimator, rotLocEstimator, transLocEstimator,waypoints, lookAheadDistance, stopDistance);
+        purePursuitMovementStrategy = new PurePursuitMovementStrategy(tankRobot, transLocEstimator, rotLocEstimator, transLocEstimator, waypoints, lookAheadDistance, stopDistance);
         Log.info("initAngleDegrees: {0,number,0.00}\n" + initAngleDegrees);
     }
 
@@ -176,7 +176,7 @@ public class PurePursuitCommand extends Command
 
         SmartDashboard.putBoolean("PPisSuccess", purePursuitMovementStrategy.isSuccessfullyFinished());
 
-        driveTrain.runMotors(ControlMode.Velocity,wheelL*Constants.FPS_TO_EVEL,wheelR*Constants.FPS_TO_EVEL);
+        driveTrain.runMotors(ControlMode.Velocity, wheelL * Constants.FPS_TO_EVEL, wheelR * Constants.FPS_TO_EVEL);
 //        driveTrain.runMotors(wheelL, wheelR);
     }
 

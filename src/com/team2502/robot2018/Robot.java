@@ -7,6 +7,7 @@ import com.team2502.robot2018.sendables.SendableNavX;
 import com.team2502.robot2018.subsystem.ClimberSubsystem;
 import com.team2502.robot2018.subsystem.DriveTrainSubsystem;
 import com.team2502.robot2018.subsystem.TransmissionSubsystem;
+import com.team2502.robot2018.utils.Files;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -16,26 +17,22 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import logger.Log;
 import org.joml.ImmutableVector2f;
-import com.team2502.robot2018.utils.Files;
 
-import java.io.*;
+import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.List;
 
 public final class Robot extends IterativeRobot
 {
     public static double CAL_VELOCITY = 0D;
+    public static long SHIFTED;
+    public static String GAME_DATA = "    ";
 
     public static DriveTrainSubsystem DRIVE_TRAIN;
     public static TransmissionSubsystem TRANSMISSION;
     public static ClimberSubsystem CLIMBER;
-    public static long SHIFTED;
     public static Compressor COMPRESSOR;
-
-    public static String GAME_DATA="    ";
-
     public static PrintWriter LOG_OUTPUT;
-    // NavX Subsystem
     public static AHRS NAVX;
 
     public static void write(String string)
@@ -50,35 +47,35 @@ public final class Robot extends IterativeRobot
      */
     public void robotInit()
     {
-
         Log.createLogger(true);
-        DRIVE_TRAIN = new DriveTrainSubsystem();
+
         CLIMBER = new ClimberSubsystem();
+        COMPRESSOR = new Compressor();
+        DRIVE_TRAIN = new DriveTrainSubsystem();
         NAVX = new AHRS(SPI.Port.kMXP);
         TRANSMISSION = new TransmissionSubsystem();
-        COMPRESSOR = new Compressor();
+
+        OI.init();
 
         AutoSwitcher.putToSmartDashboard();
 
-        SendableNavX.init();
+        DashboardData.versioning();
+
         SendableDriveTrain.init();
-
         DashboardData.addUpdater(SendableDriveTrain.getInstance());
-        DashboardData.addUpdater(SendableNavX.getInstance());
 
-        SmartDashboard.putBoolean("calibration_enabled", false);
-        SmartDashboard.putNumber("calibration_velocity", 0);
+        SendableNavX.init();
+        DashboardData.addUpdater(SendableNavX.getInstance());
 
         DashboardData.addUpdater(() -> {
             Robot.CAL_VELOCITY = SmartDashboard.getNumber("calibration_velocity", 0);
             SmartDashboard.putNumber("calibration_velocity", Robot.CAL_VELOCITY);
         });
 
-        OI.init();
+        SmartDashboard.putBoolean("calibration_enabled", false);
+        SmartDashboard.putNumber("calibration_velocity", 0);
 
         NAVX.resetDisplacement();
-        // DashboardData.addUpdater(DRIVE_TRAIN);
-        DashboardData.versioning();
 
         fileWriting();
     }
@@ -100,10 +97,7 @@ public final class Robot extends IterativeRobot
         Scheduler.getInstance().run();
         DashboardData.update();
         GAME_DATA = DriverStation.getInstance().getGameSpecificMessage();
-        if(GAME_DATA == null)
-        {
-            GAME_DATA = "___";
-        }
+        if(GAME_DATA == null) { GAME_DATA = "___"; }
     }
 
     /**
@@ -122,13 +116,13 @@ public final class Robot extends IterativeRobot
         DRIVE_TRAIN.setAutonSettings();
 
         List<ImmutableVector2f> waypoints = Arrays.asList(
-                new ImmutableVector2f(0,0),
-                new ImmutableVector2f(0,10),
-                new ImmutableVector2f(10,10)
+                new ImmutableVector2f(0, 0),
+                new ImmutableVector2f(0, 10),
+                new ImmutableVector2f(10, 10)
                                                          );
 //        Scheduler.getInstance().add(new CalibrateRobotCommand());
-        Scheduler.getInstance().add(new PurePursuitCommand(waypoints, Constants.LOOKAHEAD_DISTANCE_FT, Constants.STOP_DIST_TOLERANCE_FT ));
-        //Scheduler.getInstance().add(AutoSwitcher.getAutoInstance());
+        Scheduler.getInstance().add(new PurePursuitCommand(waypoints, Constants.LOOKAHEAD_DISTANCE_FT, Constants.STOP_DIST_TOLERANCE_FT));
+//        Scheduler.getInstance().add(AutoSwitcher.getAutoInstance());
 
         NAVX.reset();
     }
@@ -165,15 +159,13 @@ public final class Robot extends IterativeRobot
         DashboardData.update();
     }
 
-    private void fileWriting() {
-
+    private void fileWriting()
+    {
         String fileName = "/home/lvuser/FILES";
-        if ((System.currentTimeMillis() % 10000) == 0) { Files.newFile(fileName); }
+        if((System.currentTimeMillis() % 10000) == 0) { Files.newFile(fileName); }
         Files.setFileName(fileName);
         Files.setTime(System.currentTimeMillis());
         Files.writeToFile();
         Files.setNameAndValue("Loop Error", 5);
-
-//        Files.writeTimeAndValuesToFile(Files.FileName, System.currentT imeMillis(), "LOOP ERROR", RobotMap.Files.LoopErrorArray);
     }
 }

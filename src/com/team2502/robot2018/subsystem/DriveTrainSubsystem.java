@@ -31,10 +31,10 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     public final SpeedControllerGroupF spgRight;
 
     private final SendablePIDTuner pidTuner;
-    double kP=1;
+    double kP = 1;
     double kI;
     double kD;
-    double kF=1;
+    double kF = 1;
     private float lastLeft;
     private float lastRight;
     private boolean isNegativePressed;

@@ -5,7 +5,6 @@ import com.team2502.robot2018.Constants;
 import com.team2502.robot2018.OI;
 import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.RobotMap;
-import com.team2502.robot2018.data.Vector;
 import com.team2502.robot2018.subsystem.DriveTrainSubsystem;
 import com.team2502.robot2018.subsystem.TransmissionSubsystem;
 import com.team2502.robot2018.trajectory.localization.EncoderDifferentialDriveLocationEstimator;

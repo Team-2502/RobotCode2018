@@ -6,7 +6,6 @@ import com.team2502.robot2018.command.autonomous.groups.LeftCommandGroup;
 import com.team2502.robot2018.command.autonomous.groups.RightCommandGroup;
 import com.team2502.robot2018.command.autonomous.ingredients.DriveTime;
 import com.team2502.robot2018.command.teleop.CalibrateRobotCommand;
-import com.team2502.robot2018.data.Vector;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;

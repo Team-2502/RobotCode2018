@@ -2,7 +2,6 @@ package com.team2502.robot2018.trajectory.localization;
 
 import com.team2502.robot2018.Constants;
 import com.team2502.robot2018.Robot;
-import com.team2502.robot2018.data.Vector;
 import com.team2502.robot2018.utils.MathUtils;
 import org.joml.ImmutableVector2f;
 
