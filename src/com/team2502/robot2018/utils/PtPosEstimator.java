@@ -126,7 +126,7 @@ public class PtPosEstimator
         // no: throw it out, and set it to our estimated position
         if(est_trilaterate.x < 0 || est_trilaterate.y < 0 || dist2(est_trilaterate) > maxTrilaterateError)
         {
-            errCnt++;
+            ++errCnt;
             return est_position;
         }
 

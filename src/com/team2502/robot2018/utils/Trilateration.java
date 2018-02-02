@@ -1,5 +1,8 @@
 package com.team2502.robot2018.utils;
 
+import java.text.MessageFormat;
+import java.util.Objects;
+
 public class Trilateration
 {
     public static double[] ranges = new double[3];
@@ -35,12 +38,39 @@ public class Trilateration
 
     public static class Point
     {
-        double x, y;
+        public double x;
+        public double y;
 
         public Point(double x, double y)
         {
             this.x = x;
             this.y = y;
+        }
+
+        @Override
+        public int hashCode()
+        {
+            return Objects.hash(x, y);
+        }
+
+        @Override
+        public boolean equals(Object o)
+        {
+            if(this == o) { return true; }
+            if(o == null || getClass() != o.getClass()) { return false; }
+
+            Point that = (Point) o;
+
+            return Objects.equals(this.x, that.x) &&
+                   Objects.equals(this.y, that.y);
+        }
+
+        static final MessageFormat FORMATTER = new MessageFormat("Point: '{' {0,number,#.000}, {1,number,#.000} '}'");
+
+        @Override
+        public String toString()
+        {
+            return FORMATTER.format(new Object[] { x, y });
         }
     }
 }

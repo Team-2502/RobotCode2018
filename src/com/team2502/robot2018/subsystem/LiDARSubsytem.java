@@ -25,7 +25,7 @@ public class LiDARSubsytem extends Subsystem
     int state = 0;
     byte distHi, distLo, strengthLo;
 
-    void decodeMethod2(byte[] buffer)
+    public void decodeMethod2(byte[] buffer)
     {
         byte[] end = new byte[buffer.length];
         for(byte aBuffer : buffer)
