@@ -2,6 +2,7 @@ package com.team2502.robot2018;
 
 import com.kauailabs.navx.frc.AHRS;
 import com.team2502.robot2018.command.autonomous.PurePursuitCommand;
+import com.team2502.robot2018.command.teleop.CalibrateRobotCommand;
 import com.team2502.robot2018.sendables.SendableDriveTrain;
 import com.team2502.robot2018.sendables.SendableNavX;
 import com.team2502.robot2018.subsystem.ClimberSubsystem;
@@ -92,7 +93,7 @@ public final class Robot extends IterativeRobot
     public void disabledInit()
     {
         CLIMBER.stop();
-        LOG_OUTPUT.close();
+//        LOG_OUTPUT.close();
     }
 
     public void disabledPeriodic()
@@ -123,8 +124,10 @@ public final class Robot extends IterativeRobot
 
         List<ImmutableVector2f> waypoints = Arrays.asList(
                 new ImmutableVector2f(0,0),
-                new ImmutableVector2f(0,10),
-                new ImmutableVector2f(10,10)
+                new ImmutableVector2f(0,26),
+                new ImmutableVector2f(-6,26),
+                new ImmutableVector2f(-6,0),
+                new ImmutableVector2f(0,0)
                                                          );
 //        Scheduler.getInstance().add(new CalibrateRobotCommand());
         Scheduler.getInstance().add(new PurePursuitCommand(waypoints, Constants.LOOKAHEAD_DISTANCE_FT, Constants.STOP_DIST_TOLERANCE_FT ));

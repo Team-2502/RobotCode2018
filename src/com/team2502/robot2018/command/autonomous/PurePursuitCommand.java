@@ -176,7 +176,10 @@ public class PurePursuitCommand extends Command
 
         SmartDashboard.putBoolean("PPisSuccess", purePursuitMovementStrategy.isSuccessfullyFinished());
 
-        driveTrain.runMotors(ControlMode.Velocity,wheelL*Constants.FPS_TO_EVEL,wheelR*Constants.FPS_TO_EVEL);
+        Robot.DRIVE_TRAIN.leftRearTalonEnc.set(ControlMode.Velocity, wheelL*Constants.FPS_TO_EVEL); // this
+        Robot.DRIVE_TRAIN.rightRearTalonEnc.set(ControlMode.Velocity, wheelR*Constants.FPS_TO_EVEL); // this
+//        driveTrain.runMotors(ControlMode.Velocity,200,200);
+//        driveTrain.runMotors(ControlMode.Velocity,wheelL*Constants.FPS_TO_EVEL,wheelR*Constants.FPS_TO_EVEL);
 //        driveTrain.runMotors(wheelL, wheelR);
     }
 

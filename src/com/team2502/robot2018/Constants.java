@@ -13,10 +13,10 @@ public class Constants
      */
 
     // Currently the max percent ft/s that can be given to each to each wheel
-    public static final float VR_MAX = 1F;
-    public static final float VL_MAX = 1F;
-    public static final float VR_MIN = -1F;
-    public static final float VL_MIN = -1F;
+    public static final float VR_MAX = 3F;
+    public static final float VL_MAX = 3F;
+    public static final float VR_MIN = -3F;
+    public static final float VL_MIN = -3F;
 
     // The max change in voltage per second (acceleration)
     public static final float AR_MAX = .3F;
@@ -40,7 +40,7 @@ public class Constants
     public static final float WHEEL_ROLLING_RADIUS_FT = WHEEL_ROLLING_RADIUS_INCH * 1.5F / 12F;
 
     // The distance between wheels (laterally) in feet. Measure from the centerpoints of the wheels.
-    public static final float LATERAL_WHEEL_DISTANCE_FT = 23.25F / 12F * 10F;
+    public static final float LATERAL_WHEEL_DISTANCE_FT = 23.25F / 12F; //* 10F;
 
     public static final float MAX_FPS_SPEED = 18.0F;
 
