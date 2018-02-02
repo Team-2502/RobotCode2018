@@ -32,10 +32,10 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
 
     private final SendablePIDTuner pidTuner;
 
-    double kP=0.5;
-    double kI=0.001;
-    double kD=0;
-    double kF=0.53;
+    double kP = 0.5;
+    double kI = 0.001;
+    double kD = 0;
+    double kF = 0.53;
 
     private float lastLeft;
     private float lastRight;

@@ -5,10 +5,8 @@ import com.team2502.robot2018.Robot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 
 public class CalibrateRobotCommand extends Command
 {
@@ -50,17 +48,17 @@ public class CalibrateRobotCommand extends Command
             int actualVel = Robot.DRIVE_TRAIN.leftRearTalonEnc.getSelectedSensorVelocity(0);
             float dif = (float) (actualVel - velocity);
 //            samples++;
-            error2.add(dif*dif);
+            error2.add(dif * dif);
             int size = error2.size();
             float error2Avg = 0;
 
             // F ... rpm = 557.6  ... 557.6 * 1/60 * 1/10 * 4096 = 3806.5493333333 ... .0.2687473379
             for(int i = 0; i < size; i++)
             {
-                error2Avg+=error2.get(i)/size;
+                error2Avg += error2.get(i) / size;
             }
 
-            System.out.println("enabled!"+size);
+            System.out.println("enabled!" + size);
 
             SmartDashboard.putNumber("enc_error_2", error2Avg);
             SmartDashboard.putNumber("enc_velocity", actualVel);
@@ -87,14 +85,17 @@ public class CalibrateRobotCommand extends Command
 
         private int limit;
 
-        public LimitedQueue(int limit) {
+        public LimitedQueue(int limit)
+        {
             this.limit = limit;
         }
 
         @Override
-        public boolean add(E o) {
+        public boolean add(E o)
+        {
             boolean added = super.add(o);
-            while (added && size() > limit) {
+            while(added && size() > limit)
+            {
                 super.remove();
             }
             return added;
