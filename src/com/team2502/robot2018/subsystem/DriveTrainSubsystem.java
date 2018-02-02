@@ -9,9 +9,9 @@ import com.team2502.robot2018.RobotMap;
 import com.team2502.robot2018.command.teleop.DriveCommand;
 import com.team2502.robot2018.sendables.PIDTunable;
 import com.team2502.robot2018.sendables.SendablePIDTuner;
-import com.team2502.robot2018.utils.DifferentialDriveF;
-import com.team2502.robot2018.utils.SpeedControllerGroupF;
-import com.team2502.robot2018.utils.WPI_TalonSRXF;
+import com.team2502.robot2018.utils.baseoverloads.DifferentialDriveF;
+import com.team2502.robot2018.utils.baseoverloads.SpeedControllerGroupF;
+import com.team2502.robot2018.utils.baseoverloads.WPI_TalonSRXF;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 

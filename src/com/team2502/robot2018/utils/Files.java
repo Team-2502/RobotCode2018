@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-
 public class Files
 {
     public static String FileName = "";
@@ -77,31 +76,31 @@ public class Files
             }
         }
     }
-}
 
-class WriteToFile
-{
-    private String path;
-    private boolean append_to_file = false;
-
-    public WriteToFile(String file_path)
+    public static class WriteToFile
     {
-        path = file_path;
-    }
+        private String path;
+        private boolean append_to_file = false;
 
-    public WriteToFile(String file_path, boolean append_value)
-    {
-        path = file_path;
-        append_to_file = append_value;
-    }
+        public WriteToFile(String file_path)
+        {
+            path = file_path;
+        }
 
-    public void writeToFile(String text) throws IOException
-    {
-        FileWriter write = new FileWriter(path, append_to_file);
-        PrintWriter print_line = new PrintWriter(write);
+        public WriteToFile(String file_path, boolean append_value)
+        {
+            path = file_path;
+            append_to_file = append_value;
+        }
 
-        print_line.printf("%s" + "%n", text);
+        public void writeToFile(String text) throws IOException
+        {
+            FileWriter write = new FileWriter(path, append_to_file);
+            PrintWriter print_line = new PrintWriter(write);
 
-        print_line.close();
+            print_line.printf("%s" + "%n", text);
+
+            print_line.close();
+        }
     }
 }

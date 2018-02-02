@@ -4,6 +4,9 @@ import com.team2502.robot2018.trajectory.localization.IRotationalLocationEstimat
 import com.team2502.robot2018.trajectory.localization.ITranslationalLocationEstimator;
 import com.team2502.robot2018.trajectory.localization.ITranslationalVelocityEstimator;
 import com.team2502.robot2018.utils.MathUtils;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import logger.Log;
 import org.joml.ImmutableVector2f;
 
@@ -42,6 +45,8 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
     private float dThetaToRotate;
     private boolean isClose = false;
     private boolean isSuccessfullyFinished;
+    private NetworkTable rendererTable;
+    private NetworkTableEntry entry;
 
     /**
      * Strategize your movement!
@@ -63,6 +68,16 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         this.velocityEstimator = velocityEstimator;
         lookAheadDistanceSquared = lookAheadDistance * lookAheadDistance;
         distanceStopSq = distanceStop * distanceStop;
+        rendererTable = NetworkTableInstance.getDefault().getTable("rendererTable");
+        entry = rendererTable.getEntry("updateCount");
+        double[] waypointsArr = new double[waypoints.size() * 2];
+        int i = 0;
+        for(ImmutableVector2f vec : waypoints)
+        {
+            waypointsArr[i++] = vec.x;
+            waypointsArr[i++] = vec.y;
+        }
+        rendererTable.getEntry("waypoints").setDoubleArray(waypointsArr);
     }
 
     /**
@@ -168,12 +183,21 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         return isClose;
     }
 
+    static final boolean DEBUG_RENDERER = true;
+
+    private int updateCount = 0;
+
+    private void postUpdateCount()
+    {
+        entry.setNumber(++updateCount);
+    }
+
     /**
      * Recalculates position, heading, and goalpoint.
      */
     public void update()
     {
-
+        postUpdateCount();
         usedEstimatedLocation = transEstimator.estimateLocation();
         usedHeading = rotEstimator.estimateHeading();
 

@@ -1,6 +1,6 @@
-package com.team2502.robot2018.utils;
+package com.team2502.robot2018.utils.baseoverloads;
 
-import edu.wpi.first.wpilibj.util.BaseSystemNotInitializedException;
+import edu.wpi.first.wpilibj.SpeedController;
 
 /**
  * Reason for this class: Single Precision Floating Point Numbers.
@@ -43,58 +43,26 @@ import edu.wpi.first.wpilibj.util.BaseSystemNotInitializedException;
  * And even if it did this shows that single precision will out
  * perform double precision.
  * <p>
- * The default Joystick classes return doubles for the joystick
- * positions. But the value eventually delegates back to a float
- * array. So why not just make the functions return floats.
+ * The Talon's also don't take in doubles when setting the speed.
+ * CTRE PhoenixLib converts the floating point numbers to integral
+ * types using specific operations depending on what the control
+ * mode is. This mean we can very easily write up some code to
+ * use single precision instead of double precision floating
+ * point numbers.
  */
-public class RobotStateF
+public interface ISpeedControllerF extends SpeedController
 {
-    private static Interface m_impl;
+    /**
+     * Common interface for setting the speed of a speed controller.
+     *
+     * @param speed The speed to set. Value should be between -1.0 and 1.0.
+     */
+    void set(float speed);
 
-    @SuppressWarnings("MethodName")
-    public static void SetImplementation(Interface implementation)
-    { m_impl = implementation; }
-
-    public static boolean isDisabled()
-    {
-        if(m_impl != null) { return m_impl.isDisabled(); }
-        else { throw new BaseSystemNotInitializedException(Interface.class, RobotStateF.class); }
-    }
-
-    public static boolean isEnabled()
-    {
-        if(m_impl != null) { return m_impl.isEnabled(); }
-        else { throw new BaseSystemNotInitializedException(Interface.class, RobotStateF.class); }
-    }
-
-    public static boolean isOperatorControl()
-    {
-        if(m_impl != null) { return m_impl.isOperatorControl(); }
-        else { throw new BaseSystemNotInitializedException(Interface.class, RobotStateF.class); }
-    }
-
-    public static boolean isAutonomous()
-    {
-        if(m_impl != null) { return m_impl.isAutonomous(); }
-        else { throw new BaseSystemNotInitializedException(Interface.class, RobotStateF.class); }
-    }
-
-    public static boolean isTest()
-    {
-        if(m_impl != null) { return m_impl.isTest(); }
-        else { throw new BaseSystemNotInitializedException(Interface.class, RobotStateF.class); }
-    }
-
-    interface Interface
-    {
-        boolean isDisabled();
-
-        boolean isEnabled();
-
-        boolean isOperatorControl();
-
-        boolean isAutonomous();
-
-        boolean isTest();
-    }
+    /**
+     * Common interface for getting the current set speed of a speed controller.
+     *
+     * @return The current set speed. Value is between -1.0 and 1.0.
+     */
+    float getF();
 }
