@@ -2,21 +2,23 @@ package com.team2502.robot2018.subsystem;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.team2502.robot2018.Constants;
 import com.team2502.robot2018.DashboardData;
 import com.team2502.robot2018.OI;
 import com.team2502.robot2018.RobotMap;
 import com.team2502.robot2018.command.teleop.DriveCommand;
+import com.team2502.robot2018.sendables.PIDTunable;
+import com.team2502.robot2018.sendables.SendablePIDTuner;
 import com.team2502.robot2018.utils.DifferentialDriveF;
 import com.team2502.robot2018.utils.SpeedControllerGroupF;
 import com.team2502.robot2018.utils.WPI_TalonSRXF;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import logger.Log;
 
 /**
  * Example Implementation, Many changes needed.
  */
-public class DriveTrainSubsystem extends Subsystem implements DashboardData.DashboardUpdater
+public class DriveTrainSubsystem extends Subsystem implements DashboardData.DashboardUpdater, PIDTunable
 {
     private static final FloatPair SPEED_CONTAINER = new FloatPair();
 
@@ -28,6 +30,13 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     public final SpeedControllerGroupF spgLeft;
     public final SpeedControllerGroupF spgRight;
 
+    private final SendablePIDTuner pidTuner;
+
+    double kP = 0.5;
+    double kI = 0.001;
+    double kD = 0;
+    double kF = 0.53;
+
     private float lastLeft;
     private float lastRight;
     private boolean isNegativePressed;
@@ -35,77 +44,153 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
 
     public DriveTrainSubsystem()
     {
+
+        setName("DriveTrainSubsystem");
+
         lastLeft = 0.0F;
         lastRight = 0.0F;
 
         leftFrontTalon = new WPI_TalonSRXF(RobotMap.Motor.DRIVE_TRAIN_FRONT_LEFT);
         leftRearTalonEnc = new WPI_TalonSRXF(RobotMap.Motor.DRIVE_TRAIN_BACK_LEFT);
+
         rightFrontTalon = new WPI_TalonSRXF(RobotMap.Motor.DRIVE_TRAIN_FRONT_RIGHT);
         rightRearTalonEnc = new WPI_TalonSRXF(RobotMap.Motor.DRIVE_TRAIN_BACK_RIGHT);
 
         // Add encoders (ask nicely for encoders on drivetrain)
-        leftRearTalonEnc.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, RobotMap.Motor.INIT_TIMEOUT);
-        rightRearTalonEnc.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, RobotMap.Motor.INIT_TIMEOUT);
+        leftRearTalonEnc.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute, 0, Constants.INIT_TIMEOUT);
+        rightRearTalonEnc.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute, 0, Constants.INIT_TIMEOUT);
 
         spgLeft = new SpeedControllerGroupF(leftFrontTalon, leftRearTalonEnc);
         spgRight = new SpeedControllerGroupF(rightFrontTalon, rightRearTalonEnc);
 
         drive = new DifferentialDriveF(spgLeft, spgRight);
 
+        pidTuner = new SendablePIDTuner(this, this);
+
         drive.setSafetyEnabled(true);
         setTeleopSettings();
         DashboardData.addUpdater(this);
     }
 
-    public void stop()
-    { drive.stopMotor(); }
+    public void stop() { drive.stopMotor(); }
 
     private void setTeleopSettings(WPI_TalonSRXF talon)
     {
         talon.set(ControlMode.PercentOutput, 0.0F);
-        talon.configNominalOutputForward(0.0D, RobotMap.Motor.INIT_TIMEOUT);
-        talon.configNominalOutputReverse(0.0D, RobotMap.Motor.INIT_TIMEOUT);
+        talon.configNominalOutputForward(0.0D, Constants.INIT_TIMEOUT);
+        talon.configNominalOutputReverse(0.0D, Constants.INIT_TIMEOUT);
 
-        talon.configPeakOutputForward(1.0D, RobotMap.Motor.INIT_TIMEOUT);
-        talon.configPeakOutputReverse(-1.0D, RobotMap.Motor.INIT_TIMEOUT);
-
+        talon.configPeakOutputForward(1.0D, Constants.INIT_TIMEOUT);
+        talon.configPeakOutputReverse(-1.0D, Constants.INIT_TIMEOUT);
 
         talon.setInverted(true);
     }
 
+    /**
+     * This class sets the correct nominal/peak values for the talon and also sets the correct inversion settings on the encoders.
+     */
     public void setTeleopSettings()
     {
+
         setTeleopSettings(leftFrontTalon);
         setTeleopSettings(rightFrontTalon);
         setTeleopSettings(leftRearTalonEnc);
         setTeleopSettings(rightRearTalonEnc);
 
+
+        // Required for correct readings
         leftRearTalonEnc.setSensorPhase(false);
         rightRearTalonEnc.setSensorPhase(true);
     }
 
+    /**
+     * This method makes sure that the non-encoder talons are following their encoder-equipped brethren.
+     */
     public void setAutonSettings()
     {
-        leftRearTalonEnc.set(ControlMode.Position, 0.0F);
-        rightRearTalonEnc.set(ControlMode.Position, 0.0F);
-
         leftFrontTalon.follow(leftRearTalonEnc);
         rightFrontTalon.follow(rightRearTalonEnc);
 
         leftRearTalonEnc.setSensorPhase(false);
         rightRearTalonEnc.setSensorPhase(true);
+    }
 
-        if(leftRearTalonEnc.getControlMode() != ControlMode.Position || rightRearTalonEnc.getControlMode() != ControlMode.Position || leftFrontTalon.getControlMode() != ControlMode.Follower || rightFrontTalon.getControlMode() != ControlMode.Follower)
-        {
-            Log.warn("setAutonSettings: One or more of the talons did not retain their control mode!\n" +
-                     "Using the .set(int x) method will yield undesirable results!");
+    /**
+     * Sets the PID for left AND right motors. If the descriptions below confuse you, go look up a better
+     * explanation of PID.
+     *
+     * @param kP Proportional constant. Makes the motor go faster proportional to the error.
+     * @param kI Integral constant. Makes the motor go faster proportional to the integral of the error.
+     * @param kD Derivative constant. Makes the motor go faster proportional to the derivative of the error.
+     */
+    public void setPID(double kP, double kI, double kD)
+    {
+        this.kP = kP;
+        this.kI = kI;
+        this.kD = kD;
 
-        }
+        leftRearTalonEnc.config_kP(0, kP, Constants.INIT_TIMEOUT);
+        leftRearTalonEnc.config_kI(0, kI, Constants.INIT_TIMEOUT);
+        leftRearTalonEnc.config_kD(0, kD, Constants.INIT_TIMEOUT);
 
+        rightRearTalonEnc.config_kP(0, kP, Constants.INIT_TIMEOUT);
+        rightRearTalonEnc.config_kI(0, kI, Constants.INIT_TIMEOUT);
+        rightRearTalonEnc.config_kD(0, kD, Constants.INIT_TIMEOUT);
+    }
+
+    /**
+     * Sets the PID for left AND right motors. If the descriptions below confuse you, go look up a better
+     * explanation of PID.
+     *
+     * @param kP    Proportional constant. Makes the motor go faster proportional to the error.
+     * @param kI    Integral constant. Makes the motor go faster proportional to the integral of the error
+     * @param kD    Derivative constant. Makes the motor go faster proportional to the derivative of the error
+     * @param iZone Integral Zone. If the integral of the error is bigger than this, the integral is reset to 0.
+     */
+    public void setPID(double kP, double kI, double kD, int iZone)
+    {
+        setPID(kP, kI, kD);
+
+        leftRearTalonEnc.config_IntegralZone(0, iZone, Constants.INIT_TIMEOUT);
+        rightRearTalonEnc.config_IntegralZone(0, iZone, Constants.INIT_TIMEOUT);
     }
 
     /**
      * Drive the robot. The equation x=-y must be true for the robot to drive straight.
+     * <br>
+     * Make sure to set the motors according to the control mode. In auton, it's position. In teleop, it's percent voltage.
+     *
+     * @param x           Units for the left side of drivetrain
+     * @param y           Units for the right side of drivetrain
+     * @param controlMode The mode that the motors are being driven in
+     */
+    public void runMotors(ControlMode controlMode, float x, float y) // double z
+    {
+        leftFrontTalon.set(controlMode, x);
+        leftRearTalonEnc.set(controlMode, x);
+
+        rightFrontTalon.set(controlMode, y);
+        rightRearTalonEnc.set(controlMode, y);
+    }
+
+    /**
+     * Drive the robot with x=0,y=0. The equation x=-y must be true for the robot to drive straight.
+     * <br>
+     * Make sure to set the motors according to the control mode. In auton, it's position. In teleop, it's percent voltage.
+     *
+     * @param controlMode The mode that the motors are being driven in
+     */
+    public void runMotors(ControlMode controlMode) // double z
+    {
+        leftFrontTalon.set(controlMode, 0);
+        leftRearTalonEnc.set(controlMode, 0);
+
+        rightFrontTalon.set(controlMode, 0);
+        rightRearTalonEnc.set(controlMode, 0);
+    }
+
+    /**
+     * Drive the robot using ControlMode.PercentOutput. The equation x=-y must be true for the robot to drive straight.
      * <br>
      * Make sure to set the motors according to the control mode. In auton, it's position. In teleop, it's percent voltage.
      *
@@ -114,11 +199,7 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
      */
     public void runMotors(float x, float y) // double z
     {
-        leftFrontTalon.set(x);
-        leftRearTalonEnc.set(x);
-
-        rightFrontTalon.set(-y);
-        rightRearTalonEnc.set(-y);
+        runMotors(ControlMode.PercentOutput, x, y);
     }
 
     public double turningFactor()
@@ -182,7 +263,7 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         // Log.debug("Left: {0,number,#.###}\t\t Right: {0,number,#.###}", speed.right, speed.left);
 
         //reverse drive
-        if(OI.JOYSTICK_DRIVE_LEFT.getRawButton(RobotMap.Joystick.Button.INVERSE_DRIVER_CONTROLS) && !isNegativePressed) { negative = !negative; }
+        if((OI.JOYSTICK_DRIVE_LEFT.getRawButton(RobotMap.Joystick.Button.INVERSE_DRIVER_CONTROLS) && !isNegativePressed)) { negative = !negative; }
 
         isNegativePressed = OI.JOYSTICK_DRIVE_LEFT.getRawButton(RobotMap.Joystick.Button.INVERSE_DRIVER_CONTROLS);
 
@@ -199,21 +280,78 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     /**
      * @return Velocity as read by left encoder in Feet per Second
      */
-    public float getLeftVel() { return leftRearTalonEnc.getSelectedSensorVelocity(0) * RobotMap.Motor.VEL_TO_FPS; }
+    public float getLeftVel() { return leftRearTalonEnc.getSelectedSensorVelocity(0) * Constants.EVEL_TO_FPS; }
 
     /**
      * @return Velocity as ready by right encoder in Feet per Second
      */
-    public float getRightVel() { return rightRearTalonEnc.getSelectedSensorVelocity(0) * RobotMap.Motor.VEL_TO_FPS; }
+    public float getRightVel() { return rightRearTalonEnc.getSelectedSensorVelocity(0) * Constants.EVEL_TO_FPS; }
 
     @Override
     public void updateDashboard()
     {
-        SmartDashboard.putNumber("Left Speed (ft/s)", leftRearTalonEnc.getSelectedSensorVelocity(0) * RobotMap.Motor.VEL_TO_FPS);
-        SmartDashboard.putNumber("Left Pos (ft)", leftRearTalonEnc.getSelectedSensorPosition(0) * RobotMap.Motor.POS_TO_FEET);
+        SmartDashboard.putNumber("Left Speed (ft/s)", leftRearTalonEnc.getSelectedSensorVelocity(0) * Constants.EVEL_TO_FPS);
+        SmartDashboard.putNumber("Left Pos (ft)", leftRearTalonEnc.getSelectedSensorPosition(0) * Constants.EPOS_TO_FEET);
 
-        SmartDashboard.putNumber("Right Speed (ft/s)", rightRearTalonEnc.getSelectedSensorVelocity(0) * RobotMap.Motor.VEL_TO_FPS);
-        SmartDashboard.putNumber("Right Pos (ft)", rightRearTalonEnc.getSelectedSensorPosition(0) * RobotMap.Motor.POS_TO_FEET);
+        SmartDashboard.putNumber("Right Speed (ft/s)", rightRearTalonEnc.getSelectedSensorVelocity(0) * Constants.EVEL_TO_FPS);
+        SmartDashboard.putNumber("Right Pos (ft)", rightRearTalonEnc.getSelectedSensorPosition(0) * Constants.EPOS_TO_FEET);
+
+
+        pidTuner.updateDashboard();
+    }
+
+    @Override
+    public double getkP()
+    {
+        return kP;
+    }
+
+    @Override
+    public void setkP(double kP)
+    {
+        this.kP = kP;
+        setPID(this.kP, kI, kD);
+
+    }
+
+    @Override
+    public double getkI()
+    {
+        return kI;
+    }
+
+    @Override
+    public void setkI(double kI)
+    {
+        this.kI = kI;
+        setPID(kP, this.kI, kD);
+    }
+
+    @Override
+    public double getkD()
+    {
+        return kD;
+    }
+
+    @Override
+    public void setkD(double kD)
+    {
+        this.kD = kD;
+        setPID(kP, kI, this.kD);
+    }
+
+    @Override
+    public double getkF()
+    {
+        return kF;
+    }
+
+    @Override
+    public void setkF(double kF)
+    {
+        this.kF = kF;
+        leftRearTalonEnc.config_kF(0, kF, Constants.INIT_TIMEOUT);
+        rightRearTalonEnc.config_kF(0, kF, Constants.INIT_TIMEOUT);
     }
 
     /**

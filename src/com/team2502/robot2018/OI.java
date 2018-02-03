@@ -8,9 +8,7 @@ public final class OI
     public static final JoystickF JOYSTICK_DRIVE_RIGHT = new JoystickF(RobotMap.Joystick.JOYSTICK_DRIVE_RIGHT);
     public static final JoystickF JOYSTICK_FUNCTION = new JoystickF(RobotMap.Joystick.JOYSTICK_FUNCTION);
 
-    static
-    {
-    }
+    static { }
 
     private OI() { }
 

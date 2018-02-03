@@ -2,57 +2,64 @@ plugins {
     id "java"
     id "eclipse"
     id "idea"
-    id "jaci.openrio.gradle.GradleRIO" version "2018.01.06b"
+    id "jaci.openrio.gradle.GradleRIO" version "2018.01.22"
     id "net.ltgt.apt" version "0.13"
 }
 
 def TEAM = 2502
 def ROBOT_CLASS = "com.team2502.robot2018.Robot"
 
-// Define my targets (RoboRIO) and artifacts (deployable files)
-// This is added by GradleRIO's backing project EmbeddedTools.
 deploy {
-    targets {
-        target("roborio", jaci.openrio.gradle.frc.RoboRIO) {
-            team = TEAM
-        }
-    }
-    artifacts {
-        artifact('frcJava', jaci.openrio.gradle.frc.FRCJavaArtifact) {
-            targets << "roborio"
-        }
-    }
+    targets { target("roborio", jaci.openrio.gradle.frc.RoboRIO) { team = TEAM } }
+    artifacts { artifact('frcJava', jaci.openrio.gradle.frc.FRCJavaArtifact) { targets << "roborio" } }
 }
 
 repositories {
     mavenCentral()
-    flatDir {
-        dirs 'libs'
-    }
-    maven {
-        url "https://oss.sonatype.org/content/repositories/snapshots/"
-    }
+    flatDir { dirs 'libs' }
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
 }
 
 dependencies {
     compile wpilib()
     compile ctre()
     compile navx()
+    compile openrio.powerup.matchData()
 
     compile "com.team2502.ctannotationprocessor:CTAnnotationProcessor:1.0"
     apt     "com.team2502.ctannotationprocessor:CTAnnotationProcessor:1.0"
-    compile "org.joml:joml:1.9.8-SNAPSHOT"
-
-//    compile "org.jetbrains:annotations:15.0" // Provides useful annotations like @NotNull & @Nullable
-
+    compile "org.joml:joml:1.9.9:beta0"
+    compile group: 'org.apache.commons', name: 'commons-math3', version: '3.6.1'
 }
 
-// Setting up my Jar File. In this case, adding all libraries into the main jar ('fat jar')
-// in order to make them all available at runtime. Also adding the manifest so WPILib
-// knows where to look for our Robot Class.
+def branch() {
+    def branch = ""
+    def proc = "git rev-parse --abbrev-ref HEAD".execute()
+    proc.in.eachLine { line -> branch = line }
+    proc.err.eachLine { line -> println line }
+    proc.waitFor()
+    branch
+}
+
+def hash = { ->
+    def stdout = new ByteArrayOutputStream()
+    exec {
+        commandLine 'git', 'rev-parse', '--short', 'HEAD'
+        standardOutput = stdout
+    }
+    return stdout.toString().trim()
+}
+
 jar {
     from configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
     manifest jaci.openrio.gradle.GradleRIOPlugin.javaManifest(ROBOT_CLASS)
+    manifest {
+        attributes("branch": branch())
+        attributes("commit": hash())
+        attributes("version": version)
+        attributes("time": new Date().format("yyyy-MM-dd HH:mm:ss"))
+        attributes("blame": System.getProperty("user.name"))
+    }
 }
 
 task genJavadoc(type: Jar, dependsOn: javadoc) {
@@ -60,33 +67,19 @@ task genJavadoc(type: Jar, dependsOn: javadoc) {
   from javadoc.destinationDir
 }
 
-// task deploy_paths() {
-//     doLast {
-
-// // TODO: SCP all files from ./path to lvuser:@roboRIO-2502-frc.local
-//     }
-// }
-
-// task deploy(dependsOn: deploy, deploy_paths) {}
-
-artifacts {
-  archives genJavadoc
-}
+artifacts { archives genJavadoc }
 
 genJavadoc.onlyIf { project.hasProperty('runJavadoc') }
 javadoc.onlyIf { project.hasProperty('runJavadoc') }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '4.4'
-}
+            gradleVersion = '4.4'
+            distributionType = Wrapper.DistributionType.ALL
+        }
 
 sourceSets {
     main {
-        java {
-            srcDirs = ['src/']
-        }
-        resources {
-            srcDirs = ['res/']
-        }
+        java { srcDirs = ['src/'] }
+        resources { srcDirs = ['res/'] }
     }
 }

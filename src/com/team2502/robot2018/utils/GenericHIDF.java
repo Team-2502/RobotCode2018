@@ -49,57 +49,8 @@ import edu.wpi.first.wpilibj.hal.HAL;
  */
 public abstract class GenericHIDF
 {
-    /**
-     * Represents a rumble output on the JoyStick.
-     */
-    public enum RumbleType
-    {
-        kLeftRumble, kRightRumble
-    }
-
-    public enum HIDType
-    {
-        kUnknown(-1),
-        kXInputUnknown(0),
-        kXInputGamepad(1),
-        kXInputWheel(2),
-        kXInputArcadeStick(3),
-        kXInputFlightStick(4),
-        kXInputDancePad(5),
-        kXInputGuitar(6),
-        kXInputGuitar2(7),
-        kXInputDrumKit(8),
-        kXInputGuitar3(11),
-        kXInputArcadePad(19),
-        kHIDJoystick(20),
-        kHIDGamepad(21),
-        kHIDDriving(22),
-        kHIDFlight(23),
-        kHID1stPerson(24);
-
-        public static final HIDType[] VALUES = values();
-
-        public final int value;
-
-        HIDType(int value)
-        { this.value = value; }
-    }
-
-    /**
-     * Which hand the Human Interface Device is associated with.
-     */
-    public enum Hand
-    {
-        kLeft(0), kRight(1);
-
-        public final int value;
-
-        Hand(int value)
-        { this.value = value; }
-    }
-
-    private DriverStationF m_ds;
     private final int m_port;
+    private DriverStationF m_ds;
     private int m_outputs;
     private short m_leftRumble;
     private short m_rightRumble;
@@ -288,5 +239,54 @@ public abstract class GenericHIDF
         if(type == RumbleType.kLeftRumble) { m_leftRumble = (short) (value * 65535); }
         else { m_rightRumble = (short) (value * 65535); }
         HAL.setJoystickOutputs((byte) m_port, m_outputs, m_leftRumble, m_rightRumble);
+    }
+
+    /**
+     * Represents a rumble output on the JoyStick.
+     */
+    public enum RumbleType
+    {
+        kLeftRumble, kRightRumble
+    }
+
+    public enum HIDType
+    {
+        kUnknown(-1),
+        kXInputUnknown(0),
+        kXInputGamepad(1),
+        kXInputWheel(2),
+        kXInputArcadeStick(3),
+        kXInputFlightStick(4),
+        kXInputDancePad(5),
+        kXInputGuitar(6),
+        kXInputGuitar2(7),
+        kXInputDrumKit(8),
+        kXInputGuitar3(11),
+        kXInputArcadePad(19),
+        kHIDJoystick(20),
+        kHIDGamepad(21),
+        kHIDDriving(22),
+        kHIDFlight(23),
+        kHID1stPerson(24);
+
+        public static final HIDType[] VALUES = values();
+
+        public final int value;
+
+        HIDType(int value)
+        { this.value = value; }
+    }
+
+    /**
+     * Which hand the Human Interface Device is associated with.
+     */
+    public enum Hand
+    {
+        kLeft(0), kRight(1);
+
+        public final int value;
+
+        Hand(int value)
+        { this.value = value; }
     }
 }

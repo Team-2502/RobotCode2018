@@ -313,7 +313,7 @@ public class DifferentialDriveF extends RobotDriveBase
             rightSpeed = Math.copySign(rightSpeed * rightSpeed, rightSpeed);
         }
 
-        m_leftMotor.set(leftSpeed * m_maxOutputF);
+        m_leftMotor.set(-leftSpeed * m_maxOutputF);
         m_rightMotor.set(-rightSpeed * m_maxOutputF);
 
         m_safetyHelper.feed();

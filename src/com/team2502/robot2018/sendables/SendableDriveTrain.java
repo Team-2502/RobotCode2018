@@ -1,8 +1,8 @@
 package com.team2502.robot2018.sendables;
 
+import com.team2502.robot2018.Constants;
 import com.team2502.robot2018.DashboardData;
 import com.team2502.robot2018.Robot;
-import com.team2502.robot2018.RobotMap;
 import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -16,14 +16,14 @@ public class SendableDriveTrain implements Sendable, DashboardData.DashboardUpda
 {
 
     private static SendableDriveTrain instance = new SendableDriveTrain();
+    DoubleConsumer doNothing = (double value) -> {};
+    String name = "EncoderDriveTrain";
 
     private SendableDriveTrain() {}
 
     public static void init() {}
-    public static SendableDriveTrain getInstance() {return instance;}
 
-    DoubleConsumer doNothing = (double value) -> {};
-    String name = "EncoderDriveTrain";
+    public static SendableDriveTrain getInstance() {return instance;}
 
     @Override
     public String getName()
@@ -54,8 +54,8 @@ public class SendableDriveTrain implements Sendable, DashboardData.DashboardUpda
     public void initSendable(SendableBuilder builder)
     {
         builder.setSmartDashboardType("DifferentialDrive");
-        builder.addDoubleProperty("Left Motor Speed", () -> Robot.DRIVE_TRAIN.getLeftVel() / RobotMap.Motor.MAX_FPS_SPEED, doNothing);
-        builder.addDoubleProperty("Right Motor Speed", () -> Robot.DRIVE_TRAIN.getRightVel() / RobotMap.Motor.MAX_FPS_SPEED, doNothing);
+        builder.addDoubleProperty("Left Motor Speed", () -> Robot.DRIVE_TRAIN.getLeftVel() / Constants.MAX_FPS_SPEED, doNothing);
+        builder.addDoubleProperty("Right Motor Speed", () -> Robot.DRIVE_TRAIN.getRightVel() / Constants.MAX_FPS_SPEED, doNothing);
     }
 
     @Override

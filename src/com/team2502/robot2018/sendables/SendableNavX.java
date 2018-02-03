@@ -19,13 +19,25 @@ public class SendableNavX implements Sendable, DashboardData.DashboardUpdater
 {
     private static SendableNavX instance = new SendableNavX();
 
-    DoubleSupplier getAngle = () -> 180 + Robot.NAVX.getAngle();
+    DoubleSupplier getAngle;
     DoubleConsumer takeAngle = (double value) -> {};
+    private String name;
 
     /**
      * This class is a Singleton
      */
-    private SendableNavX() {}
+    public SendableNavX()
+    {
+        this.getAngle = () -> 180 + Robot.NAVX.getYaw();
+        this.name = "Sendable NavX";
+    }
+
+    public SendableNavX(DoubleSupplier getAngle, String name)
+    {
+        this.getAngle = getAngle;
+        this.name = name;
+    }
+
 
     /**
      * Activate all the static items
@@ -37,11 +49,10 @@ public class SendableNavX implements Sendable, DashboardData.DashboardUpdater
 
     /**
      * Grab the one and only instance of SendableNavX
+     *
      * @return the one and only instance of SendableNavX
      */
     public static SendableNavX getInstance() { return instance; }
-
-    public String name = "Sendibble NavX";
 
     @Override
     public String getName()
@@ -78,7 +89,6 @@ public class SendableNavX implements Sendable, DashboardData.DashboardUpdater
     @Override
     public void updateDashboard()
     {
-        SmartDashboard.putData(name,this);
-//        System.out.println("Angle: " + getAngle.getAsDouble());
+        SmartDashboard.putData(name, this);
     }
 }

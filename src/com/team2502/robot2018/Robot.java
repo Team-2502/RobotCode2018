@@ -3,43 +3,38 @@ package com.team2502.robot2018;
 import com.kauailabs.navx.frc.AHRS;
 import com.team2502.robot2018.command.autonomous.PurePursuitCommand;
 import com.team2502.robot2018.sendables.SendableDriveTrain;
+import com.team2502.robot2018.sendables.SendableNavX;
+import com.team2502.robot2018.sendables.SendableVersioning;
 import com.team2502.robot2018.subsystem.ClimberSubsystem;
 import com.team2502.robot2018.subsystem.DriveTrainSubsystem;
-import com.team2502.robot2018.sendables.SendableNavX;
 import com.team2502.robot2018.subsystem.TransmissionSubsystem;
-import edu.wpi.first.wpilibj.*;
+import com.team2502.robot2018.utils.Files;
+import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import logger.Log;
-import org.joml.Vector2f;
+import org.joml.ImmutableVector2f;
 
-import java.io.*;
-import java.util.ArrayList;
+import java.io.PrintWriter;
+import java.util.Arrays;
+import java.util.List;
 
 public final class Robot extends IterativeRobot
 {
-    // Currently the max percent voltage that can be given to each to each wheel
-    public static final float VR_MAX = .75F;
-    public static final float VL_MAX = .75F;
-    public static final float VR_MIN = -.75F;
-    public static final float VL_MIN = -.75F;
-    // The distance between wheels (laterally) in feet. Measure from the centerpoints of the wheels.
-    public static final float LATERAL_WHEEL_DISTANCE = 23.25F/12F;
-    // The lookahead distance (feet) for Pure Pursuit
-    public static final float LOOKAHEAD_DISTANCE = 2F;
+    public static double CAL_VELOCITY = 0D;
+    public static long SHIFTED;
+    public static String GAME_DATA = "    ";
 
     public static DriveTrainSubsystem DRIVE_TRAIN;
     public static TransmissionSubsystem TRANSMISSION;
     public static ClimberSubsystem CLIMBER;
-    public static long SHIFTED;
     public static Compressor COMPRESSOR;
-
-    public static String GAME_DATA;
-
     public static PrintWriter LOG_OUTPUT;
-    // NavX Subsystem
     public static AHRS NAVX;
-    private File logFile;
 
     public static void write(String string)
     {
@@ -53,38 +48,38 @@ public final class Robot extends IterativeRobot
      */
     public void robotInit()
     {
-        logFile = new File("/home/lvuser/log.txt");
-        FileWriter fileWriter = null;
-        try
-        {
-            logFile.createNewFile();
-            fileWriter = new FileWriter(logFile);
-        }
-        catch(IOException e) { e.printStackTrace(); }
-        LOG_OUTPUT = new PrintWriter(fileWriter == null ? new OutputStreamWriter(System.out) : fileWriter, true);
-
-        Robot.write("tester");
-        // System.out.println("writing tester");
-
         Log.createLogger(true);
-        DRIVE_TRAIN = new DriveTrainSubsystem();
+
         CLIMBER = new ClimberSubsystem();
+        COMPRESSOR = new Compressor();
+        DRIVE_TRAIN = new DriveTrainSubsystem();
         NAVX = new AHRS(SPI.Port.kMXP);
         TRANSMISSION = new TransmissionSubsystem();
-        COMPRESSOR = new Compressor();
-
-        AutoSwitcher.putToSmartDashboard();
-
-        SendableNavX.init();
-        SendableDriveTrain.init();
-
-        DashboardData.addUpdater(SendableDriveTrain.getInstance());
-        DashboardData.addUpdater(SendableNavX.getInstance());
 
         OI.init();
 
+        AutoSwitcher.putToSmartDashboard();
+
+        SendableDriveTrain.init();
+        DashboardData.addUpdater(SendableDriveTrain.getInstance());
+
+        SendableVersioning.getInstance().init();
+        SmartDashboard.putData(SendableVersioning.getInstance());
+
+        SendableNavX.init();
+        DashboardData.addUpdater(SendableNavX.getInstance());
+
+        DashboardData.addUpdater(() -> {
+            Robot.CAL_VELOCITY = SmartDashboard.getNumber("calibration_velocity", 0);
+            SmartDashboard.putNumber("calibration_velocity", Robot.CAL_VELOCITY);
+        });
+
+        SmartDashboard.putBoolean("calibration_enabled", false);
+        SmartDashboard.putNumber("calibration_velocity", 0);
+
         NAVX.resetDisplacement();
-        // DashboardData.addUpdater(DRIVE_TRAIN);
+
+        fileWriting();
     }
 
     /**
@@ -96,7 +91,7 @@ public final class Robot extends IterativeRobot
     public void disabledInit()
     {
         CLIMBER.stop();
-        LOG_OUTPUT.close();
+//        LOG_OUTPUT.close();
     }
 
     public void disabledPeriodic()
@@ -104,6 +99,7 @@ public final class Robot extends IterativeRobot
         Scheduler.getInstance().run();
         DashboardData.update();
         GAME_DATA = DriverStation.getInstance().getGameSpecificMessage();
+        if(GAME_DATA == null) { GAME_DATA = "___"; }
     }
 
     /**
@@ -120,13 +116,19 @@ public final class Robot extends IterativeRobot
     public void autonomousInit()
     {
         DRIVE_TRAIN.setAutonSettings();
-        ArrayList<Vector2f> waypoints = new ArrayList<>();
 
-        waypoints.add(new Vector2f(0,0));
-        waypoints.add(new Vector2f(5,5));
-        waypoints.add(new Vector2f(6,21));
-        Scheduler.getInstance().add(new PurePursuitCommand(waypoints, LOOKAHEAD_DISTANCE));
-        // Scheduler.getInstance().add(AutoSwitcher.getAutoInstance());
+        List<ImmutableVector2f> waypoints = Arrays.asList(
+                new ImmutableVector2f(0, 0),
+                new ImmutableVector2f(0, 26),
+                new ImmutableVector2f(-6, 26),
+                new ImmutableVector2f(-6, 0),
+                new ImmutableVector2f(0, 0)
+                                                         );
+
+//        Scheduler.getInstance().add(new CalibrateRobotCommand());
+        Scheduler.getInstance().add(new PurePursuitCommand(waypoints, Constants.LOOKAHEAD_DISTANCE_FT, Constants.STOP_DIST_TOLERANCE_FT));
+//        Scheduler.getInstance().add(AutoSwitcher.getAutoInstance());
+
         NAVX.reset();
     }
 
@@ -139,7 +141,10 @@ public final class Robot extends IterativeRobot
         DashboardData.update();
     }
 
-    public void teleopInit() { }
+    public void teleopInit()
+    {
+        DRIVE_TRAIN.setTeleopSettings();
+    }
 
     /**
      * This function is called periodically during operator control
@@ -159,11 +164,13 @@ public final class Robot extends IterativeRobot
         DashboardData.update();
     }
 
-    public static final class Physical
+    private void fileWriting()
     {
-        public static final float WHEEL_DIAMETER_INCH = 4F;
-        public static final float WHEEL_ROLLING_RADIUS_INCH = 1.5F;
-        public static final float WHEEL_ROLLING_RADIUS_FT = WHEEL_ROLLING_RADIUS_INCH * 1.5F / 12F;
-        public static final float WHEEL_DIAMETER_FT = WHEEL_DIAMETER_INCH / 12F;
+        String fileName = "/home/lvuser/FILES";
+        if((System.currentTimeMillis() % 10000) == 0) { Files.newFile(fileName); }
+        Files.setFileName(fileName);
+        Files.setTime(System.currentTimeMillis());
+        Files.writeToFile();
+        Files.setNameAndValue("Loop Error", 5);
     }
 }
