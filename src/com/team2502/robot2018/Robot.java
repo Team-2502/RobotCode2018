@@ -168,9 +168,11 @@ public final class Robot extends IterativeRobot
     {
         String fileName = "/home/lvuser/FILES";
         if((System.currentTimeMillis() % 10000) == 0) { Files.newFile(fileName); }
+
         Files.setFileName(fileName);
         Files.setTime(System.currentTimeMillis());
+        Files.setNameAndValue("Right Pos", DRIVE_TRAIN.getRightPos());
+        Files.setNameAndValue("Left Pos", DRIVE_TRAIN.getLeftPos());
         Files.writeToFile();
-        Files.setNameAndValue("Loop Error", 5);
     }
 }

@@ -2,6 +2,9 @@ package com.team2502.robot2018;
 
 import com.team2502.ctannotationprocessor.Undefined;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Exclusively for defining Button ID's, Solenoid ID's, Motor ID's, and other kinds of ID's
  * Stuff like conversion constants DO NOT belong here
@@ -58,7 +61,9 @@ public class RobotMap
 
     public static final class Files
     {
-        public static int FilesMade = 0;
+        public static String[] NAMES = {"Right Pos", "Left Pos"};
+        public static int FILESMADE = 0;
+        public static Map<String, Object> FILEMAP = new HashMap<String, Object>();
 
         private Files() {}
     }

@@ -283,18 +283,29 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     public float getLeftVel() { return leftRearTalonEnc.getSelectedSensorVelocity(0) * Constants.EVEL_TO_FPS; }
 
     /**
-     * @return Velocity as ready by right encoder in Feet per Second
+     * @return Velocity as read by right encoder in Feet per Second
      */
     public float getRightVel() { return rightRearTalonEnc.getSelectedSensorVelocity(0) * Constants.EVEL_TO_FPS; }
+
+    /**
+     * @return Position as read by right encoder in Feet per Second
+     */
+    public float getRightPos() { return rightRearTalonEnc.getSelectedSensorPosition(0) * Constants.EPOS_TO_FEET; }
+
+    /**
+     * @return Position as read by left encoder in Feet per Second
+     */
+    public float getLeftPos() { return leftRearTalonEnc.getSelectedSensorPosition(0) * Constants.EPOS_TO_FEET; }
+
 
     @Override
     public void updateDashboard()
     {
-        SmartDashboard.putNumber("Left Speed (ft/s)", leftRearTalonEnc.getSelectedSensorVelocity(0) * Constants.EVEL_TO_FPS);
-        SmartDashboard.putNumber("Left Pos (ft)", leftRearTalonEnc.getSelectedSensorPosition(0) * Constants.EPOS_TO_FEET);
+        SmartDashboard.putNumber("Left Speed (ft/s)", getLeftVel());
+        SmartDashboard.putNumber("Left Pos (ft)", getLeftVel());
 
-        SmartDashboard.putNumber("Right Speed (ft/s)", rightRearTalonEnc.getSelectedSensorVelocity(0) * Constants.EVEL_TO_FPS);
-        SmartDashboard.putNumber("Right Pos (ft)", rightRearTalonEnc.getSelectedSensorPosition(0) * Constants.EPOS_TO_FEET);
+        SmartDashboard.putNumber("Right Speed (ft/s)", getRightVel());
+        SmartDashboard.putNumber("Right Pos (ft)", getRightPos());
 
 
         pidTuner.updateDashboard();
