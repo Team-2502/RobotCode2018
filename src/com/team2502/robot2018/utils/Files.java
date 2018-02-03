@@ -38,6 +38,7 @@ public class Files
     {
         Time = time;
     }
+
     public static void setFileName(String fileName)
     {
         FileName = fileName;
@@ -52,7 +53,7 @@ public class Files
 
     public static void writeToFile()
     {
-        long time = Time;
+        long time = System.currentTimeMillis();
         WriteToFile writeToFile = new WriteToFile(getFileName());
 
         long minutes = TimeUnit.MILLISECONDS.toMinutes(time);

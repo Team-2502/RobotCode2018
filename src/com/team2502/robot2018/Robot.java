@@ -167,10 +167,10 @@ public final class Robot extends IterativeRobot
     private void fileWriting()
     {
         String fileName = "/home/lvuser/FILES";
+        Files.setFileName(fileName);
+        
         if((System.currentTimeMillis() % 10000) == 0) { Files.newFile(fileName); }
 
-        Files.setFileName(fileName);
-        Files.setTime(System.currentTimeMillis());
         Files.setNameAndValue("Right Pos", DRIVE_TRAIN.getRightPos());
         Files.setNameAndValue("Left Pos", DRIVE_TRAIN.getLeftPos());
         Files.writeToFile();
