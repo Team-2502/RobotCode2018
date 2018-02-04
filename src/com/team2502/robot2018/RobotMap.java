@@ -45,15 +45,21 @@ public class RobotMap
 
     public static final class Motor
     {
+        // Right side of e-panel, bottom to top
         public static final int DRIVE_TRAIN_FRONT_RIGHT = 1;
         public static final int DRIVE_TRAIN_BACK_RIGHT = 2;
         public static final int DRIVE_TRAIN_FRONT_LEFT = 3;
         public static final int DRIVE_TRAIN_BACK_LEFT = 4;
+        public static final int ACTIVE_RIGHT = 5;
+        public static final int ACTIVE_ROTATE = 6;
 
-        @Undefined(safe = true)
-        public static final int CLIMBER_LEFT = UNDEFINED;
-        @Undefined(safe = true)
-        public static final int CLIMBER_RIGHT = UNDEFINED;
+        // Left side of e-panel, top to bottom
+        public static final int SPARE_TALON = 7;
+        public static final int ACTIVE_LEFT = 8;
+        public static final int ELEVATOR_TOP = 9;
+        public static final int ELEVATOR_BOTTOM = 10;
+        public static final int CLIMBER_LEFT = 11;
+        public static final int CLIMBER_RIGHT = 12;
 
         private Motor() { }
     }
