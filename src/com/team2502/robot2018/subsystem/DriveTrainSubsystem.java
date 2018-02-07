@@ -2,10 +2,7 @@ package com.team2502.robot2018.subsystem;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-import com.team2502.robot2018.Constants;
-import com.team2502.robot2018.DashboardData;
-import com.team2502.robot2018.OI;
-import com.team2502.robot2018.RobotMap;
+import com.team2502.robot2018.*;
 import com.team2502.robot2018.command.teleop.DriveCommand;
 import com.team2502.robot2018.sendables.PIDTunable;
 import com.team2502.robot2018.sendables.SendablePIDTuner;
@@ -229,8 +226,7 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         // Only increase the speed by a small amount
         float diff = joystickLevel - lastLeft;
         if(diff > 0.1F) { joystickLevel = lastLeft + 0.1F; }
-        else if(diff < 0.1F) { joystickLevel = lastLeft - 0.1F; }
-
+        else if(diff < -0.1F) { joystickLevel = lastLeft - 0.1F; }
         lastLeft = joystickLevel;
         out.left = joystickLevel;
 
@@ -239,8 +235,7 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
 
         diff = joystickLevel - lastRight;
         if(diff > 0.1F) { joystickLevel = lastRight + 0.1F; }
-        else if(diff < 0.1F) { joystickLevel = lastRight - 0.1F; }
-
+        else if(diff < -0.1F) { joystickLevel = lastRight - 0.1F; }
         lastRight = joystickLevel;
         out.right = joystickLevel;
 
@@ -259,6 +254,8 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     public void drive()
     {
         FloatPair speed = getSpeed();
+        SmartDashboard.putNumber("speedL", -speed.left);
+        SmartDashboard.putNumber("speedR", -speed.left);
 
         // Log.debug("Left: {0,number,#.###}\t\t Right: {0,number,#.###}", speed.right, speed.left);
 
@@ -267,8 +264,16 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
 
         isNegativePressed = OI.JOYSTICK_DRIVE_LEFT.getRawButton(RobotMap.Joystick.Button.INVERSE_DRIVER_CONTROLS);
 
-        if(!negative) { drive.tankDrive(speed.left, speed.right, true); }
-        else { drive.tankDrive(-speed.left, -speed.right, true); }
+        if(negative)
+        {
+            Robot.DRIVE_TRAIN.leftRearTalonEnc.set(ControlMode.Velocity, speed.left * Constants.FPS_TO_EVEL* 8F); // this
+            Robot.DRIVE_TRAIN.rightRearTalonEnc.set(ControlMode.Velocity, speed.right * Constants.FPS_TO_EVEL* 8F); // this
+        }
+        else
+        {
+            Robot.DRIVE_TRAIN.leftRearTalonEnc.set(ControlMode.Velocity, -speed.left * Constants.FPS_TO_EVEL* 8F); // this
+            Robot.DRIVE_TRAIN.rightRearTalonEnc.set(ControlMode.Velocity, -speed.right * Constants.FPS_TO_EVEL* 8F); // this
+        }
     }
 
     public float avgVel()
