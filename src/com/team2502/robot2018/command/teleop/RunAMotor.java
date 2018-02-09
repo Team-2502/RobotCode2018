@@ -25,4 +25,9 @@ public class RunAMotor extends Command
     {
         return true;
     }
+
+    protected void end()
+    {
+        talon.set(ControlMode.PercentOutput, 0.0F);
+    }
 }

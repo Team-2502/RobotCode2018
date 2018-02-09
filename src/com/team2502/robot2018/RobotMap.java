@@ -33,6 +33,8 @@ public class RobotMap
             public static final int FORCE_LOW_GEAR = 1;
             @Undefined(safe = true)
             public static final int INVERSE_DRIVER_CONTROLS = 1;
+            public static final int RAISE_ELEVATOR = 10;
+            public static final int LOWER_ELEVATOR = 11;
 
             private Button() { }
         }
