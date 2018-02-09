@@ -5,9 +5,7 @@ import com.team2502.robot2018.command.autonomous.PurePursuitCommand;
 import com.team2502.robot2018.sendables.SendableDriveTrain;
 import com.team2502.robot2018.sendables.SendableNavX;
 import com.team2502.robot2018.sendables.SendableVersioning;
-import com.team2502.robot2018.subsystem.ClimberSubsystem;
-import com.team2502.robot2018.subsystem.DriveTrainSubsystem;
-import com.team2502.robot2018.subsystem.TransmissionSubsystem;
+import com.team2502.robot2018.subsystem.*;
 import com.team2502.robot2018.utils.Files;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -31,9 +29,11 @@ public final class Robot extends IterativeRobot
 
     public static DriveTrainSubsystem DRIVE_TRAIN;
     public static TransmissionSubsystem TRANSMISSION;
+    public static ActiveSubsystem ACTIVE_INTAKE;
     public static ClimberSubsystem CLIMBER;
     public static Compressor COMPRESSOR;
     public static PrintWriter LOG_OUTPUT;
+    public static ElevatorSubsystem ELEVATOR;
     public static AHRS NAVX;
 
     public static void write(String string)
@@ -55,6 +55,8 @@ public final class Robot extends IterativeRobot
         DRIVE_TRAIN = new DriveTrainSubsystem();
         NAVX = new AHRS(SPI.Port.kMXP);
         TRANSMISSION = new TransmissionSubsystem();
+        ACTIVE_INTAKE = new ActiveSubsystem();
+        ELEVATOR = new ElevatorSubsystem();
 
         OI.init();
 
