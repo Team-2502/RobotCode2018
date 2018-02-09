@@ -20,20 +20,18 @@ public final class OI
     public static final Button ELEV_UP = new JoystickButtonF(JOYSTICK_FUNCTION, 10);
     public static final Button ELEV_DOWN = new JoystickButtonF(JOYSTICK_FUNCTION, 11);
 
-    static {
-        double sped = 0.1;
-        LEFT_INTAKE_FORWARD.whileHeld(new RunAMotor(Robot.ACTIVE_INTAKE.leftIntake, sped));
-        LEFT_INTAKE_BACKWARD.whileHeld(new RunAMotor(Robot.ACTIVE_INTAKE.leftIntake, -sped));
-        RIGHT_INTAKE_FORWARD.whileHeld(new RunAMotor(Robot.ACTIVE_INTAKE.rightIntake, sped));
-        RIGHT_INTAKE_BACKWARD.whileHeld(new RunAMotor(Robot.ACTIVE_INTAKE.rightIntake, -sped));
-
-        ELEV_UP.whileHeld(new OneMethodCommand(() -> {Robot.ELEVATOR.run(0.6);}));
-        ELEV_DOWN.whileHeld(new OneMethodCommand(() -> {Robot.ELEVATOR.run(-0.6);}));
-    }
-
     private OI() { }
 
-    public static void init() {}
+    public static void init()
+    {
+        LEFT_INTAKE_FORWARD.whileHeld(new RunAMotor(Robot.ACTIVE_INTAKE.leftIntake, Constants.INTAKE_SPEED_PERCENT_LIMIT));
+        LEFT_INTAKE_BACKWARD.whileHeld(new RunAMotor(Robot.ACTIVE_INTAKE.leftIntake, -Constants.INTAKE_SPEED_PERCENT_LIMIT));
+        RIGHT_INTAKE_FORWARD.whileHeld(new RunAMotor(Robot.ACTIVE_INTAKE.rightIntake, Constants.INTAKE_SPEED_PERCENT_LIMIT));
+        RIGHT_INTAKE_BACKWARD.whileHeld(new RunAMotor(Robot.ACTIVE_INTAKE.rightIntake, -Constants.INTAKE_SPEED_PERCENT_LIMIT));
+
+        ELEV_UP.whileHeld(new OneMethodCommand(() -> Robot.ELEVATOR.run(Constants.ELEVATOR_SPEED_PERCENT_LIMIT)));
+        ELEV_DOWN.whileHeld(new OneMethodCommand(() -> Robot.ELEVATOR.run(-Constants.ELEVATOR_SPEED_PERCENT_LIMIT)));
+    }
 
     public static boolean joysThreshold(double threshold, boolean above)
     {
