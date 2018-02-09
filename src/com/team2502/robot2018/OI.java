@@ -6,6 +6,9 @@ import com.team2502.robot2018.utils.JoystickButtonF;
 import com.team2502.robot2018.utils.JoystickF;
 import edu.wpi.first.wpilibj.buttons.Button;
 
+/**
+ * The Operator Interface class. NOT the wrong spelling of I/O!
+ */
 public final class OI
 {
     public static final JoystickF JOYSTICK_DRIVE_LEFT = new JoystickF(RobotMap.Joystick.JOYSTICK_DRIVE_LEFT);
