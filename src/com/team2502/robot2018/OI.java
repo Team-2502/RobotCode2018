@@ -1,7 +1,6 @@
 package com.team2502.robot2018;
 
 import com.team2502.robot2018.command.teleop.ElevatorCommand;
-import com.team2502.robot2018.command.teleop.OneMethodCommand;
 import com.team2502.robot2018.command.teleop.RunAMotor;
 import com.team2502.robot2018.utils.JoystickButtonF;
 import com.team2502.robot2018.utils.JoystickF;
@@ -32,7 +31,6 @@ public final class OI
         LEFT_INTAKE_BACKWARD.whileHeld(new RunAMotor(Robot.ACTIVE_INTAKE.leftIntake, -Constants.INTAKE_SPEED_PERCENT_LIMIT));
         RIGHT_INTAKE_FORWARD.whileHeld(new RunAMotor(Robot.ACTIVE_INTAKE.rightIntake, Constants.INTAKE_SPEED_PERCENT_LIMIT));
         RIGHT_INTAKE_BACKWARD.whileHeld(new RunAMotor(Robot.ACTIVE_INTAKE.rightIntake, -Constants.INTAKE_SPEED_PERCENT_LIMIT));
-
         ELEV_UP.whileHeld(new ElevatorCommand());
     }
 
