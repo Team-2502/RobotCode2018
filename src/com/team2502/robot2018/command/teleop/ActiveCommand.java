@@ -1,30 +1,27 @@
 package com.team2502.robot2018.command.teleop;
 
+import com.team2502.robot2018.OI;
 import com.team2502.robot2018.Robot;
 import edu.wpi.first.wpilibj.command.Command;
 
-public class ElevatorCommand extends Command
+/**
+ * Created by 64009334 on 2/9/18.
+ */
+public class ActiveCommand extends Command
 {
-    public ElevatorCommand()
+    public ActiveCommand()
     {
-        requires(Robot.ELEVATOR);
+        requires(Robot.ACTIVE_INTAKE);
     }
 
-    @Override
     protected void execute()
     {
-        Robot.ELEVATOR.moveElevator(0.5F);
+        Robot.ACTIVE_INTAKE.rotateIntake(OI.JOYSTICK_FUNCTION.getY());
     }
 
     @Override
     protected boolean isFinished()
     {
         return false;
-    }
-
-    @Override
-    protected void end()
-    {
-        Robot.ELEVATOR.stopElevator();
     }
 }

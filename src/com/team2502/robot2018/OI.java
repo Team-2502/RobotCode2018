@@ -16,24 +16,47 @@ public final class OI
     public static final JoystickF JOYSTICK_DRIVE_RIGHT = new JoystickF(RobotMap.Joystick.JOYSTICK_DRIVE_RIGHT);
     public static final JoystickF JOYSTICK_FUNCTION = new JoystickF(RobotMap.Joystick.JOYSTICK_FUNCTION);
 
-    public static final Button LEFT_INTAKE_FORWARD = new JoystickButtonF(JOYSTICK_FUNCTION, 5);
-    public static final Button LEFT_INTAKE_BACKWARD = new JoystickButtonF(JOYSTICK_FUNCTION, 6);
-    public static final Button RIGHT_INTAKE_FORWARD = new JoystickButtonF(JOYSTICK_FUNCTION, 7);
-    public static final Button RIGHT_INTAKE_BACKWARD = new JoystickButtonF(JOYSTICK_FUNCTION, 8);
+    public static final Button INTAKE_IN = new JoystickButtonF(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.INTAKE_IN);
+    public static final Button INTAKE_OUT = new JoystickButtonF(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.INTAKE_OUT);
+    public static final Button OPEN_INTAKE = new JoystickButtonF(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.OPEN_INTAKE);
 
-    public static final Button ELEV_UP = new JoystickButtonF(JOYSTICK_DRIVE_LEFT, 10);
-    public static final Button SHIFT_GEARBOX_ELEV = new JoystickButtonF(JOYSTICK_FUNCTION, 11);
+    public static final Button ELEV_UP = new JoystickButtonF(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.RAISE_ELEVATOR);
+    public static final Button ELEV_DOWN = new JoystickButtonF(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.LOWER_ELEVATOR);
+
+    public static final Button CLIMBER = new JoystickButtonF(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.CLIMBER);
+
+
+    public static final Button SHIFT_GEARBOX_ELEV = new JoystickButtonF(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.SHIFT_GEARBOX_ELEV);
 
     private OI() { }
 
     public static void init()
     {
-        LEFT_INTAKE_FORWARD.whileHeld(new RunAMotor(Robot.ACTIVE_INTAKE.leftIntake, Constants.INTAKE_SPEED_PERCENT_LIMIT));
-        LEFT_INTAKE_BACKWARD.whileHeld(new RunAMotor(Robot.ACTIVE_INTAKE.leftIntake, -Constants.INTAKE_SPEED_PERCENT_LIMIT));
-        RIGHT_INTAKE_FORWARD.whileHeld(new RunAMotor(Robot.ACTIVE_INTAKE.rightIntake, Constants.INTAKE_SPEED_PERCENT_LIMIT));
-        RIGHT_INTAKE_BACKWARD.whileHeld(new RunAMotor(Robot.ACTIVE_INTAKE.rightIntake, -Constants.INTAKE_SPEED_PERCENT_LIMIT));
 
+        // Elevator buttons
+
+        // This is supposed to automatically engage
+//        ELEV_UP.whenPressed(new OneMethodCommand(Robot.ELEVATOR, Robot.ELEVATOR::unlockElevator));
         ELEV_UP.whileHeld(new ElevatorCommand());
+//        ELEV_UP.whenReleased(new OneMethodCommand(Robot.ELEVATOR, Robot.ELEVATOR::lockElevator));
+
+//        ELEV_DOWN.whenPressed(new OneMethodCommand(Robot.ELEVATOR, Robot.ELEVATOR::unlockElevator));
+        ELEV_DOWN.whileHeld(new OneMethodCommand(Robot.ELEVATOR, () -> Robot.ELEVATOR.moveElevator(-0.2)));
+//        ELEV_DOWN.whenReleased(new OneMethodCommand(Robot.ELEVATOR, Robot.ELEVATOR::lockElevator));
+
+        // Active Intake buttons
+        INTAKE_IN.whileHeld(new OneMethodCommand(Robot.ACTIVE_INTAKE, () -> Robot.ACTIVE_INTAKE.runIntake(0.3)));
+        INTAKE_IN.whenReleased(new OneMethodCommand(Robot.ACTIVE_INTAKE, Robot.ACTIVE_INTAKE::stop));
+
+        INTAKE_OUT.whileHeld(new OneMethodCommand(Robot.ACTIVE_INTAKE, () -> Robot.ACTIVE_INTAKE.runIntake(-0.3)));
+        INTAKE_OUT.whenReleased(new OneMethodCommand(Robot.ACTIVE_INTAKE, Robot.ACTIVE_INTAKE::stop));
+
+        OPEN_INTAKE.whenPressed(new OneMethodCommand(Robot.ACTIVE_INTAKE, Robot.ACTIVE_INTAKE::toggleIntake));
+
+        CLIMBER.whileHeld(new OneMethodCommand(Robot.ELEVATOR, () -> Robot.ELEVATOR.moveClimber(0.4)));
+        CLIMBER.whenReleased(new OneMethodCommand(Robot.ELEVATOR, Robot.ELEVATOR::stopClimber));
+
+        SHIFT_GEARBOX_ELEV.whenPressed(new OneMethodCommand(Robot.ELEVATOR, () -> Robot.ELEVATOR.toggleLock()));
     }
 
     public static boolean joysThreshold(double threshold, boolean above)

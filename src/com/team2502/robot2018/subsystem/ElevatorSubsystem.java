@@ -5,6 +5,7 @@ import com.team2502.robot2018.RobotMap;
 import com.team2502.robot2018.utils.WPI_TalonSRXF;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import logger.Log;
 
 public class ElevatorSubsystem extends Subsystem
 {
@@ -25,7 +26,7 @@ public class ElevatorSubsystem extends Subsystem
     /**
      * When true, it means the elevator is locked and can only go down
      */
-    private boolean climberEnabled = false;
+    private boolean climberDisabled = false;
 
     public ElevatorSubsystem()
     {
@@ -81,7 +82,9 @@ public class ElevatorSubsystem extends Subsystem
      */
     public void lockElevator()
     {
-        climberSolenoid.set(climberEnabled = true);
+        //TODO: Once solenoid is installed, make functional
+        Log.info("Locking elevator");
+        climberSolenoid.set(climberDisabled = false);
     }
 
     /**
@@ -99,8 +102,10 @@ public class ElevatorSubsystem extends Subsystem
      */
     public void unlockElevator()
     {
+        //TODO: Once solenoid is installed, make functional
+        Log.info("Unlocking elevator");
 
-        climberSolenoid.set(climberEnabled = false);
+        climberSolenoid.set(climberDisabled = true);
     }
 
     /**
@@ -108,13 +113,13 @@ public class ElevatorSubsystem extends Subsystem
      */
     public void toggleLock()
     {
-        climberSolenoid.set(climberEnabled = !climberEnabled);
+        climberSolenoid.set(climberDisabled = !climberDisabled);
     }
 
     /**
      * @return Whether or not the climber is enabled
      */
-    public boolean isLocked() { return climberEnabled; }
+    public boolean isLocked() { return climberDisabled; }
 
     /**
      * Stop both the elevator and the climber

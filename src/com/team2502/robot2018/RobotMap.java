@@ -33,8 +33,27 @@ public class RobotMap
             public static final int FORCE_LOW_GEAR = 1;
             @Undefined(safe = true)
             public static final int INVERSE_DRIVER_CONTROLS = 1;
-            public static final int RAISE_ELEVATOR = 10;
-            public static final int LOWER_ELEVATOR = 11;
+
+            /*
+             * Eventually, once we have encoders, these buttons will go all the way up/down
+             */
+            public static final int RAISE_ELEVATOR = 4;
+            public static final int LOWER_ELEVATOR = 5;
+
+            /*
+             * Then, these buttons will let Driver 2 adjust it manually
+             */
+            public static final int ADJUST_ELEVATOR_UP = 3;
+            public static final int ADJUST_ELEVATOR_DOWN = 3;
+
+            public static final int CLIMBER = 10;
+
+            public static final int SHIFT_GEARBOX_ELEV = 11;
+
+
+            public static final int OPEN_INTAKE = 1;
+            public static final int INTAKE_IN = 6;
+            public static final int INTAKE_OUT = 7;
 
             private Button() { }
         }
@@ -78,9 +97,9 @@ public class RobotMap
     public class Solenoid
     {
         public static final int TRANSMISSION_SWITCH = 0;
-        public static final int CLIMBER_SOLENOID = 1;
-        public static final int ACTIVE_GRABBER = 2;
-        public static final int BUTTERFLY_RELEASE = 3;
+        public static final int CLIMBER_SOLENOID = 2;
+        public static final int ACTIVE_GRABBER = 1;
+//        public static final int BUTTERFLY_RELEASE = 3;
 
         private Solenoid() { }
     }
