@@ -1,5 +1,6 @@
 package com.team2502.robot2018;
 
+import com.team2502.robot2018.command.teleop.ElevatorCommand;
 import com.team2502.robot2018.command.teleop.OneMethodCommand;
 import com.team2502.robot2018.command.teleop.RunAMotor;
 import com.team2502.robot2018.utils.JoystickButtonF;
@@ -20,8 +21,8 @@ public final class OI
     public static final Button RIGHT_INTAKE_FORWARD = new JoystickButtonF(JOYSTICK_FUNCTION, 7);
     public static final Button RIGHT_INTAKE_BACKWARD = new JoystickButtonF(JOYSTICK_FUNCTION, 8);
 
-    public static final Button ELEV_UP = new JoystickButtonF(JOYSTICK_FUNCTION, 10);
-    public static final Button ELEV_DOWN = new JoystickButtonF(JOYSTICK_FUNCTION, 11);
+    public static final Button ELEV_UP = new JoystickButtonF(JOYSTICK_DRIVE_LEFT, 10);
+    public static final Button SHIFT_GEARBOX_ELEV = new JoystickButtonF(JOYSTICK_FUNCTION, 11);
 
     private OI() { }
 
@@ -32,8 +33,7 @@ public final class OI
         RIGHT_INTAKE_FORWARD.whileHeld(new RunAMotor(Robot.ACTIVE_INTAKE.rightIntake, Constants.INTAKE_SPEED_PERCENT_LIMIT));
         RIGHT_INTAKE_BACKWARD.whileHeld(new RunAMotor(Robot.ACTIVE_INTAKE.rightIntake, -Constants.INTAKE_SPEED_PERCENT_LIMIT));
 
-        ELEV_UP.whileHeld(new OneMethodCommand(() -> Robot.ELEVATOR.run(Constants.ELEVATOR_SPEED_PERCENT_LIMIT)));
-        ELEV_DOWN.whileHeld(new OneMethodCommand(() -> Robot.ELEVATOR.run(-Constants.ELEVATOR_SPEED_PERCENT_LIMIT)));
+        ELEV_UP.whileHeld(new ElevatorCommand());
     }
 
     public static boolean joysThreshold(double threshold, boolean above)
