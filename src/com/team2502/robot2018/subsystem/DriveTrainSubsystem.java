@@ -153,7 +153,7 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     }
 
     /**
-     * Drive the robot. The equation x=-y must be true for the robot to drive straight.
+     * Drive the robot. The equation x=-y must be true for the robot to moveElevator straight.
      * <br>
      * Make sure to set the motors according to the control mode. In auton, it's position. In teleop, it's percent voltage.
      *
@@ -171,7 +171,7 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     }
 
     /**
-     * Drive the robot with x=0,y=0. The equation x=-y must be true for the robot to drive straight.
+     * Drive the robot with x=0,y=0. The equation x=-y must be true for the robot to moveElevator straight.
      * <br>
      * Make sure to set the motors according to the control mode. In auton, it's position. In teleop, it's percent voltage.
      *
@@ -187,7 +187,7 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     }
 
     /**
-     * Drive the robot using ControlMode.PercentOutput. The equation x=-y must be true for the robot to drive straight.
+     * Drive the robot using ControlMode.PercentOutput. The equation x=-y must be true for the robot to moveElevator straight.
      * <br>
      * Make sure to set the motors according to the control mode. In auton, it's position. In teleop, it's percent voltage.
      *
@@ -259,7 +259,7 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
 
         // Log.debug("Left: {0,number,#.###}\t\t Right: {0,number,#.###}", speed.right, speed.left);
 
-        //reverse drive
+        //reverse moveElevator
         if((OI.JOYSTICK_DRIVE_LEFT.getRawButton(RobotMap.Joystick.Button.INVERSE_DRIVER_CONTROLS) && !isNegativePressed)) { negative = !negative; }
 
         isNegativePressed = OI.JOYSTICK_DRIVE_LEFT.getRawButton(RobotMap.Joystick.Button.INVERSE_DRIVER_CONTROLS);

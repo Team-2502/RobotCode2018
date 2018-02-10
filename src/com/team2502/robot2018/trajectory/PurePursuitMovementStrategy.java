@@ -90,7 +90,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
             ImmutableVector2f lineP1 = waypoints.get(i);
             ImmutableVector2f lineP2 = waypoints.get(i + 1);
 
-            // Since goal points are within radius LOOK_AHEAD_DISTANCE from us, the robot would normally stop
+            // Since goal points are within radius LOOK_AHEAD_DISTANCE from us, the robot would normally stopElevator
             // when the distance from the last waypoint < LOOK_AHEAD_DISTANCE. However, we prevent this
             // by setting the last waypoint as a goal point when this happens.
             // TODO: test this to see if the robot is jerky near the end
@@ -101,7 +101,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
                 {
 //                    System.out.println("is close to: "+lineP2);
                     isClose = true;
-                    // We want to stop if the distance is within the desired amount
+                    // We want to stopElevator if the distance is within the desired amount
                     if(distanceWaypointSq < distanceStopSq)
                     {
                         isSuccessfullyFinished = true;

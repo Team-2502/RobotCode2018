@@ -13,7 +13,7 @@ public class ElevatorCommand extends Command
     @Override
     protected void execute()
     {
-        Robot.ELEVATOR.drive(1.0F);
+        Robot.ELEVATOR.moveElevator(1.0F);
     }
 
     @Override
@@ -25,6 +25,6 @@ public class ElevatorCommand extends Command
     @Override
     protected void end()
     {
-        Robot.ELEVATOR.stop();
+        Robot.ELEVATOR.stopElevator();
     }
 }

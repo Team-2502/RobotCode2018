@@ -14,8 +14,8 @@ public class ClimberSubsystem extends Subsystem
 
     public ClimberSubsystem()
     {
-        climbMotorLeft = new WPI_TalonSRXF(RobotMap.Motor.CLIMBER_LEFT);
-        climbMotorRight = new WPI_TalonSRXF(RobotMap.Motor.CLIMBER_RIGHT);
+        climbMotorLeft = new WPI_TalonSRXF(RobotMap.Motor.CLIMBER_TOP);
+        climbMotorRight = new WPI_TalonSRXF(RobotMap.Motor.CLIMBER_BOTTOM);
     }
 
     @Override
@@ -28,7 +28,7 @@ public class ClimberSubsystem extends Subsystem
 
         /*
          * Prevent motors from going backwards and
-         * stop if speed is below a certain threshold.
+         * stopElevator if speed is below a certain threshold.
          */
         if(speed <= 0.01F) { speed = 0.0F; }
 

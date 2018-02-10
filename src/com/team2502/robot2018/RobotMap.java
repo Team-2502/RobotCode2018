@@ -60,8 +60,8 @@ public class RobotMap
         public static final int ACTIVE_LEFT = 8;
         public static final int ELEVATOR_TOP = 9;
         public static final int ELEVATOR_BOTTOM = 10;
-        public static final int CLIMBER_LEFT = 11;
-        public static final int CLIMBER_RIGHT = 12;
+        public static final int CLIMBER_TOP = 11;
+        public static final int CLIMBER_BOTTOM = 12;
 
         private Motor() { }
     }
@@ -78,6 +78,9 @@ public class RobotMap
     public class Solenoid
     {
         public static final int TRANSMISSION_SWITCH = 0;
+        public static final int CLIMBER_SOLENOID = 1;
+        public static final int ACTIVE_GRABBER = 2;
+        public static final int BUTTERFLY_RELEASE = 3;
 
         private Solenoid() { }
     }
