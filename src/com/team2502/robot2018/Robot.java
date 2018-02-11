@@ -40,7 +40,6 @@ public final class Robot extends IterativeRobot
     public static void write(String string)
     {
         LOG_OUTPUT.println(string);
-        // System.out.println("I am writing something ");
     }
 
     /**

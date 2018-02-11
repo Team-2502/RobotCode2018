@@ -13,6 +13,7 @@ import com.team2502.robot2018.utils.SpeedControllerGroupF;
 import com.team2502.robot2018.utils.WPI_TalonSRXF;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  * Example Implementation, Many changes needed.
@@ -157,21 +158,21 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     }
 
     /**
-     * Drive the robot. The equation x=-y must be true for the robot to moveElevator straight.
+     * Drive the robot. The equation leftWheel=-rightWheel must be true for the robot to moveElevator straight.
      * <br>
      * Make sure to set the motors according to the control mode. In auton, it's position. In teleop, it's percent voltage.
      *
-     * @param x           Units for the left side of drivetrain
-     * @param y           Units for the right side of drivetrain
+     * @param leftWheel           Units for the left side of drivetrain
+     * @param rightWheel           Units for the right side of drivetrain
      * @param controlMode The mode that the motors are being driven in
      */
-    public void runMotors(ControlMode controlMode, float x, float y) // double z
+    public void runMotors(ControlMode controlMode, float leftWheel, float rightWheel) // double z
     {
-//        leftFrontTalon.set(controlMode, x);
-        leftRearTalonEnc.set(controlMode, x);
+//        leftFrontTalon.set(controlMode, leftWheel);
+        leftRearTalonEnc.set(controlMode, leftWheel);
 
-//        rightFrontTalon.set(controlMode, y);
-        rightRearTalonEnc.set(controlMode, y);
+//        rightFrontTalon.set(controlMode, rightWheel);
+        rightRearTalonEnc.set(controlMode, rightWheel);
     }
 
     /**
@@ -191,16 +192,16 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     }
 
     /**
-     * Drive the robot using ControlMode.PercentOutput. The equation x=-y must be true for the robot to moveElevator straight.
+     * Drive the robot using ControlMode.PercentOutput. The equation leftWheel=-rightWheel must be true for the robot to moveElevator straight.
      * <br>
      * Make sure to set the motors according to the control mode. In auton, it's position. In teleop, it's percent voltage.
      *
-     * @param x Units for the left side of drivetrain
-     * @param y Units for the right side of drivetrain
+     * @param leftWheel Units for the left side of drivetrain
+     * @param rightWheel Units for the right side of drivetrain
      */
-    public void runMotors(float x, float y) // double z
+    public void runMotors(float leftWheel, float rightWheel) // double z
     {
-        runMotors(ControlMode.PercentOutput, x, y);
+        runMotors(ControlMode.PercentOutput, leftWheel, rightWheel);
     }
 
     public double turningFactor()
@@ -217,10 +218,10 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     /**
      * Used to gradually increase the speed of the robot.
      *
-     * @param out The object to store the data in
+     * @param out The percent voltages of each wheel
      * @return the speed of the robot
      */
-    private FloatPair getSpeed(FloatPair out)
+    private FloatPair getSpeedTank(FloatPair out)
     {
         float joystickLevel;
         // Get the base speed of the robot
@@ -250,14 +251,58 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         return out;
     }
 
-    private FloatPair getSpeed()
+    /**
+     * TODO: finish!!!!
+     * @param out the percent voltages of each wheel.
+     * @deprecated
+     * @return
+     */
+    private FloatPair getSpeedArcade(FloatPair out)
     {
-        return getSpeed(SPEED_CONTAINER);
+        // ( v_l + v_r ) / 2
+        float vTan = OI.JOYSTICK_DRIVE_RIGHT.getY();
+
+        // (vR - vL) / l
+        float rot = OI.JOYSTICK_DRIVE_RIGHT.getX();
+
+        throw new NotImplementedException();
+
+//        float joystickLevel;
+//        // Get the base speed of the robot
+//        if(negative) { joystickLevel = OI.JOYSTICK_DRIVE_RIGHT.getY(); }
+//        else { joystickLevel = OI.JOYSTICK_DRIVE_LEFT.getY(); }
+//
+//        // Only increase the speed by a small amount
+//        float diff = joystickLevel - lastLeft;
+//        if(diff > 0.1F) { joystickLevel = lastLeft + 0.1F; }
+//        else if(diff < -0.1F) { joystickLevel = lastLeft - 0.1F; }
+//        lastLeft = joystickLevel;
+//        out.left = joystickLevel;
+//
+//        if(negative) { joystickLevel = OI.JOYSTICK_DRIVE_LEFT.getY(); }
+//        else { joystickLevel = OI.JOYSTICK_DRIVE_RIGHT.getY(); }
+//
+//        diff = joystickLevel - lastRight;
+//        if(diff > 0.1F) { joystickLevel = lastRight + 0.1F; }
+//        else if(diff < -0.1F) { joystickLevel = lastRight - 0.1F; }
+//        lastRight = joystickLevel;
+//        out.right = joystickLevel;
+//
+//        // Sets the speed to 0 if the speed is less than 0.05 and larger than -0.05
+//        if(Math.abs(out.left) < 0.05F) { out.left = 0.0F; }
+//        if(Math.abs(out.right) < 0.05F) { out.right = 0.0F; }
+//
+//        return out;
+    }
+
+    private FloatPair getSpeedTank()
+    {
+        return getSpeedTank(SPEED_CONTAINER);
     }
 
     public void drive()
     {
-        FloatPair speed = getSpeed();
+        FloatPair speed = getSpeedTank();
         SmartDashboard.putNumber("speedL", -speed.left);
         SmartDashboard.putNumber("speedR", -speed.right);
 
