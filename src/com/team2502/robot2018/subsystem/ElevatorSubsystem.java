@@ -1,6 +1,10 @@
 package com.team2502.robot2018.subsystem;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
+import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
+import com.ctre.phoenix.motorcontrol.RemoteLimitSwitchSource;
+import com.team2502.robot2018.Constants;
 import com.team2502.robot2018.RobotMap;
 import com.team2502.robot2018.utils.WPI_TalonSRXF;
 import edu.wpi.first.wpilibj.Solenoid;
@@ -37,6 +41,12 @@ public class ElevatorSubsystem extends Subsystem
 
         climberTop = new WPI_TalonSRXF(RobotMap.Motor.CLIMBER_TOP);
         climberBottom = new WPI_TalonSRXF(RobotMap.Motor.CLIMBER_BOTTOM);
+
+        elevatorTop.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen, Constants.INIT_TIMEOUT);
+        elevatorBottom.configForwardLimitSwitchSource(RemoteLimitSwitchSource.RemoteTalonSRX, LimitSwitchNormal.NormallyOpen, RobotMap.Motor.ELEVATOR_TOP, Constants.INIT_TIMEOUT);
+
+        elevatorTop.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen, Constants.INIT_TIMEOUT);
+        elevatorBottom.configReverseLimitSwitchSource(RemoteLimitSwitchSource.RemoteTalonSRX, LimitSwitchNormal.NormallyOpen, RobotMap.Motor.ELEVATOR_TOP, Constants.INIT_TIMEOUT);
     }
 
     /**
@@ -59,11 +69,12 @@ public class ElevatorSubsystem extends Subsystem
     }
 
     /**
-     * Move the elevator down for climbing purposes
-     * @param x How fast to move it
+     * Move the elevator down for climbing purpose
+     * @param x How fast to move it. Make it positive OR ELSE
      */
     public void moveClimber(double x)
     {
+        x = Math.abs(x);
         climberTop.set(ControlMode.PercentOutput, x);
         climberBottom.set(ControlMode.PercentOutput, x);
     }

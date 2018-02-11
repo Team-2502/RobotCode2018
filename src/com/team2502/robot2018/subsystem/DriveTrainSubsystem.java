@@ -93,6 +93,8 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         setTeleopSettings(rightFrontTalon);
         setTeleopSettings(leftRearTalonEnc);
         setTeleopSettings(rightRearTalonEnc);
+//        leftFrontTalon.follow(leftRearTalonEnc);
+//        rightFrontTalon.follow(rightRearTalonEnc);
 
 
         // Required for correct readings
@@ -255,7 +257,7 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     {
         FloatPair speed = getSpeed();
         SmartDashboard.putNumber("speedL", -speed.left);
-        SmartDashboard.putNumber("speedR", -speed.left);
+        SmartDashboard.putNumber("speedR", -speed.right);
 
         // Log.debug("Left: {0,number,#.###}\t\t Right: {0,number,#.###}", speed.right, speed.left);
 
@@ -266,13 +268,15 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
 
         if(negative)
         {
-            Robot.DRIVE_TRAIN.leftRearTalonEnc.set(ControlMode.Velocity, speed.left * Constants.FPS_TO_EVEL* 8F); // this
-            Robot.DRIVE_TRAIN.rightRearTalonEnc.set(ControlMode.Velocity, speed.right * Constants.FPS_TO_EVEL* 8F); // this
+//            Robot.DRIVE_TRAIN.leftRearTalonEnc.set(ControlMode.Velocity, speed.left * Constants.FPS_TO_EVEL* 8F); // this
+//            Robot.DRIVE_TRAIN.rightRearTalonEnc.set(ControlMode.Velocity, speed.right * Constants.FPS_TO_EVEL* 8F); // this
+            runMotors(speed.left, speed.right);
         }
         else
         {
-            Robot.DRIVE_TRAIN.leftRearTalonEnc.set(ControlMode.Velocity, -speed.left * Constants.FPS_TO_EVEL* 8F); // this
-            Robot.DRIVE_TRAIN.rightRearTalonEnc.set(ControlMode.Velocity, -speed.right * Constants.FPS_TO_EVEL* 8F); // this
+//            Robot.DRIVE_TRAIN.leftRearTalonEnc.set(ControlMode.Velocity, -speed.left * Constants.FPS_TO_EVEL* 8F); // this
+//            Robot.DRIVE_TRAIN.rightRearTalonEnc.set(ControlMode.Velocity, -speed.right * Constants.FPS_TO_EVEL* 8F); // this
+            runMotors(-speed.left, -speed.right);
         }
     }
 

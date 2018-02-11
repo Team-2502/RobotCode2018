@@ -17,6 +17,7 @@ public class ActiveCommand extends Command
     protected void execute()
     {
         Robot.ACTIVE_INTAKE.rotateIntake(OI.JOYSTICK_FUNCTION.getY());
+        System.out.println("Running active command");
     }
 
     @Override

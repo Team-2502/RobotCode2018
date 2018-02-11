@@ -93,6 +93,7 @@ public final class Robot extends IterativeRobot
     public void disabledInit()
     {
         CLIMBER.stop();
+        ELEVATOR.disengageClimber();
 //        LOG_OUTPUT.close();
     }
 

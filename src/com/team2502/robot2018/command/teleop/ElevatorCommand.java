@@ -13,7 +13,7 @@ public class ElevatorCommand extends Command
     @Override
     protected void execute()
     {
-        Robot.ELEVATOR.moveElevator(0.5F);
+        Robot.ELEVATOR.moveElevator(1F);
     }
 
     @Override

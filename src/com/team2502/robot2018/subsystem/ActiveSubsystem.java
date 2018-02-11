@@ -1,12 +1,16 @@
 package com.team2502.robot2018.subsystem;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
+import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
+import com.team2502.robot2018.Constants;
 import com.team2502.robot2018.RobotMap;
 import com.team2502.robot2018.command.teleop.ActiveCommand;
 import com.team2502.robot2018.utils.WPI_TalonSRXF;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import logger.Log;
+
 
 public class ActiveSubsystem extends Subsystem
 {
@@ -24,6 +28,9 @@ public class ActiveSubsystem extends Subsystem
         rotateIntake = new WPI_TalonSRXF(RobotMap.Motor.ACTIVE_ROTATE);
         grabber = new Solenoid(RobotMap.Solenoid.ACTIVE_GRABBER);
         grabber.set(grabberEnabled);
+
+        rotateIntake.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen, Constants.INIT_TIMEOUT);
+        rotateIntake.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen, Constants.INIT_TIMEOUT);
     }
 
     public void runIntake(double x)
