@@ -26,15 +26,14 @@ public final class Robot extends IterativeRobot
 {
     public static double CAL_VELOCITY = 0D;
     public static long SHIFTED;
-    public static String GAME_DATA = "    ";
+    public static String GAME_DATA = "...";
 
     public static DriveTrainSubsystem DRIVE_TRAIN;
-    public static TransmissionSubsystem TRANSMISSION;
     public static ActiveSubsystem ACTIVE_INTAKE;
-    public static ClimberSubsystem CLIMBER;
     public static Compressor COMPRESSOR;
     public static PrintWriter LOG_OUTPUT;
     public static ElevatorSubsystem ELEVATOR;
+    public static SolenoidSubsystem SOLENOIDS;
     public static AHRS NAVX;
 
     public static void write(String string)
@@ -50,13 +49,12 @@ public final class Robot extends IterativeRobot
     {
         Log.createLogger(true);
 
-        CLIMBER = new ClimberSubsystem();
         COMPRESSOR = new Compressor();
         DRIVE_TRAIN = new DriveTrainSubsystem();
         NAVX = new AHRS(SPI.Port.kMXP);
-        TRANSMISSION = new TransmissionSubsystem();
         ACTIVE_INTAKE = new ActiveSubsystem();
         ELEVATOR = new ElevatorSubsystem();
+        SOLENOIDS = new SolenoidSubsystem();
 
         OI.init();
 
@@ -94,8 +92,11 @@ public final class Robot extends IterativeRobot
 
     public void disabledInit()
     {
-        CLIMBER.stop();
-        ELEVATOR.disengageClimber();
+        /*
+         * Why would anyone do this? This will cause the robot
+         * (and potentially 2 other robots to fall to the ground.
+         */
+//        SOLENOIDS.disengageClimber();
 //        LOG_OUTPUT.close();
     }
 

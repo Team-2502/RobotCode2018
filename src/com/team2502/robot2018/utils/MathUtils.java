@@ -40,6 +40,9 @@ public final class MathUtils
 
     private MathUtils() { }
 
+    public static boolean signSame(float x, float y)
+    { return ((Float.floatToIntBits(x) & 0x80000000) == (Float.floatToIntBits(y) & 0x80000000)); }
+
     /**
      * sin looked up in a table
      */
@@ -187,6 +190,7 @@ public final class MathUtils
     public static float maxF(final float a, final int b)
     { return a > b ? a : b; }
 
+    //region Logarithmic Functions
     /**
      * Allows for the calculate of logX(in), may have minor performance boost from using direct call to StrictMath lowering stack overhead.
      *
@@ -215,8 +219,6 @@ public final class MathUtils
      */
     public static double log2(final double in)
     { return StrictMath.log(in) / 0.6931471806D; }
-
-    //region Logarithmic Functions
 
     /**
      * Use the predefined cube log instead of a custom implementation.

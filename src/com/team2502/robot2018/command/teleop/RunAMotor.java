@@ -1,7 +1,7 @@
 package com.team2502.robot2018.command.teleop;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.team2502.robot2018.utils.WPI_TalonSRXF;
+import com.team2502.robot2018.utils.baseoverloads.WPI_TalonSRXF;
 import edu.wpi.first.wpilibj.command.Command;
 
 public class RunAMotor extends Command
