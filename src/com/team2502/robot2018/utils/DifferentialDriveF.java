@@ -86,7 +86,7 @@ public class DifferentialDriveF extends RobotDriveBase
     }
 
     /**
-     * Arcade drive method for differential drive platform.
+     * Arcade moveElevator method for differential moveElevator platform.
      * The calculated values will be squared to decrease sensitivity at low speeds.
      *
      * @param xSpeed    The robot's speed along the X axis [-1.0..1.0]. Forward is positive.
@@ -114,7 +114,7 @@ public class DifferentialDriveF extends RobotDriveBase
     }
 
     /**
-     * Arcade drive method for differential drive platform.
+     * Arcade moveElevator method for differential moveElevator platform.
      *
      * @param xSpeed        The robot's speed along the X axis [-1.0..1.0]. Forward is positive.
      * @param zRotation     The robot's rotation rate around the Z axis [-1.0..1.0]. Clockwise is
@@ -184,7 +184,7 @@ public class DifferentialDriveF extends RobotDriveBase
     }
 
     /**
-     * Curvature drive method for differential drive platform.
+     * Curvature moveElevator method for differential moveElevator platform.
      * <p>
      * <p>The rotation argument controls the curvature of the robot's path rather than its rate of
      * heading change. This makes the robot more controllable at high speeds. Also handles the
@@ -269,7 +269,7 @@ public class DifferentialDriveF extends RobotDriveBase
     }
 
     /**
-     * Tank drive method for differential drive platform.
+     * Tank moveElevator method for differential moveElevator platform.
      * The calculated values will be squared to decrease sensitivity at low speeds.
      *
      * @param leftSpeed  The robot's left side speed along the X axis [-1.0..1.0]. Forward is
@@ -283,7 +283,7 @@ public class DifferentialDriveF extends RobotDriveBase
     }
 
     /**
-     * Tank drive method for differential drive platform.
+     * Tank moveElevator method for differential moveElevator platform.
      *
      * @param leftSpeed     The robot left side's speed along the X axis [-1.0..1.0]. Forward is
      *                      positive.
@@ -329,7 +329,7 @@ public class DifferentialDriveF extends RobotDriveBase
      * threshold. When QuickTurn is disabled, the accumulator's value is applied against the computed
      * angular power request to slow the robot's rotation.
      *
-     * @param threshold X speed below which quick stop accumulator will receive rotation rate values
+     * @param threshold X speed below which quick stopElevator accumulator will receive rotation rate values
      *                  [0..1.0].
      */
     public void setQuickStopThreshold(float threshold)

@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 public class TransmissionSubsystem extends Subsystem
 {
     private static Solenoid switcher;
-    public boolean disabledAutoShifting = false;
+    public boolean disabledAutoShifting = true;
 
     // TODO: Change name to `lowGear` if applicable.
     public boolean highGear;

@@ -2,18 +2,18 @@ package com.team2502.robot2018.subsystem;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-import com.team2502.robot2018.Constants;
-import com.team2502.robot2018.DashboardData;
-import com.team2502.robot2018.OI;
-import com.team2502.robot2018.RobotMap;
+import com.team2502.robot2018.*;
 import com.team2502.robot2018.command.teleop.DriveCommand;
+import com.team2502.robot2018.sendables.Nameable;
 import com.team2502.robot2018.sendables.PIDTunable;
+import com.team2502.robot2018.sendables.SendableDriveStrategyType;
 import com.team2502.robot2018.sendables.SendablePIDTuner;
 import com.team2502.robot2018.utils.DifferentialDriveF;
 import com.team2502.robot2018.utils.SpeedControllerGroupF;
 import com.team2502.robot2018.utils.WPI_TalonSRXF;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  * Example Implementation, Many changes needed.
@@ -96,6 +96,8 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         setTeleopSettings(rightFrontTalon);
         setTeleopSettings(leftRearTalonEnc);
         setTeleopSettings(rightRearTalonEnc);
+//        leftFrontTalon.follow(leftRearTalonEnc);
+//        rightFrontTalon.follow(rightRearTalonEnc);
 
 
         // Required for correct readings
@@ -156,25 +158,25 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     }
 
     /**
-     * Drive the robot. The equation x=-y must be true for the robot to drive straight.
+     * Drive the robot. The equation leftWheel=-rightWheel must be true for the robot to moveElevator straight.
      * <br>
      * Make sure to set the motors according to the control mode. In auton, it's position. In teleop, it's percent voltage.
      *
-     * @param x           Units for the left side of drivetrain
-     * @param y           Units for the right side of drivetrain
+     * @param leftWheel           Units for the left side of drivetrain
+     * @param rightWheel           Units for the right side of drivetrain
      * @param controlMode The mode that the motors are being driven in
      */
-    public void runMotors(ControlMode controlMode, float x, float y) // double z
+    public void runMotors(ControlMode controlMode, float leftWheel, float rightWheel) // double z
     {
-        leftFrontTalon.set(controlMode, x);
-        leftRearTalonEnc.set(controlMode, x);
+//        leftFrontTalon.set(controlMode, leftWheel);
+        leftRearTalonEnc.set(controlMode, leftWheel);
 
-        rightFrontTalon.set(controlMode, y);
-        rightRearTalonEnc.set(controlMode, y);
+//        rightFrontTalon.set(controlMode, rightWheel);
+        rightRearTalonEnc.set(controlMode, rightWheel);
     }
 
     /**
-     * Drive the robot with x=0,y=0. The equation x=-y must be true for the robot to drive straight.
+     * Drive the robot with x=0,y=0. The equation x=-y must be true for the robot to moveElevator straight.
      * <br>
      * Make sure to set the motors according to the control mode. In auton, it's position. In teleop, it's percent voltage.
      *
@@ -182,24 +184,24 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
      */
     public void runMotors(ControlMode controlMode) // double z
     {
-        leftFrontTalon.set(controlMode, 0);
+//        leftFrontTalon.set(controlMode, 0);
         leftRearTalonEnc.set(controlMode, 0);
 
-        rightFrontTalon.set(controlMode, 0);
+//        rightFrontTalon.set(controlMode, 0);
         rightRearTalonEnc.set(controlMode, 0);
     }
 
     /**
-     * Drive the robot using ControlMode.PercentOutput. The equation x=-y must be true for the robot to drive straight.
+     * Drive the robot using ControlMode.PercentOutput. The equation leftWheel=-rightWheel must be true for the robot to moveElevator straight.
      * <br>
      * Make sure to set the motors according to the control mode. In auton, it's position. In teleop, it's percent voltage.
      *
-     * @param x Units for the left side of drivetrain
-     * @param y Units for the right side of drivetrain
+     * @param leftWheel Units for the left side of drivetrain
+     * @param rightWheel Units for the right side of drivetrain
      */
-    public void runMotors(float x, float y) // double z
+    public void runMotors(float leftWheel, float rightWheel) // double z
     {
-        runMotors(ControlMode.PercentOutput, x, y);
+        runMotors(ControlMode.PercentOutput, leftWheel, rightWheel);
     }
 
     public double turningFactor()
@@ -216,10 +218,10 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     /**
      * Used to gradually increase the speed of the robot.
      *
-     * @param out The object to store the data in
+     * @param out The percent voltages of each wheel
      * @return the speed of the robot
      */
-    private FloatPair getSpeed(FloatPair out)
+    private FloatPair getSpeedTank(FloatPair out)
     {
         float joystickLevel;
         // Get the base speed of the robot
@@ -229,8 +231,7 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         // Only increase the speed by a small amount
         float diff = joystickLevel - lastLeft;
         if(diff > 0.1F) { joystickLevel = lastLeft + 0.1F; }
-        else if(diff < 0.1F) { joystickLevel = lastLeft - 0.1F; }
-
+        else if(diff < -0.1F) { joystickLevel = lastLeft - 0.1F; }
         lastLeft = joystickLevel;
         out.left = joystickLevel;
 
@@ -239,8 +240,7 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
 
         diff = joystickLevel - lastRight;
         if(diff > 0.1F) { joystickLevel = lastRight + 0.1F; }
-        else if(diff < 0.1F) { joystickLevel = lastRight - 0.1F; }
-
+        else if(diff < -0.1F) { joystickLevel = lastRight - 0.1F; }
         lastRight = joystickLevel;
         out.right = joystickLevel;
 
@@ -251,24 +251,83 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         return out;
     }
 
-    private FloatPair getSpeed()
+    /**
+     * TODO: finish!!!!
+     * @param out the percent voltages of each wheel.
+     * @deprecated
+     * @return
+     */
+    private FloatPair getSpeedArcade(FloatPair out)
     {
-        return getSpeed(SPEED_CONTAINER);
+        // ( v_l + v_r ) / 2
+        float vTan = OI.JOYSTICK_DRIVE_RIGHT.getY();
+
+        // (vR - vL) / l
+        float rot = OI.JOYSTICK_DRIVE_RIGHT.getX();
+
+        throw new NotImplementedException();
+
+//        float joystickLevel;
+//        // Get the base speed of the robot
+//        if(negative) { joystickLevel = OI.JOYSTICK_DRIVE_RIGHT.getY(); }
+//        else { joystickLevel = OI.JOYSTICK_DRIVE_LEFT.getY(); }
+//
+//        // Only increase the speed by a small amount
+//        float diff = joystickLevel - lastLeft;
+//        if(diff > 0.1F) { joystickLevel = lastLeft + 0.1F; }
+//        else if(diff < -0.1F) { joystickLevel = lastLeft - 0.1F; }
+//        lastLeft = joystickLevel;
+//        out.left = joystickLevel;
+//
+//        if(negative) { joystickLevel = OI.JOYSTICK_DRIVE_LEFT.getY(); }
+//        else { joystickLevel = OI.JOYSTICK_DRIVE_RIGHT.getY(); }
+//
+//        diff = joystickLevel - lastRight;
+//        if(diff > 0.1F) { joystickLevel = lastRight + 0.1F; }
+//        else if(diff < -0.1F) { joystickLevel = lastRight - 0.1F; }
+//        lastRight = joystickLevel;
+//        out.right = joystickLevel;
+//
+//        // Sets the speed to 0 if the speed is less than 0.05 and larger than -0.05
+//        if(Math.abs(out.left) < 0.05F) { out.left = 0.0F; }
+//        if(Math.abs(out.right) < 0.05F) { out.right = 0.0F; }
+//
+//        return out;
+    }
+
+    private FloatPair getSpeedTank()
+    {
+        return getSpeedTank(SPEED_CONTAINER);
     }
 
     public void drive()
     {
-        FloatPair speed = getSpeed();
+        FloatPair speed = getSpeedTank();
+        SmartDashboard.putNumber("speedL", -speed.left);
+        SmartDashboard.putNumber("speedR", -speed.right);
 
         // Log.debug("Left: {0,number,#.###}\t\t Right: {0,number,#.###}", speed.right, speed.left);
 
-        //reverse drive
+        //reverse moveElevator
         if((OI.JOYSTICK_DRIVE_LEFT.getRawButton(RobotMap.Joystick.Button.INVERSE_DRIVER_CONTROLS) && !isNegativePressed)) { negative = !negative; }
 
         isNegativePressed = OI.JOYSTICK_DRIVE_LEFT.getRawButton(RobotMap.Joystick.Button.INVERSE_DRIVER_CONTROLS);
 
-        if(!negative) { drive.tankDrive(speed.left, speed.right, true); }
-        else { drive.tankDrive(-speed.left, -speed.right, true); }
+        Nameable currentMode = SendableDriveStrategyType.getInstance().getCurrentMode();
+
+        if(!(currentMode instanceof DriveStrategyType))
+        {
+            throw new IllegalArgumentException("currentMode is of wrong type!"); // Note this acts as a return statement
+        }
+        DriveStrategyType strategyType = (DriveStrategyType) currentMode;
+        if(negative)
+        {
+            strategyType.getDriveStrategy().drive(speed.left, speed.right);
+        }
+        else
+        {
+            strategyType.getDriveStrategy().drive(-speed.left, -speed.right);
+        }
     }
 
     public float avgVel()
@@ -283,18 +342,29 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     public float getLeftVel() { return leftRearTalonEnc.getSelectedSensorVelocity(0) * Constants.EVEL_TO_FPS; }
 
     /**
-     * @return Velocity as ready by right encoder in Feet per Second
+     * @return Velocity as read by right encoder in Feet per Second
      */
     public float getRightVel() { return rightRearTalonEnc.getSelectedSensorVelocity(0) * Constants.EVEL_TO_FPS; }
+
+    /**
+     * @return Position as read by right encoder in Feet per Second
+     */
+    public float getRightPos() { return rightRearTalonEnc.getSelectedSensorPosition(0) * Constants.EPOS_TO_FEET; }
+
+    /**
+     * @return Position as read by left encoder in Feet per Second
+     */
+    public float getLeftPos() { return leftRearTalonEnc.getSelectedSensorPosition(0) * Constants.EPOS_TO_FEET; }
+
 
     @Override
     public void updateDashboard()
     {
-        SmartDashboard.putNumber("Left Speed (ft/s)", leftRearTalonEnc.getSelectedSensorVelocity(0) * Constants.EVEL_TO_FPS);
-        SmartDashboard.putNumber("Left Pos (ft)", leftRearTalonEnc.getSelectedSensorPosition(0) * Constants.EPOS_TO_FEET);
+        SmartDashboard.putNumber("Left Speed (ft/s)", getLeftVel());
+        SmartDashboard.putNumber("Left Pos (ft)", getLeftVel());
 
-        SmartDashboard.putNumber("Right Speed (ft/s)", rightRearTalonEnc.getSelectedSensorVelocity(0) * Constants.EVEL_TO_FPS);
-        SmartDashboard.putNumber("Right Pos (ft)", rightRearTalonEnc.getSelectedSensorPosition(0) * Constants.EPOS_TO_FEET);
+        SmartDashboard.putNumber("Right Speed (ft/s)", getRightVel());
+        SmartDashboard.putNumber("Right Pos (ft)", getRightPos());
 
 
         pidTuner.updateDashboard();
@@ -352,6 +422,48 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         this.kF = kF;
         leftRearTalonEnc.config_kF(0, kF, Constants.INIT_TIMEOUT);
         rightRearTalonEnc.config_kF(0, kF, Constants.INIT_TIMEOUT);
+    }
+
+    public enum DriveStrategyType implements Nameable
+    {
+        VOLTAGE("VOLTAGE", (joystickLeft, joystickRight) -> {
+            Robot.DRIVE_TRAIN.runMotors(joystickLeft, joystickRight);
+        }),
+        PID("PID", (joystickLeft, joystickRight) -> {
+
+            float leftVel = joystickLeft * Constants.MAX_FPS_SPEED * Constants.FPS_TO_EVEL;
+            float rightVel = joystickRight * Constants.MAX_FPS_SPEED * Constants.FPS_TO_EVEL;
+
+//            Robot.DRIVE_TRAIN.leftRearTalonEnc.set(ControlMode.Velocity, joystickLeft * Constants.MAX_FPS_SPEED * Constants.FPS_TO_EVEL); // this
+//            Robot.DRIVE_TRAIN.rightRearTalonEnc.set(ControlMode.Velocity, joystickRight * Constants.MAX_FPS_SPEED * Constants.FPS_TO_EVEL); // this
+
+            Robot.DRIVE_TRAIN.runMotors(ControlMode.Velocity, leftVel, rightVel);
+        });
+
+        private final String name;
+        private final DriveStrategy driveStrategy;
+
+        DriveStrategyType(String name, DriveStrategy driveStrategy)
+        {
+            this.name = name;
+            this.driveStrategy = driveStrategy;
+        }
+
+        @Override
+        public String getName()
+        {
+            return name;
+        }
+
+        public DriveStrategy getDriveStrategy()
+        {
+            return driveStrategy;
+        }
+    }
+
+    private interface DriveStrategy
+    {
+        void drive(float joystickLeft, float joystickRight);
     }
 
     /**
@@ -495,4 +607,6 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
             return false;
         }
     }
+
+
 }

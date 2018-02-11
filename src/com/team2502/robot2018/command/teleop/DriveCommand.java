@@ -91,7 +91,7 @@ public class DriveCommand extends Command
                     Log.warn("Shifting down forced by driver.");
                     transmission.setGear(false);
                 }
-                else // If the driver is cool with auto shifting doing its thing
+                else // If the driver is cool with auto shifting doing its action
                 {
                     // Make sure that we're going mostly straight
                     if(driveTrainSubsystem.turningFactor() < 0.1F)

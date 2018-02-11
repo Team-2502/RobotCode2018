@@ -6,28 +6,32 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 
 public class Files
 {
-    public static String FileName = "";
-    static File file;
-    static long Time = 0;
-    static Object Object;
-    static Map<String, Object> fileMap = new HashMap<String, Object>();
-    static String[] Names = { "Loop Error" };
+    private static long Time = 0;
+
+    private static String FileName = "";
+
+    private static File file;
 
     /**
      * @param fileName add directory (Always a .txt file)
      */
     public static void newFile(String fileName)
     {
-        FileName = fileName + RobotMap.Files.FilesMade + ".csv";
+        FileName = fileName + RobotMap.Files.FILESMADE + ".txt";
+
         file = new File(FileName);
-        RobotMap.Files.FilesMade++;
+
+        if(file.exists())
+        { file.delete(); }
+        else
+        { file = new File(FileName); }
+
+        RobotMap.Files.FILESMADE++;
     }
 
     public static void setTime(long time)
@@ -35,24 +39,27 @@ public class Files
         Time = time;
     }
 
+    public static void setNameAndValue(String Name, Object object)
+    {
+        RobotMap.Files.FILEMAP.put(Name, object);
+    }
+
+    public static String getFileName() { return FileName; }
+
     public static void setFileName(String fileName)
     {
         FileName = fileName;
     }
 
-    public static void setNameAndValue(String Name, Object object)
-    {
-        fileMap.put(Name, object);
-    }
-
     public static void writeToFile()
     {
-        long time = Time;
-        WriteToFile data = new WriteToFile(FileName, true);
+        long time = System.currentTimeMillis();
+        WriteToFile writeToFile = new WriteToFile(getFileName());
 
         long minutes = TimeUnit.MILLISECONDS.toMinutes(time);
         long seconds = TimeUnit.MILLISECONDS.toSeconds(time);
         String newTime;
+
         if(time < 1000)
         {
             newTime = String.valueOf(time);
@@ -65,11 +72,11 @@ public class Files
         {
             newTime = String.valueOf(minutes) + ": " + String.valueOf(seconds) + ": " + String.valueOf(time % 1000);
         }
-        for(int i = 0; i < Names.length - 1; i++)
+        for(int i = 0; i < RobotMap.Files.NAMES.length; i++)
         {
             try
             {
-                data.writeToFile(newTime + ", " + Names[i] + ": " + fileMap.get(Names[i]) + ", ");
+                writeToFile.writeToFile(newTime + ", " + RobotMap.Files.NAMES[i] + ": " + RobotMap.Files.FILEMAP.get(RobotMap.Files.NAMES[i]) + ", ");
             }
             catch(IOException e)
             {
@@ -77,12 +84,13 @@ public class Files
             }
         }
     }
+
 }
 
 class WriteToFile
 {
     private String path;
-    private boolean append_to_file = false;
+    private boolean append_to_file = true;
 
     public WriteToFile(String file_path)
     {
@@ -95,13 +103,14 @@ class WriteToFile
         append_to_file = append_value;
     }
 
-    public void writeToFile(String text) throws IOException
+    public void writeToFile(Object text) throws IOException
     {
         FileWriter write = new FileWriter(path, append_to_file);
         PrintWriter print_line = new PrintWriter(write);
 
-        print_line.printf("%s" + "%n", text);
+        print_line.println(text);
 
         print_line.close();
     }
 }
+

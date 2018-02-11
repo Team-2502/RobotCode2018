@@ -257,7 +257,7 @@ public class WPI_TalonSRXF extends TalonSRX implements ISpeedControllerF, Sendab
     }
 
     /**
-     * Common interface to stop the motor until Set is called again.
+     * Common interface to stopElevator the motor until Set is called again.
      */
     @Override
     public void stopMotor()
