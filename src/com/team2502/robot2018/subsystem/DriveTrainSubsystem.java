@@ -161,8 +161,8 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
      * <br>
      * Make sure to set the motors according to the control mode. In auton, it's position. In teleop, it's percent voltage.
      *
-     * @param leftWheel           Units for the left side of drivetrain
-     * @param rightWheel           Units for the right side of drivetrain
+     * @param leftWheel   Units for the left side of drivetrain
+     * @param rightWheel  Units for the right side of drivetrain
      * @param controlMode The mode that the motors are being driven in
      */
     public void runMotors(ControlMode controlMode, float leftWheel, float rightWheel) // double z
@@ -195,7 +195,7 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
      * <br>
      * Make sure to set the motors according to the control mode. In auton, it's position. In teleop, it's percent voltage.
      *
-     * @param leftWheel Units for the left side of drivetrain
+     * @param leftWheel  Units for the left side of drivetrain
      * @param rightWheel Units for the right side of drivetrain
      */
     public void runMotors(float leftWheel, float rightWheel) // double z
@@ -252,9 +252,10 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
 
     /**
      * TODO: finish!!!!
+     *
      * @param out the percent voltages of each wheel.
-     * @deprecated
      * @return
+     * @deprecated
      */
     private FloatPair getSpeedArcade(FloatPair out)
     {

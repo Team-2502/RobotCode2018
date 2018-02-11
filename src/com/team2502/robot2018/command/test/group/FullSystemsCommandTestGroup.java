@@ -17,8 +17,8 @@ public class FullSystemsCommandTestGroup extends CommandGroup
 
         RotateStationaryCommand rotateStationaryCommand = new RotateStationaryCommand(3);
         addSequential(rotateStationaryCommand);
-        Robot.write("Success: "+rotateStationaryCommand.getSuccess());
-        Robot.write("Results: "+rotateStationaryCommand.getResultsString());
+        Robot.write("Success: " + rotateStationaryCommand.getSuccess());
+        Robot.write("Results: " + rotateStationaryCommand.getResultsString());
 
         Robot.write("~waiting~");
         addSequential(new WaitCommand(3));
