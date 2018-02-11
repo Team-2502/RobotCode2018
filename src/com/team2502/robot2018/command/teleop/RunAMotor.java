@@ -10,6 +10,7 @@ public class RunAMotor extends Command
 
     WPI_TalonSRXF talon;
     double speed;
+
     public RunAMotor(WPI_TalonSRXF talon, double speed)
     {
         this.talon = talon;
@@ -20,6 +21,7 @@ public class RunAMotor extends Command
     {
         talon.set(ControlMode.PercentOutput, speed);
     }
+
     @Override
     protected boolean isFinished()
     {

@@ -87,7 +87,7 @@ public class RobotMap
 
     public static final class Files
     {
-        public static String[] NAMES = {"Right Pos", "Left Pos"};
+        public static String[] NAMES = { "Right Pos", "Left Pos" };
         public static int FILESMADE = 0;
         public static Map<String, Object> FILEMAP = new HashMap<String, Object>();
 

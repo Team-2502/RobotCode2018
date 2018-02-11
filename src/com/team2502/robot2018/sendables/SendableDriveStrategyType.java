@@ -9,9 +9,9 @@ import java.util.Arrays;
 public class SendableDriveStrategyType extends ToggleSendable implements DashboardData.DashboardUpdater
 {
 
+    private final static SendableDriveStrategyType INSTANCE = new SendableDriveStrategyType();
     private String name = "DriveStrategyType";
     private String subsystem = "DriveTrainSubsystem";
-    private final static SendableDriveStrategyType INSTANCE = new SendableDriveStrategyType();
 
     public SendableDriveStrategyType()
     {
@@ -50,6 +50,6 @@ public class SendableDriveStrategyType extends ToggleSendable implements Dashboa
     @Override
     public void updateDashboard()
     {
-        SmartDashboard.putData(name,this);
+        SmartDashboard.putData(name, this);
     }
 }

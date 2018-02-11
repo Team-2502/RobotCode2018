@@ -277,11 +277,11 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         DriveStrategyType strategyType = (DriveStrategyType) currentMode;
         if(negative)
         {
-            strategyType.getDriveStrategy().drive(speed.left,speed.right);
+            strategyType.getDriveStrategy().drive(speed.left, speed.right);
         }
         else
         {
-            strategyType.getDriveStrategy().drive(-speed.left,-speed.right);
+            strategyType.getDriveStrategy().drive(-speed.left, -speed.right);
         }
     }
 
@@ -377,6 +377,48 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         this.kF = kF;
         leftRearTalonEnc.config_kF(0, kF, Constants.INIT_TIMEOUT);
         rightRearTalonEnc.config_kF(0, kF, Constants.INIT_TIMEOUT);
+    }
+
+    public enum DriveStrategyType implements Nameable
+    {
+        VOLTAGE("VOLTAGE", (joystickLeft, joystickRight) -> {
+            Robot.DRIVE_TRAIN.runMotors(joystickLeft, joystickRight);
+        }),
+        PID("PID", (joystickLeft, joystickRight) -> {
+
+            float leftVel = joystickLeft * Constants.MAX_FPS_SPEED * Constants.FPS_TO_EVEL;
+            float rightVel = joystickRight * Constants.MAX_FPS_SPEED * Constants.FPS_TO_EVEL;
+
+//            Robot.DRIVE_TRAIN.leftRearTalonEnc.set(ControlMode.Velocity, joystickLeft * Constants.MAX_FPS_SPEED * Constants.FPS_TO_EVEL); // this
+//            Robot.DRIVE_TRAIN.rightRearTalonEnc.set(ControlMode.Velocity, joystickRight * Constants.MAX_FPS_SPEED * Constants.FPS_TO_EVEL); // this
+
+            Robot.DRIVE_TRAIN.runMotors(ControlMode.Velocity, leftVel, rightVel);
+        });
+
+        private final String name;
+        private final DriveStrategy driveStrategy;
+
+        DriveStrategyType(String name, DriveStrategy driveStrategy)
+        {
+            this.name = name;
+            this.driveStrategy = driveStrategy;
+        }
+
+        @Override
+        public String getName()
+        {
+            return name;
+        }
+
+        public DriveStrategy getDriveStrategy()
+        {
+            return driveStrategy;
+        }
+    }
+
+    private interface DriveStrategy
+    {
+        void drive(float joystickLeft, float joystickRight);
     }
 
     /**
@@ -520,49 +562,6 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
             return false;
         }
     }
-
-    public enum DriveStrategyType implements Nameable
-    {
-        VOLTAGE("VOLTAGE",(joystickLeft, joystickRight) -> {
-            Robot.DRIVE_TRAIN.runMotors(joystickLeft, joystickRight);
-        }),
-        PID("PID",(joystickLeft, joystickRight) -> {
-
-            float leftVel = joystickLeft * Constants.MAX_FPS_SPEED * Constants.FPS_TO_EVEL;
-            float rightVel = joystickRight * Constants.MAX_FPS_SPEED * Constants.FPS_TO_EVEL;
-
-//            Robot.DRIVE_TRAIN.leftRearTalonEnc.set(ControlMode.Velocity, joystickLeft * Constants.MAX_FPS_SPEED * Constants.FPS_TO_EVEL); // this
-//            Robot.DRIVE_TRAIN.rightRearTalonEnc.set(ControlMode.Velocity, joystickRight * Constants.MAX_FPS_SPEED * Constants.FPS_TO_EVEL); // this
-
-            Robot.DRIVE_TRAIN.runMotors(ControlMode.Velocity, leftVel,rightVel);
-        });
-
-        private final String name;
-        private final DriveStrategy driveStrategy;
-
-        DriveStrategyType(String name, DriveStrategy driveStrategy)
-        {
-            this.name = name;
-            this.driveStrategy = driveStrategy;
-        }
-
-        @Override
-        public String getName()
-        {
-            return name;
-        }
-
-        public DriveStrategy getDriveStrategy()
-        {
-            return driveStrategy;
-        }
-    }
-
-    private interface DriveStrategy
-    {
-        void drive(float joystickLeft, float joystickRight);
-    }
-
 
 
 }

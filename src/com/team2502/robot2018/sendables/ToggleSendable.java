@@ -11,7 +11,7 @@ public abstract class ToggleSendable implements Sendable
     private Nameable currentMode;
 
     /**
-     * @param modes        a list of enums that implement nameable.
+     * @param modes       a list of enums that implement nameable.
      * @param defaultMode the default modes.
      */
     public ToggleSendable(final List<Nameable> modes, final Nameable defaultMode)

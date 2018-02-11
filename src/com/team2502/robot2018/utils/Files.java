@@ -27,9 +27,9 @@ public class Files
         file = new File(FileName);
 
         if(file.exists())
-            file.delete();
+        { file.delete(); }
         else
-            file = new File(FileName);
+        { file = new File(FileName); }
 
         RobotMap.Files.FILESMADE++;
     }
@@ -39,17 +39,17 @@ public class Files
         Time = time;
     }
 
-    public static void setFileName(String fileName)
-    {
-        FileName = fileName;
-    }
-
     public static void setNameAndValue(String Name, Object object)
     {
         RobotMap.Files.FILEMAP.put(Name, object);
     }
 
     public static String getFileName() { return FileName; }
+
+    public static void setFileName(String fileName)
+    {
+        FileName = fileName;
+    }
 
     public static void writeToFile()
     {
@@ -60,7 +60,7 @@ public class Files
         long seconds = TimeUnit.MILLISECONDS.toSeconds(time);
         String newTime;
 
-        if (time < 1000)
+        if(time < 1000)
         {
             newTime = String.valueOf(time);
         }
@@ -72,7 +72,7 @@ public class Files
         {
             newTime = String.valueOf(minutes) + ": " + String.valueOf(seconds) + ": " + String.valueOf(time % 1000);
         }
-        for(int i=0; i< RobotMap.Files.NAMES.length; i++)
+        for(int i = 0; i < RobotMap.Files.NAMES.length; i++)
         {
             try
             {
@@ -92,7 +92,7 @@ class WriteToFile
     private String path;
     private boolean append_to_file = true;
 
-    public WriteToFile (String file_path)
+    public WriteToFile(String file_path)
     {
         path = file_path;
     }

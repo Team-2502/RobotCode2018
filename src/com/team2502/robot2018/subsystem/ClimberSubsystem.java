@@ -1,9 +1,5 @@
 package com.team2502.robot2018.subsystem;
 
-import com.team2502.robot2018.OI;
-import com.team2502.robot2018.RobotMap;
-import com.team2502.robot2018.command.teleop.RunClimberCommand;
-import com.team2502.robot2018.utils.WPI_TalonSRXF;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 @Deprecated
@@ -22,7 +18,7 @@ public class ClimberSubsystem extends Subsystem
     }
 
     @Override
-    protected void initDefaultCommand(){}
+    protected void initDefaultCommand() {}
 //    { setDefaultCommand(new RunClimberCommand()); }
 
     public void climb()

@@ -15,18 +15,14 @@ public class ElevatorSubsystem extends Subsystem
 {
     public final WPI_TalonSRXF elevatorTop;
     public final WPI_TalonSRXF elevatorBottom;
-
-    /**
-     * This solenoid, when enabled (set to true), locks the climber
-     */
-    private final Solenoid climberSolenoid;
-
     // The difference between the climber motors and the elevator motors is that
     // the climber motors are the slower CIMS while the the elevator motors are the faster miniCIMS
     public final WPI_TalonSRXF climberTop;
     public final WPI_TalonSRXF climberBottom;
-
-
+    /**
+     * This solenoid, when enabled (set to true), locks the climber
+     */
+    private final Solenoid climberSolenoid;
     /**
      * When true, it means the elevator is locked and can only go down
      */
@@ -51,6 +47,7 @@ public class ElevatorSubsystem extends Subsystem
 
     /**
      * Move the elevator up or down
+     *
      * @param x Speed to move elevator (in percent output)
      */
     public void moveElevator(double x)
@@ -70,6 +67,7 @@ public class ElevatorSubsystem extends Subsystem
 
     /**
      * Move the elevator down for climbing purpose
+     *
      * @param x How fast to move it. Make it positive OR ELSE
      */
     public void moveClimber(double x)
