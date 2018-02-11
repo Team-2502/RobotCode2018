@@ -2,9 +2,7 @@ package com.team2502.robot2018;
 
 import com.kauailabs.navx.frc.AHRS;
 import com.team2502.robot2018.command.autonomous.PurePursuitCommand;
-import com.team2502.robot2018.sendables.SendableDriveTrain;
-import com.team2502.robot2018.sendables.SendableNavX;
-import com.team2502.robot2018.sendables.SendableVersioning;
+import com.team2502.robot2018.sendables.*;
 import com.team2502.robot2018.subsystem.*;
 import com.team2502.robot2018.utils.Files;
 import edu.wpi.first.wpilibj.Compressor;
@@ -64,6 +62,8 @@ public final class Robot extends IterativeRobot
 
         SendableDriveTrain.init();
         DashboardData.addUpdater(SendableDriveTrain.getInstance());
+
+        DashboardData.addUpdater(SendableDriveStrategyType.getInstance());
 
         SendableVersioning.getInstance().init();
         SmartDashboard.putData(SendableVersioning.getInstance());

@@ -4,7 +4,9 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.team2502.robot2018.*;
 import com.team2502.robot2018.command.teleop.DriveCommand;
+import com.team2502.robot2018.sendables.Nameable;
 import com.team2502.robot2018.sendables.PIDTunable;
+import com.team2502.robot2018.sendables.SendableDriveStrategyType;
 import com.team2502.robot2018.sendables.SendablePIDTuner;
 import com.team2502.robot2018.utils.DifferentialDriveF;
 import com.team2502.robot2018.utils.SpeedControllerGroupF;
@@ -165,10 +167,10 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
      */
     public void runMotors(ControlMode controlMode, float x, float y) // double z
     {
-        leftFrontTalon.set(controlMode, x);
+//        leftFrontTalon.set(controlMode, x);
         leftRearTalonEnc.set(controlMode, x);
 
-        rightFrontTalon.set(controlMode, y);
+//        rightFrontTalon.set(controlMode, y);
         rightRearTalonEnc.set(controlMode, y);
     }
 
@@ -181,10 +183,10 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
      */
     public void runMotors(ControlMode controlMode) // double z
     {
-        leftFrontTalon.set(controlMode, 0);
+//        leftFrontTalon.set(controlMode, 0);
         leftRearTalonEnc.set(controlMode, 0);
 
-        rightFrontTalon.set(controlMode, 0);
+//        rightFrontTalon.set(controlMode, 0);
         rightRearTalonEnc.set(controlMode, 0);
     }
 
@@ -266,17 +268,20 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
 
         isNegativePressed = OI.JOYSTICK_DRIVE_LEFT.getRawButton(RobotMap.Joystick.Button.INVERSE_DRIVER_CONTROLS);
 
+        Nameable currentMode = SendableDriveStrategyType.getInstance().getCurrentMode();
+
+        if(!(currentMode instanceof DriveStrategyType))
+        {
+            throw new IllegalArgumentException("currentMode is of wrong type!"); // Note this acts as a return statement
+        }
+        DriveStrategyType strategyType = (DriveStrategyType) currentMode;
         if(negative)
         {
-//            Robot.DRIVE_TRAIN.leftRearTalonEnc.set(ControlMode.Velocity, speed.left * Constants.FPS_TO_EVEL* 8F); // this
-//            Robot.DRIVE_TRAIN.rightRearTalonEnc.set(ControlMode.Velocity, speed.right * Constants.FPS_TO_EVEL* 8F); // this
-            runMotors(speed.left, speed.right);
+            strategyType.getDriveStrategy().drive(speed.left,speed.right);
         }
         else
         {
-//            Robot.DRIVE_TRAIN.leftRearTalonEnc.set(ControlMode.Velocity, -speed.left * Constants.FPS_TO_EVEL* 8F); // this
-//            Robot.DRIVE_TRAIN.rightRearTalonEnc.set(ControlMode.Velocity, -speed.right * Constants.FPS_TO_EVEL* 8F); // this
-            runMotors(-speed.left, -speed.right);
+            strategyType.getDriveStrategy().drive(-speed.left,-speed.right);
         }
     }
 
@@ -515,4 +520,49 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
             return false;
         }
     }
+
+    public enum DriveStrategyType implements Nameable
+    {
+        VOLTAGE("VOLTAGE",(joystickLeft, joystickRight) -> {
+            Robot.DRIVE_TRAIN.runMotors(joystickLeft, joystickRight);
+        }),
+        PID("PID",(joystickLeft, joystickRight) -> {
+
+            float leftVel = joystickLeft * Constants.MAX_FPS_SPEED * Constants.FPS_TO_EVEL;
+            float rightVel = joystickRight * Constants.MAX_FPS_SPEED * Constants.FPS_TO_EVEL;
+
+//            Robot.DRIVE_TRAIN.leftRearTalonEnc.set(ControlMode.Velocity, joystickLeft * Constants.MAX_FPS_SPEED * Constants.FPS_TO_EVEL); // this
+//            Robot.DRIVE_TRAIN.rightRearTalonEnc.set(ControlMode.Velocity, joystickRight * Constants.MAX_FPS_SPEED * Constants.FPS_TO_EVEL); // this
+
+            Robot.DRIVE_TRAIN.runMotors(ControlMode.Velocity, leftVel,rightVel);
+        });
+
+        private final String name;
+        private final DriveStrategy driveStrategy;
+
+        DriveStrategyType(String name, DriveStrategy driveStrategy)
+        {
+            this.name = name;
+            this.driveStrategy = driveStrategy;
+        }
+
+        @Override
+        public String getName()
+        {
+            return name;
+        }
+
+        public DriveStrategy getDriveStrategy()
+        {
+            return driveStrategy;
+        }
+    }
+
+    private interface DriveStrategy
+    {
+        void drive(float joystickLeft, float joystickRight);
+    }
+
+
+
 }
