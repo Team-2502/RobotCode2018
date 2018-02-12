@@ -66,16 +66,24 @@ public class RobotMap
 
     public static final class Motor
     {
-        // Right side of e-panel, bottom to top
+        /*                        Name - Talon ID - Log ID
+         *
+         *          Left Side of PDP         |           Right Side of PDP
+         *                                   |
+         * Spare Talon ------------- 7 - 11  |  Active Rotate ----------- 6 -- 6
+         * Active Left ------------- 8 - 12  |  Active_Right ------------ 5 -- 5
+         * Elevator Top ------------ 9 - 13  |  Drive_Train_Back_Left --- 4 -- 4
+         * Elevator Bottom -------- 10 - 14  |  Drive_Train_Front_Left -- 3 -- 3
+         * Climber Top ------------ 11 - 15  |  Drive_Train_Back_Right -- 2 -- 2
+         * Climber Bottom --------- 12 - 16  |  Drive_Train_Front_Right - 1 -- 1
+         */
+
         public static final int DRIVE_TRAIN_FRONT_RIGHT = 1;
         public static final int DRIVE_TRAIN_BACK_RIGHT = 2;
         public static final int DRIVE_TRAIN_FRONT_LEFT = 3;
         public static final int DRIVE_TRAIN_BACK_LEFT = 4;
         public static final int ACTIVE_RIGHT = 5;
         public static final int ACTIVE_ROTATE = 6;
-
-        // Left side of e-panel, top to bottom
-        public static final int SPARE_TALON = 7;
         public static final int ACTIVE_LEFT = 8;
         public static final int ELEVATOR_TOP = 9;
         public static final int ELEVATOR_BOTTOM = 10;
@@ -96,9 +104,16 @@ public class RobotMap
 
     public class Solenoid
     {
+        /*
+         * Transmission ------ 0
+         * Climber Solenoid -- 1
+         * Active Grabber ---- 2
+         * Butterfly Release - 3
+         */
+
         public static final int TRANSMISSION_SWITCH = 0;
-        public static final int CLIMBER_SOLENOID = 2;
-        public static final int ACTIVE_GRABBER = 1;
+        public static final int CLIMBER_SOLENOID = 1;
+        public static final int ACTIVE_GRABBER = 2;
 //        public static final int BUTTERFLY_RELEASE = 3;
 
         private Solenoid() { }
