@@ -70,12 +70,12 @@ public class RobotMap
          *
          *          Left Side of PDP         |           Right Side of PDP
          *                                   |
-         * Spare Talon ------------- 7 - 11  |  Active Rotate ----------- 6 -- 6
-         * Active Left ------------- 8 - 12  |  Active Right ------------ 5 -- 5
-         * Elevator Top ------------ 9 - 13  |  Drive Train Back Left --- 4 -- 4
-         * Elevator Bottom -------- 10 - 14  |  Drive Train Front Left -- 3 -- 3
-         * Climber Top ------------ 11 - 15  |  Drive Train Back Right -- 2 -- 2
-         * Climber Bottom --------- 12 - 16  |  Drive Train Front Right - 1 -- 1
+         * Spare Talon ------------- 7 - 10  |  Active Rotate ----------- 6 -- 5
+         * Active Left ------------- 8 - 11  |  Active Right ------------ 5 -- 4
+         * Elevator Top ------------ 9 - 12  |  Drive Train Back Left --- 4 -- 3
+         * Elevator Bottom -------- 10 - 13  |  Drive Train Front Left -- 3 -- 2
+         * Climber Top ------------ 11 - 14  |  Drive Train Back Right -- 2 -- 1
+         * Climber Bottom --------- 12 - 15  |  Drive Train Front Right - 1 -- 0
          */
 
         public static final int DRIVE_TRAIN_FRONT_RIGHT = 1;
