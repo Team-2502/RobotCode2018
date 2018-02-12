@@ -428,17 +428,17 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     {
         VOLTAGE("VOLTAGE", (joystickLeft, joystickRight) -> {
             Robot.DRIVE_TRAIN.runMotors(joystickLeft, joystickRight);
-        }),
-        PID("PID", (joystickLeft, joystickRight) -> {
-
-            float leftVel = joystickLeft * Constants.MAX_FPS_SPEED * Constants.FPS_TO_EVEL;
-            float rightVel = joystickRight * Constants.MAX_FPS_SPEED * Constants.FPS_TO_EVEL;
-
-//            Robot.DRIVE_TRAIN.leftRearTalonEnc.set(ControlMode.Velocity, joystickLeft * Constants.MAX_FPS_SPEED * Constants.FPS_TO_EVEL); // this
-//            Robot.DRIVE_TRAIN.rightRearTalonEnc.set(ControlMode.Velocity, joystickRight * Constants.MAX_FPS_SPEED * Constants.FPS_TO_EVEL); // this
-
-            Robot.DRIVE_TRAIN.runMotors(ControlMode.Velocity, leftVel, rightVel);
         });
+//        PID("PID", (joystickLeft, joystickRight) -> {
+//
+//            float leftVel = joystickLeft * Constants.MAX_FPS_SPEED * Constants.FPS_TO_EVEL;
+//            float rightVel = joystickRight * Constants.MAX_FPS_SPEED * Constants.FPS_TO_EVEL;
+//
+////            Robot.DRIVE_TRAIN.leftRearTalonEnc.set(ControlMode.Velocity, joystickLeft * Constants.MAX_FPS_SPEED * Constants.FPS_TO_EVEL); // this
+////            Robot.DRIVE_TRAIN.rightRearTalonEnc.set(ControlMode.Velocity, joystickRight * Constants.MAX_FPS_SPEED * Constants.FPS_TO_EVEL); // this
+//
+//            Robot.DRIVE_TRAIN.runMotors(ControlMode.Velocity, leftVel, rightVel);
+//        });
 
         private final String name;
         private final DriveStrategy driveStrategy;
