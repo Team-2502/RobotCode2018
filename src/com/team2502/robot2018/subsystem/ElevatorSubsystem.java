@@ -6,7 +6,7 @@ import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 import com.ctre.phoenix.motorcontrol.RemoteLimitSwitchSource;
 import com.team2502.robot2018.Constants;
 import com.team2502.robot2018.RobotMap;
-import com.team2502.robot2018.utils.WPI_TalonSRXF;
+import com.team2502.robot2018.utils.baseoverloads.WPI_TalonSRXF;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import logger.Log;
@@ -19,21 +19,11 @@ public class ElevatorSubsystem extends Subsystem
     // the climber motors are the slower CIMS while the the elevator motors are the faster miniCIMS
     public final WPI_TalonSRXF climberTop;
     public final WPI_TalonSRXF climberBottom;
-    /**
-     * This solenoid, when enabled (set to true), locks the climber
-     */
-    private final Solenoid climberSolenoid;
-    /**
-     * When true, it means the elevator is locked and can only go down
-     */
-    private boolean climberDisabled = false;
 
     public ElevatorSubsystem()
     {
         elevatorTop = new WPI_TalonSRXF(RobotMap.Motor.ELEVATOR_TOP);
         elevatorBottom = new WPI_TalonSRXF(RobotMap.Motor.ELEVATOR_BOTTOM);
-
-        climberSolenoid = new Solenoid(RobotMap.Solenoid.CLIMBER_SOLENOID);
 
         climberTop = new WPI_TalonSRXF(RobotMap.Motor.CLIMBER_TOP);
         climberBottom = new WPI_TalonSRXF(RobotMap.Motor.CLIMBER_BOTTOM);
@@ -85,50 +75,6 @@ public class ElevatorSubsystem extends Subsystem
         climberTop.set(ControlMode.PercentOutput, 0);
         climberBottom.set(ControlMode.PercentOutput, 0);
     }
-
-    /**
-     * Stop the elevator from slamming down by engaging the climber
-     */
-    public void lockElevator()
-    {
-        //TODO: Once solenoid is installed, make functional
-        Log.info("Locking elevator");
-        climberSolenoid.set(climberDisabled = false);
-    }
-
-    /**
-     * Engage the climber
-     */
-    public void engageClimber() { lockElevator(); }
-
-    /**
-     * Disengage the climber
-     */
-    public void disengageClimber() { unlockElevator(); }
-
-    /**
-     * Let the elevator move freely by disengaging the climber
-     */
-    public void unlockElevator()
-    {
-        //TODO: Once solenoid is installed, make functional
-        Log.info("Unlocking elevator");
-
-        climberSolenoid.set(climberDisabled = true);
-    }
-
-    /**
-     * Toggle whether the climber is engaged
-     */
-    public void toggleLock()
-    {
-        climberSolenoid.set(climberDisabled = !climberDisabled);
-    }
-
-    /**
-     * @return Whether or not the climber is enabled
-     */
-    public boolean isLocked() { return climberDisabled; }
 
     /**
      * Stop both the elevator and the climber

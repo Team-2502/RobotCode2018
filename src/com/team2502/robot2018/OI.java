@@ -2,8 +2,8 @@ package com.team2502.robot2018;
 
 import com.team2502.robot2018.command.teleop.ElevatorCommand;
 import com.team2502.robot2018.command.teleop.QuickCommand;
-import com.team2502.robot2018.utils.JoystickButtonF;
-import com.team2502.robot2018.utils.JoystickF;
+import com.team2502.robot2018.utils.baseoverloads.JoystickButtonF;
+import com.team2502.robot2018.utils.baseoverloads.JoystickF;
 import edu.wpi.first.wpilibj.buttons.Button;
 
 /**
@@ -55,12 +55,12 @@ public final class OI
         INTAKE_OUT.whileHeld(new QuickCommand(Robot.ACTIVE_INTAKE, () -> Robot.ACTIVE_INTAKE.runIntake(-0.3)));
         INTAKE_OUT.whenReleased(new QuickCommand(Robot.ACTIVE_INTAKE, Robot.ACTIVE_INTAKE::stop));
 
-        OPEN_INTAKE.whenPressed(new QuickCommand(Robot.ACTIVE_INTAKE, Robot.ACTIVE_INTAKE::toggleIntake));
+        OPEN_INTAKE.whenPressed(new QuickCommand(Robot.ACTIVE_INTAKE, Robot.SOLENOIDS::toggleIntake));
 
         CLIMBER.whileHeld(new QuickCommand(Robot.ELEVATOR, () -> Robot.ELEVATOR.moveClimber(0.4)));
         CLIMBER.whenReleased(new QuickCommand(Robot.ELEVATOR, Robot.ELEVATOR::stopClimber));
 
-        SHIFT_GEARBOX_ELEV.whenPressed(new QuickCommand(Robot.ELEVATOR, Robot.ELEVATOR::toggleLock));
+        SHIFT_GEARBOX_ELEV.whenPressed(new QuickCommand(Robot.ELEVATOR, Robot.SOLENOIDS::toggleLock));
     }
 
     public static boolean joysThreshold(double threshold, boolean above)
