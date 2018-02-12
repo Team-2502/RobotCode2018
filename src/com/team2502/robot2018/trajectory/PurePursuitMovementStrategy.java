@@ -18,13 +18,11 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
      */
     private static final float THRESHOLD_CURVATURE = 0.001F;
     public final List<ImmutableVector2f> waypoints;
-    public final float lookAheadDistance;
     private final ITranslationalLocationEstimator transEstimator;
     private final ITankRobotBounds tankRobot;
     private final IRotationalLocationEstimator rotEstimator;
-    private final float lookAheadDistanceSquared;
     private final float distanceStopSq;
-    private final ITranslationalVelocityEstimator velocityEstimator;
+    private final float baseLookAhead;
     private ImmutableVector2f relativeGoalPoint;
     private float pathRadius;
     private float rotVelocity;
@@ -50,19 +48,17 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
      * @param transEstimator    An estimator for the absolute position of the robot
      * @param rotEstimator      An estimator for the heading of the robot
      * @param waypoints         A list of waypoints for the robot to drive through
-     * @param lookAheadDistance The lookahead distance for the pure pursuit algorithm
+     * @param baseLookAhead The lookahead distance for the pure pursuit algorithm
      * @param distanceStop
      */
-    public PurePursuitMovementStrategy(ITankRobotBounds tankRobot, ITranslationalLocationEstimator transEstimator, IRotationalLocationEstimator rotEstimator, ITranslationalVelocityEstimator velocityEstimator, List<ImmutableVector2f> waypoints, float lookAheadDistance, float distanceStop)
+    public PurePursuitMovementStrategy(ITankRobotBounds tankRobot, ITranslationalLocationEstimator transEstimator, IRotationalLocationEstimator rotEstimator, ITranslationalVelocityEstimator velocityEstimator, List<ImmutableVector2f> waypoints, float baseLookAhead, float distanceStop)
     {
         this.waypoints = waypoints;
         this.tankRobot = tankRobot;
-        this.lookAheadDistance = lookAheadDistance;
         this.transEstimator = transEstimator;
         this.rotEstimator = rotEstimator;
-        this.velocityEstimator = velocityEstimator;
-        lookAheadDistanceSquared = lookAheadDistance * lookAheadDistance;
         distanceStopSq = distanceStop * distanceStop;
+        this.baseLookAhead = baseLookAhead;
     }
 
     /**
@@ -70,8 +66,9 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
      * The goal point is a point on the path 1 lookahead distance away from us.
      * We want to drive at it.
      */
-    public ImmutableVector2f calculateAbsoluteGoalPoint()
+    public ImmutableVector2f calculateAbsoluteGoalPoint(float lookAheadDistance)
     {
+        float lookAheadDistanceSquared = lookAheadDistance*lookAheadDistance;
         // The path is finished — there are no more goal points to compute
         if(finishedPath) { return null; }
 
@@ -99,13 +96,11 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
                 float distanceWaypointSq = lineP2.sub(usedEstimatedLocation).lengthSquared();
                 if(distanceWaypointSq <= lookAheadDistanceSquared)
                 {
-//                    System.out.println("is close to: "+lineP2);
                     isClose = true;
                     // We want to stopElevator if the distance is within the desired amount
                     if(distanceWaypointSq < distanceStopSq)
                     {
                         isSuccessfullyFinished = true;
-//                        System.out.println("is finished w/: "+lineP2);
                         finishedPath = true;
                         return null;
                     }
@@ -177,7 +172,10 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         usedEstimatedLocation = transEstimator.estimateLocation();
         usedHeading = rotEstimator.estimateHeading();
 
-        absoluteGoalPoint = calculateAbsoluteGoalPoint();
+        ImmutableVector2f closestPoint = MathUtils.Geometry.getClosestPoint(waypoints.get(lastSegmentSearched), waypoints.get(lastSegmentSearched + 1), usedEstimatedLocation);
+        ImmutableVector2f dClosestPoint = usedEstimatedLocation.sub(closestPoint);
+        float dCP = dClosestPoint.length();
+        absoluteGoalPoint = calculateAbsoluteGoalPoint(dCP+baseLookAhead);
 
         // Sometimes the above method will cause isFinished to return true if no more goal points are found.
         if(isFinishedPath())
@@ -256,11 +254,6 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
 
 
         // TODO: get max acceleration from actual wheel velocities
-//        ImmutableVector2f velEst = velocityEstimator.estimateAbsoluteVelocity();
-//        float v_lMax = Math.min(velocityEstimator.getLeftWheelSpeed()+ tankRobot.getA_lMax(), tankRobot.getV_lMax());
-//        float v_rMax = Math.min(velocityEstimator.getRightWheelSpeed()+tankRobot.getA_rMax(), tankRobot.getV_rMax());
-//        float v_lMin = Math.max(velocityEstimator.getLeftWheelSpeed()+tankRobot.getA_lMin(), tankRobot.getV_lMax());
-//        float v_rMin = Math.max(velocityEstimator.getRightWheelSpeed()+tankRobot.getA_rMin(), tankRobot.getV_rMin());
 
         float v_lMax = tankRobot.getV_lMax();
         float v_rMax = tankRobot.getV_rMax();
@@ -329,14 +322,6 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
             if(bestVector == null)
             {
                 throw new NullPointerException("bestVector is null!");
-//                throw new NullPointerException(MessageFormat.format("`bestVector` was equal to null.\n\t" +
-//                                                                    "{\n\t\t\"curvature\" = \"{0}\",\n\t\t" +
-//                                                                    "[ \"v_lMax\", \"v_lMin\", \"v_rMax\", \"v_rMin\" ] = [ \"{1}\", \"{2}\", \"{3}\", \"{4}\" ],\n\t\t" +
-//                                                                    "\"c\" = \"{5}\",\n\t\t" +
-//                                                                    "\"velLeftToRightRatio\" = \"{6}\",\n\t\t" +
-//                                                                    "\"velRightToLeftRatio\" = \"{7}\",\n\t\t" +
-//                                                                    "\"v_r\" = \"{8}\",\n\t\t" +
-//                                                                    "\"v_l\" = \"{9}\"\n\t}", curvature, v_lMax, v_lMin, v_rMax, v_rMin, c, velLeftToRightRatio, velRightToLeftRatio, v_r, v_l));
             }
 
             rotVelocity = (bestVector.get(1) - bestVector.get(0)) / tankRobot.getLateralWheelDistance();
