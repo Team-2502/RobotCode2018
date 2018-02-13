@@ -37,8 +37,8 @@ public class RobotMap
             /*
              * Eventually, once we have encoders, these buttons will go all the way up/down
              */
-            public static final int RAISE_ELEVATOR = 4;
-            public static final int LOWER_ELEVATOR = 5;
+            public static final int RAISE_ELEVATOR = 5;
+            public static final int LOWER_ELEVATOR = 3;
 
             /*
              * Then, these buttons will let Driver 2 adjust it manually
@@ -97,9 +97,8 @@ public class RobotMap
     public class Solenoid
     {
         public static final int TRANSMISSION_SWITCH = 0;
-        public static final int CLIMBER_SOLENOID = 2;
-        public static final int ACTIVE_GRABBER = 1;
-//        public static final int BUTTERFLY_RELEASE = 3;
+        public static final int CLIMBER_SOLENOID = 1;
+        public static final int ACTIVE_GRABBER = 2;
 
         private Solenoid() { }
     }

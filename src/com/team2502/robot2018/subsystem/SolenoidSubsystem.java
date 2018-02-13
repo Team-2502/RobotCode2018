@@ -32,7 +32,7 @@ public class SolenoidSubsystem extends NonDefaultSubsystem
     public SolenoidSubsystem()
     {
         climberSolenoid = new Solenoid(RobotMap.Solenoid.CLIMBER_SOLENOID);
-        climberDisabled = false;
+        climberDisabled = true;
 
         switcher = new Solenoid(RobotMap.Solenoid.TRANSMISSION_SWITCH);
         highGear = false;
