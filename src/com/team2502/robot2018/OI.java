@@ -49,7 +49,7 @@ public final class OI
 
         INTAKE_OUT.whileHeld(new ActiveIntakeCommand(-0.6));
 
-        OPEN_INTAKE.whenPressed(new GrabCommand());2qg
+        OPEN_INTAKE.whenPressed(new GrabCommand());
 
         CLIMBER.whileHeld(new ClimberCommand(1));
 
