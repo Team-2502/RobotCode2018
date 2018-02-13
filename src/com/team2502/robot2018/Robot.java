@@ -7,6 +7,9 @@ import com.team2502.robot2018.sendables.SendableDriveTrain;
 import com.team2502.robot2018.sendables.SendableNavX;
 import com.team2502.robot2018.sendables.SendableVersioning;
 import com.team2502.robot2018.subsystem.*;
+import com.team2502.robot2018.subsystem.solenoid.ActiveIntakeSolenoid;
+import com.team2502.robot2018.subsystem.solenoid.ClimberSubsystem;
+import com.team2502.robot2018.subsystem.solenoid.TransmissionSolenoid;
 import com.team2502.robot2018.utils.Files;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -33,7 +36,9 @@ public final class Robot extends IterativeRobot
     public static Compressor COMPRESSOR;
     public static PrintWriter LOG_OUTPUT;
     public static ElevatorSubsystem ELEVATOR;
-    public static SolenoidSubsystem SOLENOIDS;
+    public static ActiveIntakeSolenoid GRABBER;
+    public static ClimberSubsystem CLIMBER;
+    public static TransmissionSolenoid TRANSMISSION;
     public static AHRS NAVX;
 
     public static void write(String string)
@@ -54,7 +59,9 @@ public final class Robot extends IterativeRobot
         NAVX = new AHRS(SPI.Port.kMXP);
         ACTIVE_INTAKE = new ActiveSubsystem();
         ELEVATOR = new ElevatorSubsystem();
-        SOLENOIDS = new SolenoidSubsystem();
+        GRABBER = new ActiveIntakeSolenoid();
+        CLIMBER = new ClimberSubsystem();
+        TRANSMISSION = new TransmissionSolenoid();
 
         OI.init();
 

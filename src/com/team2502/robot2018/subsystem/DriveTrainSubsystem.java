@@ -95,8 +95,8 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         setTeleopSettings(rightFrontTalon);
         setTeleopSettings(leftRearTalonEnc);
         setTeleopSettings(rightRearTalonEnc);
-//        leftFrontTalon.follow(leftRearTalonEnc);
-//        rightFrontTalon.follow(rightRearTalonEnc);
+        leftFrontTalon.follow(leftRearTalonEnc);
+        rightFrontTalon.follow(rightRearTalonEnc);
 
 
         // Required for correct readings

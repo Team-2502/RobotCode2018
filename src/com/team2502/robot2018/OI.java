@@ -35,32 +35,26 @@ public final class OI
 
         // This is supposed to automatically engage
 //        ELEV_UP.whenPressed(new QuickCommand(Robot.ELEVATOR, Robot.ELEVATOR::unlockElevator));
-        ELEV_UP.whileHeld(new ElevatorCommand());
-        ELEV_UP.whenReleased(new QuickCommand(Robot.ELEVATOR, () -> {
-//            Robot.ELEVATOR.lockElevator();
-            Robot.ELEVATOR.stopElevator();
-        }));
+        ELEV_UP.whileHeld(new ElevatorCommand(1));
+//        ELEV_UP.whenReleased(new QuickCommand(Robot.ELEVATOR, () -> Robot.ELEVATOR.stopElevator()));
 
 //        ELEV_DOWN.whenPressed(new QuickCommand(Robot.ELEVATOR, Robot.ELEVATOR::unlockElevator));
-        ELEV_DOWN.whileHeld(new QuickCommand(Robot.ELEVATOR, () -> Robot.ELEVATOR.moveElevator(-0.2)));
-        ELEV_DOWN.whenReleased(new QuickCommand(Robot.ELEVATOR, () -> {
-//            Robot.ELEVATOR.lockElevator();
-            Robot.ELEVATOR.stopElevator();
-        }));
+        ELEV_DOWN.whileHeld(new ElevatorCommand(-1));
+//        ELEV_DOWN.whenReleased(new QuickCommand(Robot.ELEVATOR, () -> Robot.ELEVATOR.stopElevator()));
 
         // Active Intake buttons
-        INTAKE_IN.whileHeld(new QuickCommand(Robot.ACTIVE_INTAKE, () -> Robot.ACTIVE_INTAKE.runIntake(0.3)));
+        INTAKE_IN.whileHeld(new QuickCommand(Robot.ACTIVE_INTAKE, () -> Robot.ACTIVE_INTAKE.runIntake(0.6)));
         INTAKE_IN.whenReleased(new QuickCommand(Robot.ACTIVE_INTAKE, Robot.ACTIVE_INTAKE::stop));
 
-        INTAKE_OUT.whileHeld(new QuickCommand(Robot.ACTIVE_INTAKE, () -> Robot.ACTIVE_INTAKE.runIntake(-0.3)));
+        INTAKE_OUT.whileHeld(new QuickCommand(Robot.ACTIVE_INTAKE, () -> Robot.ACTIVE_INTAKE.runIntake(-0.6)));
         INTAKE_OUT.whenReleased(new QuickCommand(Robot.ACTIVE_INTAKE, Robot.ACTIVE_INTAKE::stop));
 
-        OPEN_INTAKE.whenPressed(new QuickCommand(Robot.ACTIVE_INTAKE, Robot.SOLENOIDS::toggleIntake));
+        OPEN_INTAKE.whenPressed(new QuickCommand(Robot.ACTIVE_INTAKE, Robot.GRABBER::toggleIntake));
 
         CLIMBER.whileHeld(new QuickCommand(Robot.ELEVATOR, () -> Robot.ELEVATOR.moveClimber(0.4)));
         CLIMBER.whenReleased(new QuickCommand(Robot.ELEVATOR, Robot.ELEVATOR::stopClimber));
 
-        SHIFT_GEARBOX_ELEV.whenPressed(new QuickCommand(Robot.ELEVATOR, Robot.SOLENOIDS::toggleLock));
+        SHIFT_GEARBOX_ELEV.whenPressed(new QuickCommand(Robot.ELEVATOR, Robot.CLIMBER::toggleLock));
     }
 
     public static boolean joysThreshold(double threshold, boolean above)
