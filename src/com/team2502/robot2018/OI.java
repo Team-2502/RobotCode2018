@@ -1,8 +1,7 @@
 package com.team2502.robot2018;
 
-import com.team2502.robot2018.command.teleop.ActiveIntakeCommand;
-import com.team2502.robot2018.command.teleop.ElevatorCommand;
-import com.team2502.robot2018.command.teleop.QuickCommand;
+import com.team2502.robot2018.command.teleop.*;
+import com.team2502.robot2018.subsystem.solenoid.ActiveIntakeSolenoid;
 import com.team2502.robot2018.utils.baseoverloads.JoystickButtonF;
 import com.team2502.robot2018.utils.baseoverloads.JoystickF;
 import edu.wpi.first.wpilibj.buttons.Button;
@@ -24,6 +23,7 @@ public final class OI
     public static final Button ELEV_DOWN = new JoystickButtonF(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.LOWER_ELEVATOR);
 
     public static final Button CLIMBER = new JoystickButtonF(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.CLIMBER);
+    public static final Button CLIMBER_DOWN = new JoystickButtonF(JOYSTICK_FUNCTION, RobotMap.UNDEFINED);
 
 
     public static final Button SHIFT_GEARBOX_ELEV = new JoystickButtonF(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.SHIFT_GEARBOX_ELEV);
@@ -47,14 +47,16 @@ public final class OI
         INTAKE_IN.whileHeld(new ActiveIntakeCommand(0.6));
 
 
-        INTAKE_IN.whileHeld(new ActiveIntakeCommand(-0.6));
+        INTAKE_OUT.whileHeld(new ActiveIntakeCommand(-0.6));
 
-        OPEN_INTAKE.whenPressed(new QuickCommand(Robot.ACTIVE_INTAKE, Robot.GRABBER::toggleIntake));
+        OPEN_INTAKE.whenPressed(new GrabCommand());2qg
 
-        CLIMBER.whileHeld(new QuickCommand(Robot.ELEVATOR, () -> Robot.ELEVATOR.moveClimber(0.4)));
-        CLIMBER.whenReleased(new QuickCommand(Robot.ELEVATOR, Robot.ELEVATOR::stopClimber));
+        CLIMBER.whileHeld(new ClimberCommand(1));
 
-        SHIFT_GEARBOX_ELEV.whenPressed(new QuickCommand(Robot.ELEVATOR, Robot.CLIMBER::toggleLock));
+        CLIMBER_DOWN.whileHeld(new ClimberCommand(-1));
+
+
+        SHIFT_GEARBOX_ELEV.whenPressed(new ShiftElevatorCommand());
     }
 
     public static boolean joysThreshold(double threshold, boolean above)
