@@ -37,8 +37,8 @@ public class RobotMap
             /*
              * Eventually, once we have encoders, these buttons will go all the way up/down
              */
-            public static final int RAISE_ELEVATOR = 4;
-            public static final int LOWER_ELEVATOR = 5;
+            public static final int RAISE_ELEVATOR = 5;
+            public static final int LOWER_ELEVATOR = 3;
 
             /*
              * Then, these buttons will let Driver 2 adjust it manually

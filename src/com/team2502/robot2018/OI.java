@@ -1,5 +1,6 @@
 package com.team2502.robot2018;
 
+import com.team2502.robot2018.command.teleop.ActiveIntakeCommand;
 import com.team2502.robot2018.command.teleop.ElevatorCommand;
 import com.team2502.robot2018.command.teleop.QuickCommand;
 import com.team2502.robot2018.utils.baseoverloads.JoystickButtonF;
@@ -43,11 +44,10 @@ public final class OI
 //        ELEV_DOWN.whenReleased(new QuickCommand(Robot.ELEVATOR, () -> Robot.ELEVATOR.stopElevator()));
 
         // Active Intake buttons
-        INTAKE_IN.whileHeld(new QuickCommand(Robot.ACTIVE_INTAKE, () -> Robot.ACTIVE_INTAKE.runIntake(0.6)));
-        INTAKE_IN.whenReleased(new QuickCommand(Robot.ACTIVE_INTAKE, Robot.ACTIVE_INTAKE::stop));
+        INTAKE_IN.whileHeld(new ActiveIntakeCommand(0.6));
 
-        INTAKE_OUT.whileHeld(new QuickCommand(Robot.ACTIVE_INTAKE, () -> Robot.ACTIVE_INTAKE.runIntake(-0.6)));
-        INTAKE_OUT.whenReleased(new QuickCommand(Robot.ACTIVE_INTAKE, Robot.ACTIVE_INTAKE::stop));
+
+        INTAKE_IN.whileHeld(new ActiveIntakeCommand(-0.6));
 
         OPEN_INTAKE.whenPressed(new QuickCommand(Robot.ACTIVE_INTAKE, Robot.GRABBER::toggleIntake));
 

@@ -5,11 +5,9 @@ import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
 import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 import com.team2502.robot2018.Constants;
 import com.team2502.robot2018.RobotMap;
-import com.team2502.robot2018.command.teleop.ActiveCommand;
+import com.team2502.robot2018.command.teleop.ActiveRotationCommand;
 import com.team2502.robot2018.utils.baseoverloads.WPI_TalonSRXF;
-import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
-import logger.Log;
 
 
 public class ActiveSubsystem extends Subsystem
@@ -43,5 +41,5 @@ public class ActiveSubsystem extends Subsystem
 
     @Override
     protected void initDefaultCommand()
-    { setDefaultCommand(new ActiveCommand()); }
+    { setDefaultCommand(new ActiveRotationCommand()); }
 }

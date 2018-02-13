@@ -5,7 +5,7 @@ import com.team2502.robot2018.utils.NonDefaultSubsystem;
 import edu.wpi.first.wpilibj.Solenoid;
 import logger.Log;
 
-public class ClimberSubsystem extends NonDefaultSubsystem
+public class ClimberSolenoid extends NonDefaultSubsystem
 {
     /**
      * This solenoid, when enabled (set to true), locks the climber
@@ -16,10 +16,10 @@ public class ClimberSubsystem extends NonDefaultSubsystem
      */
     private boolean climberDisabled;
 
-    public ClimberSubsystem()
+    public ClimberSolenoid()
     {
         climberSolenoid = new Solenoid(RobotMap.Solenoid.CLIMBER_SOLENOID);
-        climberDisabled = false;
+        climberDisabled = true;
     }
 
     /**

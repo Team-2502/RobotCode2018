@@ -7,9 +7,9 @@ import edu.wpi.first.wpilibj.command.Command;
 /**
  * Created by 64009334 on 2/9/18.
  */
-public class ActiveCommand extends Command
+public class ActiveRotationCommand extends Command
 {
-    public ActiveCommand()
+    public ActiveRotationCommand()
     {
         requires(Robot.ACTIVE_INTAKE);
     }
@@ -24,5 +24,10 @@ public class ActiveCommand extends Command
     protected boolean isFinished()
     {
         return false;
+    }
+
+    protected void end()
+    {
+        Robot.ACTIVE_INTAKE.stop();
     }
 }
