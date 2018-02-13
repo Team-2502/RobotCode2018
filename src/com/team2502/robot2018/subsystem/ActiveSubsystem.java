@@ -18,7 +18,6 @@ public class ActiveSubsystem extends Subsystem
     public final WPI_TalonSRXF rightIntake;
     public final WPI_TalonSRXF rotateIntake;
 
-
     public ActiveSubsystem()
     {
         leftIntake = new WPI_TalonSRXF(RobotMap.Motor.ACTIVE_LEFT);

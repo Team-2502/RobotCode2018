@@ -167,10 +167,10 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
      */
     public void runMotors(ControlMode controlMode, float leftWheel, float rightWheel) // double z
     {
-//        leftFrontTalon.set(controlMode, leftWheel);
+        leftFrontTalon.set(controlMode, leftWheel);
         leftRearTalonEnc.set(controlMode, leftWheel);
 
-//        rightFrontTalon.set(controlMode, rightWheel);
+        rightFrontTalon.set(controlMode, rightWheel);
         rightRearTalonEnc.set(controlMode, rightWheel);
     }
 
@@ -183,10 +183,10 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
      */
     public void runMotors(ControlMode controlMode) // double z
     {
-//        leftFrontTalon.set(controlMode, 0);
+        leftFrontTalon.set(controlMode, 0);
         leftRearTalonEnc.set(controlMode, 0);
 
-//        rightFrontTalon.set(controlMode, 0);
+        rightFrontTalon.set(controlMode, 0);
         rightRearTalonEnc.set(controlMode, 0);
     }
 
@@ -267,32 +267,6 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
 
         throw new UnsupportedOperationException();
 
-//        float joystickLevel;
-//        // Get the base speed of the robot
-//        if(negative) { joystickLevel = OI.JOYSTICK_DRIVE_RIGHT.getY(); }
-//        else { joystickLevel = OI.JOYSTICK_DRIVE_LEFT.getY(); }
-//
-//        // Only increase the speed by a small amount
-//        float diff = joystickLevel - lastLeft;
-//        if(diff > 0.1F) { joystickLevel = lastLeft + 0.1F; }
-//        else if(diff < -0.1F) { joystickLevel = lastLeft - 0.1F; }
-//        lastLeft = joystickLevel;
-//        out.left = joystickLevel;
-//
-//        if(negative) { joystickLevel = OI.JOYSTICK_DRIVE_LEFT.getY(); }
-//        else { joystickLevel = OI.JOYSTICK_DRIVE_RIGHT.getY(); }
-//
-//        diff = joystickLevel - lastRight;
-//        if(diff > 0.1F) { joystickLevel = lastRight + 0.1F; }
-//        else if(diff < -0.1F) { joystickLevel = lastRight - 0.1F; }
-//        lastRight = joystickLevel;
-//        out.right = joystickLevel;
-//
-//        // Sets the speed to 0 if the speed is less than 0.05 and larger than -0.05
-//        if(Math.abs(out.left) < 0.05F) { out.left = 0.0F; }
-//        if(Math.abs(out.right) < 0.05F) { out.right = 0.0F; }
-//
-//        return out;
     }
 
     private FloatPair getSpeedTank()
