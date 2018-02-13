@@ -33,6 +33,7 @@ public class SolenoidSubsystem extends NonDefaultSubsystem
     {
         climberSolenoid = new Solenoid(RobotMap.Solenoid.CLIMBER_SOLENOID);
         climberDisabled = true;
+        climberSolenoid.set(climberDisabled);
 
         switcher = new Solenoid(RobotMap.Solenoid.TRANSMISSION_SWITCH);
         highGear = false;
