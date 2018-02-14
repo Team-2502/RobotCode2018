@@ -10,8 +10,9 @@ public class GrabCommand extends InstantCommand
         requires(Robot.ACTIVE_INTAKE);
     }
 
+    @Override
     protected void execute()
     {
-        Robot.GRABBER.toggleIntake();
+        Robot.ACTIVE_INTAKE_SOLENOID.toggleIntake();
     }
 }

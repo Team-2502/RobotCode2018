@@ -42,9 +42,9 @@ public class DriveCommand extends Command
     public DriveCommand()
     {
         requires(Robot.DRIVE_TRAIN);
-        requires(Robot.TRANSMISSION);
+        requires(Robot.TRANSMISSION_SOLENOID);
         driveTrainSubsystem = Robot.DRIVE_TRAIN;
-        transmission = Robot.TRANSMISSION;
+        transmission = Robot.TRANSMISSION_SOLENOID;
         navx = Robot.NAVX;
         initAngleDegrees = (float) navx.getAngle();
     }

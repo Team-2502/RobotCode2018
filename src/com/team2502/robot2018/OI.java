@@ -1,13 +1,12 @@
 package com.team2502.robot2018;
 
 import com.team2502.robot2018.command.teleop.*;
-import com.team2502.robot2018.subsystem.solenoid.ActiveIntakeSolenoid;
 import com.team2502.robot2018.utils.baseoverloads.JoystickButtonF;
 import com.team2502.robot2018.utils.baseoverloads.JoystickF;
 import edu.wpi.first.wpilibj.buttons.Button;
 
 /**
- * The Operator Interface class. NOT the wrong spelling of I/O!
+ * The Operator Interface class
  */
 public final class OI
 {
@@ -23,7 +22,7 @@ public final class OI
     public static final Button ELEV_DOWN = new JoystickButtonF(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.LOWER_ELEVATOR);
 
     public static final Button CLIMBER = new JoystickButtonF(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.CLIMBER);
-    public static final Button CLIMBER_DOWN = new JoystickButtonF(JOYSTICK_FUNCTION, RobotMap.UNDEFINED);
+//    public static final Button CLIMBER_DOWN = new JoystickButtonF(JOYSTICK_FUNCTION, RobotMap.UNDEFINED);
 
 
     public static final Button SHIFT_GEARBOX_ELEV = new JoystickButtonF(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.SHIFT_GEARBOX_ELEV);
@@ -33,27 +32,17 @@ public final class OI
     public static void init()
     {
         // Elevator buttons
-
-        // This is supposed to automatically engage
-//        ELEV_UP.whenPressed(new QuickCommand(Robot.ELEVATOR, Robot.ELEVATOR::unlockElevator));
         ELEV_UP.whileHeld(new ElevatorCommand(1));
-//        ELEV_UP.whenReleased(new QuickCommand(Robot.ELEVATOR, () -> Robot.ELEVATOR.stopElevator()));
-
-//        ELEV_DOWN.whenPressed(new QuickCommand(Robot.ELEVATOR, Robot.ELEVATOR::unlockElevator));
-        ELEV_DOWN.whileHeld(new ElevatorCommand(-1));
-//        ELEV_DOWN.whenReleased(new QuickCommand(Robot.ELEVATOR, () -> Robot.ELEVATOR.stopElevator()));
+        ELEV_DOWN.whileHeld(new ElevatorCommand(-0.3));
 
         // Active Intake buttons
         INTAKE_IN.whileHeld(new ActiveIntakeCommand(0.6));
-
-
         INTAKE_OUT.whileHeld(new ActiveIntakeCommand(-0.6));
 
         OPEN_INTAKE.whenPressed(new GrabCommand());
 
         CLIMBER.whileHeld(new ClimberCommand(1));
-
-        CLIMBER_DOWN.whileHeld(new ClimberCommand(-1));
+//        CLIMBER_DOWN.whileHeld(new ClimberCommand(-1));
 
 
         SHIFT_GEARBOX_ELEV.whenPressed(new ShiftElevatorCommand());

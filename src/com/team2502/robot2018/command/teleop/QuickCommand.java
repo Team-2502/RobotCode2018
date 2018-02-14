@@ -4,6 +4,11 @@ import com.team2502.ctannotationprocessor.Undefined;
 import edu.wpi.first.wpilibj.command.InstantCommand;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
+/**
+ * This class has been deprecated in order to discourage use of it.
+ *
+ * Only use this class when doing quick fixes at tournaments.
+ */
 @Deprecated
 public class QuickCommand extends InstantCommand
 {

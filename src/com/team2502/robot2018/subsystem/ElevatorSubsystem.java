@@ -5,6 +5,7 @@ import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
 import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 import com.ctre.phoenix.motorcontrol.RemoteLimitSwitchSource;
 import com.team2502.robot2018.Constants;
+import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.RobotMap;
 import com.team2502.robot2018.utils.baseoverloads.WPI_TalonSRXF;
 import edu.wpi.first.wpilibj.Solenoid;
@@ -15,6 +16,7 @@ public class ElevatorSubsystem extends Subsystem
 {
     public final WPI_TalonSRXF elevatorTop;
     public final WPI_TalonSRXF elevatorBottom;
+
     // The difference between the climber motors and the elevator motors is that
     // the climber motors are the slower CIMS while the the elevator motors are the faster miniCIMS
     public final WPI_TalonSRXF climberTop;
@@ -38,12 +40,19 @@ public class ElevatorSubsystem extends Subsystem
     /**
      * Move the elevator up or down
      *
-     * @param x Speed to move elevator (in percent output)
+     * @param speed Speed to move elevator (in percent output)
      */
-    public void moveElevator(double x)
+    public void moveElevator(double speed)
     {
-        elevatorTop.set(ControlMode.PercentOutput, x);
-        elevatorBottom.set(ControlMode.PercentOutput, x);
+        // TESTING THESE LINES
+        if(Robot.CLIMBER_SOLENOID.isLocked())
+        {
+            Robot.CLIMBER_SOLENOID.unlockElevator();
+        }
+        // TESTING THESE LINES
+
+        elevatorTop.set(ControlMode.PercentOutput, speed);
+        elevatorBottom.set(ControlMode.PercentOutput, speed);
     }
 
     /**
@@ -51,6 +60,13 @@ public class ElevatorSubsystem extends Subsystem
      */
     public void stopElevator()
     {
+        // TESTING THESE LINES
+        if(!Robot.CLIMBER_SOLENOID.isLocked())
+        {
+            Robot.CLIMBER_SOLENOID.lockElevator();
+        }
+        // TESTING THESE LINES
+
         elevatorTop.set(ControlMode.PercentOutput, 0.0F);
         elevatorBottom.set(ControlMode.PercentOutput, 0.0F);
     }
@@ -58,7 +74,7 @@ public class ElevatorSubsystem extends Subsystem
     /**
      * Move the elevator down for climbing purpose
      *
-     * @param x How fast to move it. Make it positive OR ELSE
+     * @param x How fast to move it. Make it positive to life elevator
      */
     public void moveClimber(double x)
     {

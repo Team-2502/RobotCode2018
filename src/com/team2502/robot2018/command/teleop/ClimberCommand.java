@@ -5,17 +5,18 @@ import edu.wpi.first.wpilibj.command.Command;
 
 public class ClimberCommand extends Command
 {
-    double x = 0;
+    private double _speed;
 
-    public ClimberCommand(double x)
+    public ClimberCommand(double speed)
     {
         requires(Robot.ELEVATOR);
-        this.x = x;
+        this._speed = speed;
     }
 
+    @Override
     protected void execute()
     {
-        Robot.ELEVATOR.moveClimber(x);
+        Robot.ELEVATOR.moveClimber(_speed);
         System.out.println("Running Climber command");
     }
 
@@ -25,6 +26,7 @@ public class ClimberCommand extends Command
         return false;
     }
 
+    @Override
     protected void end()
     {
        Robot.ELEVATOR.stopClimber();

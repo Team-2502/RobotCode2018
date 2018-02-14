@@ -4,6 +4,13 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.team2502.robot2018.utils.baseoverloads.WPI_TalonSRXF;
 import edu.wpi.first.wpilibj.command.Command;
 
+
+/**
+ * This class has been deprecated in order to discourage use of it.
+ *
+ * Only use this class when doing quick fixes at tournaments.
+ */
+@Deprecated
 public class RunAMotor extends Command
 
 {

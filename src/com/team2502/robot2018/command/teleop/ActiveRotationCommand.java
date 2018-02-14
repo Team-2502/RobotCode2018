@@ -14,10 +14,10 @@ public class ActiveRotationCommand extends Command
         requires(Robot.ACTIVE_INTAKE);
     }
 
+    @Override
     protected void execute()
     {
         Robot.ACTIVE_INTAKE.rotateIntake(OI.JOYSTICK_FUNCTION.getY());
-        System.out.println("Running active command");
     }
 
     @Override
@@ -26,6 +26,7 @@ public class ActiveRotationCommand extends Command
         return false;
     }
 
+    @Override
     protected void end()
     {
         Robot.ACTIVE_INTAKE.stop();

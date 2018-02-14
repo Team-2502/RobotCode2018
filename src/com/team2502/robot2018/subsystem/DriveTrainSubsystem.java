@@ -12,6 +12,7 @@ import com.team2502.robot2018.utils.baseoverloads.DifferentialDriveF;
 import com.team2502.robot2018.utils.baseoverloads.SpeedControllerGroupF;
 import com.team2502.robot2018.utils.baseoverloads.WPI_TalonSRXF;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -25,7 +26,7 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     public final WPI_TalonSRXF leftRearTalonEnc;
     public final WPI_TalonSRXF rightFrontTalon;
     public final WPI_TalonSRXF rightRearTalonEnc;
-    public final DifferentialDriveF drive;
+    public final DifferentialDrive drive;
     public final SpeedControllerGroupF spgLeft;
     public final SpeedControllerGroupF spgRight;
 
@@ -62,7 +63,7 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         spgLeft = new SpeedControllerGroupF(leftFrontTalon, leftRearTalonEnc);
         spgRight = new SpeedControllerGroupF(rightFrontTalon, rightRearTalonEnc);
 
-        drive = new DifferentialDriveF(spgLeft, spgRight);
+        drive = new DifferentialDrive(spgLeft, spgRight);
 
         pidTuner = new SendablePIDTuner(this, this);
 

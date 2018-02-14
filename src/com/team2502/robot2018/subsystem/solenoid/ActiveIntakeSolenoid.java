@@ -8,13 +8,14 @@ import logger.Log;
 public class ActiveIntakeSolenoid extends NonDefaultSubsystem
 {
     private final Solenoid grabber;
-    private boolean grabberEnabled;
+    private boolean grabberEnabled = false;
 
     public ActiveIntakeSolenoid()
     {
         grabber = new Solenoid(RobotMap.Solenoid.ACTIVE_GRABBER);
-        grabberEnabled = false;
-        grabber.set(grabberEnabled);
+
+        // starting state
+        grabber.set(false);
     }
 
     public void toggleIntake()

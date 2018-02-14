@@ -16,9 +16,6 @@ public class ActiveIntakeSubsystem extends Subsystem
     public final WPI_TalonSRXF rightIntake;
     public final WPI_TalonSRXF rotateIntake;
 
-//    public static class
-
-
 
     public ActiveIntakeSubsystem()
     {
@@ -30,14 +27,17 @@ public class ActiveIntakeSubsystem extends Subsystem
         rotateIntake.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen, Constants.INIT_TIMEOUT);
     }
 
-    public void runIntake(double x)
+    public void runIntake(double speed)
     {
-        leftIntake.set(ControlMode.PercentOutput, x);
-        rightIntake.set(ControlMode.PercentOutput, x);
+        leftIntake.set(ControlMode.PercentOutput, speed);
+        rightIntake.set(ControlMode.PercentOutput, speed);
     }
 
     public void stop()
-    { runIntake(0); }
+    {
+        rotateIntake(0.0D);
+        runIntake(0.0D);
+    }
 
     public void rotateIntake(double x)
     { rotateIntake.set(ControlMode.PercentOutput, x); }

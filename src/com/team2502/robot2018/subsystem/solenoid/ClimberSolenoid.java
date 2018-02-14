@@ -1,11 +1,11 @@
 package com.team2502.robot2018.subsystem.solenoid;
 
 import com.team2502.robot2018.RobotMap;
-import com.team2502.robot2018.utils.NonDefaultSubsystem;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.command.Subsystem;
 import logger.Log;
 
-public class ClimberSolenoid extends NonDefaultSubsystem
+public class ClimberSolenoid extends Subsystem
 {
     /**
      * This solenoid, when enabled (set to true), locks the climber
@@ -21,6 +21,9 @@ public class ClimberSolenoid extends NonDefaultSubsystem
         climberSolenoid = new Solenoid(RobotMap.Solenoid.CLIMBER_SOLENOID);
         climberDisabled = true;
     }
+
+    @Override
+    protected void initDefaultCommand() { }
 
     /**
      * Stop the elevator from slamming down by engaging the climber

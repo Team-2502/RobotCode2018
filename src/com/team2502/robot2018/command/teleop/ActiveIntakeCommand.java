@@ -1,26 +1,35 @@
 package com.team2502.robot2018.command.teleop;
 
+import com.team2502.robot2018.OI;
 import com.team2502.robot2018.Robot;
-import com.team2502.robot2018.subsystem.solenoid.ActiveIntakeSolenoid;
 import edu.wpi.first.wpilibj.command.Command;
 
 public class ActiveIntakeCommand extends Command
 {
-    double x;
+    private double _speed;
+
     public ActiveIntakeCommand(double speed)
     {
         requires(Robot.ACTIVE_INTAKE);
-        x = speed;
+        _speed = speed;
     }
 
+    @Override
     protected void execute()
     {
-        Robot.ACTIVE_INTAKE.runIntake(x);
+        Robot.ACTIVE_INTAKE.rotateIntake(OI.JOYSTICK_FUNCTION.getY());
+        Robot.ACTIVE_INTAKE.runIntake(_speed);
     }
 
     @Override
     protected boolean isFinished()
     {
         return false;
+    }
+
+    @Override
+    protected void end()
+    {
+        Robot.ACTIVE_INTAKE.stop();
     }
 }
