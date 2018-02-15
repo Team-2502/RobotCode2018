@@ -53,7 +53,7 @@ public class ClimberSolenoid extends Subsystem
      * @return Whether or not the climber is enabled
      */
     public boolean isLocked()
-    { return climberDisabled; }
+    { return !climberDisabled; }
 
     /**
      * Engage the climber
