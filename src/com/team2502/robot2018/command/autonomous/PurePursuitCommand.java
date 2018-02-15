@@ -7,7 +7,9 @@ import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.sendables.SendableNavX;
 import com.team2502.robot2018.subsystem.DriveTrainSubsystem;
 import com.team2502.robot2018.trajectory.ITankRobotBounds;
+import com.team2502.robot2018.trajectory.Lookahead;
 import com.team2502.robot2018.trajectory.PurePursuitMovementStrategy;
+import com.team2502.robot2018.trajectory.Waypoint;
 import com.team2502.robot2018.trajectory.localization.EncoderDifferentialDriveLocationEstimator;
 import com.team2502.robot2018.trajectory.localization.NavXLocationEstimator;
 import com.team2502.robot2018.utils.MathUtils;
@@ -32,12 +34,12 @@ public class PurePursuitCommand extends Command
     private long lastTime = -1;
     private float initAngleDegrees;
 
-    public PurePursuitCommand(List<ImmutableVector2f> waypoints)
+    public PurePursuitCommand(List<Waypoint> waypoints)
     {
         this(waypoints, Constants.LOOKAHEAD_DISTANCE_FT, Constants.STOP_DIST_TOLERANCE_FT);
     }
 
-    public PurePursuitCommand(List<ImmutableVector2f> waypoints, float lookAheadDistance, float stopDistance)
+    public PurePursuitCommand(List<Waypoint> waypoints, float lookAheadDistance, float stopDistance)
     {
         navx = Robot.NAVX;
         navx.resetDisplacement();
@@ -114,7 +116,8 @@ public class PurePursuitCommand extends Command
         transLocEstimator = new EncoderDifferentialDriveLocationEstimator(rotLocEstimator);
 
         sendableNavX = new SendableNavX(() -> MathUtils.rad2Deg(-rotLocEstimator.estimateHeading()), "purePursuitHeading");
-        purePursuitMovementStrategy = new PurePursuitMovementStrategy(tankRobot, transLocEstimator, rotLocEstimator, transLocEstimator, waypoints, lookAheadDistance, stopDistance);
+        Lookahead lookahead = new Lookahead(1,6,1,8);
+        purePursuitMovementStrategy = new PurePursuitMovementStrategy(tankRobot, transLocEstimator, rotLocEstimator, transLocEstimator,waypoints ,lookahead, stopDistance);
         Log.info("initAngleDegrees: {0,number,0.00}\n" + initAngleDegrees);
     }
 

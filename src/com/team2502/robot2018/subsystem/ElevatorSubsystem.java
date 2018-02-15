@@ -7,9 +7,7 @@ import com.ctre.phoenix.motorcontrol.RemoteLimitSwitchSource;
 import com.team2502.robot2018.Constants;
 import com.team2502.robot2018.RobotMap;
 import com.team2502.robot2018.utils.baseoverloads.WPI_TalonSRXF;
-import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
-import logger.Log;
 
 public class ElevatorSubsystem extends Subsystem
 {
@@ -33,6 +31,8 @@ public class ElevatorSubsystem extends Subsystem
 
         elevatorTop.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen, Constants.INIT_TIMEOUT);
         elevatorBottom.configReverseLimitSwitchSource(RemoteLimitSwitchSource.RemoteTalonSRX, LimitSwitchNormal.NormallyOpen, RobotMap.Motor.ELEVATOR_TOP, Constants.INIT_TIMEOUT);
+
+
     }
 
     /**
@@ -40,10 +40,17 @@ public class ElevatorSubsystem extends Subsystem
      *
      * @param x Speed to move elevator (in percent output)
      */
-    public void moveElevator(double x)
+    public void setElevatorPV(double x)
     {
         elevatorTop.set(ControlMode.PercentOutput, x);
         elevatorBottom.set(ControlMode.PercentOutput, x);
+    }
+
+    public void setElevatorPos(float feet)
+    {
+        float epos = feet * Constants.FT_TO_EPOS;
+        elevatorTop.set(ControlMode.Position, epos);
+        elevatorBottom.set(ControlMode.Position, epos);
     }
 
     /**

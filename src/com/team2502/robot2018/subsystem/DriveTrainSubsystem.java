@@ -157,7 +157,7 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     }
 
     /**
-     * Drive the robot. The equation leftWheel=-rightWheel must be true for the robot to moveElevator straight.
+     * Drive the robot. The equation leftWheel=-rightWheel must be true for the robot to setElevatorPV straight.
      * <br>
      * Make sure to set the motors according to the control mode. In auton, it's position. In teleop, it's percent voltage.
      *
@@ -167,15 +167,15 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
      */
     public void runMotors(ControlMode controlMode, float leftWheel, float rightWheel) // double z
     {
-//        leftFrontTalon.set(controlMode, leftWheel);
+        leftFrontTalon.set(controlMode, leftWheel);
         leftRearTalonEnc.set(controlMode, leftWheel);
 
-//        rightFrontTalon.set(controlMode, rightWheel);
+        rightFrontTalon.set(controlMode, rightWheel);
         rightRearTalonEnc.set(controlMode, rightWheel);
     }
 
     /**
-     * Drive the robot with x=0,y=0. The equation x=-y must be true for the robot to moveElevator straight.
+     * Drive the robot with x=0,y=0. The equation x=-y must be true for the robot to setElevatorPV straight.
      * <br>
      * Make sure to set the motors according to the control mode. In auton, it's position. In teleop, it's percent voltage.
      *
@@ -183,15 +183,15 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
      */
     public void runMotors(ControlMode controlMode) // double z
     {
-//        leftFrontTalon.set(controlMode, 0);
+        leftFrontTalon.set(controlMode, 0);
         leftRearTalonEnc.set(controlMode, 0);
 
-//        rightFrontTalon.set(controlMode, 0);
+        rightFrontTalon.set(controlMode, 0);
         rightRearTalonEnc.set(controlMode, 0);
     }
 
     /**
-     * Drive the robot using ControlMode.PercentOutput. The equation leftWheel=-rightWheel must be true for the robot to moveElevator straight.
+     * Drive the robot using ControlMode.PercentOutput. The equation leftWheel=-rightWheel must be true for the robot to setElevatorPV straight.
      * <br>
      * Make sure to set the motors according to the control mode. In auton, it's position. In teleop, it's percent voltage.
      *
@@ -281,7 +281,7 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
 
         // Log.debug("Left: {0,number,#.###}\t\t Right: {0,number,#.###}", speed.right, speed.left);
 
-        //reverse moveElevator
+        //reverse setElevatorPV
         if((OI.JOYSTICK_DRIVE_LEFT.getRawButton(RobotMap.Joystick.Button.INVERSE_DRIVER_CONTROLS) && !isNegativePressed)) { negative = !negative; }
 
         isNegativePressed = OI.JOYSTICK_DRIVE_LEFT.getRawButton(RobotMap.Joystick.Button.INVERSE_DRIVER_CONTROLS);

@@ -42,11 +42,8 @@ public final class OI
         }));
 
 //        ELEV_DOWN.whenPressed(new QuickCommand(Robot.ELEVATOR, Robot.ELEVATOR::unlockElevator));
-        ELEV_DOWN.whileHeld(new QuickCommand(Robot.ELEVATOR, () -> Robot.ELEVATOR.moveElevator(-0.2)));
-        ELEV_DOWN.whenReleased(new QuickCommand(Robot.ELEVATOR, () -> {
-//            Robot.ELEVATOR.lockElevator();
-            Robot.ELEVATOR.stopElevator();
-        }));
+        ELEV_DOWN.whileHeld(new QuickCommand(Robot.ELEVATOR, () -> Robot.ELEVATOR.setElevatorPV(-0.2)));
+        ELEV_DOWN.whenReleased(new QuickCommand(Robot.ELEVATOR, () -> Robot.ELEVATOR.stopElevator()));
 
         // Active Intake buttons
         INTAKE_IN.whileHeld(new QuickCommand(Robot.ACTIVE_INTAKE, () -> Robot.ACTIVE_INTAKE.runIntake(0.3)));

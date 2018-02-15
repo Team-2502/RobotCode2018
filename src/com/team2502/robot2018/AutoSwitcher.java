@@ -6,26 +6,22 @@ import com.team2502.robot2018.command.autonomous.groups.LeftCommandGroup;
 import com.team2502.robot2018.command.autonomous.groups.RightCommandGroup;
 import com.team2502.robot2018.command.autonomous.ingredients.DriveTime;
 import com.team2502.robot2018.command.teleop.CalibrateRobotCommand;
+import com.team2502.robot2018.trajectory.Waypoint;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.joml.ImmutableVector2f;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 class AutoSwitcher
 {
     private static SendableChooser<AutoMode> autoChooser;
-    private static ArrayList<ImmutableVector2f> waypoints;
+    private static List<Waypoint> waypoints = Arrays.asList(new Waypoint(new ImmutableVector2f(0, 0), 0));
 
-    static
-    {
-        waypoints = new ArrayList<>();
-        waypoints.add(new ImmutableVector2f(0.0F, 0.0F));
-        waypoints.add(new ImmutableVector2f(0.0F, 10.0F));
-        waypoints.add(new ImmutableVector2f(10.0F, 10.0F));
-        waypoints.add(new ImmutableVector2f(0.0F, 0.0F));
-    }
+
 
     static void putToSmartDashboard()
     {

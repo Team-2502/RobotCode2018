@@ -7,6 +7,7 @@ import com.team2502.robot2018.sendables.SendableDriveTrain;
 import com.team2502.robot2018.sendables.SendableNavX;
 import com.team2502.robot2018.sendables.SendableVersioning;
 import com.team2502.robot2018.subsystem.*;
+import com.team2502.robot2018.trajectory.Waypoint;
 import com.team2502.robot2018.utils.Files;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -123,13 +124,13 @@ public final class Robot extends IterativeRobot
     {
         DRIVE_TRAIN.setAutonSettings();
 
-        List<ImmutableVector2f> waypoints = Arrays.asList(
-                new ImmutableVector2f(0, 0),
-                new ImmutableVector2f(0, 26),
-                new ImmutableVector2f(-6, 26),
-                new ImmutableVector2f(-6, 0),
-                new ImmutableVector2f(0, 0)
-                                                         );
+        List<Waypoint> waypoints = Arrays.asList(
+                new Waypoint(new ImmutableVector2f(0, 0),0),
+                new Waypoint(new ImmutableVector2f(0, 10),2),
+                new Waypoint(new ImmutableVector2f(-10, 10),4),
+                new Waypoint(new ImmutableVector2f(-10, 0),6),
+                new Waypoint(new ImmutableVector2f(0, 0),0)
+                                                 );
 
 //        Scheduler.getInstance().add(new CalibrateRobotCommand());
         Scheduler.getInstance().add(new PurePursuitCommand(waypoints, Constants.LOOKAHEAD_DISTANCE_FT, Constants.STOP_DIST_TOLERANCE_FT));
@@ -152,11 +153,18 @@ public final class Robot extends IterativeRobot
         DRIVE_TRAIN.setTeleopSettings();
     }
 
+    boolean buttonPressed = false;
     /**
      * This function is called periodically during operator control
      */
     public void teleopPeriodic()
     {
+        boolean buttonPressedTemp = OI.ELEV_UP.get();
+        if(buttonPressedTemp != buttonPressed)
+        {
+            buttonPressed = buttonPressedTemp;
+            System.out.println("BUTTON: "+buttonPressed);
+        }
         Scheduler.getInstance().run();
         DashboardData.update();
     }

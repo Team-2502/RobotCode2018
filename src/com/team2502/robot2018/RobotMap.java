@@ -37,8 +37,8 @@ public class RobotMap
             /*
              * Eventually, once we have encoders, these buttons will go all the way up/down
              */
-            public static final int RAISE_ELEVATOR = 4;
-            public static final int LOWER_ELEVATOR = 5;
+            public static final int RAISE_ELEVATOR = 5;
+            public static final int LOWER_ELEVATOR = 3;
 
             /*
              * Then, these buttons will let Driver 2 adjust it manually
@@ -66,16 +66,24 @@ public class RobotMap
 
     public static final class Motor
     {
-        // Right side of e-panel, bottom to top
+        /*                        Name - Talon ID - Log ID
+         *
+         *          Left Side of PDP         |           Right Side of PDP
+         *                                   |
+         * Spare Talon ------------- 7 - 10  |  Active Rotate ----------- 6 -- 5
+         * Active Left ------------- 8 - 11  |  Active Right ------------ 5 -- 4
+         * Elevator Top ------------ 9 - 12  |  Drive Train Back Left --- 4 -- 3
+         * Elevator Bottom -------- 10 - 13  |  Drive Train Front Left -- 3 -- 2
+         * Climber Top ------------ 11 - 14  |  Drive Train Back Right -- 2 -- 1
+         * Climber Bottom --------- 12 - 15  |  Drive Train Front Right - 1 -- 0
+         */
+
         public static final int DRIVE_TRAIN_FRONT_RIGHT = 1;
         public static final int DRIVE_TRAIN_BACK_RIGHT = 2;
         public static final int DRIVE_TRAIN_FRONT_LEFT = 3;
         public static final int DRIVE_TRAIN_BACK_LEFT = 4;
         public static final int ACTIVE_RIGHT = 5;
         public static final int ACTIVE_ROTATE = 6;
-
-        // Left side of e-panel, top to bottom
-        public static final int SPARE_TALON = 7;
         public static final int ACTIVE_LEFT = 8;
         public static final int ELEVATOR_TOP = 9;
         public static final int ELEVATOR_BOTTOM = 10;
@@ -96,9 +104,17 @@ public class RobotMap
 
     public class Solenoid
     {
+        /*
+         * Transmission ------ 0
+         * Climber Solenoid -- 1
+         * Active Grabber ---- 2
+         * Butterfly Release - 3
+         */
+
         public static final int TRANSMISSION_SWITCH = 0;
-        public static final int CLIMBER_SOLENOID = 2;
-        public static final int ACTIVE_GRABBER = 1;
+        public static final int CLIMBER_SOLENOID = 1;
+        public static final int ACTIVE_GRABBER = 2;
+
 //        public static final int BUTTERFLY_RELEASE = 3;
 
         private Solenoid() { }
