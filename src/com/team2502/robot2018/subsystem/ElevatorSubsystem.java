@@ -5,12 +5,11 @@ import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
 import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 import com.ctre.phoenix.motorcontrol.RemoteLimitSwitchSource;
 import com.team2502.robot2018.Constants;
+import com.team2502.robot2018.OI;
 import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.RobotMap;
 import com.team2502.robot2018.utils.baseoverloads.WPI_TalonSRXF;
-import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
-import logger.Log;
 
 public class ElevatorSubsystem extends Subsystem
 {
@@ -21,6 +20,14 @@ public class ElevatorSubsystem extends Subsystem
     // the climber motors are the slower CIMS while the the elevator motors are the faster miniCIMS
     public final WPI_TalonSRXF climberTop;
     public final WPI_TalonSRXF climberBottom;
+    /**
+     * Move the elevator up or down
+     *
+     * @param speed Speed to move elevator (in percent output)
+     */
+    int timer;
+    boolean elevUp = false;
+    boolean elevDown = false;
 
     public ElevatorSubsystem()
     {
@@ -36,13 +43,6 @@ public class ElevatorSubsystem extends Subsystem
         elevatorTop.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen, Constants.INIT_TIMEOUT);
         elevatorBottom.configReverseLimitSwitchSource(RemoteLimitSwitchSource.RemoteTalonSRX, LimitSwitchNormal.NormallyOpen, RobotMap.Motor.ELEVATOR_TOP, Constants.INIT_TIMEOUT);
     }
-
-    /**
-     * Move the elevator up or down
-     *
-     * @param speed Speed to move elevator (in percent output)
-     */
-    int timer;
 
     public void moveElevator(double speed)
     {
@@ -108,6 +108,27 @@ public class ElevatorSubsystem extends Subsystem
     {
         stopElevator();
         stopClimber();
+    }
+
+    @Override
+    public void periodic()
+    {
+        // Uses debouncing since there is a wrapper
+        if(OI.ELEV_UP.get())
+        {
+            System.out.println("UP");
+            moveElevator(1);
+        }
+        else if(OI.ELEV_DOWN.get())
+        {
+            System.out.println("DOWN");
+            moveElevator(-.3);
+        }
+        else
+        {
+            System.out.println("STOP");
+            Robot.ELEVATOR.stopElevator();
+        }
     }
 
     @Override

@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj.command.Command;
 
 /**
  * This class has been deprecated in order to discourage use of it.
- *
+ * <p>
  * Only use this class when doing quick fixes at tournaments.
  */
 @Deprecated

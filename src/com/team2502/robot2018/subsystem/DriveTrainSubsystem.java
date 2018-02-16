@@ -8,7 +8,6 @@ import com.team2502.robot2018.sendables.Nameable;
 import com.team2502.robot2018.sendables.PIDTunable;
 import com.team2502.robot2018.sendables.SendableDriveStrategyType;
 import com.team2502.robot2018.sendables.SendablePIDTuner;
-import com.team2502.robot2018.utils.baseoverloads.DifferentialDriveF;
 import com.team2502.robot2018.utils.baseoverloads.SpeedControllerGroupF;
 import com.team2502.robot2018.utils.baseoverloads.WPI_TalonSRXF;
 import edu.wpi.first.wpilibj.command.Subsystem;

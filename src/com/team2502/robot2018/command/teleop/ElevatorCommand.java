@@ -18,6 +18,7 @@ public class ElevatorCommand extends Command
 
     // PUT THIS BACK IF TESTED LINES IN ELEVATORSUBSYSTEM DO NOT WORK ANY BETTER
 
+
     @Override
     protected void initialize()
     {
@@ -44,5 +45,6 @@ public class ElevatorCommand extends Command
 //        Robot.CLIMBER_SOLENOID.lockElevator();
         Robot.ELEVATOR.stopElevator();
     }
+
 
 }
