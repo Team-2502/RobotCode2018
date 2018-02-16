@@ -31,11 +31,7 @@ public class DebouncedJoystickButton extends JoystickButtonF
     public boolean get()
     {
         boolean status = super.get();
-        boolean toReturn = false;
-        if(status && activeCache)
-        {
-            toReturn = true;
-        }
+        boolean toReturn = status && activeCache;
         activeCache = status;
         return toReturn;
     }
