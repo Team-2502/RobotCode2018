@@ -21,7 +21,7 @@ public final class OI
     public static final Button ELEV_UP = new JoystickButtonF(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.RAISE_ELEVATOR);
     public static final Button ELEV_DOWN = new JoystickButtonF(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.LOWER_ELEVATOR);
 
-    public static final Button CLIMBER = new JoystickButtonF(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.CLIMBER);
+//    public static final Button CLIMBER = new JoystickButtonF(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.CLIMBER);
 //    public static final Button CLIMBER_DOWN = new JoystickButtonF(JOYSTICK_FUNCTION, RobotMap.UNDEFINED);
 
 
@@ -41,7 +41,7 @@ public final class OI
 
         OPEN_INTAKE.whenPressed(new GrabCommand());
 
-        CLIMBER.whileHeld(new ClimberCommand(1));
+//        CLIMBER.whileHeld(new ClimberCommand(1));
 //        CLIMBER_DOWN.whileHeld(new ClimberCommand(-1));
 
 
