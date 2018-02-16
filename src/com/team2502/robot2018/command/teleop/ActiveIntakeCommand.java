@@ -17,7 +17,10 @@ public class ActiveIntakeCommand extends Command
     @Override
     protected void execute()
     {
+        // Continue to watch the rotation axis on joystick...
         Robot.ACTIVE_INTAKE.rotateIntake(OI.JOYSTICK_FUNCTION.getY());
+
+        // ...but also rotate the intake
         Robot.ACTIVE_INTAKE.runIntake(_speed);
     }
 
@@ -30,6 +33,6 @@ public class ActiveIntakeCommand extends Command
     @Override
     protected void end()
     {
-        Robot.ACTIVE_INTAKE.stop();
+        Robot.ACTIVE_INTAKE.stopIntake();
     }
 }

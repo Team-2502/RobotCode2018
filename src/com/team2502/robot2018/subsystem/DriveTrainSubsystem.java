@@ -224,8 +224,8 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     {
         float joystickLevel;
         // Get the base speed of the robot
-        if(negative) { joystickLevel = OI.JOYSTICK_DRIVE_RIGHT.getY(); }
-        else { joystickLevel = OI.JOYSTICK_DRIVE_LEFT.getY(); }
+        if(negative) { joystickLevel = (float) OI.JOYSTICK_DRIVE_RIGHT.getY(); }
+        else { joystickLevel = (float) OI.JOYSTICK_DRIVE_LEFT.getY(); }
 
         // Only increase the speed by a small amount
         float diff = joystickLevel - lastLeft;
@@ -234,8 +234,8 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         lastLeft = joystickLevel;
         out.left = joystickLevel;
 
-        if(negative) { joystickLevel = OI.JOYSTICK_DRIVE_LEFT.getY(); }
-        else { joystickLevel = OI.JOYSTICK_DRIVE_RIGHT.getY(); }
+        if(negative) { joystickLevel = (float) OI.JOYSTICK_DRIVE_LEFT.getY(); }
+        else { joystickLevel = (float) OI.JOYSTICK_DRIVE_RIGHT.getY(); }
 
         diff = joystickLevel - lastRight;
         if(diff > 0.1F) { joystickLevel = lastRight + 0.1F; }
@@ -260,10 +260,10 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     private FloatPair getSpeedArcade(FloatPair out)
     {
         // ( v_l + v_r ) / 2
-        float vTan = OI.JOYSTICK_DRIVE_RIGHT.getY();
+        float vTan = (float) OI.JOYSTICK_DRIVE_RIGHT.getY();
 
         // (vR - vL) / l
-        float rot = OI.JOYSTICK_DRIVE_RIGHT.getX();
+        float rot = (float) OI.JOYSTICK_DRIVE_RIGHT.getX();
 
         throw new UnsupportedOperationException();
 

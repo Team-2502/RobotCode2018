@@ -13,7 +13,6 @@ public class UnlockElevatorCommand extends InstantCommand
     @Override
     protected void execute()
     {
-
         Robot.CLIMBER_SOLENOID.unlockElevator();
     }
 }

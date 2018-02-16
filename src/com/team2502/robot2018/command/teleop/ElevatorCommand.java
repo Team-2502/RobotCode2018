@@ -4,25 +4,16 @@ import com.team2502.robot2018.Robot;
 import edu.wpi.first.wpilibj.command.Command;
 import logger.Log;
 
-public class ElevatorBaseCommand extends Command
+public class ElevatorCommand extends Command
 {
     private double _speed;
 
-    public ElevatorBaseCommand(double speed)
+    public ElevatorCommand(double speed)
     {
         requires(Robot.ELEVATOR);
         _speed = speed;
     }
 
-    // PUT THIS BACK IF TESTED LINES IN ELEVATORSUBSYSTEM DO NOT WORK ANY BETTER
-
-
-    @Override
-    protected void initialize()
-    {
-//        System.out.println("initialize of ElevatorBaseCommand");
-//        Robot.CLIMBER_SOLENOID.unlockElevator();
-    }
 
     @Override
     protected void execute()
@@ -40,9 +31,6 @@ public class ElevatorBaseCommand extends Command
     @Override
     protected void end()
     {
-//        Robot.CLIMBER_SOLENOID.lockElevator();
         Robot.ELEVATOR.stopElevator();
     }
-
-
 }
