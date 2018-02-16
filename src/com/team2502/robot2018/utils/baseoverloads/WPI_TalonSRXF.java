@@ -1,4 +1,4 @@
-package com.team2502.robot2018.utils;
+package com.team2502.robot2018.utils.baseoverloads;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.MotControllerJNI;
@@ -58,6 +58,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
  * use single precision instead of double precision floating
  * point numbers.
  */
+@Deprecated
 public class WPI_TalonSRXF extends TalonSRX implements ISpeedControllerF, Sendable, MotorSafety
 {
     protected String m_description;
@@ -257,7 +258,7 @@ public class WPI_TalonSRXF extends TalonSRX implements ISpeedControllerF, Sendab
     }
 
     /**
-     * Common interface to stop the motor until Set is called again.
+     * Common interface to stopElevator the motor until Set is called again.
      */
     @Override
     public void stopMotor()

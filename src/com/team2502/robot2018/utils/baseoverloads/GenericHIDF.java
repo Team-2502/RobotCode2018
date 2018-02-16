@@ -1,4 +1,4 @@
-package com.team2502.robot2018.utils;
+package com.team2502.robot2018.utils.baseoverloads;
 
 import edu.wpi.first.wpilibj.hal.HAL;
 
@@ -47,6 +47,7 @@ import edu.wpi.first.wpilibj.hal.HAL;
  * positions. But the value eventually delegates back to a float
  * array. So why not just make the functions return floats.
  */
+@Deprecated
 public abstract class GenericHIDF
 {
     private final int m_port;

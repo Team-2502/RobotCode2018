@@ -6,8 +6,9 @@ import com.team2502.robot2018.OI;
 import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.RobotMap;
 import com.team2502.robot2018.subsystem.DriveTrainSubsystem;
-import com.team2502.robot2018.subsystem.TransmissionSubsystem;
+import com.team2502.robot2018.subsystem.solenoid.TransmissionSolenoid;
 import com.team2502.robot2018.trajectory.localization.EncoderDifferentialDriveLocationEstimator;
+import com.team2502.robot2018.utils.MathUtils;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import logger.Log;
@@ -29,7 +30,7 @@ import org.joml.Vector2f;
 public class DriveCommand extends Command
 {
     private final DriveTrainSubsystem driveTrainSubsystem;
-    private final TransmissionSubsystem transmission;
+    private final TransmissionSolenoid transmission;
     private final ImmutableVector2f estimatedLocation = new ImmutableVector2f(0, 0);
     public float heading = 0;
     private AHRS navx;
@@ -41,9 +42,9 @@ public class DriveCommand extends Command
     public DriveCommand()
     {
         requires(Robot.DRIVE_TRAIN);
-        requires(Robot.TRANSMISSION);
+        requires(Robot.TRANSMISSION_SOLENOID);
         driveTrainSubsystem = Robot.DRIVE_TRAIN;
-        transmission = Robot.TRANSMISSION;
+        transmission = Robot.TRANSMISSION_SOLENOID;
         navx = Robot.NAVX;
         initAngleDegrees = (float) navx.getAngle();
     }
@@ -91,7 +92,7 @@ public class DriveCommand extends Command
                     Log.warn("Shifting down forced by driver.");
                     transmission.setGear(false);
                 }
-                else // If the driver is cool with auto shifting doing its thing
+                else // If the driver is cool with auto shifting doing its action
                 {
                     // Make sure that we're going mostly straight
                     if(driveTrainSubsystem.turningFactor() < 0.1F)
@@ -105,7 +106,7 @@ public class DriveCommand extends Command
                             if(!transmission.highGear) { Log.info("Shifting up."); }
                             transmission.setGear(true);
                         }
-                        else if(!transmission.signSame(accel, driveTrainSubsystem.rightRearTalonEnc.getSelectedSensorVelocity(0)) && OI.joysThreshold(0.8D, false)) /* If we are not accelerating very fast but the driver is still pushing forward we shift down because it is probably a pushing match */
+                        else if(!MathUtils.signSame(accel, driveTrainSubsystem.rightRearTalonEnc.getSelectedSensorVelocity(0)) && OI.joysThreshold(0.8D, false)) /* If we are not accelerating very fast but the driver is still pushing forward we shift down because it is probably a pushing match */
                         {
                             if(transmission.highGear) { Log.info("Shifting down because you're a bad driver."); }
                             transmission.setGear(false);

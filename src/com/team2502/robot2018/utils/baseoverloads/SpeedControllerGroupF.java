@@ -1,4 +1,4 @@
-package com.team2502.robot2018.utils;
+package com.team2502.robot2018.utils.baseoverloads;
 
 import edu.wpi.first.wpilibj.SendableBase;
 import edu.wpi.first.wpilibj.SpeedController;
@@ -52,6 +52,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
  * use single precision instead of double precision floating
  * point numbers.
  */
+@Deprecated
 public class SpeedControllerGroupF extends SendableBase implements ISpeedControllerF
 {
     private static int instances = 0;

@@ -2,12 +2,16 @@ package com.team2502.robot2018;
 
 import com.kauailabs.navx.frc.AHRS;
 import com.team2502.robot2018.command.autonomous.PurePursuitCommand;
+import com.team2502.robot2018.sendables.SendableDriveStrategyType;
 import com.team2502.robot2018.sendables.SendableDriveTrain;
 import com.team2502.robot2018.sendables.SendableNavX;
 import com.team2502.robot2018.sendables.SendableVersioning;
-import com.team2502.robot2018.subsystem.ClimberSubsystem;
+import com.team2502.robot2018.subsystem.ActiveIntakeSubsystem;
 import com.team2502.robot2018.subsystem.DriveTrainSubsystem;
-import com.team2502.robot2018.subsystem.TransmissionSubsystem;
+import com.team2502.robot2018.subsystem.ElevatorSubsystem;
+import com.team2502.robot2018.subsystem.solenoid.ActiveIntakeSolenoid;
+import com.team2502.robot2018.subsystem.solenoid.ClimberSolenoid;
+import com.team2502.robot2018.subsystem.solenoid.TransmissionSolenoid;
 import com.team2502.robot2018.utils.Files;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -27,34 +31,40 @@ public final class Robot extends IterativeRobot
 {
     public static double CAL_VELOCITY = 0D;
     public static long SHIFTED;
-    public static String GAME_DATA = "    ";
+    public static String GAME_DATA = "...";
 
     public static DriveTrainSubsystem DRIVE_TRAIN;
-    public static TransmissionSubsystem TRANSMISSION;
-    public static ClimberSubsystem CLIMBER;
+    public static ActiveIntakeSubsystem ACTIVE_INTAKE;
     public static Compressor COMPRESSOR;
     public static PrintWriter LOG_OUTPUT;
+    public static ElevatorSubsystem ELEVATOR;
+    public static ActiveIntakeSolenoid ACTIVE_INTAKE_SOLENOID;
+    public static ClimberSolenoid CLIMBER_SOLENOID;
+    public static TransmissionSolenoid TRANSMISSION_SOLENOID;
     public static AHRS NAVX;
 
     public static void write(String string)
     {
         LOG_OUTPUT.println(string);
-        // System.out.println("I am writing something ");
     }
 
     /**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
      */
+    @Override
     public void robotInit()
     {
         Log.createLogger(true);
 
-        CLIMBER = new ClimberSubsystem();
         COMPRESSOR = new Compressor();
         DRIVE_TRAIN = new DriveTrainSubsystem();
         NAVX = new AHRS(SPI.Port.kMXP);
-        TRANSMISSION = new TransmissionSubsystem();
+        ACTIVE_INTAKE = new ActiveIntakeSubsystem();
+        ELEVATOR = new ElevatorSubsystem();
+        ACTIVE_INTAKE_SOLENOID = new ActiveIntakeSolenoid();
+        CLIMBER_SOLENOID = new ClimberSolenoid();
+        TRANSMISSION_SOLENOID = new TransmissionSolenoid();
 
         OI.init();
 
@@ -62,6 +72,8 @@ public final class Robot extends IterativeRobot
 
         SendableDriveTrain.init();
         DashboardData.addUpdater(SendableDriveTrain.getInstance());
+
+        DashboardData.addUpdater(SendableDriveStrategyType.getInstance());
 
         SendableVersioning.getInstance().init();
         SmartDashboard.putData(SendableVersioning.getInstance());
@@ -90,8 +102,11 @@ public final class Robot extends IterativeRobot
 
     public void disabledInit()
     {
-        CLIMBER.stop();
-//        LOG_OUTPUT.close();
+        // Must lock climber when disabled
+        // At the end of the match, we MUST lock the climber, which
+        // will prevent our robot from falling, thus dropping two other
+        // robots to the ground.
+        Robot.CLIMBER_SOLENOID.lockElevator();
     }
 
     public void disabledPeriodic()
@@ -167,10 +182,12 @@ public final class Robot extends IterativeRobot
     private void fileWriting()
     {
         String fileName = "/home/lvuser/FILES";
-        if((System.currentTimeMillis() % 10000) == 0) { Files.newFile(fileName); }
         Files.setFileName(fileName);
-        Files.setTime(System.currentTimeMillis());
+
+        if((System.currentTimeMillis() % 10000) == 0) { Files.newFile(fileName); }
+
+        Files.setNameAndValue("Right Pos", DRIVE_TRAIN.getRightPos());
+        Files.setNameAndValue("Left Pos", DRIVE_TRAIN.getLeftPos());
         Files.writeToFile();
-        Files.setNameAndValue("Loop Error", 5);
     }
 }

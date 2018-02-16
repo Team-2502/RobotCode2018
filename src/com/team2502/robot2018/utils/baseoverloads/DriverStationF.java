@@ -1,4 +1,4 @@
-package com.team2502.robot2018.utils;
+package com.team2502.robot2018.utils.baseoverloads;
 
 import edu.wpi.first.wpilibj.MotorSafetyHelper;
 import edu.wpi.first.wpilibj.Timer;
@@ -51,6 +51,7 @@ import java.nio.ByteBuffer;
  * positions. But the value eventually delegates back to a float
  * array. So why not just make the functions return floats.
  */
+@Deprecated
 public class DriverStationF implements RobotStateF.Interface
 {
     /**

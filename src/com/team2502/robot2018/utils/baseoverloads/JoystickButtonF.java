@@ -1,4 +1,4 @@
-package com.team2502.robot2018.utils;
+package com.team2502.robot2018.utils.baseoverloads;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.buttons.Button;
@@ -48,6 +48,7 @@ import edu.wpi.first.wpilibj.buttons.Button;
  * positions. But the value eventually delegates back to a float
  * array. So why not just make the functions return floats.
  */
+@Deprecated
 public class JoystickButtonF extends Button
 {
     public final GenericHIDF joystick;

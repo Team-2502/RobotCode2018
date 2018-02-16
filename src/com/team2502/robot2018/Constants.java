@@ -9,6 +9,13 @@ public class Constants
 {
 
     /*
+    Tweak
+     */
+    public static final float INTAKE_SPEED_PERCENT_LIMIT = 0.1F;
+    public static final float ELEVATOR_SPEED_PERCENT_LIMIT = 0.6F;
+    public static final float MAX_ROT_DEG_PER_SEC = 30;
+
+    /*
     Pure Pursuit
      */
 
