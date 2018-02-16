@@ -11,6 +11,9 @@ public class DebouncedJoystickButton extends JoystickButtonF
 
     boolean activeCache = false;
 
+    // If we are calling get() for the first time we cannot debounce
+    boolean debounced = false;
+
     /**
      * Create a joystick button for triggering commands.
      *
@@ -31,7 +34,9 @@ public class DebouncedJoystickButton extends JoystickButtonF
     public boolean get()
     {
         boolean status = super.get();
-        boolean toReturn = status && activeCache;
+        boolean toReturn = debounced ? status && activeCache : status;
+        if(!debounced)
+            debounced = true;
         activeCache = status;
         return toReturn;
     }
@@ -41,4 +46,8 @@ public class DebouncedJoystickButton extends JoystickButtonF
         return super.get();
     }
 
+    public boolean isDebounced()
+    {
+        return debounced;
+    }
 }
