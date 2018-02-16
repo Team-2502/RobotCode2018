@@ -52,6 +52,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
  * use single precision instead of double precision floating
  * point numbers.
  */
+@Deprecated
 public class SpeedControllerGroupF extends SendableBase implements ISpeedControllerF
 {
     private static int instances = 0;

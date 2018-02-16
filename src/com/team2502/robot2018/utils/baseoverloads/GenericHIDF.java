@@ -47,6 +47,7 @@ import edu.wpi.first.wpilibj.hal.HAL;
  * positions. But the value eventually delegates back to a float
  * array. So why not just make the functions return floats.
  */
+@Deprecated
 public abstract class GenericHIDF
 {
     private final int m_port;

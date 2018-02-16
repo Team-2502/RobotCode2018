@@ -48,6 +48,7 @@ import edu.wpi.first.wpilibj.buttons.Button;
  * positions. But the value eventually delegates back to a float
  * array. So why not just make the functions return floats.
  */
+@Deprecated
 public class JoystickButtonF extends Button
 {
     public final GenericHIDF joystick;

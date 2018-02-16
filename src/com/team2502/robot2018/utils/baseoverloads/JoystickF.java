@@ -55,6 +55,7 @@ import edu.wpi.first.wpilibj.hal.HAL;
  * positions. But the value eventually delegates back to a float
  * array. So why not just make the functions return floats.
  */
+@Deprecated
 public class JoystickF extends GenericHIDF
 {
     static final byte kDefaultXAxis = 0;
