@@ -1,6 +1,8 @@
 package com.team2502.robot2018;
 
 import com.team2502.robot2018.command.teleop.*;
+import com.team2502.robot2018.command.teleop.CommandGroups.MoveElevatorDownCommandGroup;
+import com.team2502.robot2018.command.teleop.CommandGroups.MoveElevatorUpCommandGroup;
 import com.team2502.robot2018.utils.baseoverloads.JoystickButtonF;
 import com.team2502.robot2018.utils.baseoverloads.JoystickF;
 import edu.wpi.first.wpilibj.buttons.Button;
@@ -31,8 +33,6 @@ public final class OI
 
     public static void init()
     {
-        // Elevator buttons
-
         // Active Intake buttons
         INTAKE_IN.whileHeld(new ActiveIntakeCommand(0.6));
         INTAKE_OUT.whileHeld(new ActiveIntakeCommand(-0.6));

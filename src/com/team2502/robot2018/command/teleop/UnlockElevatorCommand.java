@@ -3,9 +3,9 @@ package com.team2502.robot2018.command.teleop;
 import com.team2502.robot2018.Robot;
 import edu.wpi.first.wpilibj.command.InstantCommand;
 
-public class ShiftElevatorCommand extends InstantCommand
+public class UnlockElevatorCommand extends InstantCommand
 {
-    public ShiftElevatorCommand()
+    public UnlockElevatorCommand()
     {
         requires(Robot.CLIMBER_SOLENOID);
     }
@@ -13,6 +13,7 @@ public class ShiftElevatorCommand extends InstantCommand
     @Override
     protected void execute()
     {
-        Robot.CLIMBER_SOLENOID.toggleLock();
+
+        Robot.CLIMBER_SOLENOID.unlockElevator();
     }
 }

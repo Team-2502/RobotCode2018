@@ -31,7 +31,6 @@ public class RobotMap
         public static final class Button
         {
             public static final int FORCE_LOW_GEAR = 1;
-            @Undefined(safe = true)
             public static final int INVERSE_DRIVER_CONTROLS = 1;
 
             /*
@@ -49,7 +48,6 @@ public class RobotMap
             public static final int CLIMBER = 10;
 
             public static final int SHIFT_GEARBOX_ELEV = 11;
-
 
             public static final int OPEN_INTAKE = 1;
             public static final int INTAKE_IN = 6;

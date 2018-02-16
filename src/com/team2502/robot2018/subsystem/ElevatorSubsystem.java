@@ -43,17 +43,25 @@ public class ElevatorSubsystem extends Subsystem
      *
      * @param speed Speed to move elevator (in percent output)
      */
+    int timer;
+
     public void moveElevator(double speed)
     {
-        // TESTING THESE LINES
         if(Robot.CLIMBER_SOLENOID.isLocked())
         {
+            timer = 0;
             Robot.CLIMBER_SOLENOID.unlockElevator();
         }
-        // TESTING THESE LINES
+        if(timer <= 15)
+        {
+            timer++;
+        }
 
-        elevatorTop.set(ControlMode.PercentOutput, speed);
-        elevatorBottom.set(ControlMode.PercentOutput, speed);
+        else
+        {
+            elevatorTop.set(speed);
+            elevatorBottom.set(speed);
+        }
     }
 
     /**
@@ -65,11 +73,12 @@ public class ElevatorSubsystem extends Subsystem
         if(!Robot.CLIMBER_SOLENOID.isLocked())
         {
             Robot.CLIMBER_SOLENOID.lockElevator();
+            timer = 0;
         }
         // TESTING THESE LINES
 
-        elevatorTop.set(ControlMode.PercentOutput, 0.0F);
-        elevatorBottom.set(ControlMode.PercentOutput, 0.0F);
+        elevatorTop.set(0.0F);
+        elevatorBottom.set(0.0F);
     }
 
     /**
