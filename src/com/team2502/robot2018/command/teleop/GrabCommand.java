@@ -7,7 +7,7 @@ public class GrabCommand extends InstantCommand
 {
     public GrabCommand()
     {
-        requires(Robot.ACTIVE_INTAKE);
+        requires(Robot.ACTIVE_INTAKE_SOLENOID);
     }
 
     @Override

@@ -29,6 +29,6 @@ public class ActiveRotationCommand extends Command
     @Override
     protected void end()
     {
-        Robot.ACTIVE_INTAKE.stop();
+        Robot.ACTIVE_INTAKE.stopRotate();
     }
 }
