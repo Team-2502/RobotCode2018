@@ -116,15 +116,13 @@ public class ElevatorSubsystem extends Subsystem
     @Override
     public void periodic()
     {
-        // With debouncing
-        boolean up = OI.ELEV_UP.get();
-        boolean down = OI.ELEV_DOWN.get();
-        if(up && elevUp)
+        // Uses debouncing since there is a wrapper
+        if(OI.ELEV_UP.get())
         {
-           System.out.println("UP");
-           moveElevator(1);
+            System.out.println("UP");
+            moveElevator(1);
         }
-        else if(down && elevDown)
+        else if(OI.ELEV_DOWN.get())
         {
             System.out.println("DOWN");
             moveElevator(-.3);
@@ -134,9 +132,6 @@ public class ElevatorSubsystem extends Subsystem
             System.out.println("STOP");
             Robot.ELEVATOR.stopElevator();
         }
-
-        elevUp = up;
-        elevDown = down;
     }
 
     @Override
