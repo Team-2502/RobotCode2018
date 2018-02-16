@@ -11,16 +11,16 @@ public class TransmissionSolenoid extends Subsystem
     public boolean disabledAutoShifting = true;
     public boolean highGear;
 
-    @Override
-    protected void initDefaultCommand()
-    {
-
-    }
-
     public TransmissionSolenoid()
     {
         switcher = new Solenoid(RobotMap.Solenoid.TRANSMISSION_SWITCH);
         highGear = false;
+    }
+
+    @Override
+    protected void initDefaultCommand()
+    {
+
     }
 
     /**

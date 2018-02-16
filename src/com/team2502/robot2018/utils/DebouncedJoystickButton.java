@@ -24,8 +24,8 @@ public class DebouncedJoystickButton extends JoystickButtonF
     }
 
     /**
-     * @deprecated Use getDebounced()
      * @return
+     * @deprecated Use getDebounced()
      */
     @Override
     public boolean get()

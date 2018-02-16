@@ -1,10 +1,10 @@
 package com.team2502.robot2018;
 
-import com.team2502.robot2018.command.teleop.*;
-import com.team2502.robot2018.command.teleop.CommandGroups.MoveElevatorDownCommandGroup;
-import com.team2502.robot2018.command.teleop.CommandGroups.MoveElevatorUpCommandGroup;
+import com.team2502.robot2018.command.teleop.ActiveIntakeCommand;
+import com.team2502.robot2018.command.teleop.ClimberCommand;
+import com.team2502.robot2018.command.teleop.GrabCommand;
+import com.team2502.robot2018.command.teleop.ShiftElevatorCommand;
 import com.team2502.robot2018.utils.DebouncedJoystickButton;
-import com.team2502.robot2018.utils.baseoverloads.JoystickButtonF;
 import com.team2502.robot2018.utils.baseoverloads.JoystickF;
 import edu.wpi.first.wpilibj.buttons.Button;
 

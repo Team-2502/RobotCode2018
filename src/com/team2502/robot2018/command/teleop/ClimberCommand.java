@@ -29,6 +29,6 @@ public class ClimberCommand extends Command
     @Override
     protected void end()
     {
-       Robot.ELEVATOR.stopClimber();
+        Robot.ELEVATOR.stopClimber();
     }
 }

@@ -1,7 +1,5 @@
 package com.team2502.robot2018;
 
-import com.team2502.ctannotationprocessor.Undefined;
-
 import java.util.HashMap;
 import java.util.Map;
 
