@@ -18,13 +18,6 @@ public class ElevatorCommand extends Command
 
     // PUT THIS BACK IF TESTED LINES IN ELEVATORSUBSYSTEM DO NOT WORK ANY BETTER
 
-//    @Override
-//    protected void initialize()
-//    {
-//        System.out.println("initialize of ElevatorCommand");
-//        Robot.CLIMBER_SOLENOID.unlockElevator();
-//    }
-
     @Override
     protected void execute()
     {
@@ -40,8 +33,10 @@ public class ElevatorCommand extends Command
     @Override
     protected void end()
     {
-        Robot.CLIMBER_SOLENOID.lockElevator();
+//        Robot.CLIMBER_SOLENOID.lockElevator();
         Robot.ELEVATOR.stopElevator();
     }
+
+
 
 }

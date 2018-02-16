@@ -5,6 +5,7 @@ import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
 import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 import com.ctre.phoenix.motorcontrol.RemoteLimitSwitchSource;
 import com.team2502.robot2018.Constants;
+import com.team2502.robot2018.OI;
 import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.RobotMap;
 import com.team2502.robot2018.utils.baseoverloads.WPI_TalonSRXF;
@@ -99,6 +100,34 @@ public class ElevatorSubsystem extends Subsystem
     {
         stopElevator();
         stopClimber();
+    }
+
+    boolean elevUp = false;
+    boolean elevDown = false;
+    @Override
+    public void periodic()
+    {
+        // With debouncing
+        boolean up = OI.ELEV_UP.get();
+        boolean down = OI.ELEV_DOWN.get();
+        if(up && elevUp)
+        {
+           System.out.println("UP");
+           moveElevator(1);
+        }
+        else if(down && elevDown)
+        {
+            System.out.println("DOWN");
+            moveElevator(-.3);
+        }
+        else
+        {
+            System.out.println("STOP");
+            Robot.ELEVATOR.stopElevator();
+        }
+
+        elevUp = up;
+        elevDown = down;
     }
 
     @Override

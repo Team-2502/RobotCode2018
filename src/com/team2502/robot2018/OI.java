@@ -32,8 +32,6 @@ public final class OI
     public static void init()
     {
         // Elevator buttons
-        ELEV_UP.whileHeld(new ElevatorCommand(1));
-        ELEV_DOWN.whileHeld(new ElevatorCommand(-0.3));
 
         // Active Intake buttons
         INTAKE_IN.whileHeld(new ActiveIntakeCommand(0.6));
