@@ -26,22 +26,25 @@ public class DebouncedJoystickButton extends JoystickButtonF
         super(joystick, buttonNumber);
     }
 
+
     /**
-     * @return
-     * @deprecated Use getDebounced()
+     *
+     * @return the debounced output of the button
      */
-    @Override
-    public boolean get()
+    public boolean getDebounced()
     {
         boolean status = super.get();
         boolean toReturn = debounced ? status && activeCache : status;
-        if(!debounced)
-            debounced = true;
+        debounced = true;
         activeCache = status;
         return toReturn;
     }
 
-    public boolean getRaw()
+    /**
+     * @return
+     * @deprecated Use getDebounced()
+     */
+    public boolean get()
     {
         return super.get();
     }

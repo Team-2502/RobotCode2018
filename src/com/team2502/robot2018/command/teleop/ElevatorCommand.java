@@ -1,16 +1,14 @@
 package com.team2502.robot2018.command.teleop;
 
-import com.team2502.robot2018.OI;
 import com.team2502.robot2018.Robot;
-import com.team2502.robot2018.RobotMap;
 import edu.wpi.first.wpilibj.command.Command;
 import logger.Log;
 
-public class ElevatorCommand extends Command
+public class ElevatorBaseCommand extends Command
 {
     private double _speed;
 
-    public ElevatorCommand(double speed)
+    public ElevatorBaseCommand(double speed)
     {
         requires(Robot.ELEVATOR);
         _speed = speed;
@@ -22,7 +20,7 @@ public class ElevatorCommand extends Command
     @Override
     protected void initialize()
     {
-//        System.out.println("initialize of ElevatorCommand");
+//        System.out.println("initialize of ElevatorBaseCommand");
 //        Robot.CLIMBER_SOLENOID.unlockElevator();
     }
 
@@ -36,7 +34,7 @@ public class ElevatorCommand extends Command
     @Override
     protected boolean isFinished()
     {
-        return !OI.JOYSTICK_FUNCTION.getRawButton(RobotMap.Joystick.Button.RAISE_ELEVATOR);
+        return false;
     }
 
     @Override
