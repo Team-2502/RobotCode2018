@@ -4,31 +4,31 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
 import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 import com.ctre.phoenix.motorcontrol.RemoteLimitSwitchSource;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.team2502.robot2018.Constants;
 import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.RobotMap;
-import com.team2502.robot2018.utils.baseoverloads.WPI_TalonSRXF;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 public class ElevatorSubsystem extends Subsystem
 {
-    private final WPI_TalonSRXF elevatorTop;
-    private final WPI_TalonSRXF elevatorBottom;
+    private final WPI_TalonSRX elevatorTop;
+    private final WPI_TalonSRX elevatorBottom;
 
     // The difference between the climber motors and the elevator motors is that
     // the climber motors are the slower CIMS while the the elevator motors are the faster VEX motors
-    private final WPI_TalonSRXF climberTop;
-    private final WPI_TalonSRXF climberBottom;
+    private final WPI_TalonSRX climberTop;
+    private final WPI_TalonSRX climberBottom;
 
     private int timer;
 
     public ElevatorSubsystem()
     {
-        elevatorTop = new WPI_TalonSRXF(RobotMap.Motor.ELEVATOR_TOP);
-        elevatorBottom = new WPI_TalonSRXF(RobotMap.Motor.ELEVATOR_BOTTOM);
+        elevatorTop = new WPI_TalonSRX(RobotMap.Motor.ELEVATOR_TOP);
+        elevatorBottom = new WPI_TalonSRX(RobotMap.Motor.ELEVATOR_BOTTOM);
 
-        climberTop = new WPI_TalonSRXF(RobotMap.Motor.CLIMBER_TOP);
-        climberBottom = new WPI_TalonSRXF(RobotMap.Motor.CLIMBER_BOTTOM);
+        climberTop = new WPI_TalonSRX(RobotMap.Motor.CLIMBER_TOP);
+        climberBottom = new WPI_TalonSRX(RobotMap.Motor.CLIMBER_BOTTOM);
 
         elevatorTop.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen, Constants.INIT_TIMEOUT);
         elevatorBottom.configForwardLimitSwitchSource(RemoteLimitSwitchSource.RemoteTalonSRX, LimitSwitchNormal.NormallyOpen, RobotMap.Motor.ELEVATOR_TOP, Constants.INIT_TIMEOUT);
