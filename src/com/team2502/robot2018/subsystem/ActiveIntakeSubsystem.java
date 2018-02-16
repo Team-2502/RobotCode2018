@@ -5,22 +5,16 @@ import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
 import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 import com.team2502.robot2018.Constants;
 import com.team2502.robot2018.RobotMap;
-import com.team2502.robot2018.command.teleop.ActiveCommand;
+import com.team2502.robot2018.command.teleop.ActiveRotationCommand;
 import com.team2502.robot2018.utils.baseoverloads.WPI_TalonSRXF;
-import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
-import logger.Log;
 
 
 public class ActiveIntakeSubsystem extends Subsystem
 {
-    public final WPI_TalonSRXF leftIntake;
-    public final WPI_TalonSRXF rightIntake;
-    public final WPI_TalonSRXF rotateIntake;
-
-//    public static class
-
-
+    private final WPI_TalonSRXF leftIntake;
+    private final WPI_TalonSRXF rightIntake;
+    private final WPI_TalonSRXF rotateIntake;
 
     public ActiveIntakeSubsystem()
     {
@@ -32,19 +26,33 @@ public class ActiveIntakeSubsystem extends Subsystem
         rotateIntake.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen, Constants.INIT_TIMEOUT);
     }
 
-    public void runIntake(double x)
+    public void runIntake(double speed)
     {
-        leftIntake.set(ControlMode.PercentOutput, x);
-        rightIntake.set(ControlMode.PercentOutput, x);
+        leftIntake.set(ControlMode.PercentOutput, speed);
+        rightIntake.set(ControlMode.PercentOutput, speed);
     }
 
-    public void stop()
-    { runIntake(0); }
+    public void stopIntake()
+    {
+        rotateIntake(0.0D);
+        runIntake(0.0D);
+    }
+
+    public void stopRotate()
+    {
+        rotateIntake(0.0D);
+    }
+
+    public void stopAll()
+    {
+        rotateIntake(0.0D);
+        runIntake(0.0D);
+    }
 
     public void rotateIntake(double x)
     { rotateIntake.set(ControlMode.PercentOutput, x); }
 
     @Override
     protected void initDefaultCommand()
-    { setDefaultCommand(new ActiveCommand()); }
+    { setDefaultCommand(new ActiveRotationCommand()); }
 }

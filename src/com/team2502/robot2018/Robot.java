@@ -6,7 +6,12 @@ import com.team2502.robot2018.sendables.SendableDriveStrategyType;
 import com.team2502.robot2018.sendables.SendableDriveTrain;
 import com.team2502.robot2018.sendables.SendableNavX;
 import com.team2502.robot2018.sendables.SendableVersioning;
-import com.team2502.robot2018.subsystem.*;
+import com.team2502.robot2018.subsystem.ActiveIntakeSubsystem;
+import com.team2502.robot2018.subsystem.DriveTrainSubsystem;
+import com.team2502.robot2018.subsystem.ElevatorSubsystem;
+import com.team2502.robot2018.subsystem.solenoid.ActiveIntakeSolenoid;
+import com.team2502.robot2018.subsystem.solenoid.ClimberSolenoid;
+import com.team2502.robot2018.subsystem.solenoid.TransmissionSolenoid;
 import com.team2502.robot2018.utils.Files;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -29,11 +34,13 @@ public final class Robot extends IterativeRobot
     public static String GAME_DATA = "...";
 
     public static DriveTrainSubsystem DRIVE_TRAIN;
-    public static ActiveSubsystem ACTIVE_INTAKE;
+    public static ActiveIntakeSubsystem ACTIVE_INTAKE;
     public static Compressor COMPRESSOR;
     public static PrintWriter LOG_OUTPUT;
     public static ElevatorSubsystem ELEVATOR;
-    public static SolenoidSubsystem SOLENOIDS;
+    public static ActiveIntakeSolenoid ACTIVE_INTAKE_SOLENOID;
+    public static ClimberSolenoid CLIMBER_SOLENOID;
+    public static TransmissionSolenoid TRANSMISSION_SOLENOID;
     public static AHRS NAVX;
 
     public static void write(String string)
@@ -45,6 +52,7 @@ public final class Robot extends IterativeRobot
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
      */
+    @Override
     public void robotInit()
     {
         Log.createLogger(true);
@@ -52,9 +60,11 @@ public final class Robot extends IterativeRobot
         COMPRESSOR = new Compressor();
         DRIVE_TRAIN = new DriveTrainSubsystem();
         NAVX = new AHRS(SPI.Port.kMXP);
-        ACTIVE_INTAKE = new ActiveSubsystem();
+        ACTIVE_INTAKE = new ActiveIntakeSubsystem();
         ELEVATOR = new ElevatorSubsystem();
-        SOLENOIDS = new SolenoidSubsystem();
+        ACTIVE_INTAKE_SOLENOID = new ActiveIntakeSolenoid();
+        CLIMBER_SOLENOID = new ClimberSolenoid();
+        TRANSMISSION_SOLENOID = new TransmissionSolenoid();
 
         OI.init();
 
@@ -92,12 +102,11 @@ public final class Robot extends IterativeRobot
 
     public void disabledInit()
     {
-        /*
-         * Why would anyone do this? This will cause the robot
-         * (and potentially 2 other robots to fall to the ground.
-         */
-//        SOLENOIDS.disengageClimber();
-//        LOG_OUTPUT.close();
+        // Must lock climber when disabled
+        // At the end of the match, we MUST lock the climber, which
+        // will prevent our robot from falling, thus dropping two other
+        // robots to the ground.
+        Robot.CLIMBER_SOLENOID.lockElevator();
     }
 
     public void disabledPeriodic()
