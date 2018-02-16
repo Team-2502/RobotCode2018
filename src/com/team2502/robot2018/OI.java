@@ -40,7 +40,7 @@ public final class OI
         OPEN_INTAKE.whenPressed(new GrabCommand());
 
         // Climber button (wait to re-implement until elevator is working properly
-//        CLIMBER.whileHeld(new ClimberCommand(1));
+        CLIMBER.whileHeld(new ClimberCommand(1));
 
         SHIFT_GEARBOX_ELEV.whenPressed(new ShiftElevatorCommand());
     }
