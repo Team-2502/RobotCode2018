@@ -12,9 +12,9 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 
 public class ActiveIntakeSubsystem extends Subsystem
 {
-    public final WPI_TalonSRXF leftIntake;
-    public final WPI_TalonSRXF rightIntake;
-    public final WPI_TalonSRXF rotateIntake;
+    private final WPI_TalonSRXF leftIntake;
+    private final WPI_TalonSRXF rightIntake;
+    private final WPI_TalonSRXF rotateIntake;
 
     public ActiveIntakeSubsystem()
     {

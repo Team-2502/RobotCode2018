@@ -5,7 +5,6 @@ import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
 import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 import com.ctre.phoenix.motorcontrol.RemoteLimitSwitchSource;
 import com.team2502.robot2018.Constants;
-import com.team2502.robot2018.OI;
 import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.RobotMap;
 import com.team2502.robot2018.utils.baseoverloads.WPI_TalonSRXF;
@@ -13,18 +12,14 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 
 public class ElevatorSubsystem extends Subsystem
 {
-    public final WPI_TalonSRXF elevatorTop;
-    public final WPI_TalonSRXF elevatorBottom;
+    private final WPI_TalonSRXF elevatorTop;
+    private final WPI_TalonSRXF elevatorBottom;
 
     // The difference between the climber motors and the elevator motors is that
     // the climber motors are the slower CIMS while the the elevator motors are the faster VEX motors
-    public final WPI_TalonSRXF climberTop;
-    public final WPI_TalonSRXF climberBottom;
-    /**
-     * Move the elevator up or down
-     *
-     * @param speed Speed to move elevator (in percent output)
-     */
+    private final WPI_TalonSRXF climberTop;
+    private final WPI_TalonSRXF climberBottom;
+
     private int timer;
 
     public ElevatorSubsystem()

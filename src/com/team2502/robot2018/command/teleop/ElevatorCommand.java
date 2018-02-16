@@ -1,8 +1,6 @@
 package com.team2502.robot2018.command.teleop;
 
-import com.team2502.robot2018.OI;
 import com.team2502.robot2018.Robot;
-import com.team2502.robot2018.RobotMap;
 import edu.wpi.first.wpilibj.command.Command;
 import logger.Log;
 
@@ -14,13 +12,6 @@ public class ElevatorCommand extends Command
     {
         requires(Robot.ELEVATOR);
         _speed = speed;
-    }
-
-    @Override
-    protected void initialize()
-    {
-//        System.out.println("initialize of ElevatorCommand");
-//        Robot.CLIMBER_SOLENOID.unlockElevator();
     }
 
     @Override
@@ -39,7 +30,6 @@ public class ElevatorCommand extends Command
     @Override
     protected void end()
     {
-//        Robot.CLIMBER_SOLENOID.lockElevator();
         Robot.ELEVATOR.stopElevator();
     }
 }
