@@ -16,9 +16,6 @@ public class ElevatorCommand extends Command
         _speed = speed;
     }
 
-    // PUT THIS BACK IF TESTED LINES IN ELEVATORSUBSYSTEM DO NOT WORK ANY BETTER
-
-
     @Override
     protected void initialize()
     {
@@ -36,7 +33,7 @@ public class ElevatorCommand extends Command
     @Override
     protected boolean isFinished()
     {
-        return !OI.JOYSTICK_FUNCTION.getRawButton(RobotMap.Joystick.Button.RAISE_ELEVATOR);
+        return false;
     }
 
     @Override
@@ -45,6 +42,4 @@ public class ElevatorCommand extends Command
 //        Robot.CLIMBER_SOLENOID.lockElevator();
         Robot.ELEVATOR.stopElevator();
     }
-
-
 }
