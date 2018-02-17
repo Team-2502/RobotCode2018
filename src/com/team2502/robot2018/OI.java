@@ -31,7 +31,7 @@ public final class OI
     {
         // Elevator buttons
         ELEV_UP.whileHeld(new ElevatorCommand(1.0));
-        ELEV_DOWN.whileHeld(new ElevatorCommand( -0.4));
+        ELEV_DOWN.whileHeld(new ElevatorCommand( -0.5));
 
         // Active Intake buttons
         INTAKE_IN.whileHeld(new ActiveIntakeCommand(0.6));

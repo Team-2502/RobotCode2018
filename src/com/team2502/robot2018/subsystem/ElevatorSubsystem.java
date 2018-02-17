@@ -60,20 +60,30 @@ public class ElevatorSubsystem extends Subsystem
            This method gets called once per 20ms while the elevator
            buttons are held.
          */
-        if(Robot.CLIMBER_SOLENOID.isLocked())
+
+        if (speed < 0.0)
         {
-            timer = 0;
-            Robot.CLIMBER_SOLENOID.unlockElevator();
-        }
-        if(timer <= 15)
-        {
-            timer++;
+            elevatorTop.set(speed);
+            elevatorBottom.set(speed);
         }
 
         else
         {
-            elevatorTop.set(speed);
-            elevatorBottom.set(speed);
+            if(Robot.CLIMBER_SOLENOID.isLocked())
+            {
+                timer = 0;
+                Robot.CLIMBER_SOLENOID.unlockElevator();
+            }
+            if(timer <= 15)
+            {
+                timer++;
+            }
+
+            else
+            {
+                elevatorTop.set(speed);
+                elevatorBottom.set(speed);
+            }
         }
     }
 

@@ -49,7 +49,7 @@ public class RobotMap
 
             public static final int OPEN_INTAKE = 1;
             public static final int INTAKE_IN = 6;
-            public static final int INTAKE_OUT = 7;
+            public static final int INTAKE_OUT = 4;
 
             private Button() { }
         }
