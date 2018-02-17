@@ -58,6 +58,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
  * use single precision instead of double precision floating
  * point numbers.
  */
+@Deprecated
 public class WPI_TalonSRXF extends TalonSRX implements ISpeedControllerF, Sendable, MotorSafety
 {
     protected String m_description;

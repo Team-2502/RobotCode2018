@@ -54,6 +54,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
  * point numbers.
  */
 @SuppressWarnings("unused")
+@Deprecated
 public class DifferentialDriveF extends RobotDriveBase
 {
     public static final float kDefaultQuickStopThreshold = 0.2F;

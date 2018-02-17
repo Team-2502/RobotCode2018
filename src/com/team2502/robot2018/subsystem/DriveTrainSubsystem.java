@@ -2,14 +2,14 @@ package com.team2502.robot2018.subsystem;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.team2502.robot2018.*;
 import com.team2502.robot2018.command.teleop.DriveCommand;
 import com.team2502.robot2018.sendables.Nameable;
 import com.team2502.robot2018.sendables.PIDTunable;
 import com.team2502.robot2018.sendables.SendableDriveStrategyType;
 import com.team2502.robot2018.sendables.SendablePIDTuner;
-import com.team2502.robot2018.utils.baseoverloads.SpeedControllerGroupF;
-import com.team2502.robot2018.utils.baseoverloads.WPI_TalonSRXF;
+import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -20,14 +20,14 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class DriveTrainSubsystem extends Subsystem implements DashboardData.DashboardUpdater, PIDTunable
 {
     private static final FloatPair SPEED_CONTAINER = new FloatPair();
-
-    public final WPI_TalonSRXF leftFrontTalonEnc;
-    public final WPI_TalonSRXF leftRearTalon;
-    public final WPI_TalonSRXF rightFrontTalonEnc;
-    public final WPI_TalonSRXF rightRearTalon;
+    
+    public final WPI_TalonSRX leftFrontTalon;
+    public final WPI_TalonSRX leftRearTalonEnc;
+    public final WPI_TalonSRX rightFrontTalon;
+    public final WPI_TalonSRX rightRearTalonEnc;
     public final DifferentialDrive drive;
-    public final SpeedControllerGroupF spgLeft;
-    public final SpeedControllerGroupF spgRight;
+    public final SpeedControllerGroup spgLeft;
+    public final SpeedControllerGroup spgRight;
 
     private final SendablePIDTuner pidTuner;
 
@@ -49,18 +49,22 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         lastLeft = 0.0F;
         lastRight = 0.0F;
 
-        leftFrontTalonEnc = new WPI_TalonSRXF(RobotMap.Motor.DRIVE_TRAIN_FRONT_LEFT);
-        leftRearTalon = new WPI_TalonSRXF(RobotMap.Motor.DRIVE_TRAIN_BACK_LEFT);
+        leftFrontTalon = new WPI_TalonSRX(RobotMap.Motor.DRIVE_TRAIN_FRONT_LEFT);
+        leftRearTalonEnc = new WPI_TalonSRX(RobotMap.Motor.DRIVE_TRAIN_BACK_LEFT);
 
-        rightFrontTalonEnc = new WPI_TalonSRXF(RobotMap.Motor.DRIVE_TRAIN_FRONT_RIGHT);
-        rightRearTalon = new WPI_TalonSRXF(RobotMap.Motor.DRIVE_TRAIN_BACK_RIGHT);
+        rightFrontTalon = new WPI_TalonSRX(RobotMap.Motor.DRIVE_TRAIN_FRONT_RIGHT);
+        rightRearTalonEnc = new WPI_TalonSRX(RobotMap.Motor.DRIVE_TRAIN_BACK_RIGHT);
 
         // Add encoders (ask nicely for encoders on drivetrain)
         leftRearTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute, 0, Constants.INIT_TIMEOUT);
         rightRearTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute, 0, Constants.INIT_TIMEOUT);
 
-        spgLeft = new SpeedControllerGroupF(leftFrontTalonEnc, leftRearTalon);
-        spgRight = new SpeedControllerGroupF(rightFrontTalonEnc, rightRearTalon);
+        spgLeft = new SpeedControllerGroup(leftFrontTalon, leftRearTalonEnc);
+        spgRight = new SpeedControllerGroup(rightFrontTalon, rightRearTalonEnc);
+
+        // speed group right is inverted because motors face opposing directions.
+        spgLeft.setInverted(false);
+        spgRight.setInverted(true);
 
         drive = new DifferentialDrive(spgLeft, spgRight);
 
@@ -71,9 +75,15 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         DashboardData.addUpdater(this);
     }
 
+    @Override
+    protected void initDefaultCommand()
+    {
+        setDefaultCommand(new DriveCommand());
+    }
+
     public void stop() { drive.stopMotor(); }
 
-    private void setTeleopSettings(WPI_TalonSRXF talon)
+    private void setTeleopSettings(WPI_TalonSRX talon)
     {
         talon.set(ControlMode.PercentOutput, 0.0F);
         talon.configNominalOutputForward(0.0D, Constants.INIT_TIMEOUT);
@@ -198,7 +208,8 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
      */
     public void runMotors(float leftWheel, float rightWheel) // double z
     {
-        runMotors(ControlMode.PercentOutput, leftWheel, rightWheel);
+//        runMotors(ControlMode.PercentOutput, leftWheel, rightWheel);
+        drive.tankDrive(leftWheel, rightWheel, true);
     }
 
     public double turningFactor()
@@ -206,10 +217,12 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         return Math.abs(OI.JOYSTICK_DRIVE_LEFT.getY() - OI.JOYSTICK_DRIVE_RIGHT.getY());
     }
 
-    @Override
-    protected void initDefaultCommand()
+    public void disableTalons()
     {
-        setDefaultCommand(new DriveCommand());
+        leftFrontTalon.set(ControlMode.Disabled, 0);
+        leftRearTalonEnc.set(ControlMode.Disabled, 0);
+        rightFrontTalon.set(ControlMode.Disabled, 0);
+        rightRearTalonEnc.set(ControlMode.Disabled, 0);
     }
 
     /**
@@ -279,7 +292,6 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
 
         // Log.debug("Left: {0,number,#.###}\t\t Right: {0,number,#.###}", speed.right, speed.left);
 
-        //reverse setElevatorPV
         if((OI.JOYSTICK_DRIVE_LEFT.getRawButton(RobotMap.Joystick.Button.INVERSE_DRIVER_CONTROLS) && !isNegativePressed)) { negative = !negative; }
 
         isNegativePressed = OI.JOYSTICK_DRIVE_LEFT.getRawButton(RobotMap.Joystick.Button.INVERSE_DRIVER_CONTROLS);

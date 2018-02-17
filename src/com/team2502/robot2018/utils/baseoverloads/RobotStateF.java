@@ -47,6 +47,7 @@ import edu.wpi.first.wpilibj.util.BaseSystemNotInitializedException;
  * positions. But the value eventually delegates back to a float
  * array. So why not just make the functions return floats.
  */
+@Deprecated
 public class RobotStateF
 {
     private static Interface m_impl;

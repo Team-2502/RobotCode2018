@@ -51,6 +51,7 @@ import java.nio.ByteBuffer;
  * positions. But the value eventually delegates back to a float
  * array. So why not just make the functions return floats.
  */
+@Deprecated
 public class DriverStationF implements RobotStateF.Interface
 {
     /**
