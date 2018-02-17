@@ -135,10 +135,10 @@ public final class Robot extends IterativeRobot
 
         List<Waypoint> waypoints = Arrays.asList(
                 new Waypoint(new ImmutableVector2f(0, 0),0),
-                new Waypoint(new ImmutableVector2f(0, 10),2),
-                new Waypoint(new ImmutableVector2f(-10, 10),4),
-                new Waypoint(new ImmutableVector2f(-10, 0),6),
-                new Waypoint(new ImmutableVector2f(0, 0),0)
+                new Waypoint(new ImmutableVector2f(0, 10),2)
+//                new Waypoint(new ImmutableVector2f(-10, 10),4),
+//                new Waypoint(new ImmutableVector2f(-10, 0),6),
+//                new Waypoint(new ImmutableVector2f(0, 0),0)
                                                  );
 
 //        Scheduler.getInstance().add(new CalibrateRobotCommand());

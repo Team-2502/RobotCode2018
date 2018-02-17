@@ -12,6 +12,7 @@ import org.joml.ImmutableVector2f;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 public class PurePursuitMovementStrategy implements ITankMovementStrategy
 {
@@ -69,11 +70,11 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
      * The goal point is a point on the path 1 lookahead distance away from us.
      * We want to drive at it.
      */
-    public ImmutableVector2f calculateAbsoluteGoalPoint(float lookAheadDistance)
+    public Optional<ImmutableVector2f> calculateAbsoluteGoalPoint(float lookAheadDistance)
     {
         float lookAheadDistanceSquared = lookAheadDistance*lookAheadDistance;
         // The path is finished — there are no more goal points to compute
-        if(finishedPath) { return null; }
+        if(finishedPath) { return Optional.empty(); }
 
         List<ImmutableVector2f> intersections = new ArrayList<>();
 
@@ -82,7 +83,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         int nextPathI = Integer.MAX_VALUE;
 
         // Loop looks for intersections on last segment searched and one after that
-        for(int i = lastSegmentSearched; i <= lastSegmentSearched + 1; ++i)
+        for(int i = 0; i <= 1; ++i)
         {
             // We are on the last segment. There is no _next_ segment to search
             if(i + 1 >= waypoints.size()) { continue; }
@@ -105,9 +106,9 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
                     {
                         isSuccessfullyFinished = true;
                         finishedPath = true;
-                        return null;
+                        return Optional.empty();
                     }
-                    return lineP2;
+                    return Optional.of(lineP2);
                 }
             }
 
@@ -144,16 +145,16 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
             Log.info("closest vector not found!");
             System.out.printf("loc: %.2f, %.2f", usedEstimatedLocation.get(0), usedEstimatedLocation.get(1));
             finishedPath = true;
-            return null;
+            return Optional.empty();
         }
 
         ImmutableVector2f closest = intersections.get(closestVectorI);
 
         // If the closest vector is on the next segment, set that segment as the current segment
-        if(closestVectorI >= nextPathI) { ++lastSegmentSearched; }
+        if(closestVectorI >= nextPathI) { waypoints.remove(0); }
 
         // closest is our new goal point
-        return closest;
+        return Optional.ofNullable(closest);
     }
 
 //    public
@@ -205,7 +206,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         usedHeading = rotEstimator.estimateHeading();
 
         usedLookahead = generateLookahead();
-        absoluteGoalPoint = calculateAbsoluteGoalPoint(usedLookahead);
+        absoluteGoalPoint = calculateAbsoluteGoalPoint(usedLookahead).get();
 
         // Sometimes the above method will cause isFinished to return true if no more goal points are found.
         if(isFinishedPath())
