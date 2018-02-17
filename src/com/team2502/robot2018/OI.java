@@ -27,9 +27,10 @@ public final class OI
 
     private OI() { }
 
-    public static void init()
+        public static void init()
     {
         // Elevator buttons
+
         ELEV_UP.whileHeld(new ElevatorCommand(1.0));
         ELEV_DOWN.whileHeld(new ElevatorCommand( -0.5));
 

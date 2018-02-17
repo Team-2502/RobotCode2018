@@ -87,7 +87,7 @@ public class DifferentialDriveF extends RobotDriveBase
     }
 
     /**
-     * Arcade moveElevator method for differential moveElevator platform.
+     * Arcade setElevatorPV method for differential setElevatorPV platform.
      * The calculated values will be squared to decrease sensitivity at low speeds.
      *
      * @param xSpeed    The robot's speed along the X axis [-1.0..1.0]. Forward is positive.
@@ -115,7 +115,7 @@ public class DifferentialDriveF extends RobotDriveBase
     }
 
     /**
-     * Arcade moveElevator method for differential moveElevator platform.
+     * Arcade setElevatorPV method for differential setElevatorPV platform.
      *
      * @param xSpeed        The robot's speed along the X axis [-1.0..1.0]. Forward is positive.
      * @param zRotation     The robot's rotation rate around the Z axis [-1.0..1.0]. Clockwise is
@@ -185,7 +185,7 @@ public class DifferentialDriveF extends RobotDriveBase
     }
 
     /**
-     * Curvature moveElevator method for differential moveElevator platform.
+     * Curvature setElevatorPV method for differential setElevatorPV platform.
      * <p>
      * <p>The rotation argument controls the curvature of the robot's path rather than its rate of
      * heading change. This makes the robot more controllable at high speeds. Also handles the
@@ -270,7 +270,7 @@ public class DifferentialDriveF extends RobotDriveBase
     }
 
     /**
-     * Tank moveElevator method for differential moveElevator platform.
+     * Tank setElevatorPV method for differential setElevatorPV platform.
      * The calculated values will be squared to decrease sensitivity at low speeds.
      *
      * @param leftSpeed  The robot's left side speed along the X axis [-1.0..1.0]. Forward is
@@ -284,7 +284,7 @@ public class DifferentialDriveF extends RobotDriveBase
     }
 
     /**
-     * Tank moveElevator method for differential moveElevator platform.
+     * Tank setElevatorPV method for differential setElevatorPV platform.
      *
      * @param leftSpeed     The robot left side's speed along the X axis [-1.0..1.0]. Forward is
      *                      positive.

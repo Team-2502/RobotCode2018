@@ -35,6 +35,8 @@ public class ElevatorSubsystem extends Subsystem
 
         elevatorTop.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen, Constants.INIT_TIMEOUT);
         elevatorBottom.configReverseLimitSwitchSource(RemoteLimitSwitchSource.RemoteTalonSRX, LimitSwitchNormal.NormallyOpen, RobotMap.Motor.ELEVATOR_TOP, Constants.INIT_TIMEOUT);
+
+
     }
 
     /**
@@ -76,6 +78,13 @@ public class ElevatorSubsystem extends Subsystem
             elevatorTop.set(speed);
             elevatorBottom.set(speed);
         }
+    }
+
+    public void setElevatorPos(float feet)
+    {
+        float epos = feet * Constants.FT_TO_EPOS;
+        elevatorTop.set(ControlMode.Position, epos);
+        elevatorBottom.set(ControlMode.Position, epos);
     }
 
     /**

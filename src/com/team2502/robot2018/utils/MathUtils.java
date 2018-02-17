@@ -3,6 +3,7 @@ package com.team2502.robot2018.utils;
 
 import com.team2502.robot2018.Robot;
 import org.joml.ImmutableVector2f;
+import org.joml.Vector2f;
 
 @SuppressWarnings("unused")
 public final class MathUtils
@@ -473,6 +474,68 @@ public final class MathUtils
 //            System.out.println("\nNAVX: " + finalDegrees + "\nNAVXD: " + degDif + "\nRadians: " + radians + "\nRadBounded: " + radBounded + "\n");
             if(radBounded < 0) { return (float) (TAU + radBounded); }
             return (float) radBounded;
+        }
+
+        public static ImmutableVector2f getClosestPoint(ImmutableVector2f linePointA, ImmutableVector2f linePointB, ImmutableVector2f robotPos)
+        {
+            // Let s:[0,1]
+            // Our line is
+            // Dx = (linePointB.x - linePointA.x)s
+            // Dy = (linePointB.y - linePointA.y)s
+            // This is a transformation from R1 -> R2 we have [ x y ]
+            // [ Dx ]   [ linePointB.x - linePointA.x ]
+            // [ Dy ] = [ linePointB.y - linePointA.y ][ s ]
+
+            float dx = linePointB.x - linePointA.x;
+            float dy = linePointB.y - linePointA.y;
+
+            // Let us assume the shortest distance to a line will be perpendicular to the line. Applying a pi/2 rotation yields
+            // [ DxPerp ]   [ cos(pi/2) -sin(pi/2) ] [ linePointB.x - linePointA.x ]
+            // [ DyPerp ] = [ sin(pi/2) cos(pi/2)  ] [ linePointB.y - linePointA.y ][ s ]
+            //   [ linePointA.y - linePointB.y ]
+            // = [ linePointB.x - linePointA.x ][ s ]
+
+            float dxPerp = -dy;
+            float dyPerp = dx;
+
+            // We need the point where lines
+            // robotPos.x + dxPerp * j
+            // robotPos.y + dyPerp*j
+            // and
+            // linePointB.x + dX * s
+            // linePointB.y + dX * s
+            // collide
+
+            // robotPos.x + dxPerp * j = linePointB.x + dX * s ==> robotPos.x - linePointB.x
+            // robotPos.y + dyPerp * j = linePointB.y + dY * s
+
+            float j,s;
+            if(dx == 0)
+            {
+                j = -(robotPos.x - linePointA.x)/dxPerp;
+                s = ((robotPos.y - linePointA.y)+dyPerp*j)/dy;
+            }
+            else if(dy == 0)
+            {
+                j = -(robotPos.y-linePointB.y)/dyPerp;
+                s = ((robotPos.x - linePointA.x)+dxPerp*j)/dx;
+            }
+            else
+            {
+                float slope = dy/dx;
+                j = (robotPos.x - linePointA.x - (robotPos.y - linePointA.y))/(-slope*dxPerp+dyPerp);
+                s = (robotPos.x + dxPerp)*j/(robotPos.x+dx);
+            }
+
+            // if on line
+            if(s >= 0 && s <= 1)
+            {
+                return linePointA.add(new ImmutableVector2f(dx*s,dy*s));
+            }
+            // else ... we cannot use a perpendicular line and will need to look on endpoints
+            float dist2A = linePointA.distanceSquared(robotPos);
+            float dist2B = linePointB.distanceSquared(robotPos);
+            return dist2A < dist2B ? linePointA : linePointB;
         }
 
         public static ImmutableVector2f getVector(float speed, float angle)

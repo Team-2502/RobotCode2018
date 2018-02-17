@@ -23,13 +23,13 @@ public class CalibrateRobotCommand extends Command
     {
         System.out.println("initialized");
         // We are blocking the right wheels
-//        Robot.DRIVE_TRAIN.rightRearTalonEnc.set(ControlMode.Disabled, 0.0F);
-//        Robot.DRIVE_TRAIN.rightFrontTalon.set(ControlMode.Disabled, 0.0F);
+//        Robot.DRIVE_TRAIN.rightRearTalon.set(ControlMode.Disabled, 0.0F);
+//        Robot.DRIVE_TRAIN.rightFrontTalonEnc.set(ControlMode.Disabled, 0.0F);
 
         initAngle = (float) Robot.NAVX.getAngle();
 
         // One of the left motors lacks an encoder
-        Robot.DRIVE_TRAIN.leftFrontTalon.follow(Robot.DRIVE_TRAIN.leftRearTalonEnc);
+        Robot.DRIVE_TRAIN.leftFrontTalonEnc.follow(Robot.DRIVE_TRAIN.leftRearTalon);
     }
 
     @Override
@@ -37,17 +37,12 @@ public class CalibrateRobotCommand extends Command
     {
         if(SmartDashboard.getBoolean("calibration_enabled", false))
         {
-
-//            if(samples % 25 == 0)
-//            {
-//                error2 = 0;
-//                samples = 0;
-//            }
             velocity = Robot.CAL_VELOCITY;
 
-            int actualVel = Robot.DRIVE_TRAIN.leftRearTalonEnc.getSelectedSensorVelocity(0);
+            int actualVel = Robot.DRIVE_TRAIN.rightFrontTalonEnc.getSelectedSensorVelocity(0);
+            System.out.println("actualVel: "+actualVel);
             float dif = (float) (actualVel - velocity);
-//            samples++;
+
             error2.add(dif * dif);
             int size = error2.size();
             float error2Avg = 0;
@@ -63,8 +58,8 @@ public class CalibrateRobotCommand extends Command
             SmartDashboard.putNumber("enc_error_2", error2Avg);
             SmartDashboard.putNumber("enc_velocity", actualVel);
 
-            Robot.DRIVE_TRAIN.leftRearTalonEnc.set(ControlMode.Velocity, velocity); // this
-            Robot.DRIVE_TRAIN.rightRearTalonEnc.set(ControlMode.Velocity, velocity); // this
+            System.out.println("run @ "+velocity);
+            Robot.DRIVE_TRAIN.runMotors(ControlMode.Velocity,(float)velocity,(float)velocity);
         }
     }
 

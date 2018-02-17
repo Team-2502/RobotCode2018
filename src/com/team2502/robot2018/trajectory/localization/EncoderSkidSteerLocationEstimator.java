@@ -44,9 +44,9 @@ public class EncoderSkidSteerLocationEstimator implements ITranslationalLocation
         float dTime = getDTime();
 
         // talon inversed
-        float leftRevPerS = -Robot.DRIVE_TRAIN.leftRearTalonEnc.getSelectedSensorVelocity(0) * 10F / RAW_UNIT_PER_ROT;
+        float leftRevPerS = -Robot.DRIVE_TRAIN.leftRearTalon.getSelectedSensorVelocity(0) * 10F / RAW_UNIT_PER_ROT;
 
-        float rightRevPerS = Robot.DRIVE_TRAIN.rightRearTalonEnc.getSelectedSensorVelocity(0) * 10F / RAW_UNIT_PER_ROT;
+        float rightRevPerS = Robot.DRIVE_TRAIN.rightRearTalon.getSelectedSensorVelocity(0) * 10F / RAW_UNIT_PER_ROT;
 
         float leftVelNoSlide = leftRevPerS * Constants.WHEEL_DIAMETER_FT * MathUtils.PI_F;
 

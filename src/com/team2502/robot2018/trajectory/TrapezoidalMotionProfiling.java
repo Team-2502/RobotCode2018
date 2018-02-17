@@ -2,7 +2,7 @@ package com.team2502.robot2018.trajectory;
 
 public class TrapezoidalMotionProfiling
 {
-    final float t, vel_max, v_start, v_end, t_total;
+    final float vel_max, v_start, v_end, t_total;
     float accel;
     /**
      * accelerate to time t_1
@@ -16,9 +16,8 @@ public class TrapezoidalMotionProfiling
 
     boolean emergencyBrake;
 
-    public TrapezoidalMotionProfiling(float t, float accel, float vel_max, float v_start, float v_end, float t_total)
+    public TrapezoidalMotionProfiling(float accel, float vel_max, float v_start, float v_end, float t_total)
     {
-        this.t = t;
         this.accel = accel;
         this.vel_max = vel_max;
         this.v_start = v_start;
