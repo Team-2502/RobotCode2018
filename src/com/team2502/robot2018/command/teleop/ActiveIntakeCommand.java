@@ -4,25 +4,35 @@ import com.team2502.robot2018.OI;
 import com.team2502.robot2018.Robot;
 import edu.wpi.first.wpilibj.command.Command;
 
-/**
- * Created by 64009334 on 2/9/18.
- */
-public class ActiveCommand extends Command
+public class ActiveIntakeCommand extends Command
 {
-    public ActiveCommand()
+    private double _speed;
+
+    public ActiveIntakeCommand(double speed)
     {
         requires(Robot.ACTIVE_INTAKE);
+        _speed = speed;
     }
 
+    @Override
     protected void execute()
     {
+        // Continue to watch the rotation axis on joystick...
         Robot.ACTIVE_INTAKE.rotateIntake(OI.JOYSTICK_FUNCTION.getY());
-        System.out.println("Running active command");
+
+        // ...but also rotate the intake
+        Robot.ACTIVE_INTAKE.runIntake(_speed);
     }
 
     @Override
     protected boolean isFinished()
     {
         return false;
+    }
+
+    @Override
+    protected void end()
+    {
+        Robot.ACTIVE_INTAKE.stopIntake();
     }
 }

@@ -192,6 +192,7 @@ public final class MathUtils
     { return a > b ? a : b; }
 
     //region Logarithmic Functions
+
     /**
      * Allows for the calculate of logX(in), may have minor performance boost from using direct call to StrictMath lowering stack overhead.
      *

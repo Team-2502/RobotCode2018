@@ -5,18 +5,22 @@ import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
 import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 import com.ctre.phoenix.motorcontrol.RemoteLimitSwitchSource;
 import com.team2502.robot2018.Constants;
+import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.RobotMap;
 import com.team2502.robot2018.utils.baseoverloads.WPI_TalonSRXF;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 public class ElevatorSubsystem extends Subsystem
 {
-    public final WPI_TalonSRXF elevatorTop;
-    public final WPI_TalonSRXF elevatorBottom;
+    private final WPI_TalonSRXF elevatorTop;
+    private final WPI_TalonSRXF elevatorBottom;
+
     // The difference between the climber motors and the elevator motors is that
-    // the climber motors are the slower CIMS while the the elevator motors are the faster miniCIMS
-    public final WPI_TalonSRXF climberTop;
-    public final WPI_TalonSRXF climberBottom;
+    // the climber motors are the slower CIMS while the the elevator motors are the faster VEX motors
+    private final WPI_TalonSRXF climberTop;
+    private final WPI_TalonSRXF climberBottom;
+
+    private int timer;
 
     public ElevatorSubsystem()
     {
@@ -36,14 +40,43 @@ public class ElevatorSubsystem extends Subsystem
     }
 
     /**
-     * Move the elevator up or down
-     *
-     * @param x Speed to move elevator (in percent output)
+     * Run the elevator at given speed. This method automatically
+     * disengages the climbing solenoid for the duration that the elevator runs.
+     * @param speed the speed (-1.0 to 1.0) that the elevator motors will run at.
      */
-    public void setElevatorPV(double x)
+    public void moveElevator(double speed)
     {
-        elevatorTop.set(ControlMode.PercentOutput, x);
-        elevatorBottom.set(ControlMode.PercentOutput, x);
+        /* Artificial delay between unlocking the elevator solenoid
+           and starting the elevator motors.
+
+           This allows the shifting gearbox enough time to physically
+           change position before the elevator motors begin to try and
+           lift the elevator against the climbing ratchet.
+
+           The climbing solenoid controls the shifting gearbox.
+
+           We re-engage the shifting gearbox because the drag from the
+           CIM motors (climber motors) is enough to prevent the elevator
+           from falling back into the ground.
+
+           This method gets called once per 20ms while the elevator
+           buttons are held.
+         */
+        if(Robot.CLIMBER_SOLENOID.isLocked())
+        {
+            timer = 0;
+            Robot.CLIMBER_SOLENOID.unlockElevator();
+        }
+        if(timer <= 15)
+        {
+            timer++;
+        }
+
+        else
+        {
+            elevatorTop.set(speed);
+            elevatorBottom.set(speed);
+        }
     }
 
     public void setElevatorPos(float feet)
@@ -58,14 +91,19 @@ public class ElevatorSubsystem extends Subsystem
      */
     public void stopElevator()
     {
-        elevatorTop.set(ControlMode.PercentOutput, 0.0F);
-        elevatorBottom.set(ControlMode.PercentOutput, 0.0F);
+        if(!Robot.CLIMBER_SOLENOID.isLocked())
+        {
+            Robot.CLIMBER_SOLENOID.lockElevator();
+        }
+
+        elevatorTop.set(0.0F);
+        elevatorBottom.set(0.0F);
     }
 
     /**
      * Move the elevator down for climbing purpose
      *
-     * @param x How fast to move it. Make it positive OR ELSE
+     * @param x How fast to move it. Make it positive to life elevator
      */
     public void moveClimber(double x)
     {
@@ -94,6 +132,4 @@ public class ElevatorSubsystem extends Subsystem
 
     @Override
     protected void initDefaultCommand() { }
-
-
 }
