@@ -40,6 +40,7 @@ public class ElevatorSubsystem extends Subsystem
     /**
      * Run the elevator at given speed. This method automatically
      * disengages the climbing solenoid for the duration that the elevator runs.
+     *
      * @param speed the speed (-1.0 to 1.0) that the elevator motors will run at.
      */
     public void moveElevator(double speed)
@@ -60,30 +61,20 @@ public class ElevatorSubsystem extends Subsystem
            This method gets called once per 20ms while the elevator
            buttons are held.
          */
-
-        if (speed < 0.0)
+        if(Robot.CLIMBER_SOLENOID.isLocked())
         {
-            elevatorTop.set(speed);
-            elevatorBottom.set(speed);
+            timer = 0;
+            Robot.CLIMBER_SOLENOID.unlockElevator();
+        }
+        if(timer <= 15)
+        {
+            timer++;
         }
 
         else
         {
-            if(Robot.CLIMBER_SOLENOID.isLocked())
-            {
-                timer = 0;
-                Robot.CLIMBER_SOLENOID.unlockElevator();
-            }
-            if(timer <= 15)
-            {
-                timer++;
-            }
-
-            else
-            {
-                elevatorTop.set(speed);
-                elevatorBottom.set(speed);
-            }
+            elevatorTop.set(speed);
+            elevatorBottom.set(speed);
         }
     }
 
