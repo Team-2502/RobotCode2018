@@ -20,10 +20,10 @@ public class Constants
      */
 
     // Currently the max percent ft/s that can be given to each to each wheel
-    public static final float VR_MAX = 3F;
-    public static final float VL_MAX = 3F;
-    public static final float VR_MIN = -3F;
-    public static final float VL_MIN = -3F;
+    public static final float VR_MAX = 2F;
+    public static final float VL_MAX = 2F;
+    public static final float VR_MIN = -2F;
+    public static final float VL_MIN = -2F;
 
     // The max change in voltage per second (acceleration)
     public static final float AR_MAX = .3F;
@@ -33,13 +33,15 @@ public class Constants
 
     // The lookahead distance (feet) for Pure Pursuit
     public static final float LOOKAHEAD_DISTANCE_FT = 5F;
-    public static final float STOP_DIST_TOLERANCE_FT = 1.5F;
+    public static final float STOP_DIST_TOLERANCE_FT = 2F;
 
     /*
     Physical / Other
      */
 
-    public static final float WHEEL_DIAMETER_INCH = 4F;
+
+    // TODO: figure out why wheel diameter has to be much smaller than it should be (normally 6)
+    public static final float WHEEL_DIAMETER_INCH = 2F;
     public static final float WHEEL_DIAMETER_FT = WHEEL_DIAMETER_INCH / 12F;
 
     // half of the width of the wheel that is in contact with the ground
@@ -47,7 +49,7 @@ public class Constants
     public static final float WHEEL_ROLLING_RADIUS_FT = WHEEL_ROLLING_RADIUS_INCH * 1.5F / 12F;
 
     // The distance between wheels (laterally) in feet. Measure from the centerpoints of the wheels.
-    public static final float LATERAL_WHEEL_DISTANCE_FT = 23.25F / 12F; //* 10F;
+    public static final float LATERAL_WHEEL_DISTANCE_FT = 23.25F / 12F * 5F; //* 10F;
 
     public static final float MAX_FPS_SPEED = 18.0F;
 

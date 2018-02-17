@@ -27,8 +27,8 @@ public class RotateStationaryCommand extends TimedCommand implements TestResult
     {
         Robot.NAVX.reset();
         // TODO: see if resets position when called
-        encoderLeftInit = Robot.DRIVE_TRAIN.leftRearTalonEnc.getSelectedSensorPosition(0);
-        encoderRightInit = Robot.DRIVE_TRAIN.rightRearTalonEnc.getSelectedSensorPosition(0);
+        encoderLeftInit = Robot.DRIVE_TRAIN.leftRearTalon.getSelectedSensorPosition(0);
+        encoderRightInit = Robot.DRIVE_TRAIN.rightRearTalon.getSelectedSensorPosition(0);
     }
 
     @Override
@@ -46,10 +46,10 @@ public class RotateStationaryCommand extends TimedCommand implements TestResult
         degreesRotated = Robot.NAVX.getAngle();
 
         // should be negative
-        encoderLeft = Robot.DRIVE_TRAIN.leftRearTalonEnc.getSelectedSensorPosition(0) - encoderLeftInit;
+        encoderLeft = Robot.DRIVE_TRAIN.leftRearTalon.getSelectedSensorPosition(0) - encoderLeftInit;
 
         // should be positive
-        encoderRight = Robot.DRIVE_TRAIN.rightRearTalonEnc.getSelectedSensorPosition(0) - encoderRightInit;
+        encoderRight = Robot.DRIVE_TRAIN.rightRearTalon.getSelectedSensorPosition(0) - encoderRightInit;
 
 
         System.out.println("");

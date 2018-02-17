@@ -6,12 +6,12 @@ import org.joml.ImmutableVector2f;
 
 public class NavXLocationEstimator implements IRotationalLocationEstimator, ITranslationalLocationEstimator
 {
-    float initHeading;
+    double initHeading;
     ImmutableVector2f initPosition;
 
     public NavXLocationEstimator()
     {
-        initHeading = estimateHeading();
+        initHeading = -Robot.NAVX.getAngle();
         initPosition = estimateLocation();
     }
 
@@ -19,12 +19,13 @@ public class NavXLocationEstimator implements IRotationalLocationEstimator, ITra
     public float estimateHeading()
     {
         // switch direction of increase
-        float yawDeg = -Robot.NAVX.getYaw();
-        return navXToRad(yawDeg);
+        double yawDegTotal = -Robot.NAVX.getAngle();
+        return (float) navXToRad(yawDegTotal - initHeading);
     }
 
-    float navXToRad(float yawDeg)
+    double navXToRad(double yawDegTot)
     {
+        double yawDeg = yawDegTot % 360;
         if(yawDeg < 0) { yawDeg = 360 + yawDeg; }
         return MathUtils.deg2Rad(yawDeg);
     }

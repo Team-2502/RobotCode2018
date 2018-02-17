@@ -2,6 +2,7 @@ package com.team2502.robot2018;
 
 import com.kauailabs.navx.frc.AHRS;
 import com.team2502.robot2018.command.autonomous.PurePursuitCommand;
+import com.team2502.robot2018.command.teleop.CalibrateRobotCommand;
 import com.team2502.robot2018.sendables.SendableDriveStrategyType;
 import com.team2502.robot2018.sendables.SendableDriveTrain;
 import com.team2502.robot2018.sendables.SendableNavX;
@@ -133,19 +134,24 @@ public final class Robot extends IterativeRobot
     {
         DRIVE_TRAIN.setAutonSettings();
 
-        List<Waypoint> waypoints = Arrays.asList(
-                new Waypoint(new ImmutableVector2f(0, 0),0),
-                new Waypoint(new ImmutableVector2f(0, 10),2)
-//                new Waypoint(new ImmutableVector2f(-10, 10),4),
-//                new Waypoint(new ImmutableVector2f(-10, 0),6),
-//                new Waypoint(new ImmutableVector2f(0, 0),0)
-                                                 );
 
-//        Scheduler.getInstance().add(new CalibrateRobotCommand());
-        Scheduler.getInstance().add(new PurePursuitCommand(waypoints, Constants.LOOKAHEAD_DISTANCE_FT, Constants.STOP_DIST_TOLERANCE_FT));
-//        Scheduler.getInstance().add(AutoSwitcher.getAutoInstance());
+        List<Waypoint> straightSwitch = Arrays.asList(
+                new Waypoint(new ImmutableVector2f(0, 0),6),
+                new Waypoint(new ImmutableVector2f(-1, 6),9),
+                new Waypoint(new ImmutableVector2f(-1, 10),6),
+                new Waypoint(new ImmutableVector2f(-1, 13),2F)
+            );
+
+//        List<Waypoint> sideSwitch = Arrays.asList(
+//                new Waypoint(new ImmutableVector2f(0,0),9),
+//                new Waypoint(new ImmutableVector2f(-5,3),9),
+//                new Waypoint(new ImmutableVector2f(-10,6),9)
+//                                                 );
 
         NAVX.reset();
+//        Scheduler.getInstance().add(new CalibrateRobotCommand());
+        Scheduler.getInstance().add(new PurePursuitCommand(straightSwitch, Constants.LOOKAHEAD_DISTANCE_FT, Constants.STOP_DIST_TOLERANCE_FT));
+//        Scheduler.getInstance().add(AutoSwitcher.getAutoInstance());
     }
 
     /**

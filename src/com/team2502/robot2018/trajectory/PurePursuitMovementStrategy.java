@@ -44,6 +44,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
     private boolean isClose = false;
     private boolean isSuccessfullyFinished;
     private float usedLookahead;
+    private float speedUsed;
 
     /**
      * Strategize your movement!
@@ -57,7 +58,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
      */
     public PurePursuitMovementStrategy(ITankRobotBounds tankRobot, ITranslationalLocationEstimator transEstimator, IRotationalLocationEstimator rotEstimator, ITranslationalVelocityEstimator velocityEstimator, List<Waypoint> waypoints, Lookahead lookahead, float distanceStop)
     {
-        this.waypoints = waypoints;
+        this.waypoints = new ArrayList<>(waypoints);
         this.tankRobot = tankRobot;
         this.transEstimator = transEstimator;
         this.rotEstimator = rotEstimator;
@@ -70,11 +71,11 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
      * The goal point is a point on the path 1 lookahead distance away from us.
      * We want to drive at it.
      */
-    public Optional<ImmutableVector2f> calculateAbsoluteGoalPoint(float lookAheadDistance)
+    public ImmutableVector2f calculateAbsoluteGoalPoint(float lookAheadDistance)
     {
         float lookAheadDistanceSquared = lookAheadDistance*lookAheadDistance;
         // The path is finished — there are no more goal points to compute
-        if(finishedPath) { return Optional.empty(); }
+        if(finishedPath) { return null; }
 
         List<ImmutableVector2f> intersections = new ArrayList<>();
 
@@ -106,9 +107,9 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
                     {
                         isSuccessfullyFinished = true;
                         finishedPath = true;
-                        return Optional.empty();
+                        return null;
                     }
-                    return Optional.of(lineP2);
+                    return lineP2;
                 }
             }
 
@@ -145,7 +146,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
             Log.info("closest vector not found!");
             System.out.printf("loc: %.2f, %.2f", usedEstimatedLocation.get(0), usedEstimatedLocation.get(1));
             finishedPath = true;
-            return Optional.empty();
+            return null;
         }
 
         ImmutableVector2f closest = intersections.get(closestVectorI);
@@ -154,7 +155,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         if(closestVectorI >= nextPathI) { waypoints.remove(0); }
 
         // closest is our new goal point
-        return Optional.ofNullable(closest);
+        return closest;
     }
 
 //    public
@@ -175,22 +176,30 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
 
         Waypoint waypointEnd = waypoints.get(lastSegmentSearched + 1);
         ImmutableVector2f lineEndPoint = waypointEnd.getLocation();
+
         Waypoint waypointStart = waypoints.get(lastSegmentSearched);
         ImmutableVector2f lineStartPoint = waypointStart.getLocation();
-        float travelDistance = lineStartPoint.sub(lineEndPoint).length();
+
+        float pathDistance = lineStartPoint.sub(lineEndPoint).length();
+
         ImmutableVector2f closestPoint = MathUtils.Geometry.getClosestPoint(lineStartPoint, lineEndPoint, usedEstimatedLocation);
         ImmutableVector2f dClosestPoint = usedEstimatedLocation.sub(closestPoint);
 
         /**
          * // TODO: horrible!!!! not how it should be used ... but can test a POC
          */
+
+
+
 //        TrapezoidalMotionProfiling trapezoidalMotionProfiling = new TrapezoidalMotionProfiling(Constants.AL_MAX,waypointEnd.getMaxSpeed(),waypointStart.getMaxSpeed(),waypointEnd.getMaxSpeed(),);
 //        trapezoidalMotionProfiling.generate();
 //        trapezoidalMotionProfiling
 
         // TODO: will need to modify for non-lines
-        float distanceAlongLine = closestPoint.distance(lineStartPoint);
+        float distanceAlongPath = closestPoint.distance(lineStartPoint);
+        float progress = distanceAlongPath / pathDistance;
 
+        speedUsed = (waypointStart.getMaxSpeed() * (1 - progress) + waypointEnd.getMaxSpeed() * progress) / 2;
 
         float dCP = dClosestPoint.length();
         return lookaheadForSpeed + dCP;
@@ -206,7 +215,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         usedHeading = rotEstimator.estimateHeading();
 
         usedLookahead = generateLookahead();
-        absoluteGoalPoint = calculateAbsoluteGoalPoint(usedLookahead).get();
+        absoluteGoalPoint = calculateAbsoluteGoalPoint(usedLookahead);
 
         // Sometimes the above method will cause isFinished to return true if no more goal points are found.
         if(isFinishedPath())
@@ -217,6 +226,11 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
 
         relativeGoalPoint = MathUtils.LinearAlgebra.absoluteToRelativeCoord(absoluteGoalPoint, usedEstimatedLocation, usedHeading);
         wheelVelocities = calculateWheelVelocities();
+    }
+
+    public float getUsedLookahead()
+    {
+        return usedLookahead;
     }
 
     /**
@@ -286,10 +300,10 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
 
         // TODO: get max acceleration from actual wheel velocities
 
-        float v_lMax = tankRobot.getV_lMax();
-        float v_rMax = tankRobot.getV_rMax();
-        float v_lMin = tankRobot.getV_lMin();
-        float v_rMin = tankRobot.getV_rMin();
+        float v_lMax = speedUsed;
+        float v_rMax = speedUsed;
+        float v_lMin = -speedUsed;
+        float v_rMin = -speedUsed;
 
         if(Math.abs(curvature) < THRESHOLD_CURVATURE) // if we are a straight line ish (lines are not curvy -> low curvature)
         {

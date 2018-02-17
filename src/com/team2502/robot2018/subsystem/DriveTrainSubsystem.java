@@ -21,20 +21,20 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
 {
     private static final FloatPair SPEED_CONTAINER = new FloatPair();
 
-    public final WPI_TalonSRXF leftFrontTalon;
-    public final WPI_TalonSRXF leftRearTalonEnc;
-    public final WPI_TalonSRXF rightFrontTalon;
-    public final WPI_TalonSRXF rightRearTalonEnc;
+    public final WPI_TalonSRXF leftFrontTalonEnc;
+    public final WPI_TalonSRXF leftRearTalon;
+    public final WPI_TalonSRXF rightFrontTalonEnc;
+    public final WPI_TalonSRXF rightRearTalon;
     public final DifferentialDrive drive;
     public final SpeedControllerGroupF spgLeft;
     public final SpeedControllerGroupF spgRight;
 
     private final SendablePIDTuner pidTuner;
 
-    double kP = 0.5;
-    double kI = 0.001;
+    double kP = 0.2;
+    double kI = 0.0;
     double kD = 0;
-    double kF = 0.53;
+    double kF = 0.03;
 
     private float lastLeft;
     private float lastRight;
@@ -49,18 +49,18 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         lastLeft = 0.0F;
         lastRight = 0.0F;
 
-        leftFrontTalon = new WPI_TalonSRXF(RobotMap.Motor.DRIVE_TRAIN_FRONT_LEFT);
-        leftRearTalonEnc = new WPI_TalonSRXF(RobotMap.Motor.DRIVE_TRAIN_BACK_LEFT);
+        leftFrontTalonEnc = new WPI_TalonSRXF(RobotMap.Motor.DRIVE_TRAIN_FRONT_LEFT);
+        leftRearTalon = new WPI_TalonSRXF(RobotMap.Motor.DRIVE_TRAIN_BACK_LEFT);
 
-        rightFrontTalon = new WPI_TalonSRXF(RobotMap.Motor.DRIVE_TRAIN_FRONT_RIGHT);
-        rightRearTalonEnc = new WPI_TalonSRXF(RobotMap.Motor.DRIVE_TRAIN_BACK_RIGHT);
+        rightFrontTalonEnc = new WPI_TalonSRXF(RobotMap.Motor.DRIVE_TRAIN_FRONT_RIGHT);
+        rightRearTalon = new WPI_TalonSRXF(RobotMap.Motor.DRIVE_TRAIN_BACK_RIGHT);
 
         // Add encoders (ask nicely for encoders on drivetrain)
-        leftRearTalonEnc.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute, 0, Constants.INIT_TIMEOUT);
-        rightRearTalonEnc.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute, 0, Constants.INIT_TIMEOUT);
+        leftRearTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute, 0, Constants.INIT_TIMEOUT);
+        rightRearTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute, 0, Constants.INIT_TIMEOUT);
 
-        spgLeft = new SpeedControllerGroupF(leftFrontTalon, leftRearTalonEnc);
-        spgRight = new SpeedControllerGroupF(rightFrontTalon, rightRearTalonEnc);
+        spgLeft = new SpeedControllerGroupF(leftFrontTalonEnc, leftRearTalon);
+        spgRight = new SpeedControllerGroupF(rightFrontTalonEnc, rightRearTalon);
 
         drive = new DifferentialDrive(spgLeft, spgRight);
 
@@ -91,17 +91,22 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     public void setTeleopSettings()
     {
 
-        setTeleopSettings(leftFrontTalon);
-        setTeleopSettings(rightFrontTalon);
-        setTeleopSettings(leftRearTalonEnc);
-        setTeleopSettings(rightRearTalonEnc);
-        leftFrontTalon.follow(leftRearTalonEnc);
-        rightFrontTalon.follow(rightRearTalonEnc);
+        setTeleopSettings(leftFrontTalonEnc);
+        setTeleopSettings(rightFrontTalonEnc);
+        setTeleopSettings(leftRearTalon);
+        setTeleopSettings(rightRearTalon);
 
+        setupTalons();
+    }
 
-        // Required for correct readings
-        leftRearTalonEnc.setSensorPhase(false);
-        rightRearTalonEnc.setSensorPhase(true);
+    public void setupTalons()
+    {
+
+        leftFrontTalonEnc.setSensorPhase(false);
+        rightFrontTalonEnc.setSensorPhase(true);
+
+        leftRearTalon.follow(leftFrontTalonEnc);
+        rightRearTalon.follow(rightFrontTalonEnc);
     }
 
     /**
@@ -109,11 +114,7 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
      */
     public void setAutonSettings()
     {
-        leftFrontTalon.follow(leftRearTalonEnc);
-        rightFrontTalon.follow(rightRearTalonEnc);
-
-        leftRearTalonEnc.setSensorPhase(false);
-        rightRearTalonEnc.setSensorPhase(true);
+        setupTalons();
     }
 
     /**
@@ -130,13 +131,13 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         this.kI = kI;
         this.kD = kD;
 
-        leftRearTalonEnc.config_kP(0, kP, Constants.INIT_TIMEOUT);
-        leftRearTalonEnc.config_kI(0, kI, Constants.INIT_TIMEOUT);
-        leftRearTalonEnc.config_kD(0, kD, Constants.INIT_TIMEOUT);
+        leftRearTalon.config_kP(0, kP, Constants.INIT_TIMEOUT);
+        leftRearTalon.config_kI(0, kI, Constants.INIT_TIMEOUT);
+        leftRearTalon.config_kD(0, kD, Constants.INIT_TIMEOUT);
 
-        rightRearTalonEnc.config_kP(0, kP, Constants.INIT_TIMEOUT);
-        rightRearTalonEnc.config_kI(0, kI, Constants.INIT_TIMEOUT);
-        rightRearTalonEnc.config_kD(0, kD, Constants.INIT_TIMEOUT);
+        rightRearTalon.config_kP(0, kP, Constants.INIT_TIMEOUT);
+        rightRearTalon.config_kI(0, kI, Constants.INIT_TIMEOUT);
+        rightRearTalon.config_kD(0, kD, Constants.INIT_TIMEOUT);
     }
 
     /**
@@ -152,8 +153,8 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     {
         setPID(kP, kI, kD);
 
-        leftRearTalonEnc.config_IntegralZone(0, iZone, Constants.INIT_TIMEOUT);
-        rightRearTalonEnc.config_IntegralZone(0, iZone, Constants.INIT_TIMEOUT);
+        leftRearTalon.config_IntegralZone(0, iZone, Constants.INIT_TIMEOUT);
+        rightRearTalon.config_IntegralZone(0, iZone, Constants.INIT_TIMEOUT);
     }
 
     /**
@@ -167,11 +168,12 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
      */
     public void runMotors(ControlMode controlMode, float leftWheel, float rightWheel) // double z
     {
-        leftFrontTalon.set(controlMode, leftWheel);
-        leftRearTalonEnc.set(controlMode, leftWheel);
+        // setting slaves as the talons w/ encoders is the only way it works ¯\_(ツ)_/¯
+        leftFrontTalonEnc.follow(leftRearTalon);
+        rightFrontTalonEnc.follow(rightRearTalon);
 
-        rightFrontTalon.set(controlMode, rightWheel);
-        rightRearTalonEnc.set(controlMode, rightWheel);
+        leftRearTalon.set(controlMode, leftWheel);
+        rightRearTalon.set(controlMode, rightWheel);
     }
 
     /**
@@ -183,11 +185,7 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
      */
     public void runMotors(ControlMode controlMode) // double z
     {
-        leftFrontTalon.set(controlMode, 0);
-        leftRearTalonEnc.set(controlMode, 0);
-
-        rightFrontTalon.set(controlMode, 0);
-        rightRearTalonEnc.set(controlMode, 0);
+        runMotors(controlMode,0,0);
     }
 
     /**
@@ -303,16 +301,10 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         }
     }
 
-    public float avgVel()
+    public float getTanSpeed()
     {
-        return Math.abs((leftRearTalonEnc.getSelectedSensorVelocity(0) + rightRearTalonEnc.getSelectedSensorVelocity(0)) / 2.0F);
+        return Math.abs(getTanVel());
     }
-
-
-    /**
-     * @return Velocity as read by left encoder in Feet per Second
-     */
-    public float getLeftVel() { return leftRearTalonEnc.getSelectedSensorVelocity(0) * Constants.EVEL_TO_FPS; }
 
     public float getTanVel()
     {
@@ -320,19 +312,24 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     }
 
     /**
+     * @return Velocity as read by left encoder in Feet per Second
+     */
+    public float getLeftVel() { return leftFrontTalonEnc.getSelectedSensorVelocity(0) * Constants.EVEL_TO_FPS; }
+
+    /**
      * @return Velocity as read by right encoder in Feet per Second
      */
-    public float getRightVel() { return rightRearTalonEnc.getSelectedSensorVelocity(0) * Constants.EVEL_TO_FPS; }
+    public float getRightVel() { return rightFrontTalonEnc.getSelectedSensorVelocity(0) * Constants.EVEL_TO_FPS; }
 
     /**
      * @return Position as read by right encoder in Feet per Second
      */
-    public float getRightPos() { return rightRearTalonEnc.getSelectedSensorPosition(0) * Constants.EPOS_TO_FEET; }
+    public float getRightPos() { return rightFrontTalonEnc.getSelectedSensorPosition(0) * Constants.EPOS_TO_FEET; }
 
     /**
      * @return Position as read by left encoder in Feet per Second
      */
-    public float getLeftPos() { return leftRearTalonEnc.getSelectedSensorPosition(0) * Constants.EPOS_TO_FEET; }
+    public float getLeftPos() { return leftFrontTalonEnc.getSelectedSensorPosition(0) * Constants.EPOS_TO_FEET; }
 
 
     @Override
@@ -398,8 +395,8 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     public void setkF(double kF)
     {
         this.kF = kF;
-        leftRearTalonEnc.config_kF(0, kF, Constants.INIT_TIMEOUT);
-        rightRearTalonEnc.config_kF(0, kF, Constants.INIT_TIMEOUT);
+        leftRearTalon.config_kF(0, kF, Constants.INIT_TIMEOUT);
+        rightRearTalon.config_kF(0, kF, Constants.INIT_TIMEOUT);
     }
 
     public enum DriveStrategyType implements Nameable
@@ -407,16 +404,6 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         VOLTAGE("VOLTAGE", (joystickLeft, joystickRight) -> {
             Robot.DRIVE_TRAIN.runMotors(joystickLeft, joystickRight);
         });
-//        PID("PID", (joystickLeft, joystickRight) -> {
-//
-//            float leftVel = joystickLeft * Constants.MAX_FPS_SPEED * Constants.FPS_TO_EVEL;
-//            float rightVel = joystickRight * Constants.MAX_FPS_SPEED * Constants.FPS_TO_EVEL;
-//
-////            Robot.DRIVE_TRAIN.leftRearTalonEnc.set(ControlMode.Velocity, joystickLeft * Constants.MAX_FPS_SPEED * Constants.FPS_TO_EVEL); // this
-////            Robot.DRIVE_TRAIN.rightRearTalonEnc.set(ControlMode.Velocity, joystickRight * Constants.MAX_FPS_SPEED * Constants.FPS_TO_EVEL); // this
-//
-//            Robot.DRIVE_TRAIN.runMotors(ControlMode.Velocity, leftVel, rightVel);
-//        });
 
         private final String name;
         private final DriveStrategy driveStrategy;
