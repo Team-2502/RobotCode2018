@@ -2,8 +2,8 @@ package com.team2502.robot2018.command.autonomous.groups;
 
 import com.team2502.robot2018.Constants;
 import com.team2502.robot2018.Robot;
-import com.team2502.robot2018.command.autonomous.DeadreckoningDrive;
-import com.team2502.robot2018.command.autonomous.RotateAutonStationary;
+import com.team2502.robot2018.command.autonomous.ingredients.DeadreckoningDrive;
+import com.team2502.robot2018.command.autonomous.ingredients.RotateAutonStationary;
 import com.team2502.robot2018.command.autonomous.ingredients.ActiveIntakeDown;
 import com.team2502.robot2018.command.autonomous.ingredients.ElevatorUpAutonCommand;
 import com.team2502.robot2018.command.autonomous.ingredients.PurePursuitCommand;
@@ -31,13 +31,13 @@ public class RightCommandGroup extends CommandGroup
 
             case "LR":
             {
-                List<Waypoint> straightSwitch = Arrays.asList(
+                List<Waypoint> straightScale = Arrays.asList(
                         new Waypoint(new ImmutableVector2f(0, 0), 9),
                         new Waypoint(new ImmutableVector2f(0, 5), 9),
                         new Waypoint(new ImmutableVector2f(0, 7), 0.2F)
                                                              );
                 addParallel(new ActiveIntakeDown(0.7, 0.5));
-                addSequential(new PurePursuitCommand(straightSwitch, Constants.LOOKAHEAD_DISTANCE_FT, Constants.STOP_DIST_TOLERANCE_FT));
+                addSequential(new PurePursuitCommand(straightScale, Constants.LOOKAHEAD_DISTANCE_FT, Constants.STOP_DIST_TOLERANCE_FT));
                 addSequential(new WaitCommand(0.8F));
                 addSequential(new RotateAutonStationary(55));
                 addSequential(new ElevatorUpAutonCommand(2.7F));
