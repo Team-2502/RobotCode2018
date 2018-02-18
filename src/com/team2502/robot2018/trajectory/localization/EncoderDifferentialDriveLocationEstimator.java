@@ -3,6 +3,7 @@ package com.team2502.robot2018.trajectory.localization;
 import com.team2502.robot2018.Constants;
 import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.utils.MathUtils;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.joml.ImmutableVector2f;
 
 public class EncoderDifferentialDriveLocationEstimator implements ITranslationalLocationEstimator, IRotationalLocationEstimator, ITranslationalVelocityEstimator
@@ -40,24 +41,18 @@ public class EncoderDifferentialDriveLocationEstimator implements ITranslational
         float dTime = getDTime();
 
         // talon inversed
-        float leftVel = Robot.DRIVE_TRAIN.leftRearTalonEnc.getSelectedSensorVelocity(0) * Constants.EVEL_TO_FPS;
+        float leftVel = Robot.DRIVE_TRAIN.getLeftVel();
 
-        float rightVel = Robot.DRIVE_TRAIN.rightRearTalonEnc.getSelectedSensorVelocity(0) * Constants.EVEL_TO_FPS;
+        float rightVel = Robot.DRIVE_TRAIN.getRightVel();
 
-//        System.out.printf("leftVel: %.2f, rightVel: %.2f\n",leftVel,rightVel);
+        SmartDashboard.putNumber("encL", leftVel);
+        SmartDashboard.putNumber("encR", rightVel);
 
-        angularVel = MathUtils.Kinematics.getAngularVel(leftVel, rightVel, Constants.LATERAL_WHEEL_DISTANCE_FT);
+        ImmutableVector2f immutableVector2f = MathUtils.LinearAlgebra.rotate2D(new ImmutableVector2f(0, (leftVel + rightVel) * dTime / 2), estimateHeading());
 
-        ImmutableVector2f absoluteDPos = MathUtils.Kinematics.getAbsoluteDPos(
-                leftVel, rightVel, Constants.LATERAL_WHEEL_DISTANCE_FT, dTime
-                , rotationalLocationEstimator.estimateHeading());
+        location = location.add(immutableVector2f);
 
-//        System.out.printf("absDPos: %.2f,%.2f\n",absoluteDPos.x,absoluteDPos.y);
-        location = location.add(absoluteDPos);
-        ImmutableVector2f absLoc = location.add(absoluteDPos);
-
-        encHeading += angularVel * dTime;
-        return absLoc;
+        return location;
     }
 
     @Override
@@ -76,13 +71,13 @@ public class EncoderDifferentialDriveLocationEstimator implements ITranslational
     @Override
     public float getLeftWheelSpeed()
     {
-        return Robot.DRIVE_TRAIN.leftRearTalonEnc.getSelectedSensorVelocity(0) * Constants.EVEL_TO_FPS;
+        return Robot.DRIVE_TRAIN.leftRearTalon.getSelectedSensorVelocity(0) * Constants.EVEL_TO_FPS;
     }
 
     @Override
     public float getRightWheelSpeed()
     {
-        return Robot.DRIVE_TRAIN.rightRearTalonEnc.getSelectedSensorVelocity(0) * Constants.EVEL_TO_FPS;
+        return Robot.DRIVE_TRAIN.rightRearTalon.getSelectedSensorVelocity(0) * Constants.EVEL_TO_FPS;
     }
 
     @Override

@@ -5,7 +5,7 @@ import com.team2502.robot2018.utils.baseoverloads.JoystickButtonF;
 
 /**
  * A wrapper for Joystick Button
- *
+ * <p>
  * Deprecated because joysticks should not be used like this
  * except in exceptional situations.
  */
@@ -32,7 +32,6 @@ public class DebouncedJoystickButton extends JoystickButtonF
 
 
     /**
-     *
      * @return the debounced output of the button
      */
     public boolean getDebounced()

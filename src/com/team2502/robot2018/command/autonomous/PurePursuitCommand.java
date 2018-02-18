@@ -7,7 +7,9 @@ import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.sendables.SendableNavX;
 import com.team2502.robot2018.subsystem.DriveTrainSubsystem;
 import com.team2502.robot2018.trajectory.ITankRobotBounds;
+import com.team2502.robot2018.trajectory.Lookahead;
 import com.team2502.robot2018.trajectory.PurePursuitMovementStrategy;
+import com.team2502.robot2018.trajectory.Waypoint;
 import com.team2502.robot2018.trajectory.localization.EncoderDifferentialDriveLocationEstimator;
 import com.team2502.robot2018.trajectory.localization.NavXLocationEstimator;
 import com.team2502.robot2018.utils.MathUtils;
@@ -32,12 +34,12 @@ public class PurePursuitCommand extends Command
     private long lastTime = -1;
     private float initAngleDegrees;
 
-    public PurePursuitCommand(List<ImmutableVector2f> waypoints)
+    public PurePursuitCommand(List<Waypoint> waypoints)
     {
         this(waypoints, Constants.LOOKAHEAD_DISTANCE_FT, Constants.STOP_DIST_TOLERANCE_FT);
     }
 
-    public PurePursuitCommand(List<ImmutableVector2f> waypoints, float lookAheadDistance, float stopDistance)
+    public PurePursuitCommand(List<Waypoint> waypoints, float lookAheadDistance, float stopDistance)
     {
         navx = Robot.NAVX;
         navx.resetDisplacement();
@@ -114,7 +116,8 @@ public class PurePursuitCommand extends Command
         transLocEstimator = new EncoderDifferentialDriveLocationEstimator(rotLocEstimator);
 
         sendableNavX = new SendableNavX(() -> MathUtils.rad2Deg(-rotLocEstimator.estimateHeading()), "purePursuitHeading");
-        purePursuitMovementStrategy = new PurePursuitMovementStrategy(tankRobot, transLocEstimator, rotLocEstimator, transLocEstimator, waypoints, lookAheadDistance, stopDistance);
+        Lookahead lookahead = new Lookahead(3, 5, 1, 8);
+        purePursuitMovementStrategy = new PurePursuitMovementStrategy(tankRobot, transLocEstimator, rotLocEstimator, transLocEstimator, waypoints, lookahead, stopDistance);
         Log.info("initAngleDegrees: {0,number,0.00}\n" + initAngleDegrees);
     }
 
@@ -133,7 +136,8 @@ public class PurePursuitCommand extends Command
     @Override
     protected void initialize()
     {
-
+        SmartDashboard.putBoolean("PPisClose", purePursuitMovementStrategy.isClose());
+        SmartDashboard.putBoolean("PPisSuccess", purePursuitMovementStrategy.isSuccessfullyFinished());
     }
 
     @Override
@@ -143,41 +147,42 @@ public class PurePursuitCommand extends Command
 
         sendableNavX.updateDashboard();
 
-        SmartDashboard.putNumber("purePursuitHeadingRad", purePursuitMovementStrategy.getUsedHeading());
+//        SmartDashboard.putNumber("purePursuitHeadingRad", purePursuitMovementStrategy.getUsedHeading());
 
         ImmutableVector2f usedEstimatedLocation = purePursuitMovementStrategy.getUsedEstimatedLocation();
 
-        SmartDashboard.putNumber("purePursuitLocX", usedEstimatedLocation.get(0));
-        SmartDashboard.putNumber("purePursuitLocY", usedEstimatedLocation.get(1));
+//        SmartDashboard.putNumber("purePursuitLocX", usedEstimatedLocation.get(0));
+//        SmartDashboard.putNumber("purePursuitLocY", usedEstimatedLocation.get(1));
 
         ImmutableVector2f wheelVelocities = purePursuitMovementStrategy.getWheelVelocities();
 
         float wheelL = wheelVelocities.get(0);
         float wheelR = wheelVelocities.get(1);
 
-        SmartDashboard.putNumber("PPwheelL", wheelVelocities.get(0));
-        SmartDashboard.putNumber("PPwheelR", wheelVelocities.get(1));
+//        SmartDashboard.putNumber("PPwheelL", wheelVelocities.get(0));
+//        SmartDashboard.putNumber("PPwheelR", wheelVelocities.get(1));
 
         ImmutableVector2f relativeGoalPoint = purePursuitMovementStrategy.getRelativeGoalPoint();
         if(relativeGoalPoint != null)
         {
-            SmartDashboard.putNumber("rGPx", relativeGoalPoint.get(0));
-            SmartDashboard.putNumber("rGPy", relativeGoalPoint.get(1));
+//            SmartDashboard.putNumber("rGPx", relativeGoalPoint.get(0));
+//            SmartDashboard.putNumber("rGPy", relativeGoalPoint.get(1));
         }
 
         ImmutableVector2f absGP = purePursuitMovementStrategy.getAbsoluteGoalPoint();
         if(absGP != null)
         {
-            SmartDashboard.putNumber("GPx", absGP.get(0));
-            SmartDashboard.putNumber("GPy", absGP.get(1));
+//            SmartDashboard.putNumber("GPx", absGP.get(0));
+//            SmartDashboard.putNumber("GPy", absGP.get(1));
         }
 
-        SmartDashboard.putBoolean("PPisClose", purePursuitMovementStrategy.isClose());
+        float usedLookahead = purePursuitMovementStrategy.getUsedLookahead();
 
-        SmartDashboard.putBoolean("PPisSuccess", purePursuitMovementStrategy.isSuccessfullyFinished());
+//        SmartDashboard.putNumber("Lookahead", usedLookahead);
 
-        Robot.DRIVE_TRAIN.leftRearTalonEnc.set(ControlMode.Velocity, wheelL * Constants.FPS_TO_EVEL); // this
-        Robot.DRIVE_TRAIN.rightRearTalonEnc.set(ControlMode.Velocity, wheelR * Constants.FPS_TO_EVEL); // this
+        float leftWheelFPS = wheelL * Constants.FPS_TO_EVEL;
+        float rightWheelFPS = wheelR * Constants.FPS_TO_EVEL;
+        Robot.DRIVE_TRAIN.runMotors(ControlMode.Velocity, leftWheelFPS, rightWheelFPS);
     }
 
     @Override
@@ -188,8 +193,9 @@ public class PurePursuitCommand extends Command
         {
             SmartDashboard.putBoolean("PPisSuccess", purePursuitMovementStrategy.isSuccessfullyFinished());
             System.out.println("\n!!!\nBRAKING\n!!!!\n");
-            Robot.DRIVE_TRAIN.leftRearTalonEnc.set(ControlMode.Disabled, 0.0F);
-            Robot.DRIVE_TRAIN.rightRearTalonEnc.set(ControlMode.Disabled, 0.0F);
+            Robot.DRIVE_TRAIN.leftRearTalon.set(ControlMode.Disabled, 0.0F);
+            Robot.DRIVE_TRAIN.rightRearTalon.set(ControlMode.Disabled, 0.0F);
+            System.out.println("\n\nFINISHED!\n\n");
         }
         return finishedPath;
 

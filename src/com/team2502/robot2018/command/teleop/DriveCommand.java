@@ -98,7 +98,7 @@ public class DriveCommand extends Command
                     if(driveTrainSubsystem.turningFactor() < 0.1F)
                     {
                         float accel = navx.getRawAccelY();
-                        float speed = driveTrainSubsystem.avgVel();
+                        float speed = driveTrainSubsystem.getTanSpeed();
 
                         // Shift up if we are accelerating and going fast and the driver is putting the joystick at least 80% forward or backward
                         if(Math.abs(accel) > 0.15F && speed > Constants.SHIFT_UP_THRESHOLD && OI.joysThreshold(0.8D, true))
@@ -106,7 +106,7 @@ public class DriveCommand extends Command
                             if(!transmission.highGear) { Log.info("Shifting up."); }
                             transmission.setGear(true);
                         }
-                        else if(!MathUtils.signSame(accel, driveTrainSubsystem.rightRearTalonEnc.getSelectedSensorVelocity(0)) && OI.joysThreshold(0.8D, false)) /* If we are not accelerating very fast but the driver is still pushing forward we shift down because it is probably a pushing match */
+                        else if(!MathUtils.signSame(accel, driveTrainSubsystem.rightRearTalon.getSelectedSensorVelocity(0)) && OI.joysThreshold(0.8D, false)) /* If we are not accelerating very fast but the driver is still pushing forward we shift down because it is probably a pushing match */
                         {
                             if(transmission.highGear) { Log.info("Shifting down because you're a bad driver."); }
                             transmission.setGear(false);

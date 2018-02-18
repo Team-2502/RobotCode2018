@@ -5,12 +5,12 @@ import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
 import java.util.*;
 
 /**
- * Make a new interpolating hash table. You need 2 key/value pairs to interpolate properly.
- * An interpolating hash table is like a crappy kind of regression.
+ * Make a new interpolating map. You need 2 key/value pairs to interpolate properly.
+ * Interpolation is like a crappy kind of regression.
  * You put in (x, f(x)) pairs of the function that you know for sure,
  * and linear regression is used to find the pairs you didn't explicitly put in.
  */
-public class InterpolatingHashTable implements Map<Double, Double>
+public class InterpolationMap implements Map<Double, Double>
 {
 
     private HashMap<Double, Double> table;
@@ -19,7 +19,7 @@ public class InterpolatingHashTable implements Map<Double, Double>
      * @param firstKey   The first key to put into the hash table.
      * @param firstValue The first value to put into the hash table.
      */
-    public InterpolatingHashTable(Double firstKey, Double firstValue)
+    public InterpolationMap(Double firstKey, Double firstValue)
     {
         table = new HashMap<Double, Double>();
         table.put(firstKey, firstValue);
@@ -30,7 +30,7 @@ public class InterpolatingHashTable implements Map<Double, Double>
      *
      * @param initTable The table to start with
      */
-    public InterpolatingHashTable(HashMap<Double, Double> initTable)
+    public InterpolationMap(HashMap<Double, Double> initTable)
     {
         if(initTable.keySet().isEmpty())
         {
