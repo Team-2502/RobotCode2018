@@ -39,12 +39,12 @@ class AutoSwitcher
 
     public enum AutoMode
     {
-        PURE_PURSUIT("PurePursuit", new PurePursuitCommand(waypoints)),
-        CALIBRATE("Calibrate", new CalibrateRobotCommand()),
-        DEMO("DriveTime", new DriveTime(3F, 0.2F)),
-        CENTERCOMMANDGROUP("Center Line Up", new CenterCommandGroup()),
-        LEFTCOMMANDGROUP("Left Line Up", new LeftCommandGroup()),
-        RIGHTCOMMANDGROUP("Right Line Up", new RightCommandGroup());
+//        PURE_PURSUIT("PurePursuit", new PurePursuitCommand(waypoints)),
+//        CALIBRATE("Calibrate", new CalibrateRobotCommand()),
+//        DEMO("DriveTime", new DriveTime(3F, 0.2F)),
+        CENTERCOMMANDGROUP("Center", new CenterCommandGroup()),
+        LEFTCOMMANDGROUP("Left", new LeftCommandGroup()),
+        RIGHTCOMMANDGROUP("Right", new RightCommandGroup());
 
         public final Command autoCommand;
         public final String name;

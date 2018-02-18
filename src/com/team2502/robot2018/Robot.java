@@ -141,7 +141,7 @@ public final class Robot extends IterativeRobot
         // 53 inches left/right = 4.42 ft
 
 //        Scheduler.getInstance().add(new CenterCommandGroup());
-        Scheduler.getInstance().add(new LeftCommandGroup());
+        Scheduler.getInstance().add(AutoSwitcher.getAutoInstance());
     }
 
     /**
