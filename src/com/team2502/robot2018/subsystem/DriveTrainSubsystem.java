@@ -132,6 +132,7 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     {
         setPID(kP, kI, kD);
     }
+
     /**
      * Sets the PID for left AND right motors. If the descriptions below confuse you, go look up a better
      * explanation of PID.
@@ -313,6 +314,7 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
 
     /**
      * Get tangent velocity
+     *
      * @return The tangent velocity
      */
     public float getTanVel()

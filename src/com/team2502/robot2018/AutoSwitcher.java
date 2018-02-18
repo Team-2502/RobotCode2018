@@ -1,12 +1,9 @@
 package com.team2502.robot2018;
 
-import com.team2502.robot2018.command.autonomous.ingredients.Paths;
-import com.team2502.robot2018.command.autonomous.ingredients.PurePursuitCommand;
+
 import com.team2502.robot2018.command.autonomous.groups.CenterCommandGroup;
 import com.team2502.robot2018.command.autonomous.groups.LeftCommandGroup;
 import com.team2502.robot2018.command.autonomous.groups.RightCommandGroup;
-import com.team2502.robot2018.command.autonomous.ingredients.DriveTime;
-import com.team2502.robot2018.command.teleop.CalibrateRobotCommand;
 import com.team2502.robot2018.trajectory.Waypoint;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -26,6 +23,7 @@ class AutoSwitcher
         CENTERAUTO("Center", CenterCommandGroup.class),
         LEFTAUTO("Left", LeftCommandGroup.class),
         RIGHTAUTO("Right", RightCommandGroup.class);
+
 
 
         private Class<? extends Command> autoCommand;

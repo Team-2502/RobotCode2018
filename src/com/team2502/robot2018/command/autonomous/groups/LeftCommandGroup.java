@@ -22,7 +22,7 @@ public class LeftCommandGroup extends CommandGroup
             case "LL":
                 switch(Robot.AUTON_STRATEGY)
                 {
-                    case SCALE: // WARNING!!! the active needs to be half way down so it will not get caught
+                    case SCALE:
                     {
                         goScaleLeft();
                         break;

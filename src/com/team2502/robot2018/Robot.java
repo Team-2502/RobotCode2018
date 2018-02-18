@@ -3,7 +3,6 @@ package com.team2502.robot2018;
 import com.kauailabs.navx.frc.AHRS;
 import com.team2502.robot2018.command.autonomous.groups.CenterCommandGroup;
 import com.team2502.robot2018.command.autonomous.ingredients.AutonStrategy;
-import com.team2502.robot2018.command.autonomous.groups.LeftCommandGroup;
 import com.team2502.robot2018.sendables.SendableDriveStrategyType;
 import com.team2502.robot2018.sendables.SendableDriveTrain;
 import com.team2502.robot2018.sendables.SendableNavX;
