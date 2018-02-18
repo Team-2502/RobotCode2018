@@ -169,8 +169,8 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
     float generateLookahead()
     {
         // TODO: might be better to directly calculate
-        float tanVel = Robot.DRIVE_TRAIN.getTanVel();
-        float lookaheadForSpeed = lookahead.getLookaheadForSpeed(tanVel);
+        float tangentialVelocity = Robot.DRIVE_TRAIN.getTanVel();
+        float lookaheadForSpeed = lookahead.getLookaheadForSpeed(tangentialVelocity);
 
         Waypoint waypointEnd = waypoints.get(lastSegmentSearched + 1);
         ImmutableVector2f lineEndPoint = waypointEnd.getLocation();
@@ -187,14 +187,14 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
          * // TODO: horrible!!!! not how it should be used ... but can test a POC
          */
 
-
-//        TrapezoidalMotionProfiling trapezoidalMotionProfiling = new TrapezoidalMotionProfiling(Constants.AL_MAX,waypointEnd.getMaxSpeed(),waypointStart.getMaxSpeed(),waypointEnd.getMaxSpeed(),);
-//        trapezoidalMotionProfiling.generate();
-//        trapezoidalMotionProfiling
-
         // TODO: will need to modify for non-lines
         float distanceAlongPath = closestPoint.distance(lineStartPoint);
         float progress = distanceAlongPath / pathDistance;
+
+        // Using the physics equation p1 = 1/2at^2 + vt + p0, we get
+        // tangentialVelocity * t + 1/2 * acceleration * t = pathDistance
+        // [-b +/- sqrt(4ac)]/(2a)
+        //
 
         speedUsed = (waypointStart.getMaxSpeed() * (1 - progress) + waypointEnd.getMaxSpeed() * progress) / 2;
 
