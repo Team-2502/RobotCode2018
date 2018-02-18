@@ -1,7 +1,6 @@
 package com.team2502.robot2018;
 
 import com.kauailabs.navx.frc.AHRS;
-import com.team2502.robot2018.command.autonomous.groups.CenterCommandGroup;
 import com.team2502.robot2018.command.autonomous.ingredients.AutonStrategy;
 import com.team2502.robot2018.sendables.SendableDriveStrategyType;
 import com.team2502.robot2018.sendables.SendableDriveTrain;
@@ -56,7 +55,7 @@ public final class Robot extends IterativeRobot
     @Override
     public void robotInit()
     {
-
+        // TODO: needs to be changed in shuffleboard
         AUTON_STRATEGY = AutonStrategy.SCALE;
 
         Log.createLogger(true);
@@ -73,7 +72,7 @@ public final class Robot extends IterativeRobot
 
         OI.init();
 
-        AutoSwitcher.putToSmartDashboard();
+        AutoStartLocationSwitcher.putToSmartDashboard();
 
         SendableDriveTrain.init();
         DashboardData.addUpdater(SendableDriveTrain.getInstance());
@@ -142,7 +141,7 @@ public final class Robot extends IterativeRobot
 
 //        Scheduler.getInstance().add(new CenterCommandGroup());
 
-        Scheduler.getInstance().add(AutoSwitcher.getAutoInstance());
+        Scheduler.getInstance().add(AutoStartLocationSwitcher.getAutoInstance());
     }
 
     /**

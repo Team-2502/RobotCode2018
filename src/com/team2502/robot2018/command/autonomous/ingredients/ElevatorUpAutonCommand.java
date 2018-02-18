@@ -14,7 +14,7 @@ public class ElevatorUpAutonCommand extends TimedCommand
     @Override
     protected void execute()
     {
-        Robot.ELEVATOR.moveElevator(1);
+//        Robot.ELEVATOR.moveElevator(1);
     }
 
     @Override

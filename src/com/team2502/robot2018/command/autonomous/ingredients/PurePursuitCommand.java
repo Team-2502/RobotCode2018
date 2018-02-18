@@ -151,16 +151,16 @@ public class PurePursuitCommand extends Command
 
         ImmutableVector2f usedEstimatedLocation = purePursuitMovementStrategy.getUsedEstimatedLocation();
 
-//        SmartDashboard.putNumber("purePursuitLocX", usedEstimatedLocation.get(0));
-//        SmartDashboard.putNumber("purePursuitLocY", usedEstimatedLocation.get(1));
+        SmartDashboard.putNumber("purePursuitLocX", usedEstimatedLocation.get(0));
+        SmartDashboard.putNumber("purePursuitLocY", usedEstimatedLocation.get(1));
 
         ImmutableVector2f wheelVelocities = purePursuitMovementStrategy.getWheelVelocities();
 
         float wheelL = wheelVelocities.get(0);
         float wheelR = wheelVelocities.get(1);
 
-//        SmartDashboard.putNumber("PPwheelL", wheelVelocities.get(0));
-//        SmartDashboard.putNumber("PPwheelR", wheelVelocities.get(1));
+        SmartDashboard.putNumber("PPwheelL", wheelVelocities.get(0));
+        SmartDashboard.putNumber("PPwheelR", wheelVelocities.get(1));
 
         ImmutableVector2f relativeGoalPoint = purePursuitMovementStrategy.getRelativeGoalPoint();
         if(relativeGoalPoint != null)

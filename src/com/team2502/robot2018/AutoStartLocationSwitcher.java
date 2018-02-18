@@ -14,7 +14,7 @@ import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.List;
 
-class AutoSwitcher
+class AutoStartLocationSwitcher
 {
     private static SendableChooser<AutoMode> autoChooser;
 
@@ -23,8 +23,6 @@ class AutoSwitcher
         CENTERAUTO("Center", CenterCommandGroup.class),
         LEFTAUTO("Left", LeftCommandGroup.class),
         RIGHTAUTO("Right", RightCommandGroup.class);
-
-
 
         private Class<? extends Command> autoCommand;
         private String name;
@@ -45,7 +43,7 @@ class AutoSwitcher
 
     static void putToSmartDashboard()
     {
-        autoChooser = new SendableChooser<AutoMode>();
+        autoChooser = new SendableChooser<>();
 
         for(int i = 0; i < AutoMode.values().length; i++)
         {
