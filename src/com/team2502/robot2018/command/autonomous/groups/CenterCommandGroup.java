@@ -18,6 +18,7 @@ public class CenterCommandGroup extends CommandGroup
     public CenterCommandGroup()
     {
         String AUTO_GAME_DATA = Robot.GAME_DATA.substring(0, 2);
+
         switch(AUTO_GAME_DATA)
         {
             case "LL":
@@ -80,7 +81,6 @@ public class CenterCommandGroup extends CommandGroup
                         new Waypoint(new ImmutableVector2f(4.42F, 12), 2F)
                                                              );
                 Robot.NAVX.reset();
-//        Scheduler.getInstance().add(new CalibrateRobotCommand());
                 addSequential(new PurePursuitCommand(straightSwitch, Constants.LOOKAHEAD_DISTANCE_FT, Constants.STOP_DIST_TOLERANCE_FT));
                 addSequential(new ElevatorUpAutonCommand(1.1F));
                 addSequential(new ActiveIntakeDown(0.35, 1));
