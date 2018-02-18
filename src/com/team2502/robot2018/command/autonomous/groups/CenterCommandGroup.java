@@ -2,10 +2,10 @@ package com.team2502.robot2018.command.autonomous.groups;
 
 import com.team2502.robot2018.Constants;
 import com.team2502.robot2018.Robot;
-import com.team2502.robot2018.command.autonomous.ActiveIntakeDown;
-import com.team2502.robot2018.command.autonomous.ElevatorUpAutonCommand;
-import com.team2502.robot2018.command.autonomous.PurePursuitCommand;
-import com.team2502.robot2018.command.autonomous.ShootCubeCommand;
+import com.team2502.robot2018.command.autonomous.ingredients.ActiveIntakeDown;
+import com.team2502.robot2018.command.autonomous.ingredients.ElevatorUpAutonCommand;
+import com.team2502.robot2018.command.autonomous.ingredients.PurePursuitCommand;
+import com.team2502.robot2018.command.autonomous.ingredients.ShootCubeCommand;
 import com.team2502.robot2018.trajectory.Waypoint;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import org.joml.ImmutableVector2f;
