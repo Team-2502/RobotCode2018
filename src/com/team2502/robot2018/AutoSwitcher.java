@@ -1,6 +1,6 @@
 package com.team2502.robot2018;
 
-import com.team2502.robot2018.command.autonomous.PurePursuitCommand;
+import com.team2502.robot2018.command.autonomous.ingredients.PurePursuitCommand;
 import com.team2502.robot2018.command.autonomous.groups.CenterCommandGroup;
 import com.team2502.robot2018.command.autonomous.groups.LeftCommandGroup;
 import com.team2502.robot2018.command.autonomous.groups.RightCommandGroup;
