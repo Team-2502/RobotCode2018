@@ -128,6 +128,10 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         setupTalons();
     }
 
+    public void setPID()
+    {
+        setPID(kP, kI, kD);
+    }
     /**
      * Sets the PID for left AND right motors. If the descriptions below confuse you, go look up a better
      * explanation of PID.
@@ -356,7 +360,7 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     public void setkP(double kP)
     {
         this.kP = kP;
-        setPID(this.kP, kI, kD);
+        setPID();
 
     }
 
@@ -370,7 +374,7 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     public void setkI(double kI)
     {
         this.kI = kI;
-        setPID(kP, this.kI, kD);
+        setPID();
     }
 
     @Override
@@ -383,7 +387,7 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     public void setkD(double kD)
     {
         this.kD = kD;
-        setPID(kP, kI, this.kD);
+        setPID();
     }
 
     @Override

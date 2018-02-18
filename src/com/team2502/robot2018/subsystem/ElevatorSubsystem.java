@@ -1,16 +1,17 @@
 package com.team2502.robot2018.subsystem;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
-import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
-import com.ctre.phoenix.motorcontrol.RemoteLimitSwitchSource;
+import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.team2502.robot2018.Constants;
+import com.team2502.robot2018.DashboardData;
 import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.RobotMap;
+import com.team2502.robot2018.sendables.PIDTunable;
+import com.team2502.robot2018.sendables.SendablePIDTuner;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class ElevatorSubsystem extends Subsystem
+public class ElevatorSubsystem extends Subsystem implements PIDTunable, DashboardData.DashboardUpdater
 {
     private final WPI_TalonSRX elevatorTop;
     private final WPI_TalonSRX elevatorBottom;
@@ -19,6 +20,13 @@ public class ElevatorSubsystem extends Subsystem
     // the climber motors are the slower CIMS while the the elevator motors are the faster VEX motors
     private final WPI_TalonSRX climberTop;
     private final WPI_TalonSRX climberBottom;
+
+    private double kP = 0D;
+    private double kI = 0D;
+    private double kD = 0D;
+    private double kF = 0D;
+
+    private final SendablePIDTuner pidTuner;
 
     private int timer;
 
@@ -36,7 +44,13 @@ public class ElevatorSubsystem extends Subsystem
         elevatorTop.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen, Constants.INIT_TIMEOUT);
         elevatorBottom.configReverseLimitSwitchSource(RemoteLimitSwitchSource.RemoteTalonSRX, LimitSwitchNormal.NormallyOpen, RobotMap.Motor.ELEVATOR_TOP, Constants.INIT_TIMEOUT);
 
+        elevatorTop.follow(elevatorBottom);
+        elevatorBottom.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute, 0, Constants.INIT_TIMEOUT);
 
+        pidTuner = new SendablePIDTuner(this, this);
+
+        DashboardData.addUpdater(this);
+        calibrateEncoder();
     }
 
     /**
@@ -45,7 +59,7 @@ public class ElevatorSubsystem extends Subsystem
      *
      * @param speed the speed (-1.0 to 1.0) that the elevator motors will run at.
      */
-    public void moveElevator(double speed)
+    public void moveElevator(ControlMode controlMode, double speed)
     {
         /* Artificial delay between unlocking the elevator solenoid
            and starting the elevator motors.
@@ -75,16 +89,19 @@ public class ElevatorSubsystem extends Subsystem
 
         else
         {
-            elevatorTop.set(speed);
-            elevatorBottom.set(speed);
+            elevatorBottom.set(controlMode, speed);
         }
+    }
+
+    public void moveElevator(double speed)
+    {
+        moveElevator(ControlMode.PercentOutput, speed);
     }
 
     public void setElevatorPos(float feet)
     {
-        float epos = feet * Constants.FT_TO_EPOS;
-        elevatorTop.set(ControlMode.Position, epos);
-        elevatorBottom.set(ControlMode.Position, epos);
+        float epos = feet * Constants.FEET_TO_EPOS;
+        moveElevator(ControlMode.Position, epos);
     }
 
     /**
@@ -97,7 +114,6 @@ public class ElevatorSubsystem extends Subsystem
             Robot.CLIMBER_SOLENOID.lockElevator();
         }
 
-        elevatorTop.set(0.0F);
         elevatorBottom.set(0.0F);
     }
 
@@ -133,4 +149,88 @@ public class ElevatorSubsystem extends Subsystem
 
     @Override
     protected void initDefaultCommand() { }
+
+    @Override
+    public double getkP()
+    {
+        return kP;
+    }
+
+    @Override
+    public void setkP(double kP)
+    {
+        this.kP = kP;
+        setPID();
+    }
+
+    @Override
+    public double getkI()
+    {
+        return kI;
+    }
+
+    @Override
+    public void setkI(double kI)
+    {
+        this.kI = kI;
+        setPID();
+    }
+
+    @Override
+    public double getkD()
+    {
+        return kD;
+    }
+
+    @Override
+    public void setkD(double kD)
+    {
+        this.kD = kD;
+        setPID();
+    }
+
+    @Override
+    public double getkF()
+    {
+        return kF;
+    }
+
+    @Override
+    public void setkF(double kF)
+    {
+        this.kF = kF;
+        setPID();
+    }
+
+    @Override
+    public void setPID()
+    {
+        elevatorBottom.config_kP(0, kP, Constants.INIT_TIMEOUT);
+        elevatorBottom.config_kI(0, kI, Constants.INIT_TIMEOUT);
+        elevatorBottom.config_kD(0, kD, Constants.INIT_TIMEOUT);
+        elevatorBottom.config_kF(0, kF, Constants.INIT_TIMEOUT);
+    }
+
+    public double getVel()
+    {
+        return elevatorBottom.getSelectedSensorVelocity(0) * Constants.EVEL_TO_FPS;
+    }
+
+    public double getPos()
+    {
+        return elevatorBottom.getSelectedSensorPosition(0) * Constants.EVEL_TO_FPS;
+    }
+
+    public void calibrateEncoder()
+    {
+        elevatorBottom.setSelectedSensorPosition(0, 0, Constants.INIT_TIMEOUT);
+    }
+    @Override
+    public void updateDashboard()
+    {
+        SmartDashboard.putNumber("Elevator: Velocity (fps)", getVel());
+        SmartDashboard.putNumber("Elevator: Position (ft)", getPos());
+
+        pidTuner.updateDashboard();
+    }
 }
