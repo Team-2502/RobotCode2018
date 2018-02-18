@@ -20,14 +20,11 @@ public class ElevatorSubsystem extends Subsystem implements PIDTunable, Dashboar
     // the climber motors are the slower CIMS while the the elevator motors are the faster VEX motors
     private final WPI_TalonSRX climberTop;
     private final WPI_TalonSRX climberBottom;
-
+    private final SendablePIDTuner pidTuner;
     private double kP = 0D;
     private double kI = 0D;
     private double kD = 0D;
     private double kF = 0D;
-
-    private final SendablePIDTuner pidTuner;
-
     private int timer;
 
     public ElevatorSubsystem()
@@ -225,6 +222,7 @@ public class ElevatorSubsystem extends Subsystem implements PIDTunable, Dashboar
     {
         elevatorBottom.setSelectedSensorPosition(0, 0, Constants.INIT_TIMEOUT);
     }
+
     @Override
     public void updateDashboard()
     {

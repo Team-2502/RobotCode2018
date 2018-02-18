@@ -3,14 +3,8 @@ package com.team2502.robot2018.command.autonomous.groups;
 import com.team2502.robot2018.Constants;
 import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.command.autonomous.ingredients.*;
-import com.team2502.robot2018.trajectory.Waypoint;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.command.WaitCommand;
-import org.joml.ImmutableVector2f;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class RightCommandGroup extends CommandGroup
 {
