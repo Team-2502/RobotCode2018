@@ -12,7 +12,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.joml.ImmutableVector2f;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -20,7 +19,6 @@ class AutoSwitcher
 {
     private static SendableChooser<AutoMode> autoChooser;
     private static List<Waypoint> waypoints = Arrays.asList(new Waypoint(new ImmutableVector2f(0, 0), 0));
-
 
 
     static void putToSmartDashboard()

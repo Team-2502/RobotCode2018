@@ -1,6 +1,5 @@
 package com.team2502.robot2018.trajectory;
 
-import com.team2502.robot2018.Constants;
 import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.trajectory.localization.IRotationalLocationEstimator;
 import com.team2502.robot2018.trajectory.localization.ITranslationalLocationEstimator;
@@ -12,7 +11,6 @@ import org.joml.ImmutableVector2f;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 public class PurePursuitMovementStrategy implements ITankMovementStrategy
 {
@@ -49,11 +47,11 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
     /**
      * Strategize your movement!
      *
-     * @param tankRobot         An instance of ITanRobotBounds, an interface that has getters for robot max speed and accel.
-     * @param transEstimator    An estimator for the absolute position of the robot
-     * @param rotEstimator      An estimator for the heading of the robot
-     * @param waypoints         A list of waypoints for the robot to drive through
-     * @param lookahead The lookahead distance for the pure pursuit algorithm
+     * @param tankRobot      An instance of ITanRobotBounds, an interface that has getters for robot max speed and accel.
+     * @param transEstimator An estimator for the absolute position of the robot
+     * @param rotEstimator   An estimator for the heading of the robot
+     * @param waypoints      A list of waypoints for the robot to drive through
+     * @param lookahead      The lookahead distance for the pure pursuit algorithm
      * @param distanceStop
      */
     public PurePursuitMovementStrategy(ITankRobotBounds tankRobot, ITranslationalLocationEstimator transEstimator, IRotationalLocationEstimator rotEstimator, ITranslationalVelocityEstimator velocityEstimator, List<Waypoint> waypoints, Lookahead lookahead, float distanceStop)
@@ -73,7 +71,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
      */
     public ImmutableVector2f calculateAbsoluteGoalPoint(float lookAheadDistance)
     {
-        float lookAheadDistanceSquared = lookAheadDistance*lookAheadDistance;
+        float lookAheadDistanceSquared = lookAheadDistance * lookAheadDistance;
         // The path is finished — there are no more goal points to compute
         if(finishedPath) { return null; }
 
@@ -188,7 +186,6 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         /**
          * // TODO: horrible!!!! not how it should be used ... but can test a POC
          */
-
 
 
 //        TrapezoidalMotionProfiling trapezoidalMotionProfiling = new TrapezoidalMotionProfiling(Constants.AL_MAX,waypointEnd.getMaxSpeed(),waypointStart.getMaxSpeed(),waypointEnd.getMaxSpeed(),);
@@ -373,7 +370,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
             pathRadius = 1 / curvature;
             leftWheelTanVel = Math.abs((pathRadius - tankRobot.getLateralWheelDistance() / 2) * rotVelocity);
             rightWheelTanVel = Math.abs((pathRadius + tankRobot.getLateralWheelDistance() / 2) * rotVelocity);
-            tangentialSpeed = (leftWheelTanVel + rightWheelTanVel)/2;
+            tangentialSpeed = (leftWheelTanVel + rightWheelTanVel) / 2;
             dThetaToRotate = (float) (Math.signum(rotVelocity) * Math.atan(relativeGoalPoint.get(1) / (Math.abs(pathRadius) - relativeGoalPoint.get(0))));
         }
 

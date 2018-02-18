@@ -1,7 +1,5 @@
 package com.team2502.robot2018.data;
 
-import org.joml.ImmutableVector2f;
-
 public class Vector2D
 {
 
@@ -13,7 +11,6 @@ public class Vector2D
         this.start = start;
         this.end = end;
     }
-
 
 
 }

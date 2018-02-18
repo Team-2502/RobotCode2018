@@ -28,19 +28,18 @@ public class RightCommandGroup extends CommandGroup
 
                 waypoints = Arrays.asList(
                         new Waypoint(new ImmutableVector2f(0, 0), 9),
-                        new Waypoint(new ImmutableVector2f(0, 5),9),
-                        new Waypoint(new ImmutableVector2f(0, 7),0.2F)
-                                                             );
+                        new Waypoint(new ImmutableVector2f(0, 5), 9),
+                        new Waypoint(new ImmutableVector2f(0, 7), 0.2F)
+                                         );
 
                 break;
             case "RR":
 
                 waypoints = Arrays.asList(
                         new Waypoint(new ImmutableVector2f(0, 0), 9),
-                        new Waypoint(new ImmutableVector2f(0, 5),9),
-                        new Waypoint(new ImmutableVector2f(0, 7),0.2F)
-                 );
-
+                        new Waypoint(new ImmutableVector2f(0, 5), 9),
+                        new Waypoint(new ImmutableVector2f(0, 7), 0.2F)
+                                         );
 
 
                 break;

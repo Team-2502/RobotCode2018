@@ -3,7 +3,6 @@ package com.team2502.robot2018.utils;
 
 import com.team2502.robot2018.Robot;
 import org.joml.ImmutableVector2f;
-import org.joml.Vector2f;
 
 @SuppressWarnings("unused")
 public final class MathUtils
@@ -509,28 +508,28 @@ public final class MathUtils
             // robotPos.x + dxPerp * j = linePointB.x + dX * s ==> robotPos.x - linePointB.x
             // robotPos.y + dyPerp * j = linePointB.y + dY * s
 
-            float j,s;
+            float j, s;
             if(dx == 0)
             {
-                j = -(robotPos.x - linePointA.x)/dxPerp;
-                s = ((robotPos.y - linePointA.y)+dyPerp*j)/dy;
+                j = -(robotPos.x - linePointA.x) / dxPerp;
+                s = ((robotPos.y - linePointA.y) + dyPerp * j) / dy;
             }
             else if(dy == 0)
             {
-                j = -(robotPos.y-linePointB.y)/dyPerp;
-                s = ((robotPos.x - linePointA.x)+dxPerp*j)/dx;
+                j = -(robotPos.y - linePointB.y) / dyPerp;
+                s = ((robotPos.x - linePointA.x) + dxPerp * j) / dx;
             }
             else
             {
-                float slope = dy/dx;
-                j = (robotPos.x - linePointA.x - (robotPos.y - linePointA.y))/(-slope*dxPerp+dyPerp);
-                s = (robotPos.x + dxPerp)*j/(robotPos.x+dx);
+                float slope = dy / dx;
+                j = (robotPos.x - linePointA.x - (robotPos.y - linePointA.y)) / (-slope * dxPerp + dyPerp);
+                s = (robotPos.x + dxPerp) * j / (robotPos.x + dx);
             }
 
             // if on line
             if(s >= 0 && s <= 1)
             {
-                return linePointA.add(new ImmutableVector2f(dx*s,dy*s));
+                return linePointA.add(new ImmutableVector2f(dx * s, dy * s));
             }
             // else ... we cannot use a perpendicular line and will need to look on endpoints
             float dist2A = linePointA.distanceSquared(robotPos);

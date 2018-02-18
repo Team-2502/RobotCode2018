@@ -309,7 +309,7 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
 
     public float getTanVel()
     {
-        return (getLeftVel() + getRightVel())/2;
+        return (getLeftVel() + getRightVel()) / 2;
     }
 
     /**

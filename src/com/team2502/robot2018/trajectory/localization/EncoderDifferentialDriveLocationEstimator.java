@@ -48,7 +48,7 @@ public class EncoderDifferentialDriveLocationEstimator implements ITranslational
         SmartDashboard.putNumber("encL", leftVel);
         SmartDashboard.putNumber("encR", rightVel);
 
-        ImmutableVector2f immutableVector2f = MathUtils.LinearAlgebra.rotate2D(new ImmutableVector2f(0, (leftVel + rightVel)*dTime / 2), estimateHeading());
+        ImmutableVector2f immutableVector2f = MathUtils.LinearAlgebra.rotate2D(new ImmutableVector2f(0, (leftVel + rightVel) * dTime / 2), estimateHeading());
 
         location = location.add(immutableVector2f);
 

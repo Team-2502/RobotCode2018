@@ -40,7 +40,7 @@ public class CalibrateRobotCommand extends Command
             velocity = Robot.CAL_VELOCITY;
 
             int actualVel = Robot.DRIVE_TRAIN.rightFrontTalonEnc.getSelectedSensorVelocity(0);
-            System.out.println("actualVel: "+actualVel);
+            System.out.println("actualVel: " + actualVel);
             float dif = (float) (actualVel - velocity);
 
             error2.add(dif * dif);
@@ -58,8 +58,8 @@ public class CalibrateRobotCommand extends Command
             SmartDashboard.putNumber("enc_error_2", error2Avg);
             SmartDashboard.putNumber("enc_velocity", actualVel);
 
-            System.out.println("run @ "+velocity);
-            Robot.DRIVE_TRAIN.runMotors(ControlMode.Velocity,(float)velocity,(float)velocity);
+            System.out.println("run @ " + velocity);
+            Robot.DRIVE_TRAIN.runMotors(ControlMode.Velocity, (float) velocity, (float) velocity);
         }
     }
 

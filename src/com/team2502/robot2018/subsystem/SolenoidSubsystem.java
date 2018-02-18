@@ -17,16 +17,14 @@ public class SolenoidSubsystem extends NonDefaultSubsystem
      * This solenoid, when enabled (set to true), locks the climber
      */
     private final Solenoid climberSolenoid;
+    private final Solenoid switcher;
+    private final Solenoid grabber;
+    public boolean disabledAutoShifting = true;
+    public boolean highGear;
     /**
      * When true, it means the elevator is locked and can only go down
      */
     private boolean climberDisabled;
-
-    private final Solenoid switcher;
-    public boolean disabledAutoShifting = true;
-    public boolean highGear;
-
-    private final Solenoid grabber;
     private boolean grabberEnabled;
 
     public SolenoidSubsystem()
@@ -44,6 +42,7 @@ public class SolenoidSubsystem extends NonDefaultSubsystem
     }
 
     //region Climber
+
     /**
      * Stop the elevator from slamming down by engaging the climber
      */
@@ -88,6 +87,7 @@ public class SolenoidSubsystem extends NonDefaultSubsystem
     //endregion
 
     //region Transmission
+
     /**
      * Switch the gear from its current state
      */
