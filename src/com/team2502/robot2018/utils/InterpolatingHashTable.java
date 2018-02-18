@@ -2,12 +2,7 @@ package com.team2502.robot2018.utils;
 
 import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Set;
-
-//TODO: Single precision floats
+import java.util.*;
 
 /**
  * Make a new interpolating hash table. You need 2 key/value pairs to interpolate properly.
@@ -15,18 +10,18 @@ import java.util.Set;
  * You put in (x, f(x)) pairs of the function that you know for sure,
  * and linear regression is used to find the pairs you didn't explicitly put in.
  */
-public class InterpolatingHashTable
+public class InterpolatingHashTable implements Map<Double, Double>
 {
 
-    private HashMap<Number, Number> table;
+    private HashMap<Double, Double> table;
 
     /**
      * @param firstKey   The first key to put into the hash table.
      * @param firstValue The first value to put into the hash table.
      */
-    public InterpolatingHashTable(Number firstKey, Number firstValue)
+    public InterpolatingHashTable(Double firstKey, Double firstValue)
     {
-        table = new HashMap<Number, Number>();
+        table = new HashMap<Double, Double>();
         table.put(firstKey, firstValue);
     }
 
@@ -35,7 +30,7 @@ public class InterpolatingHashTable
      *
      * @param initTable The table to start with
      */
-    public InterpolatingHashTable(HashMap<Number, Number> initTable)
+    public InterpolatingHashTable(HashMap<Double, Double> initTable)
     {
         if(initTable.keySet().isEmpty())
         {
@@ -48,43 +43,117 @@ public class InterpolatingHashTable
     }
 
     /**
+     * If you need this you're doing it wrong
+     *
+     * @return How many defined values there are (i.e how many values we aren't guessing with linear regression)
+     */
+    @Override
+    public int size()
+    {
+        return table.size();
+    }
+
+    @Override
+    public boolean isEmpty()
+    {
+        return table.isEmpty();
+    }
+
+    @Override
+    public boolean containsKey(Object key)
+    {
+        return table.containsKey(key);
+    }
+
+    @Override
+    public boolean containsValue(Object value)
+    {
+        return table.containsValue(value);
+    }
+
+    @Override
+    public Double get(Object key) throws IllegalArgumentException
+    {
+        if(key.getClass() == Double.class)
+        {
+            return this.get((Double) key);
+        }
+        throw new IllegalArgumentException("The key was not an instance of the Double class");
+    }
+
+    /**
      * Add a pair that you know is correct
      *
      * @param key   The "x" value that you put in
      * @param value The "f(x)" value that you got out
      */
-    public void put(Number key, Number value)
+    public Double put(Double key, Double value)
     {
-        table.put(key, value);
+        return table.put(key, value);
+    }
+
+    @Override
+    public Double remove(Object key)
+    {
+        return table.remove(key);
+    }
+
+    @Override
+    public void putAll(Map<? extends Double, ? extends Double> m)
+    {
+        table.putAll(m);
+    }
+
+    @Override
+    public void clear()
+    {
+        table.clear();
+    }
+
+    @Override
+    public Set<Double> keySet()
+    {
+        return table.keySet();
+    }
+
+    @Override
+    public Collection<Double> values()
+    {
+        return table.values();
+    }
+
+    @Override
+    public Set<Entry<Double, Double>> entrySet()
+    {
+        return table.entrySet();
     }
 
     /**
-     * Use linear regression to estimate what your "f(x)" will give when evaluated at the number `key`
+     * Use linear regression to estimate what your "f(x)" will give when evaluated at the Double `key`
      *
-     * @param key The number to evaluate "f(x)" at
+     * @param key The Double to evaluate "f(x)" at
      * @return The estimated value of "f(key)"
      */
-    public Number get(Number key)
+    public Double get(Double key)
     {
-        Set<Number> keyset = table.keySet();
+        Set<Double> keyset = table.keySet();
 
         if(keyset.size() == 1)
         {
             return table.get(keyset.toArray()[0]);
         }
 
-        Number upperBound = null;
-        Number lowerBound = null;
+        Double upperBound = null;
+        Double lowerBound = null;
 
 
-        ArrayList<Number> keys = new ArrayList<Number>(keyset);
-        keys.sort(Comparator.comparingDouble(a -> (int) a));
+        ArrayList<Double> keys = new ArrayList<>(keyset);
+        keys.sort(Comparator.comparingDouble(a -> (double) a));
 
         int i = 0;
 
-        for(Number a_key : keys)
+        for(Double a_key : keys)
         {
-
             if(key.floatValue() < a_key.floatValue())
             {
                 upperBound = a_key;
@@ -96,16 +165,16 @@ public class InterpolatingHashTable
 
         if(upperBound == null) // i.e all the keys are smaller
         {
-            return table.get(keys.get(keys.size() - 1)).doubleValue(); // get the f(x) for the biggest x. we can't do real interpolation
+            return table.get(keys.get(keys.size() - 1)); // get the f(x) for the biggest x. we can't do real interpolation
         }
         else if(lowerBound == null) // i.e all the keys are bigger
         {
-            return table.get(keys.get(0)).doubleValue(); // get the f(x) for the smallest x. we can't do real interpolation.
+            return table.get(keys.get(0)); // get the f(x) for the smallest x. we can't do real interpolation.
         }
         else // we can do real interpolation
         {
-            double dx = upperBound.doubleValue() - lowerBound.doubleValue();
-            double dy = table.get(upperBound).doubleValue() - table.get(lowerBound).doubleValue();
+            double dx = upperBound - lowerBound;
+            double dy = table.get(upperBound) - table.get(lowerBound);
 
             double slope = dy / dx; // remember? rise over run. change in y over change in x.
 
@@ -114,8 +183,7 @@ public class InterpolatingHashTable
             // here, m is slope
             // upperBound is x1
             // table.get(upperBound) is y1
-            double value = slope * key.doubleValue() - slope * upperBound.doubleValue() + table.get(upperBound).doubleValue();
-            return value;
+            return ((slope * key) - (slope * upperBound)) + table.get(upperBound);
         }
     }
 }
