@@ -51,6 +51,8 @@ public class RobotMap
             public static final int INTAKE_IN = 6;
             public static final int INTAKE_OUT = 4;
 
+            public static final int DEPLOY_BUTTERFLY = 7;
+
             private Button() { }
         }
     }
@@ -110,6 +112,7 @@ public class RobotMap
         public static final int TRANSMISSION_SWITCH = 0;
         public static final int CLIMBER_SOLENOID = 1;
         public static final int ACTIVE_GRABBER = 2;
+        public static final int BUTTERFLY_SOLENOID = 3;
 
 //        public static final int BUTTERFLY_RELEASE = 3;
 

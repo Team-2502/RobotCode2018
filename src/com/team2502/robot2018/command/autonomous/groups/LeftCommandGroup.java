@@ -43,9 +43,9 @@ public class LeftCommandGroup extends CommandGroup
                         addParallel(new ActiveIntakeDown(0.7, 0.5));
                         addSequential(new PurePursuitCommand(straightSwitch, Constants.LOOKAHEAD_DISTANCE_FT, Constants.STOP_DIST_TOLERANCE_FT));
                         addSequential(new WaitCommand(0.8F));
-                        addSequential(new RotateAutonStationary(45));
+                        addSequential(new RotateAutonStationary(55));
                         addSequential(new ElevatorUpAutonCommand(2.7F));
-                        addSequential(new DeadreckoningDrive(1,3));
+                        addSequential(new DeadreckoningDrive(0.5F,2));
 //                        addSequential(new PurePursuitCommand(forward, Constants.LOOKAHEAD_DISTANCE_FT, Constants.STOP_DIST_TOLERANCE_FT));
                         addSequential(new ShootCubeCommand(1,0.5F));
                         break;

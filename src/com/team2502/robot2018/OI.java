@@ -23,6 +23,8 @@ public final class OI
 
     private static final Button CLIMBER = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.CLIMBER);
 
+    private static final Button DEPLOY_BUTTERFLY = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.DEPLOY_BUTTERFLY);
+
     private static final Button SHIFT_GEARBOX_ELEV = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.SHIFT_GEARBOX_ELEV);
 
     private OI() { }
@@ -44,6 +46,8 @@ public final class OI
         CLIMBER.whileHeld(new ClimberCommand(1.0));
 
         SHIFT_GEARBOX_ELEV.whenPressed(new ShiftElevatorCommand());
+        DEPLOY_BUTTERFLY.whenPressed(new ButterflySetCommand(true));
+        DEPLOY_BUTTERFLY.whenReleased(new ButterflySetCommand(false));
     }
 
     public static boolean joysThreshold(double threshold, boolean above)

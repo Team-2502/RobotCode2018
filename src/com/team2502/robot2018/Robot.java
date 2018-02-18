@@ -11,6 +11,7 @@ import com.team2502.robot2018.subsystem.ActiveIntakeSubsystem;
 import com.team2502.robot2018.subsystem.DriveTrainSubsystem;
 import com.team2502.robot2018.subsystem.ElevatorSubsystem;
 import com.team2502.robot2018.subsystem.solenoid.ActiveIntakeSolenoid;
+import com.team2502.robot2018.subsystem.solenoid.ButterflySolenoid;
 import com.team2502.robot2018.subsystem.solenoid.ClimberSolenoid;
 import com.team2502.robot2018.subsystem.solenoid.TransmissionSolenoid;
 import com.team2502.robot2018.utils.Files;
@@ -39,6 +40,7 @@ public final class Robot extends IterativeRobot
     public static ElevatorSubsystem ELEVATOR;
     public static ActiveIntakeSolenoid ACTIVE_INTAKE_SOLENOID;
     public static ClimberSolenoid CLIMBER_SOLENOID;
+    public static ButterflySolenoid BUTTERFLY_SOLENOID;
     public static TransmissionSolenoid TRANSMISSION_SOLENOID;
     public static AHRS NAVX;
 
@@ -66,6 +68,7 @@ public final class Robot extends IterativeRobot
         ELEVATOR = new ElevatorSubsystem();
         ACTIVE_INTAKE_SOLENOID = new ActiveIntakeSolenoid();
         CLIMBER_SOLENOID = new ClimberSolenoid();
+        BUTTERFLY_SOLENOID = new ButterflySolenoid();
         TRANSMISSION_SOLENOID = new TransmissionSolenoid();
 
         OI.init();
