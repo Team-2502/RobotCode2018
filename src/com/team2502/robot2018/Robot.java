@@ -1,7 +1,8 @@
 package com.team2502.robot2018;
 
 import com.kauailabs.navx.frc.AHRS;
-import com.team2502.robot2018.command.autonomous.groups.TestCommandGroup;
+import com.team2502.robot2018.command.autonomous.AutonStrategy;
+import com.team2502.robot2018.command.autonomous.groups.LeftCommandGroup;
 import com.team2502.robot2018.sendables.SendableDriveStrategyType;
 import com.team2502.robot2018.sendables.SendableDriveTrain;
 import com.team2502.robot2018.sendables.SendableNavX;
@@ -30,6 +31,7 @@ public final class Robot extends IterativeRobot
     public static long SHIFTED;
     public static String GAME_DATA = "...";
 
+    public static AutonStrategy AUTON_STRATEGY;
     public static DriveTrainSubsystem DRIVE_TRAIN;
     public static ActiveIntakeSubsystem ACTIVE_INTAKE;
     public static Compressor COMPRESSOR;
@@ -52,6 +54,9 @@ public final class Robot extends IterativeRobot
     @Override
     public void robotInit()
     {
+
+        AUTON_STRATEGY = AutonStrategy.SCALE;
+
         Log.createLogger(true);
 
         COMPRESSOR = new Compressor();
@@ -132,7 +137,8 @@ public final class Robot extends IterativeRobot
         // 144 inches front = 12 ft
         // 53 inches left/right = 4.42 ft
 
-        Scheduler.getInstance().add(new TestCommandGroup());
+//        Scheduler.getInstance().add(new CenterCommandGroup());
+        Scheduler.getInstance().add(new LeftCommandGroup());
     }
 
     /**

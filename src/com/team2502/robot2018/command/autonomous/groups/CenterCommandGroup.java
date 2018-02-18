@@ -30,12 +30,15 @@ public class CenterCommandGroup extends CommandGroup
         {
             case "LL":
             {
+
                 addSequential(new PurePursuitCommand(Paths.Center.leftSwitch, Constants.LOOKAHEAD_DISTANCE_FT, Constants.STOP_DIST_TOLERANCE_FT));
+
                 break;
             }
 
             case "LR":
             {
+
                 addSequential(new PurePursuitCommand(Paths.Center.leftSwitch, Constants.LOOKAHEAD_DISTANCE_FT, Constants.STOP_DIST_TOLERANCE_FT));
                 break;
             }
@@ -53,7 +56,7 @@ public class CenterCommandGroup extends CommandGroup
             }
         }
 
-        addSequential(new ElevatorUpAutonCommand(1.1F));
+        addSequential(new ElevatorUpAutonCommand(.8F));
         addSequential(new ActiveIntakeDown(0.35, 1));
         addSequential(new ShootCubeCommand(1));
     }
