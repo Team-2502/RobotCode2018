@@ -398,9 +398,21 @@ public final class MathUtils
          */
         public static boolean between(final float a, final float x, final float b)
         {
-            return (a <= x && x <= b) || (b <= x && x <= a);
+            return bounded(a,x,b) || bounded(b,x,a);
         }
 
+        // TODO: between and bounded are probably not the best names
+        public static boolean bounded(final float a, final  float x, final  float b)
+        {
+            return a <= x && x<= b;
+        }
+
+        /**
+         * @deprecated Use {@link Math#signum(float)}
+         * @param a
+         * @param b
+         * @return
+         */
         public static boolean positiveMultiplication(final float a, final float b)
         {
             return a >= 0 && b >= 0 || a < 0 && b < 0;
