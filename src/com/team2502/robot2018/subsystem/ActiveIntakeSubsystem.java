@@ -50,7 +50,7 @@ public class ActiveIntakeSubsystem extends Subsystem
     }
 
     public void rotateIntake(double x)
-    { rotateIntake.set(ControlMode.PercentOutput, x); }
+    { rotateIntake.set(ControlMode.PercentOutput, -x); }
 
     @Override
     protected void initDefaultCommand()

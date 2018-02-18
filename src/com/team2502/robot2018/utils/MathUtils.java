@@ -409,6 +409,19 @@ public final class MathUtils
 
     public static class Kinematics
     {
+
+        /**
+         * Get the 1D position of the robot given p0, v0, a0, and dt. Uses elementary physics formulas.
+         * @param p0
+         * @param v0
+         * @param a0
+         * @param dt
+         * @return
+         */
+        public static float getPos(float p0, float v0, float a0, float dt)
+        {
+            return p0 + v0*dt +1/2*a0*dt*dt;
+        }
         public static float getAngularVel(float vL, float vR, float l)
         {
             return (vR - vL) / l;

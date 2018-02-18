@@ -35,13 +35,13 @@ public final class OI
         ELEV_DOWN.whileHeld(new ElevatorCommand(-0.5));
 
         // Active Intake buttons
-        INTAKE_IN.whileHeld(new ActiveIntakeCommand(0.6));
-        INTAKE_OUT.whileHeld(new ActiveIntakeCommand(-0.6));
+        INTAKE_IN.whileHeld(new ActiveIntakeCommand(1.0));
+        INTAKE_OUT.whileHeld(new ActiveIntakeCommand(-1.0));
 
         OPEN_INTAKE.whenPressed(new GrabCommand());
 
         // Climber button (wait to re-implement until elevator is working properly
-        CLIMBER.whileHeld(new ClimberCommand(1));
+        CLIMBER.whileHeld(new ClimberCommand(1.0));
 
         SHIFT_GEARBOX_ELEV.whenPressed(new ShiftElevatorCommand());
     }
