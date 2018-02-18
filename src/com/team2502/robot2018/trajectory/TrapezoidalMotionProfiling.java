@@ -5,12 +5,12 @@ public class TrapezoidalMotionProfiling
     final float vel_max, v_start, v_end, t_total;
     float accel;
     /**
-     * accelerate to time t_1
+     * accelerate to atTime t_1
      */
     float t_1;
 
     /**
-     * decelerate after time t_1
+     * decelerate after atTime t_1
      */
     float t_2;
 
@@ -35,7 +35,7 @@ public class TrapezoidalMotionProfiling
         float t_acc = (vel_max - v_start) / accel;
         float t_dec = (vel_max - v_end) / accel;
         float t_max = t_total - t_acc - t_dec;
-        if(t_max < 0) // not enough time for trapezoidal motion profiling
+        if(t_max < 0) // not enough atTime for trapezoidal motion profiling
         {
             if(t_dec > t_total)
             {
