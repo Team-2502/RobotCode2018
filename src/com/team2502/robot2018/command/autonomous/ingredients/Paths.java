@@ -66,6 +66,17 @@ public class Paths
      */
     public static class Right
     {
+        public static final List<Waypoint> rightSwitch = Arrays.asList(
+                new Waypoint(new ImmutableVector2f(0, 0), 9),
+                new Waypoint(new ImmutableVector2f(0, 5), 9),
+                new Waypoint(new ImmutableVector2f(0, 7), 0.2F)
+                                                                     );
+        public static final List<Waypoint> rightScale = Arrays.asList(
+                new Waypoint(new ImmutableVector2f(0, 0), 6),
+                new Waypoint(new ImmutableVector2f(1.0F, 10.5F),9F),
+                new Waypoint(new ImmutableVector2f(1.0F, 22.5F), 9F),
+                new Waypoint(new ImmutableVector2f(1.0F, 26.5F), 2F)
+                                                     );
 
     }
 

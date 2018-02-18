@@ -311,6 +311,10 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         return Math.abs(getTanVel());
     }
 
+    /**
+     * Get tangent velocity
+     * @return The tangent velocity
+     */
     public float getTanVel()
     {
         return (getLeftVel() + getRightVel()) / 2;

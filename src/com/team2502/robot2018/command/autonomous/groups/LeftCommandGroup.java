@@ -20,50 +20,65 @@ public class LeftCommandGroup extends CommandGroup
         switch(AUTO_GAME_DATA)
         {
             case "LL":
-            {
                 switch(Robot.AUTON_STRATEGY)
                 {
                     case SCALE: // WARNING!!! the active needs to be half way down so it will not get caught
                     {
-                        addParallel(new ActiveIntakeDown(0.7, 0.5));
-                        addSequential(new PurePursuitCommand(Paths.Left.leftScale, Constants.LOOKAHEAD_DISTANCE_FT, Constants.STOP_DIST_TOLERANCE_FT));
-                        addSequential(new WaitCommand(0.8F));
-                        addSequential(new RotateAutonStationary(55));
-                        addSequential(new ElevatorUpAutonCommand(2.7F));
-                        addSequential(new DeadreckoningDrive(0.5F, 2));
-
+                        goScaleLeft();
                         break;
                     }
                     case SWITCH:
                     {
-                        addSequential(new PurePursuitCommand(Paths.Left.leftSwitch, Constants.LOOKAHEAD_DISTANCE_FT, Constants.STOP_DIST_TOLERANCE_FT));
-                        addSequential(new ElevatorUpAutonCommand(.8F));
-                        addSequential(new ActiveIntakeDown(0.35, 1));
-
+                        goSwitch();
                         break;
                     }
                 }
                 break;
-            }
-
             case "LR":
-            {
-                addSequential(new PurePursuitCommand(Paths.Left.leftSwitch, Constants.LOOKAHEAD_DISTANCE_FT, Constants.STOP_DIST_TOLERANCE_FT));
-                addSequential(new ElevatorUpAutonCommand(.8F));
-                addSequential(new ActiveIntakeDown(0.35, 1));
+                goSwitch();
                 break;
-            }
+
 
             case "RL":
+                goScaleLeft();
                 break;
 
             case "RR":
-                break;
-
-            default:
+                crossLine();
                 break;
         }
+        emitCube();
+
+    }
+
+    private void crossLine()
+    {
+        addSequential(new DriveTime(7, 0.4F));
+    }
+
+    private void goSwitch()
+    {
+        addSequential(new PurePursuitCommand(Paths.Left.leftSwitch, Constants.LOOKAHEAD_DISTANCE_FT, Constants.STOP_DIST_TOLERANCE_FT));
+        addSequential(new ElevatorUpAutonCommand(.8F));
+        addSequential(new ActiveIntakeDown(0.35, 1));
+
+    }
+
+    private void goScaleLeft()
+    {
+        addParallel(new ActiveIntakeDown(0.7, 0.5));
+        addSequential(new PurePursuitCommand(Paths.Left.leftScale, Constants.LOOKAHEAD_DISTANCE_FT, Constants.STOP_DIST_TOLERANCE_FT));
+        addSequential(new WaitCommand(0.8F));
+        addSequential(new RotateAutonStationary(55));
+        addSequential(new ElevatorUpAutonCommand(2.7F));
+        addSequential(new DeadreckoningDrive(0.5F, 2));
+
+    }
+
+    private void emitCube()
+    {
         addSequential(new ShootCubeCommand(1));
     }
+
 
 }
