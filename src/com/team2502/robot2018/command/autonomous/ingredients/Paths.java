@@ -39,4 +39,21 @@ public class Paths
                 new Waypoint(new ImmutableVector2f(-6.2F, 12), 2F)
                                                      );
     }
+
+    /**
+     * Organic gluten-free paths for when your robot is placed on the left
+     */
+    public static class Left
+    {
+
+    }
+
+    /**
+     * GMO-free soy-based paths for when your robot is placed on the right
+     */
+    public static class Right
+    {
+
+    }
+
 }
