@@ -36,7 +36,7 @@ public final class OI
 
         // Active Intake buttons
         INTAKE_IN.whileHeld(new ActiveIntakeCommand(1.0));
-        INTAKE_OUT.whileHeld(new ActiveIntakeCommand(-1.0));
+        INTAKE_OUT.whileHeld(new ActiveIntakeCommand(-0.5));
 
         OPEN_INTAKE.whenPressed(new GrabCommand());
 

@@ -1,9 +1,8 @@
 package com.team2502.robot2018;
 
 import com.kauailabs.navx.frc.AHRS;
-import com.team2502.robot2018.command.autonomous.ActiveIntakeDown;
-import com.team2502.robot2018.command.autonomous.PurePursuitCommand;
-import com.team2502.robot2018.command.autonomous.groups.TestCommandGroup;
+import com.team2502.robot2018.command.autonomous.AutonStrategy;
+import com.team2502.robot2018.command.autonomous.groups.LeftCommandGroup;
 import com.team2502.robot2018.sendables.SendableDriveStrategyType;
 import com.team2502.robot2018.sendables.SendableDriveTrain;
 import com.team2502.robot2018.sendables.SendableNavX;
@@ -14,7 +13,6 @@ import com.team2502.robot2018.subsystem.ElevatorSubsystem;
 import com.team2502.robot2018.subsystem.solenoid.ActiveIntakeSolenoid;
 import com.team2502.robot2018.subsystem.solenoid.ClimberSolenoid;
 import com.team2502.robot2018.subsystem.solenoid.TransmissionSolenoid;
-import com.team2502.robot2018.trajectory.Waypoint;
 import com.team2502.robot2018.utils.Files;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -24,11 +22,8 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import logger.Log;
-import org.joml.ImmutableVector2f;
 
 import java.io.PrintWriter;
-import java.util.Arrays;
-import java.util.List;
 
 public final class Robot extends IterativeRobot
 {
@@ -36,6 +31,7 @@ public final class Robot extends IterativeRobot
     public static long SHIFTED;
     public static String GAME_DATA = "...";
 
+    public static AutonStrategy AUTON_STRATEGY;
     public static DriveTrainSubsystem DRIVE_TRAIN;
     public static ActiveIntakeSubsystem ACTIVE_INTAKE;
     public static Compressor COMPRESSOR;
@@ -58,6 +54,9 @@ public final class Robot extends IterativeRobot
     @Override
     public void robotInit()
     {
+
+        AUTON_STRATEGY = AutonStrategy.SCALE;
+
         Log.createLogger(true);
 
         COMPRESSOR = new Compressor();
@@ -138,7 +137,8 @@ public final class Robot extends IterativeRobot
         // 144 inches front = 12 ft
         // 53 inches left/right = 4.42 ft
 
-        Scheduler.getInstance().add(new TestCommandGroup());
+//        Scheduler.getInstance().add(new CenterCommandGroup());
+        Scheduler.getInstance().add(new LeftCommandGroup());
     }
 
     /**

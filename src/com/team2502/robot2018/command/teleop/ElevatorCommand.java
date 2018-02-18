@@ -19,7 +19,7 @@ public class ElevatorCommand extends Command
     protected void execute()
     {
         Robot.ELEVATOR.moveElevator(_speed);
-        Log.info("Setting elevator speed.");
+//        Log.info("Setting elevator speed.");
     }
 
     @Override

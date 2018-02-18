@@ -31,7 +31,7 @@ public class CenterCommandGroup extends CommandGroup
                 Robot.NAVX.reset();
 
                 addSequential(new PurePursuitCommand(straightSwitch, Constants.LOOKAHEAD_DISTANCE_FT, Constants.STOP_DIST_TOLERANCE_FT));
-                addSequential(new ElevatorUpAutonCommand(1.1F));
+                addSequential(new ElevatorUpAutonCommand(.8F));
                 addSequential(new ActiveIntakeDown(0.35, 1));
                 addSequential(new ShootCubeCommand(1));
                 break;
@@ -48,7 +48,7 @@ public class CenterCommandGroup extends CommandGroup
                 Robot.NAVX.reset();
 
                 addSequential(new PurePursuitCommand(straightSwitch, Constants.LOOKAHEAD_DISTANCE_FT, Constants.STOP_DIST_TOLERANCE_FT));
-                addSequential(new ElevatorUpAutonCommand(1.1F));
+                addSequential(new ElevatorUpAutonCommand(.8F));
                 addSequential(new ActiveIntakeDown(0.35, 1));
                 addSequential(new ShootCubeCommand(1));
                 break;
@@ -65,7 +65,7 @@ public class CenterCommandGroup extends CommandGroup
                 Robot.NAVX.reset();
 
                 addSequential(new PurePursuitCommand(straightSwitch, Constants.LOOKAHEAD_DISTANCE_FT, Constants.STOP_DIST_TOLERANCE_FT));
-                addSequential(new ElevatorUpAutonCommand(1.1F));
+                addSequential(new ElevatorUpAutonCommand(.8F));
                 addSequential(new ActiveIntakeDown(0.35, 1));
                 addSequential(new ShootCubeCommand(1));
                 break;
@@ -82,7 +82,7 @@ public class CenterCommandGroup extends CommandGroup
                 Robot.NAVX.reset();
 //        Scheduler.getInstance().add(new CalibrateRobotCommand());
                 addSequential(new PurePursuitCommand(straightSwitch, Constants.LOOKAHEAD_DISTANCE_FT, Constants.STOP_DIST_TOLERANCE_FT));
-                addSequential(new ElevatorUpAutonCommand(1.1F));
+                addSequential(new ElevatorUpAutonCommand(.8F));
                 addSequential(new ActiveIntakeDown(0.35, 1));
                 addSequential(new ShootCubeCommand(1));
                 break;
