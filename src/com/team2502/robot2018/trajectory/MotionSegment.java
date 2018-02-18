@@ -17,6 +17,11 @@ public class MotionSegment
         this.end = end;
     }
 
+    public float length()
+    {
+        return getEnd().getPosition() - getStart().getPosition();
+    }
+
     public MotionState1D getStart()
     {
         return start;
