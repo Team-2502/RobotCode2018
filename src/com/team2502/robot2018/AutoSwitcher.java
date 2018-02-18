@@ -1,5 +1,6 @@
 package com.team2502.robot2018;
 
+import com.team2502.robot2018.command.autonomous.ingredients.Paths;
 import com.team2502.robot2018.command.autonomous.ingredients.PurePursuitCommand;
 import com.team2502.robot2018.command.autonomous.groups.CenterCommandGroup;
 import com.team2502.robot2018.command.autonomous.groups.LeftCommandGroup;
@@ -12,44 +13,25 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.joml.ImmutableVector2f;
 
+import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.List;
 
 class AutoSwitcher
 {
     private static SendableChooser<AutoMode> autoChooser;
-    private static List<Waypoint> waypoints = Arrays.asList(new Waypoint(new ImmutableVector2f(0, 0), 0));
-
-
-    static void putToSmartDashboard()
-    {
-        autoChooser = new SendableChooser<AutoMode>();
-
-        for(int i = 0; i < AutoMode.values().length; i++)
-        {
-            AutoMode mode = AutoMode.values()[i];
-            if(i == 0) { autoChooser.addDefault(mode.name, mode); }
-            else { autoChooser.addObject(mode.name, mode); }
-        }
-
-        SmartDashboard.putData("Autonomi:", autoChooser);
-    }
-
-    static Command getAutoInstance() { return autoChooser.getSelected().getInstance(); }
 
     public enum AutoMode
     {
-//        PURE_PURSUIT("PurePursuit", new PurePursuitCommand(waypoints)),
-//        CALIBRATE("Calibrate", new CalibrateRobotCommand()),
-//        DEMO("DriveTime", new DriveTime(3F, 0.2F)),
-        CENTERCOMMANDGROUP("Center", new CenterCommandGroup()),
-        LEFTCOMMANDGROUP("Left", new LeftCommandGroup()),
-        RIGHTCOMMANDGROUP("Right", new RightCommandGroup());
+        CENTERAUTO("Center", CenterCommandGroup.class),
+        LEFTAUTO("Left", LeftCommandGroup.class),
+        RIGHTAUTO("Right", RightCommandGroup.class);
 
-        public final Command autoCommand;
-        public final String name;
 
-        AutoMode(String name, Command autoCommand)
+        private Class<? extends Command> autoCommand;
+        private String name;
+
+        AutoMode(String name, Class<? extends Command> autoCommand)
         {
             this.autoCommand = autoCommand;
             this.name = name;
@@ -57,7 +39,24 @@ class AutoSwitcher
 
         public Command getInstance()
         {
-            return autoCommand;
+            Command instance;
+            try { instance = autoCommand.newInstance(); } catch(InstantiationException | IllegalAccessException e) { return null; }
+            return instance;
         }
     }
+
+    static void putToSmartDashboard()
+    {
+        autoChooser = new SendableChooser<AutoMode>();
+
+        for(int i = 0; i < AutoMode.values().length; i++)
+        {
+            AutoMode mode = AutoMode.values()[ i ];
+            if(i == 0) { autoChooser.addDefault(mode.name, mode); } else { autoChooser.addObject(mode.name, mode); }
+        }
+
+        SmartDashboard.putData("auto_modes", autoChooser);
+    }
+
+    static Command getAutoInstance() { return autoChooser.getSelected().getInstance(); }
 }

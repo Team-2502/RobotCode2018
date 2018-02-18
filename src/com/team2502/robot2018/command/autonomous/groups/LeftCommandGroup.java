@@ -47,7 +47,7 @@ public class LeftCommandGroup extends CommandGroup
                 crossLine();
                 break;
         }
-        emitCube();
+
 
     }
 
@@ -61,6 +61,7 @@ public class LeftCommandGroup extends CommandGroup
         addSequential(new PurePursuitCommand(Paths.Left.leftSwitch, Constants.LOOKAHEAD_DISTANCE_FT, Constants.STOP_DIST_TOLERANCE_FT));
         addSequential(new ElevatorUpAutonCommand(.8F));
         addSequential(new ActiveIntakeDown(0.35, 1));
+        emitCube();
 
     }
 
@@ -72,12 +73,14 @@ public class LeftCommandGroup extends CommandGroup
         addSequential(new RotateAutonStationary(55));
         addSequential(new ElevatorUpAutonCommand(2.7F));
         addSequential(new DeadreckoningDrive(0.5F, 2));
+        emitCube();
 
     }
 
     private void emitCube()
     {
         addSequential(new ShootCubeCommand(1));
+
     }
 
 

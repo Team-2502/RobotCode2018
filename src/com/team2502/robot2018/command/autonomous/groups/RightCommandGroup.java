@@ -47,7 +47,7 @@ public class RightCommandGroup extends CommandGroup
                 break;
 
         }
-        emitCube();
+
     }
 
     private void goSwitch()
@@ -55,6 +55,7 @@ public class RightCommandGroup extends CommandGroup
         addSequential(new PurePursuitCommand(Paths.Right.rightSwitch, Constants.LOOKAHEAD_DISTANCE_FT, Constants.STOP_DIST_TOLERANCE_FT));
         addSequential(new ElevatorUpAutonCommand(.8F));
         addSequential(new ActiveIntakeDown(0.35, 1));
+        emitCube();
     }
 
     private void goScaleRight()
@@ -66,15 +67,18 @@ public class RightCommandGroup extends CommandGroup
         addSequential(new RotateAutonStationary(-55));
         addSequential(new ElevatorUpAutonCommand(2.7F));
         addSequential(new DeadreckoningDrive(0.5F, 2));
+        emitCube();
     }
 
     private void crossLine()
     {
         addSequential(new DriveTime(7, 0.4F));
+
     }
 
     private void emitCube()
     {
         addSequential(new ShootCubeCommand(1));
+
     }
 }

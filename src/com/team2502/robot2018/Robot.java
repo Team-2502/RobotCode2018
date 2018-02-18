@@ -1,6 +1,7 @@
 package com.team2502.robot2018;
 
 import com.kauailabs.navx.frc.AHRS;
+import com.team2502.robot2018.command.autonomous.groups.CenterCommandGroup;
 import com.team2502.robot2018.command.autonomous.ingredients.AutonStrategy;
 import com.team2502.robot2018.command.autonomous.groups.LeftCommandGroup;
 import com.team2502.robot2018.sendables.SendableDriveStrategyType;
@@ -141,6 +142,7 @@ public final class Robot extends IterativeRobot
         // 53 inches left/right = 4.42 ft
 
 //        Scheduler.getInstance().add(new CenterCommandGroup());
+
         Scheduler.getInstance().add(AutoSwitcher.getAutoInstance());
     }
 

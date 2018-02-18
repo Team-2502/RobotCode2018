@@ -33,17 +33,19 @@ public class CenterCommandGroup extends CommandGroup
             goSwitchRight();
         }
 
-        emitCube();
+
     }
 
     private void goSwitchLeft()
     {
         addSequential(new PurePursuitCommand(Paths.Center.leftSwitch, Constants.LOOKAHEAD_DISTANCE_FT, Constants.STOP_DIST_TOLERANCE_FT));
+        emitCube();
     }
 
     private void goSwitchRight()
     {
         addSequential(new PurePursuitCommand(Paths.Center.rightSwitch, Constants.LOOKAHEAD_DISTANCE_FT, Constants.STOP_DIST_TOLERANCE_FT));
+        emitCube();
     }
 
     private void emitCube()
