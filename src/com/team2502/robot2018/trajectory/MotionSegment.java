@@ -32,6 +32,8 @@ public class MotionSegment
         return end;
     }
 
+
+
     public boolean valid()
     {
         return MathUtils.epsilonEquals(start.extrapForPositionAtTime(end.getTime()),end.getPosition());
