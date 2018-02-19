@@ -2,7 +2,6 @@ package com.team2502.robot2018.command.teleop;
 
 import com.team2502.robot2018.Robot;
 import edu.wpi.first.wpilibj.command.Command;
-import logger.Log;
 
 public class ElevatorCommand extends Command
 {
@@ -19,7 +18,7 @@ public class ElevatorCommand extends Command
     protected void execute()
     {
         Robot.ELEVATOR.moveElevator(_speed);
-        Log.info("Setting elevator speed.");
+//        Log.info("Setting elevator speed.");
     }
 
     @Override

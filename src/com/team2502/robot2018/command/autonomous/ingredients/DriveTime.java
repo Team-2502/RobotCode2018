@@ -10,7 +10,15 @@ public class DriveTime extends Command
     private float voltage;
 
     /**
-     * Drive inconsistently
+     * Veer off to the side inconsistently
+     * <p>
+     * <br>
+     * <p>
+     * Play Russian Roulette with the robot
+     * <p>
+     * <br>
+     * <p>
+     * Invest all of your money into the Lehman Brothersgi
      *
      * @param timeout How long we should put you in the timeout corner for using this class
      * @param voltage How much voltage we should give the robot to restart the robot's heart, as it got a heart attack because you used this class.

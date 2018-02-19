@@ -23,6 +23,10 @@ public final class OI
 
     private static final Button CLIMBER = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.CLIMBER);
 
+    private static final Button FORCE_LOW_GEAR = new JoystickButton(JOYSTICK_DRIVE_RIGHT, RobotMap.Joystick.Button.FORCE_LOW_GEAR);
+
+    private static final Button DEPLOY_BUTTERFLY = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.DEPLOY_BUTTERFLY);
+
     private static final Button SHIFT_GEARBOX_ELEV = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.SHIFT_GEARBOX_ELEV);
 
     private OI() { }
@@ -30,19 +34,24 @@ public final class OI
     public static void init()
     {
         // Elevator buttons
+
         ELEV_UP.whileHeld(new ElevatorCommand(1.0));
-        ELEV_DOWN.whileHeld(new ElevatorCommand( -0.4));
+        ELEV_DOWN.whileHeld(new ElevatorCommand(-0.5));
 
         // Active Intake buttons
-        INTAKE_IN.whileHeld(new ActiveIntakeCommand(0.6));
-        INTAKE_OUT.whileHeld(new ActiveIntakeCommand(-0.6));
+        INTAKE_IN.whileHeld(new ActiveIntakeCommand(1.0));
+        INTAKE_OUT.whileHeld(new ActiveIntakeCommand(-0.5));
 
         OPEN_INTAKE.whenPressed(new GrabCommand());
 
         // Climber button (wait to re-implement until elevator is working properly
-        CLIMBER.whileHeld(new ClimberCommand(1));
+        CLIMBER.whileHeld(new ClimberCommand(1.0));
 
         SHIFT_GEARBOX_ELEV.whenPressed(new ShiftElevatorCommand());
+        DEPLOY_BUTTERFLY.whenPressed(new ButterflySetCommand(true));
+        DEPLOY_BUTTERFLY.whenReleased(new ButterflySetCommand(false));
+
+        FORCE_LOW_GEAR.whenPressed(new ShiftDriveTrainCommand());
     }
 
     public static boolean joysThreshold(double threshold, boolean above)

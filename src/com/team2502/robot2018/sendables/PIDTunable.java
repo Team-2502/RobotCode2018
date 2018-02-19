@@ -21,4 +21,6 @@ public interface PIDTunable
 
     void setkF(double kF);
 
+    void setPID();
+
 }

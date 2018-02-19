@@ -1,17 +1,12 @@
 package com.team2502.robot2018.command.teleop;
 
 import com.kauailabs.navx.frc.AHRS;
-import com.team2502.robot2018.Constants;
-import com.team2502.robot2018.OI;
 import com.team2502.robot2018.Robot;
-import com.team2502.robot2018.RobotMap;
 import com.team2502.robot2018.subsystem.DriveTrainSubsystem;
 import com.team2502.robot2018.subsystem.solenoid.TransmissionSolenoid;
 import com.team2502.robot2018.trajectory.localization.EncoderDifferentialDriveLocationEstimator;
-import com.team2502.robot2018.utils.MathUtils;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import logger.Log;
 import org.joml.ImmutableVector2f;
 import org.joml.Vector2f;
 
@@ -81,45 +76,6 @@ public class DriveCommand extends Command
         SmartDashboard.putBoolean("DT: AutoShifting Enabled?", !transmission.disabledAutoShifting);
         driveTrainSubsystem.drive();
 
-        if(!transmission.disabledAutoShifting)
-        {
-            // Check that at least 1/2 second has passed since last shifting
-            if((System.currentTimeMillis() - Robot.SHIFTED) >= 500)
-            {
-                // Do the opposite if the driver is forcing a shift
-                if(OI.JOYSTICK_DRIVE_RIGHT.getRawButton(RobotMap.Joystick.Button.FORCE_LOW_GEAR))
-                {
-                    Log.warn("Shifting down forced by driver.");
-                    transmission.setGear(false);
-                }
-                else // If the driver is cool with auto shifting doing its action
-                {
-                    // Make sure that we're going mostly straight
-                    if(driveTrainSubsystem.turningFactor() < 0.1F)
-                    {
-                        float accel = navx.getRawAccelY();
-                        float speed = driveTrainSubsystem.avgVel();
-
-                        // Shift up if we are accelerating and going fast and the driver is putting the joystick at least 80% forward or backward
-                        if(Math.abs(accel) > 0.15F && speed > Constants.SHIFT_UP_THRESHOLD && OI.joysThreshold(0.8D, true))
-                        {
-                            if(!transmission.highGear) { Log.info("Shifting up."); }
-                            transmission.setGear(true);
-                        }
-                        else if(!MathUtils.signSame(accel, driveTrainSubsystem.rightRearTalonEnc.getSelectedSensorVelocity(0)) && OI.joysThreshold(0.8D, false)) /* If we are not accelerating very fast but the driver is still pushing forward we shift down because it is probably a pushing match */
-                        {
-                            if(transmission.highGear) { Log.info("Shifting down because you're a bad driver."); }
-                            transmission.setGear(false);
-                        }
-                        else if(OI.joysThreshold(30.0D, false) && speed < Constants.SHIFT_DOWN_THRESHOLD) /* If we're going slow and the driver wants it to be that way we shift down */
-                        {
-                            if(transmission.highGear) { Log.info("Shifting down because slow."); }
-                            transmission.setGear(false);
-                        }
-                    }
-                }
-            }
-        }
     }
 
     @Override

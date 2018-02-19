@@ -1,7 +1,7 @@
 package com.team2502.robot2018;
 
 import com.kauailabs.navx.frc.AHRS;
-import com.team2502.robot2018.command.autonomous.PurePursuitCommand;
+import com.team2502.robot2018.command.autonomous.ingredients.AutonStrategy;
 import com.team2502.robot2018.sendables.SendableDriveStrategyType;
 import com.team2502.robot2018.sendables.SendableDriveTrain;
 import com.team2502.robot2018.sendables.SendableNavX;
@@ -10,6 +10,7 @@ import com.team2502.robot2018.subsystem.ActiveIntakeSubsystem;
 import com.team2502.robot2018.subsystem.DriveTrainSubsystem;
 import com.team2502.robot2018.subsystem.ElevatorSubsystem;
 import com.team2502.robot2018.subsystem.solenoid.ActiveIntakeSolenoid;
+import com.team2502.robot2018.subsystem.solenoid.ButterflySolenoid;
 import com.team2502.robot2018.subsystem.solenoid.ClimberSolenoid;
 import com.team2502.robot2018.subsystem.solenoid.TransmissionSolenoid;
 import com.team2502.robot2018.utils.Files;
@@ -21,11 +22,8 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import logger.Log;
-import org.joml.ImmutableVector2f;
 
 import java.io.PrintWriter;
-import java.util.Arrays;
-import java.util.List;
 
 public final class Robot extends IterativeRobot
 {
@@ -33,6 +31,7 @@ public final class Robot extends IterativeRobot
     public static long SHIFTED;
     public static String GAME_DATA = "...";
 
+    public static AutonStrategy AUTON_STRATEGY;
     public static DriveTrainSubsystem DRIVE_TRAIN;
     public static ActiveIntakeSubsystem ACTIVE_INTAKE;
     public static Compressor COMPRESSOR;
@@ -40,6 +39,7 @@ public final class Robot extends IterativeRobot
     public static ElevatorSubsystem ELEVATOR;
     public static ActiveIntakeSolenoid ACTIVE_INTAKE_SOLENOID;
     public static ClimberSolenoid CLIMBER_SOLENOID;
+    public static ButterflySolenoid BUTTERFLY_SOLENOID;
     public static TransmissionSolenoid TRANSMISSION_SOLENOID;
     public static AHRS NAVX;
 
@@ -55,6 +55,9 @@ public final class Robot extends IterativeRobot
     @Override
     public void robotInit()
     {
+        // TODO: needs to be changed in shuffleboard
+        AUTON_STRATEGY = AutonStrategy.SCALE;
+
         Log.createLogger(true);
 
         COMPRESSOR = new Compressor();
@@ -64,11 +67,12 @@ public final class Robot extends IterativeRobot
         ELEVATOR = new ElevatorSubsystem();
         ACTIVE_INTAKE_SOLENOID = new ActiveIntakeSolenoid();
         CLIMBER_SOLENOID = new ClimberSolenoid();
+        BUTTERFLY_SOLENOID = new ButterflySolenoid();
         TRANSMISSION_SOLENOID = new TransmissionSolenoid();
 
         OI.init();
 
-        AutoSwitcher.putToSmartDashboard();
+        AutoStartLocationSwitcher.putToSmartDashboard();
 
         SendableDriveTrain.init();
         DashboardData.addUpdater(SendableDriveTrain.getInstance());
@@ -132,19 +136,12 @@ public final class Robot extends IterativeRobot
     {
         DRIVE_TRAIN.setAutonSettings();
 
-        List<ImmutableVector2f> waypoints = Arrays.asList(
-                new ImmutableVector2f(0, 0),
-                new ImmutableVector2f(0, 26),
-                new ImmutableVector2f(-6, 26),
-                new ImmutableVector2f(-6, 0),
-                new ImmutableVector2f(0, 0)
-                                                         );
+        // 144 inches front = 12 ft
+        // 53 inches left/right = 4.42 ft
 
-//        Scheduler.getInstance().add(new CalibrateRobotCommand());
-        Scheduler.getInstance().add(new PurePursuitCommand(waypoints, Constants.LOOKAHEAD_DISTANCE_FT, Constants.STOP_DIST_TOLERANCE_FT));
-//        Scheduler.getInstance().add(AutoSwitcher.getAutoInstance());
+//        Scheduler.getInstance().add(new CenterCommandGroup());
 
-        NAVX.reset();
+        Scheduler.getInstance().add(AutoStartLocationSwitcher.getAutoInstance());
     }
 
     /**
