@@ -75,7 +75,6 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
      * @return The absolute location of the selected goal point.
      * The goal point is a point on the path 1 lookahead distance away from us.
      * We want to drive at it.
-     *
      * @see <a href="https://www.chiefdelphi.com/forums/showthread.php?threadid=162713">Velocity and End Behavior (Chief Delphi)</a>
      */
     public ImmutableVector2f calculateAbsoluteGoalPoint(float lookAheadDistance)
@@ -220,38 +219,34 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
             // TODO: implement a better implementation that does not assume A_lMax() = A_rMax()
             Set<Float> times = MathUtils.Algebra.quadratic(1 / 2 * tankRobot.getA_lMax(), tangentialVelocity, -distanceLeft);
             Optional<Float> time = times.stream().filter(aTime -> aTime >= 0).min(Float::compare);
-
-            // TODO: add a buffer around this
-            // note a*dt = dv ... t = v/a
-            if(time.get() <= dSpeed/tankRobot.getA_lMax())
+            // what the motors should be
+            if(lastUpdatedS == -1)
             {
-                // what the motors should be
-                if(lastUpdatedS == -1)
-                {
-                    // assume 20 ms
-                    speedUsed = Math.min(finalSpeed,tangentialVelocity+tankRobot.getA_lMax()*0.02F);
-                }
-                else
-                {
-                    speedUsed = Math.min(finalSpeed,tangentialVelocity+tankRobot.getA_lMax()*(currentS - lastUpdatedS));
-                }
+                // assume 20 ms
+                speedUsed = Math.min(finalSpeed, tangentialVelocity + tankRobot.getA_lMax() * 0.02F);
+            }
+            else
+            {
+                speedUsed = Math.min(finalSpeed, tangentialVelocity + tankRobot.getA_lMax() * (currentS - lastUpdatedS));
             }
         }
         else
         {
             Set<Float> times = MathUtils.Algebra.quadratic(1 / 2 * tankRobot.getA_lMin(), tangentialVelocity, -distanceLeft);
             Optional<Float> time = times.stream().filter(aTime -> aTime >= 0).min(Float::compare);
-            if(time.get() <= dSpeed/tankRobot.getA_lMin())
+            // TODO: add a buffer around this
+            // note a*dt = dv ... t = v/a
+            if(time.get() <= dSpeed / tankRobot.getA_lMin())
             {
                 // what the motors should be
                 if(lastUpdatedS == -1)
                 {
                     // assume 20 ms
-                    speedUsed = Math.min(finalSpeed,tangentialVelocity+tankRobot.getA_lMin()*0.02F);
+                    speedUsed = Math.min(finalSpeed, tangentialVelocity + tankRobot.getA_lMin() * 0.02F);
                 }
                 else
                 {
-                    speedUsed = Math.min(finalSpeed,tangentialVelocity+tankRobot.getA_lMin()*(currentS - lastUpdatedS));
+                    speedUsed = Math.min(finalSpeed, tangentialVelocity + tankRobot.getA_lMin() * (currentS - lastUpdatedS));
                 }
             }
         }
