@@ -219,6 +219,12 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
             // TODO: implement a better implementation that does not assume A_lMax() = A_rMax()
             Set<Float> times = MathUtils.Algebra.quadratic(1 / 2 * tankRobot.getA_lMax(), tangentialVelocity, -distanceLeft);
             Optional<Float> time = times.stream().filter(aTime -> aTime >= 0).min(Float::compare);
+
+            // we need to find the largest dSpeed such that dSpeed / tankRobot.getA_lMin() = time.get()
+            // dSpeed = time.get() * tankRobot.getA_lMin()
+            // ==> time.get() * tankRobot.getA_lMin() = finalSpeed - tanSpeed
+            // ==> tanSpeed = finalSpeed - time.get() * tankRobot.getA_lMin()
+
             // what the motors should be
             speedUsed = finalSpeed - time.get() * tankRobot.getA_lMax();
         }
@@ -230,22 +236,8 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
             // note a*dt = dv ... t = v/a
             if(time.get() <= dSpeed / tankRobot.getA_lMin())
             {
-                // we need to find the largest dSpeed such that dSpeed / tankRobot.getA_lMin() = time.get()
-                // dSpeed = time.get() * tankRobot.getA_lMin()
-                // ==> time.get() * tankRobot.getA_lMin() = finalSpeed - tanSpeed
-                // ==> tanSpeed = finalSpeed - time.get() * tankRobot.getA_lMin()
-
                 // what the motors should be
                 speedUsed = finalSpeed - time.get() * tankRobot.getA_lMin();
-//                if(lastUpdatedS == -1)
-//                {
-//                    // assume 20 ms
-//                    speedUsed = Math.min(finalSpeed, tangentialVelocity + tankRobot.getA_lMin() * 0.02F);
-//                }
-//                else
-//                {
-//                    speedUsed = Math.min(finalSpeed, tangentialVelocity + tankRobot.getA_lMin() * (currentS - lastUpdatedS));
-//                }
             }
         }
 
