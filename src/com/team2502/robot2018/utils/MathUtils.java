@@ -430,20 +430,20 @@ public final class MathUtils
          */
         public static boolean between(final float a, final float x, final float b)
         {
-            return bounded(a,x,b) || bounded(b,x,a);
+            return bounded(a, x, b) || bounded(b, x, a);
         }
 
         // TODO: between and bounded are probably not the best names
-        public static boolean bounded(final float a, final  float x, final  float b)
+        public static boolean bounded(final float a, final float x, final float b)
         {
-            return a <= x && x<= b;
+            return a <= x && x <= b;
         }
 
         /**
-         * @deprecated Use {@link Math#signum(float)}
          * @param a
          * @param b
          * @return
+         * @deprecated Use {@link Math#signum(float)}
          */
         public static boolean positiveMultiplication(final float a, final float b)
         {
@@ -456,6 +456,7 @@ public final class MathUtils
 
         /**
          * Get the 1D position of the robot given p0, v0, a0, and dt. Uses elementary physics formulas.
+         *
          * @param p0
          * @param v0
          * @param a0
@@ -464,8 +465,9 @@ public final class MathUtils
          */
         public static float getPos(float p0, float v0, float a0, float dt)
         {
-            return p0 + v0*dt +1/2*a0*dt*dt;
+            return p0 + v0 * dt + 1 / 2 * a0 * dt * dt;
         }
+
         public static float getAngularVel(float vL, float vR, float l)
         {
             return (vR - vL) / l;

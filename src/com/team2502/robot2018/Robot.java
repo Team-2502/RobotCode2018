@@ -2,7 +2,6 @@ package com.team2502.robot2018;
 
 import com.kauailabs.navx.frc.AHRS;
 import com.team2502.robot2018.command.autonomous.ingredients.AutonStrategy;
-import com.team2502.robot2018.command.autonomous.groups.LeftCommandGroup;
 import com.team2502.robot2018.sendables.SendableDriveStrategyType;
 import com.team2502.robot2018.sendables.SendableDriveTrain;
 import com.team2502.robot2018.sendables.SendableNavX;
@@ -56,7 +55,7 @@ public final class Robot extends IterativeRobot
     @Override
     public void robotInit()
     {
-
+        // TODO: needs to be changed in shuffleboard
         AUTON_STRATEGY = AutonStrategy.SCALE;
 
         Log.createLogger(true);
@@ -73,7 +72,7 @@ public final class Robot extends IterativeRobot
 
         OI.init();
 
-        AutoSwitcher.putToSmartDashboard();
+        AutoStartLocationSwitcher.putToSmartDashboard();
 
         SendableDriveTrain.init();
         DashboardData.addUpdater(SendableDriveTrain.getInstance());
@@ -141,7 +140,8 @@ public final class Robot extends IterativeRobot
         // 53 inches left/right = 4.42 ft
 
 //        Scheduler.getInstance().add(new CenterCommandGroup());
-        Scheduler.getInstance().add(new LeftCommandGroup());
+
+        Scheduler.getInstance().add(AutoStartLocationSwitcher.getAutoInstance());
     }
 
     /**
