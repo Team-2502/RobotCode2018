@@ -20,7 +20,6 @@ class TestIHT
 
         wheee.put(200D, 1D); // slope: -1
 
-
         System.out.println(wheee.get(60.0)); // should be 61
         System.out.println(wheee.get(100.0)); // should be 101
         System.out.println(wheee.get(150.0)); // should be 51

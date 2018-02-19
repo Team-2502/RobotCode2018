@@ -4,6 +4,10 @@ package com.team2502.robot2018.utils;
 import com.team2502.robot2018.Robot;
 import org.joml.ImmutableVector2f;
 
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
 @SuppressWarnings("unused")
 public final class MathUtils
 {
@@ -393,6 +397,34 @@ public final class MathUtils
 
     public static class Algebra
     {
+
+        public static Set<Float> quadratic(float a, float b, float c)
+        {
+            Set<Float> toReturn = new HashSet<>();
+            float discriminate = discriminate(a, b, c);
+            if(discriminate < 0)
+            {
+                return toReturn;
+            }
+            else if(discriminate == 0)
+            {
+                toReturn.add(b*b/(2*a));
+            }
+            else
+            {
+                float LHS = b * b / (2*a);
+                float RHS = (float) (Math.sqrt(discriminate) / (2 * a));
+                toReturn.add(LHS+RHS);
+                toReturn.add(LHS-RHS);
+            }
+            return toReturn;
+        }
+
+        public static float discriminate(float a, float b, float c)
+        {
+            return b*b - 4*a*c;
+        }
+
         /**
          * @return if a <= x <= b or b<= x <= a
          */
