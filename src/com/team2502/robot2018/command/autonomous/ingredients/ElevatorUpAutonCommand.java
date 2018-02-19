@@ -3,6 +3,7 @@ package com.team2502.robot2018.command.autonomous.ingredients;
 import com.team2502.robot2018.Robot;
 import edu.wpi.first.wpilibj.command.TimedCommand;
 
+//TODO: Replace with encoder
 public class ElevatorUpAutonCommand extends TimedCommand
 {
     public ElevatorUpAutonCommand(double timeout)
@@ -13,7 +14,7 @@ public class ElevatorUpAutonCommand extends TimedCommand
     @Override
     protected void execute()
     {
-        Robot.ELEVATOR.moveElevator(1);
+//        Robot.ELEVATOR.moveElevator(1);
     }
 
     @Override

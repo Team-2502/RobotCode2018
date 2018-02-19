@@ -17,7 +17,7 @@ public class Waypoint
 
     public Waypoint(ImmutableVector2f location, float maxSpeed, boolean forward)
     {
-        this(location,maxSpeed);
+        this(location, maxSpeed);
         this.forward = forward;
     }
 

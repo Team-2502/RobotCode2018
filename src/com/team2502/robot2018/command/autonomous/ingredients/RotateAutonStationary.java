@@ -1,4 +1,4 @@
-package com.team2502.robot2018.command.autonomous;
+package com.team2502.robot2018.command.autonomous.ingredients;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.kauailabs.navx.frc.AHRS;

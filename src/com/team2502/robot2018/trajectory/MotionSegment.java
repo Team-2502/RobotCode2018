@@ -29,11 +29,11 @@ public class MotionSegment
 
     public boolean valid()
     {
-        return MathUtils.epsilonEquals(start.extrapForPositionAtTime(end.getTime()),end.getPosition());
+        return MathUtils.epsilonEquals(start.extrapForPositionAtTime(end.getTime()), end.getPosition());
     }
 
     public boolean containsPosition(float position)
     {
-        return MathUtils.Algebra.bounded(start.getPosition(),position,end.getPosition());
+        return MathUtils.Algebra.bounded(start.getPosition(), position, end.getPosition());
     }
 }

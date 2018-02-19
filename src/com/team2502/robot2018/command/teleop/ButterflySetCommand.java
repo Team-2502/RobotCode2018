@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.command.InstantCommand;
 public class ButterflySetCommand extends InstantCommand
 {
     private boolean _state;
+
     public ButterflySetCommand(boolean state)
     {
         requires(Robot.BUTTERFLY_SOLENOID);

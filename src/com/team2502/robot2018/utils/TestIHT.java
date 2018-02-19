@@ -7,7 +7,9 @@ class TestIHT
 {
     public static void main(String[] args)
     {
-        InterpolationMap wheee = new InterpolationMap(0.1, 0.2);
+
+        InterpolationMap wheee = new InterpolationMap(1d, 1d);
+
         System.out.println(wheee.get(100.0)); // should be 1
         System.out.println(wheee.get(-100.0)); // should be 1
 
