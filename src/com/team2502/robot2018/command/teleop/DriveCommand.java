@@ -1,17 +1,12 @@
 package com.team2502.robot2018.command.teleop;
 
 import com.kauailabs.navx.frc.AHRS;
-import com.team2502.robot2018.Constants;
-import com.team2502.robot2018.OI;
 import com.team2502.robot2018.Robot;
-import com.team2502.robot2018.RobotMap;
 import com.team2502.robot2018.subsystem.DriveTrainSubsystem;
 import com.team2502.robot2018.subsystem.solenoid.TransmissionSolenoid;
 import com.team2502.robot2018.trajectory.localization.EncoderDifferentialDriveLocationEstimator;
-import com.team2502.robot2018.utils.MathUtils;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import logger.Log;
 import org.joml.ImmutableVector2f;
 import org.joml.Vector2f;
 

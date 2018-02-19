@@ -19,6 +19,6 @@ public class DeadreckoningDrive extends TimedCommand
     @Override
     protected void execute()
     {
-        Robot.DRIVE_TRAIN.runMotors(ControlMode.Velocity,speed, speed);
+        Robot.DRIVE_TRAIN.runMotors(ControlMode.Velocity, speed, speed);
     }
 }

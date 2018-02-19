@@ -14,7 +14,7 @@ public class ShootCubeCommand extends TimedCommand
         this.speed = 0.5;
     }
 
-    public ShootCubeCommand(double timeout,double speed)
+    public ShootCubeCommand(double timeout, double speed)
     {
         super(timeout);
         this.speed = speed;

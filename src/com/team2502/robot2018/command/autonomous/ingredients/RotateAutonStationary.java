@@ -49,7 +49,7 @@ public class RotateAutonStationary extends Command
     @Override
     protected boolean isFinished()
     {
-        if(MathUtils.epsilonEquals(degrees,0F))
+        if(MathUtils.epsilonEquals(degrees, 0F))
         {
             return true;
         }
@@ -72,11 +72,11 @@ public class RotateAutonStationary extends Command
 
     private void rotateCCW()
     {
-        driveTrain.runMotors(ControlMode.Velocity,-wheelSpeed,wheelSpeed);
+        driveTrain.runMotors(ControlMode.Velocity, -wheelSpeed, wheelSpeed);
     }
 
     private void rotateCW()
     {
-        driveTrain.runMotors(ControlMode.Velocity,wheelSpeed,-wheelSpeed);
+        driveTrain.runMotors(ControlMode.Velocity, wheelSpeed, -wheelSpeed);
     }
 }
