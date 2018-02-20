@@ -28,8 +28,7 @@ public class RobotMap
 
         public static final class Button
         {
-            public static final int FORCE_LOW_GEAR = 1;
-            public static final int INVERSE_DRIVER_CONTROLS = 1;
+            public static final int TOGGLE_TRANSMISSION = 1;
 
             /*
              * Eventually, once we have encoders, these buttons will go all the way up/down
@@ -49,7 +48,9 @@ public class RobotMap
 
             public static final int OPEN_INTAKE = 1;
             public static final int INTAKE_IN = 6;
-            public static final int INTAKE_OUT = 4;
+            public static final int INTAKE_OUT_SLOW = 4;
+            public static final int INTAKE_OUT_FAST = 2;
+
 
             public static final int DEPLOY_BUTTERFLY = 7;
 
@@ -97,7 +98,7 @@ public class RobotMap
         public static int FILESMADE = 0;
         public static Map<String, Object> FILEMAP = new HashMap<String, Object>();
 
-        private Files() {}
+        private Files() { }
     }
 
     public class Solenoid
@@ -113,8 +114,6 @@ public class RobotMap
         public static final int CLIMBER_SOLENOID = 1;
         public static final int ACTIVE_GRABBER = 2;
         public static final int BUTTERFLY_SOLENOID = 3;
-
-//        public static final int BUTTERFLY_RELEASE = 3;
 
         private Solenoid() { }
     }

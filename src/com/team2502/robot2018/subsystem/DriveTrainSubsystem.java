@@ -284,12 +284,6 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         SmartDashboard.putNumber("speedL", -speed.left);
         SmartDashboard.putNumber("speedR", -speed.right);
 
-        // Log.debug("Left: {0,number,#.###}\t\t Right: {0,number,#.###}", speed.right, speed.left);
-
-        if((OI.JOYSTICK_DRIVE_LEFT.getRawButton(RobotMap.Joystick.Button.INVERSE_DRIVER_CONTROLS) && !isNegativePressed)) { negative = !negative; }
-
-        isNegativePressed = OI.JOYSTICK_DRIVE_LEFT.getRawButton(RobotMap.Joystick.Button.INVERSE_DRIVER_CONTROLS);
-
         Nameable currentMode = SendableDriveStrategyType.getInstance().getCurrentMode();
 
         if(!(currentMode instanceof DriveStrategyType))

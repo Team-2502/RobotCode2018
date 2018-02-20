@@ -24,8 +24,6 @@ import org.joml.Vector2f;
  */
 public class DriveCommand extends Command
 {
-    private final DriveTrainSubsystem driveTrainSubsystem;
-    private final TransmissionSolenoid transmission;
     private final ImmutableVector2f estimatedLocation = new ImmutableVector2f(0, 0);
     public float heading = 0;
     private AHRS navx;
@@ -37,9 +35,6 @@ public class DriveCommand extends Command
     public DriveCommand()
     {
         requires(Robot.DRIVE_TRAIN);
-        requires(Robot.TRANSMISSION_SOLENOID);
-        driveTrainSubsystem = Robot.DRIVE_TRAIN;
-        transmission = Robot.TRANSMISSION_SOLENOID;
         navx = Robot.NAVX;
         initAngleDegrees = (float) navx.getAngle();
     }
@@ -65,16 +60,14 @@ public class DriveCommand extends Command
 
     @Override
     protected void initialize()
-    {
-        encoderLocationEstimator = new EncoderDifferentialDriveLocationEstimator();
-    }
+    { encoderLocationEstimator = new EncoderDifferentialDriveLocationEstimator(); }
 
     @Override
     protected void execute()
     {
         ImmutableVector2f estimateLocation = encoderLocationEstimator.estimateLocation();
-        SmartDashboard.putBoolean("DT: AutoShifting Enabled?", !transmission.disabledAutoShifting);
-        driveTrainSubsystem.drive();
+        SmartDashboard.putBoolean("DT: AutoShifting Enabled?", !Robot.TRANSMISSION_SOLENOID.disabledAutoShifting);
+        Robot.DRIVE_TRAIN.drive();
 
     }
 
@@ -84,5 +77,5 @@ public class DriveCommand extends Command
 
     @Override
     protected void end()
-    { driveTrainSubsystem.stop(); }
+    { Robot.DRIVE_TRAIN.stop(); }
 }

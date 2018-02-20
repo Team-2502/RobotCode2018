@@ -28,7 +28,6 @@ import java.io.PrintWriter;
 public final class Robot extends IterativeRobot
 {
     public static double CAL_VELOCITY = 0D;
-    public static long SHIFTED;
     public static String GAME_DATA = "...";
 
     public static AutonStrategy AUTON_STRATEGY;
@@ -44,9 +43,7 @@ public final class Robot extends IterativeRobot
     public static AHRS NAVX;
 
     public static void write(String string)
-    {
-        LOG_OUTPUT.println(string);
-    }
+    { LOG_OUTPUT.println(string); }
 
     /**
      * This function is run when the robot is first started up and should be
