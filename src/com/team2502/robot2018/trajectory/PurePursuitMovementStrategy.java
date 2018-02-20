@@ -239,8 +239,6 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
             float decelerateAtTime = (finalSpeed - startSpeed)/Constants.AL_MIN;
             float positionToDecelerate = 1/2F * Constants.AL_MIN * decelerateAtTime*decelerateAtTime + startSpeed * decelerateAtTime;
 
-
-
             System.out.printf("a %.2f b %.2f c %.2f\n",1 / 2F * tankRobot.getA_lMin(), tangentialVelocity, -distanceLeft);
 
             // this decceleration does not seem to be working well
