@@ -29,7 +29,7 @@ public class RightCommandGroup extends CommandGroup
                 break;
 
             case "RR":
-                switch(Robot.AUTON_STRATEGY)
+                switch(Robot.autonStrategySelector.getSelected())
                 {
                     case SCALE:
                         goScaleRight();
