@@ -2,6 +2,7 @@ package com.team2502.robot2018;
 
 import com.kauailabs.navx.frc.AHRS;
 import com.team2502.robot2018.command.autonomous.ingredients.AutonStrategy;
+import com.team2502.robot2018.command.autonomous.ingredients.PurePursuitCommand;
 import com.team2502.robot2018.sendables.SendableDriveStrategyType;
 import com.team2502.robot2018.sendables.SendableDriveTrain;
 import com.team2502.robot2018.sendables.SendableNavX;
@@ -13,6 +14,7 @@ import com.team2502.robot2018.subsystem.solenoid.ActiveIntakeSolenoid;
 import com.team2502.robot2018.subsystem.solenoid.ButterflySolenoid;
 import com.team2502.robot2018.subsystem.solenoid.ClimberSolenoid;
 import com.team2502.robot2018.subsystem.solenoid.TransmissionSolenoid;
+import com.team2502.robot2018.trajectory.Waypoint;
 import com.team2502.robot2018.utils.Files;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -22,8 +24,11 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import logger.Log;
+import org.joml.ImmutableVector2f;
 
 import java.io.PrintWriter;
+import java.util.Arrays;
+import java.util.List;
 
 public final class Robot extends IterativeRobot
 {
@@ -139,9 +144,14 @@ public final class Robot extends IterativeRobot
         // 144 inches front = 12 ft
         // 53 inches left/right = 4.42 ft
 
-//        Scheduler.getInstance().add(new CenterCommandGroup());
+        List<Waypoint> waypoints = Arrays.asList(
+            new Waypoint(new ImmutableVector2f(0,0),0),
+            new Waypoint(new ImmutableVector2f(0,7),8),
+            new Waypoint(new ImmutableVector2f(0,14),0)
+        );
+        Scheduler.getInstance().add(new PurePursuitCommand(waypoints,3,1.5F));
 
-        Scheduler.getInstance().add(AutoStartLocationSwitcher.getAutoInstance());
+//        Scheduler.getInstance().add(AutoStartLocationSwitcher.getAutoInstance());
     }
 
     /**

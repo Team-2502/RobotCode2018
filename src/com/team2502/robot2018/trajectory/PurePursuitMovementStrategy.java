@@ -1,5 +1,6 @@
 package com.team2502.robot2018.trajectory;
 
+import com.team2502.robot2018.Constants;
 import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.trajectory.localization.IRotationalLocationEstimator;
 import com.team2502.robot2018.trajectory.localization.ITranslationalLocationEstimator;
@@ -46,8 +47,8 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
     private boolean isSuccessfullyFinished;
     private float usedLookahead;
     private float speedUsed;
-    private float lastUpdatedS = -1;
-    private float currentS;
+    private double lastUpdatedS = -1;
+    private double currentS;
 
     /**
      * Strategize your movement!
@@ -94,7 +95,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         float lookAheadDistanceSquared = lookAheadDistance * lookAheadDistance;
 
         // Loop looks for intersections on last segment searched and one after that
-        for(int i = 0; i <= 1; ++i)
+        for(int i = Math.max(lastSegmentSearched-1,0); i <= lastSegmentSearched + 1; ++i)
         {
             int nextWayPointI = i + 1;
 
@@ -110,12 +111,13 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
 
             // Get intersections of r=lookAheadDistance circle and segments between waypoints
             List<ImmutableVector2f> vectorList = new ArrayList<>(Arrays.asList(MathUtils.Geometry.getCircleLineIntersectionPoint(lineP1, lineP2, usedEstimatedLocation, lookAheadDistance)));
-
+//            System.out.println("intersections: ");
+//            vectorList.forEach(vector2f -> System.out.println("("+vector2f.get(0)+","+vector2f.get(1)+")"));
             // above statement assumes lineP1 lineP2 defines a (non-segment) line.
             // If we are not on the last waypoint, we will treat it as a segment.
             // If we _are_ on our last waypoint, we will NOT treat it as a segment.
             // This essentially performs a linear extrapolation on the last waypoint.
-            if(nextWayPointI == waypoints.size() - 1)
+            if(nextWayPointI == waypoints.size() - 1 && lastSegmentSearched == waypoints.size()-1)
             {
                 float distanceWaypointSq = lineP2.sub(usedEstimatedLocation).lengthSquared();
                 if(distanceWaypointSq <= lookAheadDistanceSquared)
@@ -145,7 +147,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
             intersections.addAll(vectorList);
         }
 
-        // The last goal point we are comparing the intersections to. We will want to chose the one closest to last intersection
+        // The last goal point we are comparing the intersections to. We will want to chose the one closestGoalPoint to last intersection
         ImmutableVector2f toCompare = absoluteGoalPoint;
 
         // if there is no last goal point, then just chose the first intersection
@@ -159,22 +161,28 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         // Finds i where ||\vec{toCompare} - \vec{intersections_i}|| (the distance between the 2 vectors) is minimized
         int closestVectorI = bestGoalPoint(toCompare, intersections);
 
-        // There is no closest vector ==> finish path
+        // There is no closestGoalPoint vector ==> finish path
         if(closestVectorI == -1)
         {
-            Log.info("closest vector not found!");
-            System.out.printf("loc: %.2f, %.2f", usedEstimatedLocation.get(0), usedEstimatedLocation.get(1));
+            Log.info("closestGoalPoint vector not found!");
+            System.out.printf("loc: %.2f, %.2f\n", usedEstimatedLocation.get(0), usedEstimatedLocation.get(1));
+            System.out.println("usedLookAhead: "+usedLookahead);
             finishedPath = true;
             return null;
         }
 
-        ImmutableVector2f closest = intersections.get(closestVectorI);
+        ImmutableVector2f closestGoalPoint = intersections.get(closestVectorI);
 
-        // If the closest vector is on the next segment, set that segment as the current segment
-        if(closestVectorI >= nextPathSegmentI) { waypoints.remove(0); }
+        // If the closestGoalPoint vector is on the next segment, set that segment as the current segment
+        if(closestVectorI >= nextPathSegmentI)
+        {
+            ++lastSegmentSearched;
+            lastUpdatedS = currentS;
+            System.out.println("removed a waypoint ::: lookAhead = "+lookAheadDistance+" ::: location: "+usedEstimatedLocation.get(0)+","+usedEstimatedLocation.get(1));
+        }
 
-        // closest is our new goal point
-        return closest;
+        // closestGoalPoint is our new goal point
+        return closestGoalPoint;
     }
 
     /**
@@ -193,14 +201,14 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         Waypoint waypointStart = waypoints.get(lastSegmentSearched);
         ImmutableVector2f lineStartPoint = waypointStart.getLocation();
 
-        Waypoint waypointEnd = waypoints.get(lastSegmentSearched + 1);
+        Waypoint waypointEnd = waypoints.get(lastSegmentSearched+1);
+
         ImmutableVector2f lineEndPoint = waypointEnd.getLocation();
 
         float pathSegmentDistance = lineStartPoint.sub(lineEndPoint).length();
 
         ImmutableVector2f closestPoint = MathUtils.Geometry.getClosestPoint(lineStartPoint, lineEndPoint, usedEstimatedLocation);
         ImmutableVector2f distanceClosestPoint = usedEstimatedLocation.sub(closestPoint);
-
 
         float distanceAlongPath = closestPoint.distance(lineStartPoint);
 
@@ -209,41 +217,51 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         // p1 = p0 + vt + 1/2at^2 ...
         // pathSegmentDistance = distanceAlongPath + tangentialVelocity*t + 1/2 * maxAcceleration
 
-
-        float startSpeed = waypointEnd.getMaxSpeed();
+        float startSpeed = waypointStart.getMaxSpeed();
         float finalSpeed = waypointEnd.getMaxSpeed();
 
         float dSpeed = finalSpeed - tangentialVelocity;
         if(finalSpeed > startSpeed)
         {
             // TODO: implement a better implementation that does not assume A_lMax() = A_rMax()
-            Set<Float> times = MathUtils.Algebra.quadratic(1 / 2 * tankRobot.getA_lMax(), tangentialVelocity, -distanceLeft);
-            Optional<Float> time = times.stream().filter(aTime -> aTime >= 0).min(Float::compare);
-
-            // we need to find the largest dSpeed such that dSpeed / tankRobot.getA_lMin() = time.get()
-            // dSpeed = time.get() * tankRobot.getA_lMin()
-            // ==> time.get() * tankRobot.getA_lMin() = finalSpeed - tanSpeed
-            // ==> tanSpeed = finalSpeed - time.get() * tankRobot.getA_lMin()
 
             // what the motors should be
-            speedUsed = finalSpeed - time.get() * tankRobot.getA_lMax();
+            float dTime = (float) (currentS - lastUpdatedS);
+            speedUsed = Math.min(finalSpeed, startSpeed + dTime*Constants.AL_MAX);
         }
         else
         {
-            Set<Float> times = MathUtils.Algebra.quadratic(1 / 2 * tankRobot.getA_lMin(), tangentialVelocity, -distanceLeft);
+            Set<Float> times = MathUtils.Algebra.quadratic(1 / 2F * tankRobot.getA_lMin(), tangentialVelocity, -distanceLeft);
             Optional<Float> time = times.stream().filter(aTime -> aTime >= 0).min(Float::compare);
             // TODO: add a buffer around this
-            // note a*dt = dv ... t = v/a
-            if(time.get() <= dSpeed / tankRobot.getA_lMin())
+            // t = (v_1 - v_0)/a_c
+
+            float decelerateAtTime = (finalSpeed - startSpeed)/Constants.AL_MIN;
+            float positionToDecelerate = 1/2F * Constants.AL_MIN * decelerateAtTime*decelerateAtTime + startSpeed * decelerateAtTime;
+
+
+
+            System.out.printf("a %.2f b %.2f c %.2f\n",1 / 2F * tankRobot.getA_lMin(), tangentialVelocity, -distanceLeft);
+
+            // this decceleration does not seem to be working well
+            if(distanceLeft <= positionToDecelerate)
             {
-                // what the motors should be
-                speedUsed = finalSpeed - time.get() * tankRobot.getA_lMin();
+                float dTime = (float) (currentS - lastUpdatedS);
+                speedUsed = Math.min(finalSpeed, startSpeed + dTime*Constants.AL_MIN);
+            }
+            else
+            {
+                speedUsed = startSpeed;
+                lastUpdatedS = currentS;
             }
         }
 
         float dCP = distanceClosestPoint.length();
 
-        return lookaheadForSpeed + dCP;
+//        System.out.println("speedUsed: "+speedUsed);
+        float finalLookahead = lookaheadForSpeed + dCP;
+//        System.out.println("lookahead: "+finalLookahead);
+        return finalLookahead;
     }
 
     /**
@@ -251,8 +269,11 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
      */
     public void update()
     {
-
-        currentS = System.currentTimeMillis() / 1000F;
+        currentS = System.currentTimeMillis() / 1000D;
+        if(lastUpdatedS == -1)
+        {
+            lastUpdatedS = currentS;
+        }
         usedEstimatedLocation = transEstimator.estimateLocation();
         usedHeading = rotEstimator.estimateHeading();
 
@@ -268,8 +289,6 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
 
         relativeGoalPoint = MathUtils.LinearAlgebra.absoluteToRelativeCoord(absoluteGoalPoint, usedEstimatedLocation, usedHeading);
         wheelVelocities = calculateWheelVelocities();
-
-        lastUpdatedS = currentS;
     }
 
     public float getUsedLookahead()
@@ -348,7 +367,6 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
 
         if(Math.abs(curvature) < THRESHOLD_CURVATURE) // if we are a straight line ish (lines are not curvy -> low curvature)
         {
-
             bestVector = new ImmutableVector2f(v_lMax, v_rMax);
             rotVelocity = (bestVector.get(1) - bestVector.get(0)) / tankRobot.getLateralWheelDistance();
             motionRadius = Float.MAX_VALUE;

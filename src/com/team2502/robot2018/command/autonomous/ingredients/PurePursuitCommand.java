@@ -192,10 +192,10 @@ public class PurePursuitCommand extends Command
         if(finishedPath)
         {
             SmartDashboard.putBoolean("PPisSuccess", purePursuitMovementStrategy.isSuccessfullyFinished());
-            System.out.println("\n!!!\nBRAKING\n!!!!\n");
+//            System.out.println("\n!!!\nBRAKING\n!!!!\n");
             Robot.DRIVE_TRAIN.leftRearTalon.set(ControlMode.Disabled, 0.0F);
             Robot.DRIVE_TRAIN.rightRearTalon.set(ControlMode.Disabled, 0.0F);
-            System.out.println("\n\nFINISHED!\n\n");
+//            System.out.println("\n\nFINISHED!\n\n");
         }
         return finishedPath;
 

@@ -30,4 +30,14 @@ public class Waypoint
     {
         return location;
     }
+
+    @Override
+    public String toString()
+    {
+        return "Waypoint{" +
+               "maxSpeed=" + maxSpeed +
+               ", location=" + location +
+               ", forward=" + forward +
+               '}';
+    }
 }
