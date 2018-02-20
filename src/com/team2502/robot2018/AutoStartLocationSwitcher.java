@@ -15,25 +15,23 @@ class AutoStartLocationSwitcher
 
     public enum AutoMode
     {
-        CENTERAUTO("Center", CenterCommandGroup.class),
-        LEFTAUTO("Left", LeftCommandGroup.class),
-        RIGHTAUTO("Right", RightCommandGroup.class),
-        TEST("Test",TestCommandGroup.class);
+        CENTERAUTO("Center", CenterCommandGroup::new),
+        LEFTAUTO("Left", LeftCommandGroup::new),
+        RIGHTAUTO("Right", RightCommandGroup::new),
+        TEST("Test",TestCommandGroup::new);
 
-        private Class<? extends Command> autoCommand;
+        private CommandFactory commandFactory;
         private String name;
 
-        AutoMode(String name, Class<? extends Command> autoCommand)
+        AutoMode(String name, CommandFactory commandFactory)
         {
-            this.autoCommand = autoCommand;
+            this.commandFactory = commandFactory;
             this.name = name;
         }
 
         public Command getInstance()
         {
-            Command instance;
-            try { instance = autoCommand.newInstance(); } catch(InstantiationException | IllegalAccessException e) { return null; }
-            return instance;
+            return commandFactory.getInstance();
         }
     }
 
@@ -51,4 +49,9 @@ class AutoStartLocationSwitcher
     }
 
     static Command getAutoInstance() { return autoChooser.getSelected().getInstance(); }
+
+    public interface CommandFactory
+    {
+        Command getInstance();
+    }
 }
