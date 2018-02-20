@@ -29,7 +29,6 @@ import java.io.PrintWriter;
 public final class Robot extends IterativeRobot
 {
     public static double CAL_VELOCITY = 0D;
-    public static long SHIFTED;
     public static String GAME_DATA = "...";
 
     public static DriveTrainSubsystem DRIVE_TRAIN;
@@ -43,11 +42,10 @@ public final class Robot extends IterativeRobot
     public static TransmissionSolenoid TRANSMISSION_SOLENOID;
     public static AHRS NAVX;
     public static SendableChooser<AutonStrategy> autonStrategySelector;
+    public static OI OI;
 
     public static void write(String string)
-    {
-        LOG_OUTPUT.println(string);
-    }
+    { LOG_OUTPUT.println(string); }
 
     /**
      * This function is run when the robot is first started up and should be
@@ -76,8 +74,7 @@ public final class Robot extends IterativeRobot
         CLIMBER_SOLENOID = new ClimberSolenoid();
         BUTTERFLY_SOLENOID = new ButterflySolenoid();
         TRANSMISSION_SOLENOID = new TransmissionSolenoid();
-
-        OI.init();
+        OI = new OI();
 
 
         AutoStartLocationSwitcher.putToSmartDashboard();

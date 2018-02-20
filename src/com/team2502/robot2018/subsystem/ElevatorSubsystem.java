@@ -79,7 +79,8 @@ public class ElevatorSubsystem extends Subsystem implements PIDTunable, Dashboar
             timer = 0;
             Robot.CLIMBER_SOLENOID.unlockElevator();
         }
-        if(timer <= 15)
+        // 20ms per 1 loop
+        if(timer <= 6)
         {
             timer++;
         }
