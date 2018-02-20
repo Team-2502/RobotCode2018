@@ -30,12 +30,9 @@ public final class OI
 
     private static final Button SHIFT_GEARBOX_ELEV = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.SHIFT_GEARBOX_ELEV);
 
-    private OI() { }
-
-    public static void init()
+    OI()
     {
         // Elevator buttons
-
         ELEV_UP.whileHeld(new ElevatorCommand(1.0));
         ELEV_DOWN.whileHeld(new ElevatorCommand(-0.5));
 
@@ -49,10 +46,10 @@ public final class OI
         // Climber button (wait to re-implement until elevator is working properly
         CLIMBER.whileHeld(new ClimberCommand(1.0));
 
+        // Pneumatics
         SHIFT_GEARBOX_ELEV.whenPressed(new ShiftElevatorCommand());
         DEPLOY_BUTTERFLY.whenPressed(new ButterflySetCommand(true));
         DEPLOY_BUTTERFLY.whenReleased(new ButterflySetCommand(false));
-
         TOGGLE_TRANSMISSION.whenPressed(new TransmissionCommand());
     }
 
