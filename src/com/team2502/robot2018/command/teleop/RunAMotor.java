@@ -1,9 +1,8 @@
 package com.team2502.robot2018.command.teleop;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.team2502.robot2018.utils.baseoverloads.WPI_TalonSRXF;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.command.Command;
-
 
 /**
  * This class has been deprecated in order to discourage use of it.
@@ -12,13 +11,11 @@ import edu.wpi.first.wpilibj.command.Command;
  */
 @Deprecated
 public class RunAMotor extends Command
-
 {
-
-    WPI_TalonSRXF talon;
+    WPI_TalonSRX talon;
     double speed;
 
-    public RunAMotor(WPI_TalonSRXF talon, double speed)
+    public RunAMotor(WPI_TalonSRX talon, double speed)
     {
         this.talon = talon;
         this.speed = speed;
