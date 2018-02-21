@@ -242,26 +242,12 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
             float decelerateDuration = (finalSpeed - startSpeed)/Constants.AL_MIN;
             float deltaPosDuringDeccel = 1/2F * Constants.AL_MIN * decelerateDuration*decelerateDuration + startSpeed * decelerateDuration;
 
-            // this decceleration does not seem to be working well
-            float ax = (1/2F*(finalSpeed - tangentialVelocity)*(finalSpeed - tangentialVelocity) +
-                        tangentialVelocity*(finalSpeed - tangentialVelocity))/(distanceLeft);
-            if(ax <= Constants.AL_MIN)
-            {
-                deccel = true;
-            }
-            if(deccel)
-            {
-                System.out.printf("ax: %.2f, distanceLeft: %.2f, tanSpeed %.2f\n",ax,distanceLeft,tangentialVelocity);
-                Set<Float> times = MathUtils.Algebra.quadratic(1 / 2F * ax, tangentialVelocity, -distanceLeft);
-                Optional<Float> time = times.stream().filter(aTime -> aTime >= 0).min(Float::compare);
-                float dTime = (float) (currentS - lastUpdatedS);
-                speedUsed = Math.max(finalSpeed, startSpeed + dTime*Constants.AL_MIN);
-            }
-            else
-            {
-                speedUsed = startSpeed;
-                lastUpdatedS = currentS;
-            }
+            // Using basic physics kinematic equations we get 2a*x=vf^2-vi^2
+            // so vi = \sqrt{vf^2 - 2a*x}
+
+            float maxVel = (float) Math.sqrt(finalSpeed*finalSpeed-2*Constants.AL_MIN*distanceLeft);
+
+            speedUsed = Math.min(startSpeed, maxVel);
         }
 
         float dCP = distanceClosestPoint.length();
