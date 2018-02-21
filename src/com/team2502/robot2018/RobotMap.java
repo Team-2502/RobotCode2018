@@ -54,6 +54,8 @@ public class RobotMap
 
             public static final int DEPLOY_BUTTERFLY = 7;
 
+            public static final int RUN_DEBUG_TESTS = 9;
+
             private Button() { }
         }
     }

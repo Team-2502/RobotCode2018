@@ -1,6 +1,7 @@
 package com.team2502.robot2018;
 
 import com.team2502.robot2018.command.teleop.*;
+import com.team2502.robot2018.command.test.group.FullSystemsTestCommand;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
@@ -30,7 +31,9 @@ public final class OI
 
     private static final Button SHIFT_GEARBOX_ELEV = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.SHIFT_GEARBOX_ELEV);
 
-    OI()
+    private static final Button RUN_TESTS = new JoystickButton(JOYSTICK_DRIVE_LEFT, RobotMap.Joystick.Button.RUN_DEBUG_TESTS);
+
+    static
     {
         // Elevator buttons
         ELEV_UP.whileHeld(new ElevatorCommand(1.0));
@@ -51,7 +54,11 @@ public final class OI
         DEPLOY_BUTTERFLY.whenPressed(new ButterflySetCommand(true));
         DEPLOY_BUTTERFLY.whenReleased(new ButterflySetCommand(false));
         TOGGLE_TRANSMISSION.whenPressed(new TransmissionCommand());
+
+        RUN_TESTS.whenPressed(new FullSystemsTestCommand());
     }
+
+    public static void init() {}
 
     public static boolean joysThreshold(double threshold, boolean above)
     {

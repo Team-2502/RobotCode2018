@@ -42,7 +42,6 @@ public final class Robot extends IterativeRobot
     public static TransmissionSolenoid TRANSMISSION_SOLENOID;
     public static AHRS NAVX;
     public static SendableChooser<AutonStrategy> autonStrategySelector;
-    public static OI OI;
 
     public static void write(String string)
     { LOG_OUTPUT.println(string); }
@@ -74,7 +73,7 @@ public final class Robot extends IterativeRobot
         CLIMBER_SOLENOID = new ClimberSolenoid();
         BUTTERFLY_SOLENOID = new ButterflySolenoid();
         TRANSMISSION_SOLENOID = new TransmissionSolenoid();
-        OI = new OI();
+        OI.init();
 
 
         AutoStartLocationSwitcher.putToSmartDashboard();
