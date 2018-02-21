@@ -53,7 +53,6 @@ public final class Robot extends IterativeRobot
     @Override
     public void robotInit()
     {
-
         autonStrategySelector = new SendableChooser<>();
         for(AutonStrategy autonStrategy : AutonStrategy.values())
         {

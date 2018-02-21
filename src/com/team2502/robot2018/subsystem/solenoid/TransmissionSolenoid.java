@@ -6,22 +6,22 @@ import edu.wpi.first.wpilibj.Solenoid;
 
 public class TransmissionSolenoid extends NonDefaultSubsystem
 {
-    private final Solenoid switcher;
+    private final Solenoid transmission;
     public boolean disabledAutoShifting = true;
-    public boolean highGear;
+    private boolean highGear;
 
     public TransmissionSolenoid()
     {
-        switcher = new Solenoid(RobotMap.Solenoid.TRANSMISSION_SWITCH);
+        transmission = new Solenoid(RobotMap.Solenoid.TRANSMISSION_SWITCH);
         highGear = false;
-        switcher.set(false);
+        transmission.set(false);
     }
 
     /**
      * Switch the gear from its current state
      */
     public void toggleGear()
-    { switcher.set(highGear = !highGear); }
+    { transmission.set(highGear = !highGear); }
 
     /**
      * @return if we are in high gear
@@ -35,5 +35,5 @@ public class TransmissionSolenoid extends NonDefaultSubsystem
      * @param highGear Boolean saying "do you want to be in high gear?"
      */
     public void setGear(boolean highGear)
-    { switcher.set(this.highGear = highGear); }
+    { transmission.set(this.highGear = highGear); }
 }

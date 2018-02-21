@@ -14,7 +14,8 @@ public class ActiveRotationCommand extends Command
     @Override
     protected void execute()
     {
-        Robot.ACTIVE_INTAKE.rotateIntake(OI.JOYSTICK_FUNCTION.getY());
+        // Must be negative
+        Robot.ACTIVE_INTAKE.rotateIntake(-OI.JOYSTICK_FUNCTION.getY());
     }
 
     @Override
