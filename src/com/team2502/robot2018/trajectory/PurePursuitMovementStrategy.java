@@ -25,6 +25,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
     private final ITankRobotBounds tankRobot;
     private final IRotationalLocationEstimator rotEstimator;
 
+    private boolean deccel = false;
 
     private final float distanceStopSq;
     private final Lookahead lookahead;
@@ -111,21 +112,22 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
 
             // Get intersections of r=lookAheadDistance circle and segments between waypoints
             List<ImmutableVector2f> vectorList = new ArrayList<>(Arrays.asList(MathUtils.Geometry.getCircleLineIntersectionPoint(lineP1, lineP2, usedEstimatedLocation, lookAheadDistance)));
-//            System.out.println("intersections: ");
-//            vectorList.forEach(vector2f -> System.out.println("("+vector2f.get(0)+","+vector2f.get(1)+")"));
             // above statement assumes lineP1 lineP2 defines a (non-segment) line.
             // If we are not on the last waypoint, we will treat it as a segment.
             // If we _are_ on our last waypoint, we will NOT treat it as a segment.
             // This essentially performs a linear extrapolation on the last waypoint.
-            if(nextWayPointI == waypoints.size() - 1 && lastSegmentSearched == waypoints.size()-1)
+
+            float distanceWaypointSq = lineP2.sub(usedEstimatedLocation).lengthSquared();
+
+            if(nextWayPointI == waypoints.size() - 1 && lastSegmentSearched == waypoints.size()-2)
             {
-                float distanceWaypointSq = lineP2.sub(usedEstimatedLocation).lengthSquared();
                 if(distanceWaypointSq <= lookAheadDistanceSquared)
                 {
                     isClose = true;
                     // We want to stop if the distance is within the desired amount
                     if(distanceWaypointSq < distanceStopSq)
                     {
+                        System.out.println("success: "+distanceWaypointSq);
                         isSuccessfullyFinished = true;
                         finishedPath = true;
                         return null;
@@ -177,6 +179,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         if(closestVectorI >= nextPathSegmentI)
         {
             ++lastSegmentSearched;
+            deccel = false;
             lastUpdatedS = currentS;
             System.out.println("removed a waypoint ::: lookAhead = "+lookAheadDistance+" ::: location: "+usedEstimatedLocation.get(0)+","+usedEstimatedLocation.get(1));
         }
@@ -214,6 +217,8 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
 
         float distanceLeft = pathSegmentDistance - distanceAlongPath;
 
+//        System.out.println("distanceLeft: "+distanceLeft);
+
         // p1 = p0 + vt + 1/2at^2 ...
         // pathSegmentDistance = distanceAlongPath + tangentialVelocity*t + 1/2 * maxAcceleration
 
@@ -231,21 +236,26 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         }
         else
         {
-            Set<Float> times = MathUtils.Algebra.quadratic(1 / 2F * tankRobot.getA_lMin(), tangentialVelocity, -distanceLeft);
-            Optional<Float> time = times.stream().filter(aTime -> aTime >= 0).min(Float::compare);
             // TODO: add a buffer around this
             // t = (v_1 - v_0)/a_c
 
-            float decelerateAtTime = (finalSpeed - startSpeed)/Constants.AL_MIN;
-            float positionToDecelerate = 1/2F * Constants.AL_MIN * decelerateAtTime*decelerateAtTime + startSpeed * decelerateAtTime;
-
-            System.out.printf("a %.2f b %.2f c %.2f\n",1 / 2F * tankRobot.getA_lMin(), tangentialVelocity, -distanceLeft);
+            float decelerateDuration = (finalSpeed - startSpeed)/Constants.AL_MIN;
+            float deltaPosDuringDeccel = 1/2F * Constants.AL_MIN * decelerateDuration*decelerateDuration + startSpeed * decelerateDuration;
 
             // this decceleration does not seem to be working well
-            if(distanceLeft <= positionToDecelerate)
+            float ax = (1/2F*(finalSpeed - tangentialVelocity)*(finalSpeed - tangentialVelocity) +
+                        tangentialVelocity*(finalSpeed - tangentialVelocity))/(distanceLeft);
+            if(ax <= Constants.AL_MIN)
             {
+                deccel = true;
+            }
+            if(deccel)
+            {
+                System.out.printf("ax: %.2f, distanceLeft: %.2f, tanSpeed %.2f\n",ax,distanceLeft,tangentialVelocity);
+                Set<Float> times = MathUtils.Algebra.quadratic(1 / 2F * ax, tangentialVelocity, -distanceLeft);
+                Optional<Float> time = times.stream().filter(aTime -> aTime >= 0).min(Float::compare);
                 float dTime = (float) (currentS - lastUpdatedS);
-                speedUsed = Math.min(finalSpeed, startSpeed + dTime*Constants.AL_MIN);
+                speedUsed = Math.max(finalSpeed, startSpeed + dTime*Constants.AL_MIN);
             }
             else
             {

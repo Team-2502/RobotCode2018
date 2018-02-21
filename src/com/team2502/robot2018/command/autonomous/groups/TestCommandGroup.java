@@ -15,8 +15,8 @@ public class TestCommandGroup extends CommandGroup
     {
         List<Waypoint> waypoints = Arrays.asList(
                 new Waypoint(new ImmutableVector2f(0,0),0),
-                new Waypoint(new ImmutableVector2f(0,7),8),
-                new Waypoint(new ImmutableVector2f(0,14),0)
+                new Waypoint(new ImmutableVector2f(0,15),4),
+                new Waypoint(new ImmutableVector2f(0,25),0)
                                                 );
         Scheduler.getInstance().add(new PurePursuitCommand(waypoints, 3, 1.5F));
     }

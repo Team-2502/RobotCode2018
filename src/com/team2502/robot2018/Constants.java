@@ -26,14 +26,14 @@ public class Constants
     public static final float VL_MIN = -10F;
 
     // The max change in voltage per second (acceleration)
-    public static final float AR_MAX = 2F;
-    public static final float AL_MAX = 2F;
-    public static final float AR_MIN = -1F;
-    public static final float AL_MIN = -1F;
+    public static final float AR_MAX = 4F;
+    public static final float AL_MAX = 4F;
+    public static final float AR_MIN = -2F;
+    public static final float AL_MIN = -2F;
 
     // The lookahead distance (feet) for Pure Pursuit
     public static final float LOOKAHEAD_DISTANCE_FT = 5F;
-    public static final float STOP_DIST_TOLERANCE_FT = 1F;
+    public static final float STOP_DIST_TOLERANCE_FT = 0.5F;
 
     /*
     Physical / Other
