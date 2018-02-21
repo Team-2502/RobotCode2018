@@ -67,16 +67,16 @@ public class RobotMap
 
     public static final class Motor
     {
-        /*                        Name - Talon ID - Log ID
+        /*                            Name - Talon ID - Log ID
          *
-         *          Left Side of PDP         |           Right Side of PDP
-         *                                   |
-         * Spare Talon ------------- 7 - 10  |  Active Rotate ----------- 6 -- 5
-         * Active Left ------------- 8 - 11  |  Active Right ------------ 5 -- 4
-         * Elevator Top ------------ 9 - 12  |  Drive Train Back Left --- 4 -- 3
-         * Elevator Bottom -------- 10 - 13  |  Drive Train Front Left -- 3 -- 2
-         * Climber Top ------------ 11 - 14  |  Drive Train Back Right -- 2 -- 1
-         * Climber Bottom --------- 12 - 15  |  Drive Train Front Right - 1 -- 0
+         *            Left Side of PDP           |            Right Side of PDP
+         *                                       |
+         * Spare Talon ----------------- 7 - 10  |  Active Rotate SEN ----------- 6 -- 5
+         * Active Left ----------------- 8 - 11  |  Active Right ---------------- 5 -- 4
+         * Elevator Top SEN ------------ 9 - 12  |  Drive Train Back Left ------- 4 -- 3
+         * Elevator Bottom ENC -------- 10 - 13  |  Drive Train Front Left ENC -- 3 -- 2
+         * Climber Top ---------------- 11 - 14  |  Drive Train Back Right ------ 2 -- 1
+         * Climber Bottom ------------- 12 - 15  |  Drive Train Front Right ENC - 1 -- 0
          */
 
         public static final int DRIVE_TRAIN_FRONT_RIGHT = 1;
