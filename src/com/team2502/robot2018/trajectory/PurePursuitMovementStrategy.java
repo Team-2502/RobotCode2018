@@ -25,8 +25,6 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
     private final ITankRobotBounds tankRobot;
     private final IRotationalLocationEstimator rotEstimator;
 
-    private boolean deccel = false;
-
     private final float distanceStopSq;
     private final Lookahead lookahead;
     private ImmutableVector2f relativeGoalPoint;
@@ -179,7 +177,6 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         if(closestVectorI >= nextPathSegmentI)
         {
             ++lastSegmentSearched;
-            deccel = false;
             lastUpdatedS = currentS;
             System.out.println("removed a waypoint ::: lookAhead = "+lookAheadDistance+" ::: location: "+usedEstimatedLocation.get(0)+","+usedEstimatedLocation.get(1));
         }
@@ -217,19 +214,14 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
 
         float distanceLeft = pathSegmentDistance - distanceAlongPath;
 
-//        System.out.println("distanceLeft: "+distanceLeft);
-
         // p1 = p0 + vt + 1/2at^2 ...
         // pathSegmentDistance = distanceAlongPath + tangentialVelocity*t + 1/2 * maxAcceleration
 
         float startSpeed = waypointStart.getMaxSpeed();
         float finalSpeed = waypointEnd.getMaxSpeed();
 
-        float dSpeed = finalSpeed - tangentialVelocity;
         if(finalSpeed > startSpeed)
         {
-            // TODO: implement a better implementation that does not assume A_lMax() = A_rMax()
-
             // what the motors should be
             float dTime = (float) (currentS - lastUpdatedS);
             speedUsed = Math.min(finalSpeed, startSpeed + dTime*Constants.AL_MAX);
@@ -238,9 +230,6 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         {
             // TODO: add a buffer around this
             // t = (v_1 - v_0)/a_c
-
-            float decelerateDuration = (finalSpeed - startSpeed)/Constants.AL_MIN;
-            float deltaPosDuringDeccel = 1/2F * Constants.AL_MIN * decelerateDuration*decelerateDuration + startSpeed * decelerateDuration;
 
             // Using basic physics kinematic equations we get 2a*x=vf^2-vi^2
             // so vi = \sqrt{vf^2 - 2a*x}
@@ -252,9 +241,8 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
 
         float dCP = distanceClosestPoint.length();
 
-//        System.out.println("speedUsed: "+speedUsed);
         float finalLookahead = lookaheadForSpeed + dCP;
-//        System.out.println("lookahead: "+finalLookahead);
+
         return finalLookahead;
     }
 
