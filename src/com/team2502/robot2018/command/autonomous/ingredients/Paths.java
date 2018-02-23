@@ -3,6 +3,7 @@ package com.team2502.robot2018.command.autonomous.ingredients;
 import com.team2502.robot2018.trajectory.Waypoint;
 import org.joml.ImmutableVector2f;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -66,20 +67,22 @@ public class Paths
      */
     public static class Right
     {
-        public static final List<Waypoint> rightSwitch = Arrays.asList(
-            new Waypoint(new ImmutableVector2f(0, 0), 6),
-            new Waypoint(new ImmutableVector2f(-2F, 3), 9F),
-            new Waypoint(new ImmutableVector2f(-4.67F, 7), 6F),
-            new Waypoint(new ImmutableVector2f(-4.67F, 12), 2F)
-        );
+        public static final List<Waypoint> rightSwitch = flipY(Left.leftSwitch);
         
-        public static final List<Waypoint> rightScale = Arrays.asList(
-                new Waypoint(new ImmutableVector2f(0, 0), 6),
-                new Waypoint(new ImmutableVector2f(1.0F, 10.5F),9F),
-                new Waypoint(new ImmutableVector2f(1.0F, 22.5F), 9F),
-                new Waypoint(new ImmutableVector2f(1.0F, 26.5F), 2F)
-                                                     );
+        public static final List<Waypoint> rightScale = flipY(Left.leftScale);
 
+    }
+
+    private static List<Waypoint> flipY(List<Waypoint> waypoints)
+    {
+        List<Waypoint> toReturn = new ArrayList<>();
+        for(Waypoint waypoint : waypoints)
+        {
+            ImmutableVector2f oldLoc = waypoint.getLocation();
+            ImmutableVector2f newLoc = new ImmutableVector2f(-oldLoc.x,oldLoc.y);
+            toReturn.add(new Waypoint(newLoc,waypoint.getMaxSpeed(),waypoint.isForward()));
+        }
+        return toReturn;
     }
 
 }

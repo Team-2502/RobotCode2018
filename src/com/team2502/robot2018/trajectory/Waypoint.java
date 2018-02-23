@@ -31,6 +31,11 @@ public class Waypoint
         return location;
     }
 
+    public boolean isForward()
+    {
+        return forward;
+    }
+
     @Override
     public String toString()
     {
