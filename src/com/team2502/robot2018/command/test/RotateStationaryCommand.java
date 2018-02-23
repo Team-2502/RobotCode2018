@@ -2,6 +2,7 @@ package com.team2502.robot2018.command.test;
 
 import com.team2502.robot2018.Robot;
 import edu.wpi.first.wpilibj.command.TimedCommand;
+import logger.ShuffleboardLog;
 
 public class RotateStationaryCommand extends TimedCommand implements TestResult
 {
@@ -51,8 +52,7 @@ public class RotateStationaryCommand extends TimedCommand implements TestResult
         // should be positive
         encoderRight = Robot.DRIVE_TRAIN.rightRearTalon.getSelectedSensorPosition(0) - encoderRightInit;
 
-
-        System.out.println("");
+        logResults();
     }
 
     @Override
@@ -61,25 +61,25 @@ public class RotateStationaryCommand extends TimedCommand implements TestResult
         return results;
     }
 
-    private void generateResults()
+    private void logResults()
     {
         if(!(degreesRotated < DEGREE_THRESHOLD))
         {
             success = false;
-            results += "\nDegrees rotated (navX Gyro) was supposed to be < " + DEGREE_THRESHOLD + ", but it actually was " + degreesRotated + ". " +
-                       "1) Did the robot not turn CCW? 2) Is the navX working?";
+            ShuffleboardLog.getInstance().log("Degrees rotated (navX Gyro) was supposed to be < " + DEGREE_THRESHOLD + ", but it actually was " + degreesRotated + ". " +
+                                              "1) Did the robot not turn CCW? 2) Is the navX working?");
         }
         else if(encoderLeft >= -ENCODER_THRESHOLD)
         {
             success = false;
-            results += "\nLeft encoder position detected was supposed to be < " + -ENCODER_THRESHOLD + ", but it actually was " + encoderLeft + ". " +
-                       "1) Is the left encoder backwards? 2) Is the left encoder working?";
+            ShuffleboardLog.getInstance().log("Left encoder position detected was supposed to be < " + -ENCODER_THRESHOLD + ", but it actually was " + encoderLeft + ". " +
+                       "1) Is the left encoder backwards? 2) Is the left encoder working?");
         }
         else if(encoderRight <= ENCODER_THRESHOLD)
         {
             success = false;
-            results += "\nRight encoder position detected was supposed to be > " + ENCODER_THRESHOLD + ", but it actually was " + encoderLeft + ". " +
-                       "Is the right encoder backwards? 2) Is the right encoder working?";
+            ShuffleboardLog.getInstance().log("Right encoder position detected was supposed to be > " + ENCODER_THRESHOLD + ", but it actually was " + encoderLeft + ". " +
+                       "Is the right encoder backwards? 2) Is the right encoder working?");
         }
         else
         {
@@ -87,8 +87,8 @@ public class RotateStationaryCommand extends TimedCommand implements TestResult
             if(Math.abs(encDif) >= ENCODER_THRESHOLD)
             {
                 success = false;
-                results += "\nWhen adding encoder positions the result should be near 0. The threshold was (-1000,1000), " +
-                           "but encoderRight-encoderLeft was actually " + encDif + ". 1) Are the encoders different? (one quadrature one mag)";
+                ShuffleboardLog.getInstance().log("When adding encoder positions the result should be near 0. The threshold was (-1000,1000), " +
+                           "but encoderRight-encoderLeft was actually " + encDif + ". 1) Are the encoders different? (one quadrature one mag)");
             }
         }
     }

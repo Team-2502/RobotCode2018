@@ -1,31 +1,110 @@
 package com.team2502.robot2018.command.test.group;
 
-import com.team2502.robot2018.Robot;
-import edu.wpi.first.wpilibj.command.InstantCommand;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import logger.Log;
+import com.team2502.robot2018.command.autonomous.ingredients.ActiveIntakeMove;
+import com.team2502.robot2018.command.autonomous.ingredients.ElevatorAutonCommand;
+import com.team2502.robot2018.command.autonomous.ingredients.ShootCubeCommand;
+import com.team2502.robot2018.command.teleop.ButterflySetCommand;
+import com.team2502.robot2018.command.teleop.GrabCommand;
+import com.team2502.robot2018.command.teleop.ShiftElevatorCommand;
+import com.team2502.robot2018.command.teleop.TransmissionCommand;
+import com.team2502.robot2018.command.test.PrintCommand;
+import com.team2502.robot2018.command.test.PromptCommand;
+import com.team2502.robot2018.command.test.RotateStationaryCommand;
+import edu.wpi.first.wpilibj.command.CommandGroup;
+import edu.wpi.first.wpilibj.command.WaitCommand;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class FullSystemsTestCommand extends InstantCommand
+public class FullSystemsTestCommand extends CommandGroup
 {
-    private int pushCount;
-
     public FullSystemsTestCommand()
     {
-        pushCount = 0;
+        messages.clear();
 
-        requires(Robot.DRIVE_TRAIN);
-        requires(Robot.ACTIVE_INTAKE);
-        requires(Robot.ACTIVE_INTAKE_SOLENOID);
-        requires(Robot.ELEVATOR);
-        requires(Robot.CLIMBER_SOLENOID);
-        requires(Robot.BUTTERFLY_SOLENOID);
-        requires(Robot.TRANSMISSION_SOLENOID);
+        print("Performing Full System Test");
+        print("There are 3 second delays between each test");
+
+        print("Rotate Stationary Command Active");
+        RotateStationaryCommand command = new RotateStationaryCommand(3);
+        addSequential(command);
+        if(!command.getSuccess())
+        {
+            prompt("FAILURE. DO YOU UNDERSTAND?");
+        }
+        else
+        {
+            print("Success!");
+        }
+
+        newSection("Active Intake Up");
+        addSequential(new ActiveIntakeMove(3,-0.5));
+        print("Active Intake Down");
+        addSequential(new ActiveIntakeMove(3,0.5));
+        prompt("Did this occur?");
+
+        newSection("Shooting OUT cube in active");
+        addSequential(new ShootCubeCommand(3));
+        prompt("Did this occur?");
+
+        newSection("Toggling active intake grab");
+        addSequential(new GrabCommand());
+        prompt("Did this occur?");
+        addSequential(new GrabCommand());
+
+        newSection("Toggling transmission");
+        addSequential(new TransmissionCommand());
+        prompt("Did this occur?");
+        addSequential(new TransmissionCommand());
+
+        newSection("Toggling climber solenoid");
+        addSequential(new ShiftElevatorCommand());
+        prompt("Did this occur?");
+        addSequential(new ShiftElevatorCommand());
+
+        newSection("Raising Elevator");
+        addSequential(new ElevatorAutonCommand(1,1));
+        prompt("Did this occur?");
+
+        newSection("Lowering Elevator");
+        addSequential(new ElevatorAutonCommand(1,-0.5F));
+        prompt("Did this occur?");
+
+        newSection("Deploying Butterfly");
+        addSequential(new ButterflySetCommand(true));
+        prompt("Did this occur?");
+        addSequential(new ButterflySetCommand(false));
+
+        prompt("Systems test completed!");
     }
 
-    private List<String> messages = new ArrayList<String>(4);
+    private void print(String message)
+    {
+        addSequential(new PrintCommand(message));
+    }
+
+    private void newSection(String message)
+    {
+        print("");
+        print(message);
+        waitSome();
+    }
+
+    private void prompt(String message)
+    {
+        print(message);
+        addSequential(new PromptCommand());
+    }
+
+    /**
+     * gr8 name ... totally best conventions and totally not trying to get around {@link Object#wait()}...
+     */
+    private void waitSome()
+    {
+        addSequential(new WaitCommand(3));
+    }
+
+    private List<String> messages = new ArrayList<>(4);
 
     private String get(int index)
     {
@@ -33,126 +112,9 @@ public class FullSystemsTestCommand extends InstantCommand
         catch(Exception e) { return ""; }
     }
 
-    private void log(String message)
-    {
-        Log.info(message);
-        messages.add(message);
-        if(messages.size() > 4) { messages.remove(0); }
-        SmartDashboard.putString("Test0", get(0));
-        SmartDashboard.putString("Test1", get(1));
-        SmartDashboard.putString("Test2", get(2));
-        SmartDashboard.putString("Test3", get(3));
-    }
-
-    private static void sleep(int millis)
-    {
-        try { Thread.sleep(millis); }
-        catch(InterruptedException e) { e.printStackTrace(); }
-    }
-
-    /**
-     * Run a command every n milliseconds for a period of time.
-     *
-     * @param r         The Command to run.
-     * @param delay     The delay between each cycle in milliseconds
-     * @param runTime   The amount of time to run for in milliseconds
-     */
-    private void run(Runnable r, int delay, int runTime)
-    {
-        long startTime = System.currentTimeMillis();
-        while(System.currentTimeMillis() - startTime < runTime)
-        {
-            r.run();
-            sleep(delay);
-        }
-    }
-
     @Override
-    protected void execute()
+    protected void initialize()
     {
-        messages.clear();
-        log("Preparing to run system tests.");
-        if(!SmartDashboard.getBoolean("Run Debug Tests", false)) { return; }
 
-        if(++pushCount > 2) { pushCount = 0; }
-        else { return; }
-
-        log("::: Performing Full System Test :::");
-        log("There are 3 second delays between each test");
-
-        sleep(1000);
-
-        int testId = 1;
-
-        log("Test " + testId++ + ": Run left motors forward");
-        run(() -> Robot.DRIVE_TRAIN.runMotors(0.5f, 0.0f), 10, 1000);
-        Robot.DRIVE_TRAIN.stop();
-        sleep(3000);
-
-        log("Test " + testId++ + ": Run right motors forward");
-        run(() -> Robot.DRIVE_TRAIN.runMotors(0.0f, 0.5f), 10, 1000);
-        Robot.DRIVE_TRAIN.stop();
-        sleep(3000);
-
-        log("Test " + testId++ + ": Run left motors backwards");
-        run(() -> Robot.DRIVE_TRAIN.runMotors(-0.5f, 0.0f), 10, 1000);
-        Robot.DRIVE_TRAIN.stop();
-        sleep(3000);
-
-        log("Test " + testId++ + ": Run right motors backwards");
-        run(() -> Robot.DRIVE_TRAIN.runMotors(0.0f, -0.5f), 10, 1000);
-        Robot.DRIVE_TRAIN.stop();
-        sleep(3000);
-
-        log("Test " + testId++ + ": Run active intake.");
-        run(() -> Robot.ACTIVE_INTAKE.runIntake(0.5D), 10, 1000);
-        Robot.ACTIVE_INTAKE.stopAll();
-        sleep(3000);
-
-        log("Test " + testId++ + ": Rotate active intake.");
-        run(() -> Robot.ACTIVE_INTAKE.rotateIntake(0.5D), 10, 500);
-        Robot.ACTIVE_INTAKE.stopAll();
-        sleep(3000);
-
-        log("Test " + testId++ + ": Toggle active intake");
-        Robot.ACTIVE_INTAKE_SOLENOID.toggleIntake();
-        sleep(3000);
-
-        log("Test " + testId++ + ": Engaging climber");
-        Robot.CLIMBER_SOLENOID.engageClimber();
-        sleep(3000);
-
-        log("Test " + testId++ + ": Disengaging climber");
-        Robot.CLIMBER_SOLENOID.disengageClimber();
-        sleep(3000);
-
-        log("Test " + testId++ + ": Raise elevator");
-        run(() -> Robot.ELEVATOR.moveElevator(0.5D), 10, 1000);
-        sleep(3000);
-
-        log("Test " + testId++ + ": Lower elevator");
-        run(() -> Robot.ELEVATOR.moveElevator(-0.5D), 10, 800);
-        sleep(3000);
-
-        log("Test " + testId++ + ": Open butterfly solenoids");
-        Robot.BUTTERFLY_SOLENOID.set(false);
-        sleep(3000);
-
-        log("Test " + testId++ + ": Close butterfly solenoids");
-        Robot.BUTTERFLY_SOLENOID.set(true);
-        sleep(3000);
-
-        log("Test " + testId++ + ": Setting high gear");
-        Robot.TRANSMISSION_SOLENOID.setGear(true);
-        sleep(3000);
-
-        log("Test " + testId++ + ": Setting low gear");
-        Robot.TRANSMISSION_SOLENOID.setGear(false);
-        sleep(3000);
-
-        log("Finished!");
-        log("Finished!");
-        log("Finished!");
-        log("Finished!");
     }
 }

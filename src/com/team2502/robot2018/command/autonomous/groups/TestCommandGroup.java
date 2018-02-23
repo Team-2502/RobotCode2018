@@ -2,8 +2,8 @@ package com.team2502.robot2018.command.autonomous.groups;
 
 import com.team2502.robot2018.Constants;
 import com.team2502.robot2018.Robot;
-import com.team2502.robot2018.command.autonomous.ingredients.ActiveIntakeDown;
-import com.team2502.robot2018.command.autonomous.ingredients.ElevatorUpAutonCommand;
+import com.team2502.robot2018.command.autonomous.ingredients.ActiveIntakeMove;
+import com.team2502.robot2018.command.autonomous.ingredients.ElevatorAutonCommand;
 import com.team2502.robot2018.command.autonomous.ingredients.PurePursuitCommand;
 import com.team2502.robot2018.command.autonomous.ingredients.ShootCubeCommand;
 import com.team2502.robot2018.trajectory.Waypoint;
@@ -26,8 +26,8 @@ public class TestCommandGroup extends CommandGroup
         Robot.NAVX.reset();
 //        Scheduler.getInstance().add(new CalibrateRobotCommand());
         addSequential(new PurePursuitCommand(straightSwitch, Constants.LOOKAHEAD_DISTANCE_FT, Constants.STOP_DIST_TOLERANCE_FT));
-        addSequential(new ElevatorUpAutonCommand(1.1F));
-        addSequential(new ActiveIntakeDown(0.35, 1));
+        addSequential(new ElevatorAutonCommand(1.1F));
+        addSequential(new ActiveIntakeMove(0.35, 1));
         addSequential(new ShootCubeCommand(1));
     }
 }
