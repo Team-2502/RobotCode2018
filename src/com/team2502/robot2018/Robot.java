@@ -54,9 +54,18 @@ public final class Robot extends IterativeRobot
     public void robotInit()
     {
         autonStrategySelector = new SendableChooser<>();
-        for(AutonStrategy autonStrategy : AutonStrategy.values())
+        AutonStrategy[] values = AutonStrategy.values();
+        for(int i = 0; i < values.length; i++)
         {
-            autonStrategySelector.addObject(autonStrategy.getName(),autonStrategy);
+            AutonStrategy autonStrategy = values[i];
+            if(i == 0)
+            {
+                autonStrategySelector.addDefault(autonStrategy.getName(),autonStrategy);
+            }
+            else
+            {
+                autonStrategySelector.addObject(autonStrategy.getName(),autonStrategy);
+            }
         }
 
         SmartDashboard.putData("auto_strategy",autonStrategySelector);
