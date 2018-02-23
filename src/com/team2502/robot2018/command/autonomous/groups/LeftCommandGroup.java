@@ -1,6 +1,5 @@
 package com.team2502.robot2018.command.autonomous.groups;
 
-import com.team2502.robot2018.Constants;
 import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.command.autonomous.ingredients.*;
 import edu.wpi.first.wpilibj.command.CommandGroup;
@@ -58,7 +57,7 @@ public class LeftCommandGroup extends CommandGroup
 
     private void goSwitch()
     {
-        addSequential(new PurePursuitCommand(Paths.Left.leftSwitch, Constants.LOOKAHEAD_DISTANCE_FT, Constants.STOP_DIST_TOLERANCE_FT));
+        addSequential(new PurePursuitCommand(Paths.Left.leftSwitch));
         addSequential(new ElevatorUpAutonCommand(.8F));
         addSequential(new ActiveIntakeDown(0.35, 1));
         emitCube();
@@ -68,7 +67,7 @@ public class LeftCommandGroup extends CommandGroup
     private void goScaleLeft()
     {
         addParallel(new ActiveIntakeDown(0.7, 0.5));
-        addSequential(new PurePursuitCommand(Paths.Left.leftScale, Constants.LOOKAHEAD_DISTANCE_FT, Constants.STOP_DIST_TOLERANCE_FT));
+        addSequential(new PurePursuitCommand(Paths.Left.leftScale));
         addSequential(new WaitCommand(0.8F));
         addSequential(new RotateAutonStationary(55));
         addSequential(new ElevatorUpAutonCommand(2.7F));

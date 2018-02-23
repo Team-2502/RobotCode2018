@@ -18,6 +18,6 @@ public class TestCommandGroup extends CommandGroup
                 new Waypoint(new ImmutableVector2f(0,15),4),
                 new Waypoint(new ImmutableVector2f(0,25),0)
                                                 );
-        Scheduler.getInstance().add(new PurePursuitCommand(waypoints, 3, 1.5F));
+        Scheduler.getInstance().add(new PurePursuitCommand(waypoints));
     }
 }

@@ -46,7 +46,7 @@ public class RightCommandGroup extends CommandGroup
 
     private void goSwitch()
     {
-        addSequential(new PurePursuitCommand(Paths.Right.rightSwitch, Constants.LOOKAHEAD_DISTANCE_FT, Constants.STOP_DIST_TOLERANCE_FT));
+        addSequential(new PurePursuitCommand(Paths.Right.rightSwitch));
         addSequential(new ElevatorUpAutonCommand(.8F));
         addSequential(new ActiveIntakeDown(0.35, 1));
         emitCube();
@@ -56,7 +56,7 @@ public class RightCommandGroup extends CommandGroup
     {
         // TODO: Move things into constants
         addParallel(new ActiveIntakeDown(0.7, 0.5));
-        addSequential(new PurePursuitCommand(Paths.Right.rightScale, Constants.LOOKAHEAD_DISTANCE_FT, Constants.STOP_DIST_TOLERANCE_FT));
+        addSequential(new PurePursuitCommand(Paths.Right.rightScale));
         addSequential(new WaitCommand(0.8F));
         addSequential(new RotateAutonStationary(-55));
         addSequential(new ElevatorUpAutonCommand(2.7F));
