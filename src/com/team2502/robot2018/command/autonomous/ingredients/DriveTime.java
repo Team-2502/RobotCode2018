@@ -11,13 +11,13 @@ public class DriveTime extends Command
 
     /**
      * Veer off to the side inconsistently
-     *
+     * <p>
      * <br>
-     *
+     * <p>
      * Play Russian Roulette with the robot
-     *
+     * <p>
      * <br>
-     *
+     * <p>
      * Invest all of your money into the Lehman Brothersgi
      *
      * @param timeout How long we should put you in the timeout corner for using this class

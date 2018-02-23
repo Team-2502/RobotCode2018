@@ -5,6 +5,7 @@ import com.team2502.robot2018.utils.MathUtils;
 
 /**
  * A linear segment joining two {@link MotionState1D}s.
+ *
  * @deprecated Doesn't really need to be used anywhere... and not working (probably) anyway
  */
 public class MotionSegment
@@ -32,7 +33,6 @@ public class MotionSegment
     {
         return end;
     }
-
 
 
     public boolean valid()

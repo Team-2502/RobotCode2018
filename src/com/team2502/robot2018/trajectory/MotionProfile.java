@@ -17,7 +17,7 @@ public class MotionProfile
     {
         for(MotionSegment segment : segments)
         {
-            if(MathUtils.Algebra.bounded(segment.getStart().getPosition(),position,segment.getEnd().getPosition()))
+            if(MathUtils.Algebra.bounded(segment.getStart().getPosition(), position, segment.getEnd().getPosition()))
             {
                 return segment;
             }
@@ -30,14 +30,14 @@ public class MotionProfile
         float length = 0;
         for(MotionSegment segment : segments)
         {
-            length+=segment.length();
+            length += segment.length();
         }
         return length;
     }
 
     public MotionState1D endState()
     {
-        return segments.get(segments.size()-1).getEnd();
+        return segments.get(segments.size() - 1).getEnd();
     }
 
     public MotionState1D startState()
@@ -54,7 +54,6 @@ public class MotionProfile
     {
         return segments.get(0).getStart().getTime();
     }
-
 
 
 }

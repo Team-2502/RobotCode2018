@@ -13,12 +13,28 @@ class AutoStartLocationSwitcher
 {
     private static SendableChooser<AutoMode> autoChooser;
 
+    static void putToSmartDashboard()
+    {
+        autoChooser = new SendableChooser<>();
+
+        for(int i = 0; i < AutoMode.values().length; i++)
+        {
+            AutoMode mode = AutoMode.values()[i];
+            if(i == 0) { autoChooser.addDefault(mode.name, mode); }
+            else { autoChooser.addObject(mode.name, mode); }
+        }
+
+        SmartDashboard.putData("auto_modes", autoChooser);
+    }
+
+    static Command getAutoInstance() { return autoChooser.getSelected().getInstance(); }
+
     public enum AutoMode
     {
         CENTERAUTO("Center", CenterCommandGroup::new),
         LEFTAUTO("Left", LeftCommandGroup::new),
         RIGHTAUTO("Right", RightCommandGroup::new),
-        TEST("Test",TestCommandGroup::new);
+        TEST("Test", TestCommandGroup::new);
 
         private CommandFactory commandFactory;
         private String name;
@@ -34,21 +50,6 @@ class AutoStartLocationSwitcher
             return commandFactory.getInstance();
         }
     }
-
-    static void putToSmartDashboard()
-    {
-        autoChooser = new SendableChooser<>();
-
-        for(int i = 0; i < AutoMode.values().length; i++)
-        {
-            AutoMode mode = AutoMode.values()[ i ];
-            if(i == 0) { autoChooser.addDefault(mode.name, mode); } else { autoChooser.addObject(mode.name, mode); }
-        }
-
-        SmartDashboard.putData("auto_modes", autoChooser);
-    }
-
-    static Command getAutoInstance() { return autoChooser.getSelected().getInstance(); }
 
     public interface CommandFactory
     {

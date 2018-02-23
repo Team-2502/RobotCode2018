@@ -29,7 +29,7 @@ public class MotionState1D
     {
         float dt = time - this.time;
 
-        return new MotionState1D(MathUtils.Kinematics.getPos(position,velocity,acceleration,dt),velocity+acceleration*dt,acceleration,time);
+        return new MotionState1D(MathUtils.Kinematics.getPos(position, velocity, acceleration, dt), velocity + acceleration * dt, acceleration, time);
     }
 
     public float getPosition()

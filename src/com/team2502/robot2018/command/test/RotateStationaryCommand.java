@@ -6,12 +6,6 @@ import edu.wpi.first.wpilibj.command.TimedCommand;
 public class
 
 
-
-
-
-
-
-
 RotateStationaryCommand extends TimedCommand implements TestResult
 {
     private final static int DEGREE_THRESHOLD = 10;

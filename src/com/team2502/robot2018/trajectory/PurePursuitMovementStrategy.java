@@ -96,7 +96,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         float lookAheadDistanceSquared = lookAheadDistance * lookAheadDistance;
 
         // Loop looks for intersections on last segment searched and one after that
-        for(int i = Math.max(lastSegmentSearched-1,0); i <= lastSegmentSearched + 1; ++i)
+        for(int i = Math.max(lastSegmentSearched - 1, 0); i <= lastSegmentSearched + 1; ++i)
         {
             int nextWayPointI = i + 1;
 
@@ -119,7 +119,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
 
             float distanceWaypointSq = lineP2.sub(usedEstimatedLocation).lengthSquared();
 
-            if(nextWayPointI == waypoints.size() - 1 && lastSegmentSearched == waypoints.size()-2)
+            if(nextWayPointI == waypoints.size() - 1 && lastSegmentSearched == waypoints.size() - 2)
             {
                 if(distanceWaypointSq <= lookAheadDistanceSquared)
                 {
@@ -127,7 +127,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
                     // We want to stop if the distance is within the desired amount
                     if(distanceWaypointSq < distanceStopSq)
                     {
-                        System.out.println("success: "+distanceWaypointSq);
+                        System.out.println("success: " + distanceWaypointSq);
                         isSuccessfullyFinished = true;
                         finishedPath = true;
                         return null;
@@ -168,7 +168,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         {
             Log.info("closestGoalPoint vector not found!");
             System.out.printf("loc: %.2f, %.2f\n", usedEstimatedLocation.get(0), usedEstimatedLocation.get(1));
-            System.out.println("usedLookAhead: "+usedLookahead);
+            System.out.println("usedLookAhead: " + usedLookahead);
             finishedPath = true;
             return null;
         }
@@ -180,7 +180,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         {
             ++lastSegmentSearched;
             lastUpdatedS = currentS;
-            System.out.println("removed a waypoint ::: lookAhead = "+lookAheadDistance+" ::: location: "+usedEstimatedLocation.get(0)+","+usedEstimatedLocation.get(1));
+            System.out.println("removed a waypoint ::: lookAhead = " + lookAheadDistance + " ::: location: " + usedEstimatedLocation.get(0) + "," + usedEstimatedLocation.get(1));
         }
 
         // closestGoalPoint is our new goal point
@@ -203,7 +203,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         Waypoint waypointStart = waypoints.get(lastSegmentSearched);
         ImmutableVector2f lineStartPoint = waypointStart.getLocation();
 
-        Waypoint waypointEnd = waypoints.get(lastSegmentSearched+1);
+        Waypoint waypointEnd = waypoints.get(lastSegmentSearched + 1);
 
         ImmutableVector2f lineEndPoint = waypointEnd.getLocation();
 
@@ -226,7 +226,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         {
             // what the motors should be
             float dTime = (float) (currentS - lastUpdatedS);
-            speedUsed = Math.min(finalSpeed, startSpeed + dTime*tankRobot.getA_lMax());
+            speedUsed = Math.min(finalSpeed, startSpeed + dTime * tankRobot.getA_lMax());
         }
         else
         {
@@ -236,16 +236,14 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
             // Using basic physics kinematic equations we get 2a*x=vf^2-vi^2
             // so vi = \sqrt{vf^2 - 2a*x}
 
-            float maxVel = (float) Math.sqrt(finalSpeed*finalSpeed-2*tankRobot.getA_lMin()*distanceLeft);
+            float maxVel = (float) Math.sqrt(finalSpeed * finalSpeed - 2 * tankRobot.getA_lMin() * distanceLeft);
 
             speedUsed = Math.min(startSpeed, maxVel);
         }
 
         float dCP = distanceClosestPoint.length();
 
-        float finalLookahead = lookaheadForSpeed + dCP;
-
-        return finalLookahead;
+        return lookaheadForSpeed + dCP;
     }
 
     /**
