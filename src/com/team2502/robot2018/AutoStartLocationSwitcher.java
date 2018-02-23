@@ -55,4 +55,5 @@ class AutoStartLocationSwitcher
     {
         Command getInstance();
     }
+
 }

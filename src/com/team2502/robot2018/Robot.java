@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import logger.Log;
 
@@ -28,10 +29,8 @@ import java.io.PrintWriter;
 public final class Robot extends IterativeRobot
 {
     public static double CAL_VELOCITY = 0D;
-    public static long SHIFTED;
     public static String GAME_DATA = "...";
 
-    public static AutonStrategy AUTON_STRATEGY;
     public static DriveTrainSubsystem DRIVE_TRAIN;
     public static ActiveIntakeSubsystem ACTIVE_INTAKE;
     public static Compressor COMPRESSOR;
@@ -42,11 +41,10 @@ public final class Robot extends IterativeRobot
     public static ButterflySolenoid BUTTERFLY_SOLENOID;
     public static TransmissionSolenoid TRANSMISSION_SOLENOID;
     public static AHRS NAVX;
+    public static SendableChooser<AutonStrategy> autonStrategySelector;
 
     public static void write(String string)
-    {
-        LOG_OUTPUT.println(string);
-    }
+    { LOG_OUTPUT.println(string); }
 
     /**
      * This function is run when the robot is first started up and should be
@@ -55,8 +53,22 @@ public final class Robot extends IterativeRobot
     @Override
     public void robotInit()
     {
-        // TODO: needs to be changed in shuffleboard
-        AUTON_STRATEGY = AutonStrategy.SCALE;
+        autonStrategySelector = new SendableChooser<>();
+        AutonStrategy[] values = AutonStrategy.values();
+        for(int i = 0; i < values.length; i++)
+        {
+            AutonStrategy autonStrategy = values[i];
+            if(i == 0)
+            {
+                autonStrategySelector.addDefault(autonStrategy.getName(),autonStrategy);
+            }
+            else
+            {
+                autonStrategySelector.addObject(autonStrategy.getName(),autonStrategy);
+            }
+        }
+
+        SmartDashboard.putData("auto_strategy",autonStrategySelector);
 
         Log.createLogger(true);
 
@@ -69,8 +81,8 @@ public final class Robot extends IterativeRobot
         CLIMBER_SOLENOID = new ClimberSolenoid();
         BUTTERFLY_SOLENOID = new ButterflySolenoid();
         TRANSMISSION_SOLENOID = new TransmissionSolenoid();
-
         OI.init();
+
 
         AutoStartLocationSwitcher.putToSmartDashboard();
 

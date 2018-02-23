@@ -1,7 +1,7 @@
 package com.team2502.robot2018.utils;
 
-import com.team2502.robot2018.utils.baseoverloads.GenericHIDF;
-import com.team2502.robot2018.utils.baseoverloads.JoystickButtonF;
+import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
 /**
  * A wrapper for Joystick Button
@@ -10,7 +10,7 @@ import com.team2502.robot2018.utils.baseoverloads.JoystickButtonF;
  * except in exceptional situations.
  */
 @Deprecated
-public class DebouncedJoystickButton extends JoystickButtonF
+public class DebouncedJoystickButton extends JoystickButton
 {
 
     boolean activeCache = false;
@@ -25,7 +25,7 @@ public class DebouncedJoystickButton extends JoystickButtonF
      *                     etc)
      * @param buttonNumber The button number (see {@link GenericHID#getRawButton(int) }
      */
-    public DebouncedJoystickButton(GenericHIDF joystick, int buttonNumber)
+    public DebouncedJoystickButton(GenericHID joystick, int buttonNumber)
     {
         super(joystick, buttonNumber);
     }
