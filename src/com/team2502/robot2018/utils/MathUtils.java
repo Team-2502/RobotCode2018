@@ -496,6 +496,11 @@ public final class MathUtils
             return new ImmutableVector2f(dxRelative, dyRelative);
         }
 
+        public static float getTangentialSpeed(float wheelL, float wheelR)
+        {
+            return (wheelL + wheelR)/2F;
+        }
+
         /**
          * @return
          * @deprecated

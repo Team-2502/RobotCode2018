@@ -21,13 +21,14 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
     private static final float THRESHOLD_CURVATURE = 0.001F;
     public final List<Waypoint> waypoints;
 
-    private final ITranslationalLocationEstimator transEstimator;
+    private final ITranslationalLocationEstimator translationalLocationEstimator;
     private final ITankRobotBounds tankRobot;
     private final IRotationalLocationEstimator rotEstimator;
 
     private final float distanceStopSq;
     private final Lookahead lookahead;
     private final ITranslationalVelocityEstimator velocityEstimator;
+    private final boolean forward;
     private ImmutableVector2f relativeGoalPoint;
     private float motionRadius;
     private float rotVelocity;
@@ -54,19 +55,28 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
      * Strategize your movement!
      *
      * @param tankRobot      An instance of ITanRobotBounds, an interface that has getters for robot max speed and accel.
-     * @param transEstimator An estimator for the absolute position of the robot
+     * @param translationalLocationEstimator An estimator for the absolute position of the robot
      * @param rotEstimator   An estimator for the heading of the robot
      * @param waypoints      A list of waypoints for the robot to drive through
      * @param lookahead      The lookahead distance for the pure pursuit algorithm
      * @param distanceStop
      */
-    public PurePursuitMovementStrategy(ITankRobotBounds tankRobot, ITranslationalLocationEstimator transEstimator,
+    public PurePursuitMovementStrategy(ITankRobotBounds tankRobot, ITranslationalLocationEstimator translationalLocationEstimator,
                                        IRotationalLocationEstimator rotEstimator, ITranslationalVelocityEstimator velocityEstimator,
-                                       List<Waypoint> waypoints, Lookahead lookahead, float distanceStop)
+                                       List<Waypoint> waypoints, Lookahead lookahead, float distanceStop, boolean forward)
     {
+        this.forward = forward;
         this.waypoints = new ArrayList<>(waypoints);
-        this.tankRobot = tankRobot;
-        this.transEstimator = transEstimator;
+        if(forward)
+        {
+            this.tankRobot = tankRobot;
+            this.translationalLocationEstimator = translationalLocationEstimator;
+        }
+        else
+        {
+            this.tankRobot = tankRobot.getInverted();
+            this.translationalLocationEstimator = translationalLocationEstimator.getInverted();
+        }
         this.rotEstimator = rotEstimator;
         distanceStopSq = distanceStop * distanceStop;
         this.lookahead = lookahead;
@@ -256,7 +266,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         {
             lastUpdatedS = currentS;
         }
-        usedEstimatedLocation = transEstimator.estimateLocation();
+        usedEstimatedLocation = translationalLocationEstimator.estimateLocation();
         usedHeading = rotEstimator.estimateHeading();
 
         usedLookahead = generateLookahead();
@@ -349,7 +359,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
 
         if(Math.abs(curvature) < THRESHOLD_CURVATURE) // if we are a straight line ish (lines are not curvy -> low curvature)
         {
-            bestVector = new ImmutableVector2f(v_lMax, v_rMax);
+            bestVector = forward ? new ImmutableVector2f(v_lMax, v_rMax) : new ImmutableVector2f(v_lMin, v_rMin);
             rotVelocity = (bestVector.get(1) - bestVector.get(0)) / tankRobot.getLateralWheelDistance();
             motionRadius = Float.MAX_VALUE;
             leftWheelTanVel = bestVector.get(0);
@@ -367,6 +377,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
             float score = Float.MIN_VALUE;
 
             float v_r = v_lMax * velLeftToRightRatio;
+
             if(MathUtils.Algebra.between(v_rMin, v_r, v_rMax))
             {
                 score = Math.abs(v_lMax + v_r);
@@ -418,7 +429,23 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
             dThetaToRotate = (float) (Math.signum(rotVelocity) * Math.atan(relativeGoalPoint.get(1) / (Math.abs(motionRadius) - relativeGoalPoint.get(0))));
         }
 
-        return bestVector;
+        if(forward)
+        {
+            return bestVector;
+        }
+        else
+        {
+            return new ImmutableVector2f(-bestVector.y,-bestVector.x);
+        }
+    }
+
+    private float getSpeed(float wheelL, float wheelR, float minWheelSpeed, float maxWheelSpeed)
+    {
+        if(!MathUtils.Algebra.bounded(minWheelSpeed, wheelL, maxWheelSpeed))
+            return Float.NaN;
+        if(MathUtils.Algebra.bounded(minWheelSpeed,wheelR,maxWheelSpeed))
+            return Float.NaN;
+        return MathUtils.Kinematics.getTangentialSpeed(wheelL,wheelR);
     }
 
     /**
