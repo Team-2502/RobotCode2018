@@ -188,6 +188,10 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         // If the closestGoalPoint vector is on the next segment, set that segment as the current segment
         if(closestVectorI >= nextPathSegmentI)
         {
+            // Execute commands for last waypoint
+            Waypoint waypoint = waypoints.get(lastSegmentSearched);
+            waypoint.executeCommands();
+
             ++lastSegmentSearched;
             lastUpdatedS = currentS;
             System.out.println("removed a waypoint ::: lookAhead = " + lookAheadDistance + " ::: location: " + usedEstimatedLocation.get(0) + "," + usedEstimatedLocation.get(1));
