@@ -1,7 +1,5 @@
 package com.team2502.robot2018.trajectory;
 
-import com.team2502.robot2018.Constants;
-import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.trajectory.localization.IRotationalLocationEstimator;
 import com.team2502.robot2018.trajectory.localization.ITranslationalLocationEstimator;
 import com.team2502.robot2018.trajectory.localization.ITranslationalVelocityEstimator;
@@ -9,7 +7,9 @@ import com.team2502.robot2018.utils.MathUtils;
 import logger.Log;
 import org.joml.ImmutableVector2f;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class PurePursuitMovementStrategy implements ITankMovementStrategy
 {
@@ -27,6 +27,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
 
     private final float distanceStopSq;
     private final Lookahead lookahead;
+    private final ITranslationalVelocityEstimator velocityEstimator;
     private ImmutableVector2f relativeGoalPoint;
     private float motionRadius;
     private float rotVelocity;
@@ -69,6 +70,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         this.rotEstimator = rotEstimator;
         distanceStopSq = distanceStop * distanceStop;
         this.lookahead = lookahead;
+        this.velocityEstimator = velocityEstimator;
     }
 
     /**
@@ -195,7 +197,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
 
     float generateLookahead()
     {
-        float tangentialVelocity = Robot.DRIVE_TRAIN.getTanVel();
+        float tangentialVelocity = velocityEstimator.estimateSpeed();
         float lookaheadForSpeed = lookahead.getLookaheadForSpeed(tangentialVelocity);
 
         Waypoint waypointStart = waypoints.get(lastSegmentSearched);
@@ -224,7 +226,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         {
             // what the motors should be
             float dTime = (float) (currentS - lastUpdatedS);
-            speedUsed = Math.min(finalSpeed, startSpeed + dTime*Constants.AL_MAX);
+            speedUsed = Math.min(finalSpeed, startSpeed + dTime*tankRobot.getA_lMax());
         }
         else
         {
@@ -234,7 +236,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
             // Using basic physics kinematic equations we get 2a*x=vf^2-vi^2
             // so vi = \sqrt{vf^2 - 2a*x}
 
-            float maxVel = (float) Math.sqrt(finalSpeed*finalSpeed-2*Constants.AL_MIN*distanceLeft);
+            float maxVel = (float) Math.sqrt(finalSpeed*finalSpeed-2*tankRobot.getA_lMin()*distanceLeft);
 
             speedUsed = Math.min(startSpeed, maxVel);
         }
