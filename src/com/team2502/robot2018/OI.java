@@ -33,6 +33,8 @@ public final class OI
 
     private static final Button RUN_TESTS = new JoystickButton(JOYSTICK_DRIVE_LEFT, RobotMap.Joystick.Button.RUN_DEBUG_TESTS);
 
+    private static final Button CALIBRATE_ELEV_ENCODER = new JoystickButton(JOYSTICK_DRIVE_RIGHT, RobotMap.Joystick.Button.CALIBRATE_ELEV_ENCODER);
+
     static
     {
         // Elevator buttons
@@ -56,6 +58,8 @@ public final class OI
         TOGGLE_TRANSMISSION.whenPressed(new TransmissionCommand());
 
         RUN_TESTS.whenPressed(new FullSystemsTestCommand());
+
+        CALIBRATE_ELEV_ENCODER.whenPressed(new QuickCommand(Robot.ELEVATOR::calibrateEncoder));
     }
 
     public static void init() {}

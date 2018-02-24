@@ -130,8 +130,8 @@ public class PurePursuitCommand extends Command
         SmartDashboard.putNumber("PPwheelL", wheelVelocities.get(0));
         SmartDashboard.putNumber("PPwheelR", wheelVelocities.get(1));
 
-        float leftWheelFPS = wheelL * Constants.FPS_TO_EVEL;
-        float rightWheelFPS = wheelR * Constants.FPS_TO_EVEL;
+        float leftWheelFPS = wheelL * Constants.FPS_TO_EVEL_DT;
+        float rightWheelFPS = wheelR * Constants.FPS_TO_EVEL_DT;
 
         if(purePursuitMovementStrategy.isBrakeStage())
         {
@@ -142,6 +142,8 @@ public class PurePursuitCommand extends Command
         {
             Robot.DRIVE_TRAIN.runMotors(ControlMode.Velocity, leftWheelFPS, rightWheelFPS);
         }
+
+        float usedLookahead = purePursuitMovementStrategy.getUsedLookahead();
     }
 
     @Override

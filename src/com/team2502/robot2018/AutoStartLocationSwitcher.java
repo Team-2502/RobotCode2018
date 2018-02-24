@@ -41,6 +41,7 @@ class AutoStartLocationSwitcher
         CALIBRATE("Calibrate", CalibrateRobotCommand::new);
 
         private CommandFactory commandFactory;
+
         private String name;
 
         AutoMode(String name, CommandFactory commandFactory)

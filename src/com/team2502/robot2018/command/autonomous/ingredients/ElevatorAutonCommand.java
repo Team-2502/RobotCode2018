@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj.command.TimedCommand;
 public class ElevatorAutonCommand extends TimedCommand
 {
 
-    private float speed;
+    private float feet;
 
     public ElevatorAutonCommand(double timeout)
     {
@@ -16,18 +16,18 @@ public class ElevatorAutonCommand extends TimedCommand
     /**
      * Positive voltage is up by default is up
      * @param timeout
-     * @param speed
+     * @param feet
      */
-    public ElevatorAutonCommand(double timeout, float speed)
+    public ElevatorAutonCommand(double timeout, float feet)
     {
         super(timeout);
-        this.speed = speed;
+        this.feet = feet;
     }
 
     @Override
     protected void execute()
     {
-        Robot.ELEVATOR.moveElevator(speed);
+        Robot.ELEVATOR.setElevatorPos(feet);
     }
 
     @Override

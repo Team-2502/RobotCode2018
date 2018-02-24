@@ -10,6 +10,18 @@ import com.team2502.robot2018.utils.InterpolationMap;
 public class Constants
 {
 
+    /**
+     * How high the elevator must be in order to put a cube in the switch
+     */
+    public static final double SWITCH_ELEV_HEIGHT_FT = 1.5F;
+
+    /**
+     * How high the elevator must be in order to put a cube in the scale
+     */
+    public static final double SCALE_ELEV_HEIGHT_FT = 7F;
+
+
+
     /*
     Tweak
      */
@@ -65,18 +77,37 @@ public class Constants
 
     public static final float ENC_RES = 4096.0F;
 
-    public static final float EPOS_TO_FEET = (WHEEL_DIAMETER_FT * (float) Math.PI) / ENC_RES;
+
+    /* Drivetrain */
+    public static final float EPOS_TO_FEET_DT = (WHEEL_DIAMETER_FT * (float) Math.PI) / ENC_RES;
 
     // 600 = amount of 100 ms in a minute
     public static final float EVEL_TO_RPM = (600.0F / ENC_RES);
-    public static final float RPM_TO_FPS = (WHEEL_DIAMETER_FT * (float) Math.PI) / 60F;
-    public static final float EVEL_TO_FPS = EVEL_TO_RPM * RPM_TO_FPS;
+    public static final float RPM_TO_FPS_DT = (WHEEL_DIAMETER_FT * (float) Math.PI) / 60F;
+    public static final float EVEL_TO_FPS_DT = EVEL_TO_RPM * RPM_TO_FPS_DT;
 
-    public static final float FEET_TO_EPOS = 1 / EPOS_TO_FEET;
+    public static final float FEET_TO_EPOS_DT = 1 / EPOS_TO_FEET_DT;
 
-    public static final float FPS_TO_RPM = 60F / (WHEEL_DIAMETER_FT * (float) Math.PI);
-    public static final float RPM_TO_EVEL = ENC_RES / 600F;
-    public static final float FPS_TO_EVEL = FPS_TO_RPM * RPM_TO_EVEL;
+    public static final float FPS_TO_RPM_DT = 60F / (WHEEL_DIAMETER_FT * (float) Math.PI);
+    public static final float RPM_TO_EVEL_DT = ENC_RES / 600F;
+    public static final float FPS_TO_EVEL_DT = FPS_TO_RPM_DT * RPM_TO_EVEL_DT;
+
+    /* Elevator */
+    public static final double ELEV_SHAFT_DIAMETER_IN = 1;
+    public static final double ELEV_SHAFT_DIAMETER_FT = ELEV_SHAFT_DIAMETER_IN / 12D;
+
+    public static final double EPOS_TO_FEET_ELEV = (ELEV_SHAFT_DIAMETER_FT * (float) Math.PI) / ENC_RES;
+
+    // 600 = amount of 100 ms in a minute
+    public static final double EVEL_TO_RPM_ELEV = (600.0F / ENC_RES);
+    public static final double RPM_TO_FPS_ELEV = (ELEV_SHAFT_DIAMETER_FT * (float) Math.PI) / 60F;
+    public static final double EVEL_TO_FPS_ELEV = EVEL_TO_RPM_ELEV * RPM_TO_FPS_ELEV;
+
+    public static final double FEET_TO_EPOS_ELEV = 1 / EPOS_TO_FEET_ELEV;
+
+    public static final double FPS_TO_RPM_ELEV = 60F / (WHEEL_DIAMETER_FT * (float) Math.PI);
+    public static final double RPM_TO_EVEL_ELEV = ENC_RES / 600F;
+    public static final double FPS_TO_EVEL_ELEV = FPS_TO_RPM_ELEV * RPM_TO_EVEL_ELEV;
 
 
     public static final int INIT_TIMEOUT = 10; // When initializing a sensor/whatever, the timeout will be 10 ms
