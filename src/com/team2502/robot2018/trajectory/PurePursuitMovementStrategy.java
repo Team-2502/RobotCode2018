@@ -21,14 +21,18 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
     private static final float THRESHOLD_CURVATURE = 0.001F;
     public final List<Waypoint> waypoints;
 
-    private final ITranslationalLocationEstimator translationalLocationEstimator;
-    private final ITankRobotBounds tankRobot;
+    private ITranslationalLocationEstimator translationalLocationEstimator;
+    private ITankRobotBounds tankRobot;
     private final IRotationalLocationEstimator rotEstimator;
 
     private final float distanceStopSq;
     private final Lookahead lookahead;
     private final ITranslationalVelocityEstimator velocityEstimator;
-    private final boolean forward;
+    private final ITankRobotBounds tankRobotNorm;
+    private final ITranslationalLocationEstimator normTransLocEst;
+    private boolean forward;
+    private final ITankRobotBounds tankRobotInverted;
+    private final ITranslationalLocationEstimator invertedTranslationalLocation;
     private ImmutableVector2f relativeGoalPoint;
     private float motionRadius;
     private float rotVelocity;
@@ -53,8 +57,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
 
     /**
      * Strategize your movement!
-     *
-     * @param tankRobot      An instance of ITanRobotBounds, an interface that has getters for robot max speed and accel.
+     *  @param tankRobot      An instance of ITanRobotBounds, an interface that has getters for robot max speed and accel.
      * @param translationalLocationEstimator An estimator for the absolute position of the robot
      * @param rotEstimator   An estimator for the heading of the robot
      * @param waypoints      A list of waypoints for the robot to drive through
@@ -63,20 +66,18 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
      */
     public PurePursuitMovementStrategy(ITankRobotBounds tankRobot, ITranslationalLocationEstimator translationalLocationEstimator,
                                        IRotationalLocationEstimator rotEstimator, ITranslationalVelocityEstimator velocityEstimator,
-                                       List<Waypoint> waypoints, Lookahead lookahead, float distanceStop, boolean forward)
+                                       List<Waypoint> waypoints, Lookahead lookahead, float distanceStop)
     {
-        this.forward = forward;
         this.waypoints = new ArrayList<>(waypoints);
-        if(forward)
-        {
-            this.tankRobot = tankRobot;
-            this.translationalLocationEstimator = translationalLocationEstimator;
-        }
-        else
-        {
-            this.tankRobot = tankRobot.getInverted();
-            this.translationalLocationEstimator = translationalLocationEstimator.getInvertedTranslationalLocation();
-        }
+        tankRobotInverted = tankRobot.getInverted();
+        invertedTranslationalLocation = translationalLocationEstimator.getInvertedTranslationalLocation();
+
+        tankRobotNorm = tankRobot;
+        normTransLocEst = translationalLocationEstimator;
+
+        this.tankRobot = tankRobotNorm;
+        this.translationalLocationEstimator = normTransLocEst;
+
         this.rotEstimator = rotEstimator;
         distanceStopSq = distanceStop * distanceStop;
         this.lookahead = lookahead;
@@ -193,6 +194,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
             waypoint.executeCommands();
 
             ++lastSegmentSearched;
+
             lastUpdatedS = currentS;
             System.out.println("removed a waypoint ::: lookAhead = " + lookAheadDistance + " ::: location: " + usedEstimatedLocation.get(0) + "," + usedEstimatedLocation.get(1));
         }
@@ -218,6 +220,18 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         ImmutableVector2f lineStartPoint = waypointStart.getLocation();
 
         Waypoint waypointEnd = waypoints.get(lastSegmentSearched + 1);
+        forward = waypointEnd.isForward();
+        if(forward)
+        {
+            tankRobot = tankRobotNorm;
+            translationalLocationEstimator = normTransLocEst;
+        }
+        else
+        {
+            tankRobot = tankRobotInverted;
+            translationalLocationEstimator = invertedTranslationalLocation;
+        }
+
 
         ImmutableVector2f lineEndPoint = waypointEnd.getLocation();
 
