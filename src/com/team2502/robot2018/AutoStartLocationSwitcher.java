@@ -4,6 +4,7 @@ package com.team2502.robot2018;
 import com.team2502.robot2018.command.autonomous.groups.CenterCommandGroup;
 import com.team2502.robot2018.command.autonomous.groups.LeftCommandGroup;
 import com.team2502.robot2018.command.autonomous.groups.RightCommandGroup;
+import com.team2502.robot2018.command.autonomous.groups.TestCommandGroup;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -33,6 +34,7 @@ class AutoStartLocationSwitcher
         CENTERAUTO("Center", CenterCommandGroup.class),
         LEFTAUTO("Left", LeftCommandGroup.class),
         RIGHTAUTO("Right", RightCommandGroup.class);
+//        TEST("Test", TestCommandGroup.class);
 
         private Class<? extends Command> autoCommand;
         private String name;

@@ -301,22 +301,22 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     /**
      * @return Velocity as read by left encoder in Feet per Second
      */
-    public float getLeftVel() { return leftFrontTalonEnc.getSelectedSensorVelocity(0) * Constants.EVEL_TO_FPS; }
+    public float getLeftVel() { return leftFrontTalonEnc.getSelectedSensorVelocity(0) * Constants.EVEL_TO_FPS_DT; }
 
     /**
      * @return Velocity as read by right encoder in Feet per Second
      */
-    public float getRightVel() { return rightFrontTalonEnc.getSelectedSensorVelocity(0) * Constants.EVEL_TO_FPS; }
+    public float getRightVel() { return rightFrontTalonEnc.getSelectedSensorVelocity(0) * Constants.EVEL_TO_FPS_DT; }
 
     /**
      * @return Position as read by right encoder in Feet per Second
      */
-    public float getRightPos() { return rightFrontTalonEnc.getSelectedSensorPosition(0) * Constants.EPOS_TO_FEET; }
+    public float getRightPos() { return rightFrontTalonEnc.getSelectedSensorPosition(0) * Constants.EPOS_TO_FEET_DT; }
 
     /**
      * @return Position as read by left encoder in Feet per Second
      */
-    public float getLeftPos() { return leftFrontTalonEnc.getSelectedSensorPosition(0) * Constants.EPOS_TO_FEET; }
+    public float getLeftPos() { return leftFrontTalonEnc.getSelectedSensorPosition(0) * Constants.EPOS_TO_FEET_DT; }
 
 
     @Override

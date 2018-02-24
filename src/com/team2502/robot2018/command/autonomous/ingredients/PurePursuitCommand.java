@@ -180,8 +180,8 @@ public class PurePursuitCommand extends Command
 
 //        SmartDashboard.putNumber("Lookahead", usedLookahead);
 
-        float leftWheelFPS = wheelL * Constants.FPS_TO_EVEL;
-        float rightWheelFPS = wheelR * Constants.FPS_TO_EVEL;
+        float leftWheelFPS = wheelL * Constants.FPS_TO_EVEL_DT;
+        float rightWheelFPS = wheelR * Constants.FPS_TO_EVEL_DT;
         Robot.DRIVE_TRAIN.runMotors(ControlMode.Velocity, leftWheelFPS, rightWheelFPS);
     }
 

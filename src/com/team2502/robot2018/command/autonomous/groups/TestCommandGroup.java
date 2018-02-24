@@ -17,17 +17,6 @@ public class TestCommandGroup extends CommandGroup
 {
     public TestCommandGroup()
     {
-        List<Waypoint> straightSwitch = Arrays.asList(
-                new Waypoint(new ImmutableVector2f(0, 0), 6),
-                new Waypoint(new ImmutableVector2f(-3.95F, 4), 9),
-                new Waypoint(new ImmutableVector2f(-6.2F, 7), 6),
-                new Waypoint(new ImmutableVector2f(-6.2F, 12), 2F)
-                                                     );
-        Robot.NAVX.reset();
-//        Scheduler.getInstance().add(new CalibrateRobotCommand());
-        addSequential(new PurePursuitCommand(straightSwitch, Constants.LOOKAHEAD_DISTANCE_FT, Constants.STOP_DIST_TOLERANCE_FT));
-        addSequential(new ElevatorAutonCommand(1.1F));
-        addSequential(new ActiveIntakeMove(0.35, 1));
-        addSequential(new ShootCubeCommand(1));
+        addSequential(new ElevatorAutonCommand(10, 2F));
     }
 }

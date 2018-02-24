@@ -71,13 +71,13 @@ public class EncoderDifferentialDriveLocationEstimator implements ITranslational
     @Override
     public float getLeftWheelSpeed()
     {
-        return Robot.DRIVE_TRAIN.leftRearTalon.getSelectedSensorVelocity(0) * Constants.EVEL_TO_FPS;
+        return Robot.DRIVE_TRAIN.leftRearTalon.getSelectedSensorVelocity(0) * Constants.EVEL_TO_FPS_DT;
     }
 
     @Override
     public float getRightWheelSpeed()
     {
-        return Robot.DRIVE_TRAIN.rightRearTalon.getSelectedSensorVelocity(0) * Constants.EVEL_TO_FPS;
+        return Robot.DRIVE_TRAIN.rightRearTalon.getSelectedSensorVelocity(0) * Constants.EVEL_TO_FPS_DT;
     }
 
     @Override
