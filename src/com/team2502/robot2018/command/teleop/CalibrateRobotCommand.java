@@ -29,7 +29,7 @@ public class CalibrateRobotCommand extends Command
         initAngle = (float) Robot.NAVX.getAngle();
 
         // One of the left motors lacks an encoder
-        Robot.DRIVE_TRAIN.leftFrontTalonEnc.follow(Robot.DRIVE_TRAIN.leftRearTalon);
+//        Robot.DRIVE_TRAIN.leftFrontTalonEnc.follow(Robot.DRIVE_TRAIN.leftRearTalon);
     }
 
     @Override
@@ -39,8 +39,8 @@ public class CalibrateRobotCommand extends Command
         {
             velocity = Robot.CAL_VELOCITY;
 
-            int actualVel = Robot.DRIVE_TRAIN.rightFrontTalonEnc.getSelectedSensorVelocity(0);
-            System.out.println("actualVel: " + actualVel);
+            int actualVel = Robot.DRIVE_TRAIN.getRightRawVel();
+//            System.out.println("actualVel: " + actualVel);
             float dif = (float) (actualVel - velocity);
 
             error2.add(dif * dif);
@@ -53,12 +53,12 @@ public class CalibrateRobotCommand extends Command
                 error2Avg += error2.get(i) / size;
             }
 
-            System.out.println("enabled!" + size);
+//            System.out.println("enabled!" + size);
 
             SmartDashboard.putNumber("enc_error_2", error2Avg);
             SmartDashboard.putNumber("enc_velocity", actualVel);
 
-            System.out.println("run @ " + velocity);
+//            System.out.println("run @ " + velocity);
             Robot.DRIVE_TRAIN.runMotors(ControlMode.Velocity, (float) velocity, (float) velocity);
         }
     }

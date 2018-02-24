@@ -1,5 +1,6 @@
 package com.team2502.robot2018.trajectory;
 
+import com.team2502.robot2018.Constants;
 import com.team2502.robot2018.trajectory.localization.IRotationalLocationEstimator;
 import com.team2502.robot2018.trajectory.localization.ITranslationalLocationEstimator;
 import com.team2502.robot2018.trajectory.localization.ITranslationalVelocityEstimator;
@@ -49,11 +50,13 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
     private ImmutableVector2f absoluteGoalPoint;
     private float dThetaToRotate;
     private boolean isClose = false;
-    private boolean isSuccessfullyFinished;
+    private boolean withinTolerences;
     private float usedLookahead;
     private float speedUsed;
     private double lastUpdatedS = -1;
     private double currentS;
+    private float distanceLeft;
+    private boolean brakeStage;
 
     /**
      * Strategize your movement!
@@ -93,7 +96,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
     public ImmutableVector2f calculateAbsoluteGoalPoint(float lookAheadDistance)
     {
         // The path is finished — there are no more goal points to compute
-        if(finishedPath) { return null; }
+        if(brakeStage || finishedPath) { return null; }
 
         // The intersections with the path we are following and the circle around the robot of
         // radius lookAheadDistance. These intersections will determine the "goal point" we
@@ -138,9 +141,9 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
                     // We want to stop if the distance is within the desired amount
                     if(distanceWaypointSq < distanceStopSq)
                     {
+                        withinTolerences = true;
                         System.out.println("success: " + distanceWaypointSq);
-                        isSuccessfullyFinished = true;
-                        finishedPath = true;
+                        brakeStage = true;
                         return null;
                     }
                 }
@@ -180,7 +183,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
             Log.info("closestGoalPoint vector not found!");
             System.out.printf("loc: %.2f, %.2f\n", usedEstimatedLocation.get(0), usedEstimatedLocation.get(1));
             System.out.println("usedLookAhead: " + usedLookahead);
-            finishedPath = true;
+            brakeStage = true;
             return null;
         }
 
@@ -242,7 +245,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
 
         float distanceAlongPath = closestPoint.distance(lineStartPoint);
 
-        float distanceLeft = pathSegmentDistance - distanceAlongPath;
+        distanceLeft = pathSegmentDistance - distanceAlongPath;
 
         // p1 = p0 + vt + 1/2at^2 ...
         // pathSegmentDistance = distanceAlongPath + tangentialVelocity*t + 1/2 * maxAcceleration
@@ -264,7 +267,9 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
             // Using basic physics kinematic equations we get 2a*x=vf^2-vi^2
             // so vi = \sqrt{vf^2 - 2a*x}
 
-            float maxVel = (float) Math.sqrt(finalSpeed * finalSpeed - 2 * tankRobot.getA_lMin() * distanceLeft);
+            float fakeDistance = Math.max(0, distanceLeft - Constants.DECCELERATE_EXTRA_DIST_FT);
+            float maxVel = (float) Math.sqrt(finalSpeed * finalSpeed - 2 * tankRobot.getA_lMin() * fakeDistance);
+            System.out.println("distanceLeft: "+distanceLeft+", vel: "+maxVel);
 
             speedUsed = Math.min(startSpeed, maxVel);
         }
@@ -279,6 +284,23 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
      */
     public void update()
     {
+
+        if(finishedPath)
+        {
+            return;
+        }
+
+        if(isBrakeStage())
+        {
+//            Log.info("\nBraking!!!!\n");
+            wheelVelocities = new ImmutableVector2f(0,0);
+            if(Math.abs(velocityEstimator.estimateSpeed()) < 0.1F)
+            {
+                finishedPath = true;
+            }
+            return;
+        }
+
         currentS = System.currentTimeMillis() / 1000D;
         if(lastUpdatedS == -1)
         {
@@ -290,15 +312,29 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         usedLookahead = generateLookahead();
         absoluteGoalPoint = calculateAbsoluteGoalPoint(usedLookahead);
 
-        // Sometimes the above method will cause isFinished to return true if no more goal points are found.
-        if(isFinishedPath())
+        if(finishedPath)
         {
-            Log.info("\nFinished path!!!!\n");
+            return;
+        }
+
+        if(isBrakeStage())
+        {
+//            Log.info("\nBraking!!!!\n");
+            wheelVelocities = new ImmutableVector2f(0,0);
+            if(Math.abs(velocityEstimator.estimateSpeed()) < 0.1F)
+            {
+                finishedPath = true;
+            }
             return;
         }
 
         relativeGoalPoint = MathUtils.LinearAlgebra.absoluteToRelativeCoord(absoluteGoalPoint, usedEstimatedLocation, usedHeading);
         wheelVelocities = calculateWheelVelocities();
+    }
+
+    public boolean isBrakeStage()
+    {
+        return brakeStage;
     }
 
     public float getUsedLookahead()
@@ -512,8 +548,8 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
     public float getRotVelocity()
     { return rotVelocity; }
 
-    public boolean isSuccessfullyFinished()
-    { return isSuccessfullyFinished; }
+    public boolean isWithinTolerences()
+    { return withinTolerences; }
 
     /**
      * @return If the robot is finished traveling the path

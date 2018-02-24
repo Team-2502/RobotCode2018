@@ -21,14 +21,14 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
 {
     private static final FloatPair SPEED_CONTAINER = new FloatPair();
 
-    public final WPI_TalonSRX leftFrontTalonEnc;
-    public final WPI_TalonSRX leftRearTalon;
-    public final WPI_TalonSRX rightFrontTalonEnc;
-    public final WPI_TalonSRX rightRearTalon;
+    private final WPI_TalonSRX leftFrontTalonEnc;
+    private final WPI_TalonSRX leftRearTalon;
+    private final WPI_TalonSRX rightFrontTalonEnc;
+    private final WPI_TalonSRX rightRearTalon;
 
-    public final DifferentialDrive drive;
-    public final SpeedControllerGroup spgLeft;
-    public final SpeedControllerGroup spgRight;
+    private final DifferentialDrive drive;
+    private final SpeedControllerGroup spgLeft;
+    private final SpeedControllerGroup spgRight;
 
     private final SendablePIDTuner pidTuner;
 
@@ -84,6 +84,7 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
 
     public void stop() { drive.stopMotor(); }
 
+
     private void setTeleopSettings(WPI_TalonSRX talon)
     {
         talon.set(ControlMode.PercentOutput, 0.0F);
@@ -109,7 +110,7 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
 
         setupTalons();
 
-        Robot.TRANSMISSION_SOLENOID.setGear(true);
+//        Robot.TRANSMISSION_SOLENOID.setGear(true);
     }
 
     public void setupTalons()
@@ -129,7 +130,6 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     {
         setupTalons();
         // Set high gear
-        Robot.TRANSMISSION_SOLENOID.setGear(true);
     }
 
     public void setPID()
@@ -151,13 +151,13 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         this.kI = kI;
         this.kD = kD;
 
-        leftRearTalon.config_kP(0, kP, Constants.INIT_TIMEOUT);
-        leftRearTalon.config_kI(0, kI, Constants.INIT_TIMEOUT);
-        leftRearTalon.config_kD(0, kD, Constants.INIT_TIMEOUT);
+        leftFrontTalonEnc.config_kP(0, kP, Constants.INIT_TIMEOUT);
+        leftFrontTalonEnc.config_kI(0, kI, Constants.INIT_TIMEOUT);
+        leftFrontTalonEnc.config_kD(0, kD, Constants.INIT_TIMEOUT);
 
-        rightRearTalon.config_kP(0, kP, Constants.INIT_TIMEOUT);
-        rightRearTalon.config_kI(0, kI, Constants.INIT_TIMEOUT);
-        rightRearTalon.config_kD(0, kD, Constants.INIT_TIMEOUT);
+        rightFrontTalonEnc.config_kP(0, kP, Constants.INIT_TIMEOUT);
+        rightFrontTalonEnc.config_kI(0, kI, Constants.INIT_TIMEOUT);
+        rightFrontTalonEnc.config_kD(0, kD, Constants.INIT_TIMEOUT);
     }
 
     /**
@@ -190,11 +190,11 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     public void runMotors(ControlMode controlMode, float leftWheel, float rightWheel) // double z
     {
         // setting slaves as the talons w/ encoders is the only way it works ¯\_(ツ)_/¯
-        leftFrontTalonEnc.follow(leftRearTalon);
-        rightFrontTalonEnc.follow(rightRearTalon);
+        leftRearTalon.follow(leftRearTalon);
+        rightRearTalon.follow(rightRearTalon);
 
-        leftRearTalon.set(controlMode, leftWheel);
-        rightRearTalon.set(controlMode, rightWheel);
+        leftFrontTalonEnc.set(controlMode, leftWheel);
+        rightFrontTalonEnc.set(controlMode, rightWheel);
     }
 
     /**
@@ -305,12 +305,16 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     /**
      * @return Velocity as read by left encoder in Feet per Second
      */
-    public float getLeftVel() { return leftFrontTalonEnc.getSelectedSensorVelocity(0) * Constants.EVEL_TO_FPS; }
+    public float getLeftVel() { return getLeftRawVel() * Constants.EVEL_TO_FPS; }
 
     /**
      * @return Velocity as read by right encoder in Feet per Second
      */
-    public float getRightVel() { return rightFrontTalonEnc.getSelectedSensorVelocity(0) * Constants.EVEL_TO_FPS; }
+    public float getRightVel() { return getRightRawVel() * Constants.EVEL_TO_FPS; }
+
+    public int getRightRawVel() { return rightFrontTalonEnc.getSelectedSensorVelocity(0); }
+
+    public int getLeftRawVel() { return leftFrontTalonEnc.getSelectedSensorVelocity(0); }
 
     /**
      * @return Position as read by right encoder in Feet per Second
@@ -386,8 +390,8 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     public void setkF(double kF)
     {
         this.kF = kF;
-        leftRearTalon.config_kF(0, kF, Constants.INIT_TIMEOUT);
-        rightRearTalon.config_kF(0, kF, Constants.INIT_TIMEOUT);
+        leftFrontTalonEnc.config_kF(0, kF, Constants.INIT_TIMEOUT);
+        rightFrontTalonEnc.config_kF(0, kF, Constants.INIT_TIMEOUT);
     }
 
     public enum DriveStrategyType implements Nameable

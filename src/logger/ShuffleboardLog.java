@@ -25,7 +25,7 @@ public class ShuffleboardLog
 
     public void log(String message)
     {
-        Log.info(message);
+//        Log.info(message);
         messages.add(message);
         if(messages.size() > 4) { messages.remove(0); }
         SmartDashboard.putString("systems_message_0", get(0));

@@ -107,7 +107,7 @@ public class PurePursuitCommand extends Command
     protected void initialize()
     {
         SmartDashboard.putBoolean("PPisClose", purePursuitMovementStrategy.isClose());
-        SmartDashboard.putBoolean("PPisSuccess", purePursuitMovementStrategy.isSuccessfullyFinished());
+        SmartDashboard.putBoolean("PPisSuccess", purePursuitMovementStrategy.isWithinTolerences());
     }
 
     @Override
@@ -132,7 +132,16 @@ public class PurePursuitCommand extends Command
 
         float leftWheelFPS = wheelL * Constants.FPS_TO_EVEL;
         float rightWheelFPS = wheelR * Constants.FPS_TO_EVEL;
-        Robot.DRIVE_TRAIN.runMotors(ControlMode.Velocity, leftWheelFPS, rightWheelFPS);
+
+        if(purePursuitMovementStrategy.isBrakeStage())
+        {
+            // We are lazy and are going to overshoot for faster deceleration
+            Robot.DRIVE_TRAIN.runMotors(ControlMode.PercentOutput,-0.5F,-0.5F);
+        }
+        else
+        {
+            Robot.DRIVE_TRAIN.runMotors(ControlMode.Velocity, leftWheelFPS, rightWheelFPS);
+        }
     }
 
     @Override
@@ -141,11 +150,12 @@ public class PurePursuitCommand extends Command
         boolean finishedPath = purePursuitMovementStrategy.isFinishedPath();
         if(finishedPath)
         {
-            SmartDashboard.putBoolean("PPisSuccess", purePursuitMovementStrategy.isSuccessfullyFinished());
-            if(purePursuitMovementStrategy.isSuccessfullyFinished())
+            SmartDashboard.putBoolean("PPisSuccess", purePursuitMovementStrategy.isWithinTolerences());
+            if(purePursuitMovementStrategy.isWithinTolerences())
             {
                 System.out.println("\n\nSUCCESS!\n\n");
             }
+            Robot.DRIVE_TRAIN.stop();
         }
         return finishedPath;
 

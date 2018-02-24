@@ -28,8 +28,8 @@ public class Constants
     public static final float VL_MIN = -10F;
 
     // The max change in voltage per second (acceleration)
-    public static final float AR_MAX = 4F;
-    public static final float AL_MAX = 4F;
+    public static final float AR_MAX = 6F;
+    public static final float AL_MAX = 6F;
     public static final float AR_MIN = -2F;
     public static final float AL_MIN = -2F;
 
@@ -43,6 +43,7 @@ public class Constants
     public static final Lookahead LOOKAHEAD = new Lookahead(LOOKAHEAD_MIN_DISTANCE_FT, LOOKAHEAD_MAX_DISTANCE_FT,
                                                             LOOKAHEAD_MIN_SPEED_FPS, LOOKAHEAD_MAX_SPEED_FPS);
     public static final float STOP_DIST_TOLERANCE_FT = 0.5F;
+    public static final float DECCELERATE_EXTRA_DIST_FT = 0.5F;
 
     /*
     Physical / Other
@@ -50,7 +51,7 @@ public class Constants
 
 
     // TODO: figure out why wheel diameter has to be much smaller than it should be (normally 6)
-    public static final float WHEEL_DIAMETER_INCH = 2F;
+    public static final float WHEEL_DIAMETER_INCH = 3.6944444443F;
     public static final float WHEEL_DIAMETER_FT = WHEEL_DIAMETER_INCH / 12F;
 
     // half of the width of the wheel that is in contact with the ground

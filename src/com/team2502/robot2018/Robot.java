@@ -75,6 +75,7 @@ public final class Robot extends IterativeRobot
 
         Log.createLogger(true);
 
+        TRANSMISSION_SOLENOID = new TransmissionSolenoid();
         COMPRESSOR = new Compressor();
         DRIVE_TRAIN = new DriveTrainSubsystem();
         NAVX = new AHRS(SPI.Port.kMXP);
@@ -83,7 +84,6 @@ public final class Robot extends IterativeRobot
         ACTIVE_INTAKE_SOLENOID = new ActiveIntakeSolenoid();
         CLIMBER_SOLENOID = new ClimberSolenoid();
         BUTTERFLY_SOLENOID = new ButterflySolenoid();
-        TRANSMISSION_SOLENOID = new TransmissionSolenoid();
         OI.init();
 
 

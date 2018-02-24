@@ -12,11 +12,11 @@ RotateStationaryCommand extends TimedCommand implements TestResult
     private final static int DEGREE_THRESHOLD = 10;
     private final static int ENCODER_THRESHOLD = 8000;
     private final static int ENCODER_DIF_THRESHOLD = 1000;
-    private int encoderLeftInit;
-    private int encoderRightInit;
+    private float encoderLeftInit;
+    private float encoderRightInit;
     private double degreesRotated;
-    private int encoderLeft;
-    private int encoderRight;
+    private float encoderLeft;
+    private float encoderRight;
     private boolean success;
     private String results;
 
@@ -31,8 +31,8 @@ RotateStationaryCommand extends TimedCommand implements TestResult
     {
         Robot.NAVX.reset();
         // TODO: see if resets position when called
-        encoderLeftInit = Robot.DRIVE_TRAIN.leftRearTalon.getSelectedSensorPosition(0);
-        encoderRightInit = Robot.DRIVE_TRAIN.rightRearTalon.getSelectedSensorPosition(0);
+        encoderLeftInit = Robot.DRIVE_TRAIN.getLeftPos();
+        encoderRightInit = Robot.DRIVE_TRAIN.getRightPos();
     }
 
     @Override
@@ -46,14 +46,14 @@ RotateStationaryCommand extends TimedCommand implements TestResult
     protected void end()
     {
 
-        // should be negative
+        // should be negative (counterclockwise)
         degreesRotated = Robot.NAVX.getAngle();
 
         // should be negative
-        encoderLeft = Robot.DRIVE_TRAIN.leftRearTalon.getSelectedSensorPosition(0) - encoderLeftInit;
+        encoderLeft = Robot.DRIVE_TRAIN.getLeftPos() - encoderLeftInit;
 
         // should be positive
-        encoderRight = Robot.DRIVE_TRAIN.rightRearTalon.getSelectedSensorPosition(0) - encoderRightInit;
+        encoderRight = Robot.DRIVE_TRAIN.getRightPos() - encoderRightInit;
 
         logResults();
     }
@@ -66,11 +66,11 @@ RotateStationaryCommand extends TimedCommand implements TestResult
 
     private void logResults()
     {
-        if(!(degreesRotated < DEGREE_THRESHOLD))
+        if(!(degreesRotated > DEGREE_THRESHOLD))
         {
             success = false;
-            ShuffleboardLog.getInstance().log("Degrees rotated (navX Gyro) was supposed to be < " + DEGREE_THRESHOLD + ", but it actually was " + degreesRotated + ". " +
-                                              "1) Did the robot not turn CCW? 2) Is the navX working?");
+            ShuffleboardLog.getInstance().log("Degrees rotated (navX Gyro) was supposed to be greater than " + DEGREE_THRESHOLD + ", but it actually was " + degreesRotated + ". " +
+                                              "1) Did the robot not turn counterclockwise? 2) Is the navX working?");
         }
         else if(encoderLeft >= -ENCODER_THRESHOLD)
         {
@@ -86,7 +86,7 @@ RotateStationaryCommand extends TimedCommand implements TestResult
         }
         else
         {
-            int encDif = encoderRight + encoderLeft;
+            float encDif = encoderRight + encoderLeft;
             if(Math.abs(encDif) >= ENCODER_THRESHOLD)
             {
                 success = false;

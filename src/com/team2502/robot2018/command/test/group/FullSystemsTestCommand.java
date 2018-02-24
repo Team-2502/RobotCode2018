@@ -8,6 +8,7 @@ import com.team2502.robot2018.command.teleop.GrabCommand;
 import com.team2502.robot2018.command.teleop.ShiftElevatorCommand;
 import com.team2502.robot2018.command.teleop.TransmissionCommand;
 import com.team2502.robot2018.command.test.PrintCommand;
+import com.team2502.robot2018.command.test.PrintResultsCommand;
 import com.team2502.robot2018.command.test.PromptCommand;
 import com.team2502.robot2018.command.test.RotateStationaryCommand;
 import edu.wpi.first.wpilibj.command.CommandGroup;
@@ -32,14 +33,18 @@ public class FullSystemsTestCommand extends CommandGroup
         addSequential(command);
 
         newSection("Active Intake Up");
-        addSequential(new ActiveIntakeMove(3,-0.5));
+        addSequential(new ActiveIntakeMove(0.5F,-0.5));
         print("Active Intake Down");
-        addSequential(new ActiveIntakeMove(3,0.5));
+        addSequential(new ActiveIntakeMove(0.5F,0.5));
         promptYesNo("Did this occur?","Active Intake Up/Down");
 
         newSection("Shooting OUT cube in active");
         addSequential(new ShootCubeCommand(3));
         promptYesNo("Did this occur?","Shooting out cube");
+
+        newSection("Pulling IN cube in active");
+        addSequential(new ShootCubeCommand(3,-0.5F));
+        promptYesNo("Did this occur?","Pulling in cube");
 
         newSection("Toggling active intake grab");
         addSequential(new GrabCommand());
@@ -67,7 +72,7 @@ public class FullSystemsTestCommand extends CommandGroup
         newSection("Deploying Butterfly");
         addSequential(new ButterflySetCommand(true));
         promptYesNo("Did this occur?","Deploying butterfly");
-        addSequential(new ButterflySetCommand(false));
+//        addSequential(new ButterflySetCommand(false));
 
         print("Systems test completed!");
         print("::: Results :::");
@@ -76,21 +81,7 @@ public class FullSystemsTestCommand extends CommandGroup
 
     void printResults()
     {
-        String results = "{";
-
-        int i = 0;
-        Set<Map.Entry<String, Boolean>> entries = statuses.entrySet();
-        for(Map.Entry<String, Boolean> entry : entries)
-        {
-            i++;
-            results+=entry.getKey()+":"+entry.getValue();
-            if(i < entries.size() - 1)
-            {
-                results+=", ";
-            }
-        }
-        results+="}";
-        print(results);
+        addSequential(new PrintResultsCommand(statuses));
     }
 
     private void print(String message)

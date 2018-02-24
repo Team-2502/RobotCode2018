@@ -14,9 +14,14 @@ public class PromptCommand extends Command
 
     public PromptCommand(String name, Map<String,Boolean> statuses)
     {
-        reset();
         this.statuses = statuses;
         this.name = name;
+    }
+
+    @Override
+    protected void initialize()
+    {
+        reset();
     }
 
     @Override
@@ -26,13 +31,13 @@ public class PromptCommand extends Command
         boolean getFailure = SmartDashboard.getBoolean("prompt_failure", false);
         if(getSuccess)
         {
-            reset();
+//            reset();
             success = true;
             return true;
         }
         if(getFailure)
         {
-            reset();
+//            reset();
             return true;
         }
         return false;
@@ -41,6 +46,7 @@ public class PromptCommand extends Command
     @Override
     protected void end()
     {
+        System.out.println("Put ... "+name+": "+success);
         statuses.put(name,success);
     }
 
