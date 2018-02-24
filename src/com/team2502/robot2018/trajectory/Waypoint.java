@@ -45,13 +45,20 @@ public class Waypoint
         return commands;
     }
 
-    public void executeCommands()
+    public void executeCommands(PurePursuitMovementStrategy purePursuitMovementStrategy)
     {
         for(Command command : commands)
         {
             Scheduler.getInstance().add(command);
+            if(command instanceof PurePursuitReciever)
+            {
+                PurePursuitReciever purePursuitReciever = (PurePursuitReciever) command;
+                purePursuitReciever.recieveStrategy(purePursuitMovementStrategy);
+            }
         }
     }
+
+
 
     @Override
     public String toString()
@@ -61,5 +68,10 @@ public class Waypoint
                ", location=" + location +
                ", forward=" + forward +
                '}';
+    }
+
+    interface PurePursuitReciever
+    {
+        void recieveStrategy(PurePursuitMovementStrategy purePursuitMovementStrategy);
     }
 }

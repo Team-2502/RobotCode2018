@@ -191,7 +191,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         {
             // Execute commands for last waypoint
             Waypoint waypoint = waypoints.get(lastSegmentSearched);
-            waypoint.executeCommands();
+            waypoint.executeCommands(this);
 
             ++lastSegmentSearched;
 
