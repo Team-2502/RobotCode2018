@@ -28,9 +28,9 @@ public class ShuffleboardLog
         Log.info(message);
         messages.add(message);
         if(messages.size() > 4) { messages.remove(0); }
-        SmartDashboard.putString("Test0", get(0));
-        SmartDashboard.putString("Test1", get(1));
-        SmartDashboard.putString("Test2", get(2));
-        SmartDashboard.putString("Test3", get(3));
+        SmartDashboard.putString("systems_message_0", get(0));
+        SmartDashboard.putString("systems_message_1", get(1));
+        SmartDashboard.putString("systems_message_2", get(2));
+        SmartDashboard.putString("systems_message_3", get(3));
     }
 }
