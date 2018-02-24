@@ -428,62 +428,6 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     }
 
     /**
-     * A generic data structure to store a pair of objects.
-     *
-     * @param <L> The left value
-     * @param <R> The right value
-     */
-    @Deprecated
-    private static class Pair<L, R>
-    {
-        public L left;
-        public R right;
-
-        private String nameL;
-        private String nameR;
-
-        public Pair(L left, R right)
-        {
-            this.left = left;
-            this.right = right;
-            this.nameL = left.getClass().getSimpleName();
-            this.nameR = right.getClass().getSimpleName();
-        }
-
-        public Pair() { }
-
-        @Override
-        public String toString()
-        {
-            return new StringBuilder(100 + nameL.length() + nameR.length()).append("Pair<").append(nameL).append(',')
-                                                                           .append(nameR).append("> { \"left\": \"").append(left).append("\", \"right\": \"").append(right)
-                                                                           .append("\" }").toString();
-        }
-
-        @Override
-        public int hashCode()
-        {
-            return left.hashCode() * 13 + (right == null ? 0 : right.hashCode());
-        }
-
-        @Override
-        public boolean equals(Object o)
-        {
-            if(this == o)
-            {
-                return true;
-            }
-            if(o instanceof Pair)
-            {
-                Pair pair = (Pair) o;
-                return (left != null ? left.equals(pair.left) : pair.left == null)
-                       && (left != null ? left.equals(pair.left) : pair.left == null);
-            }
-            return false;
-        }
-    }
-
-    /**
      * A data structure to store a pair of floats.
      */
     private static class FloatPair
@@ -525,49 +469,5 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
             return false;
         }
     }
-
-    /**
-     * A data structure to store a pair of doubles.
-     */
-    private static class DoublePair
-    {
-        public double left;
-        public double right;
-
-        public DoublePair(double left, double right)
-        {
-            this.left = left;
-            this.right = right;
-        }
-
-        public DoublePair() { }
-
-        @Override
-        public String toString()
-        {
-            return new StringBuilder(47).append("Pair: { \"left\": \"")
-                                        .append(String.format("%.05f", left)).append("\", \"right\": \"")
-                                        .append(String.format("%.05f", right)).append("\" }").toString();
-        }
-
-        @Override
-        public int hashCode()
-        {
-            return (int) (((Double.doubleToLongBits(left) * 31) + (Double.doubleToLongBits(right) * 7)) % Integer.MAX_VALUE);
-        }
-
-        @Override
-        public boolean equals(Object o)
-        {
-            if(this == o) { return true; }
-            if(o instanceof FloatPair)
-            {
-                FloatPair pair = (FloatPair) o;
-                return left == pair.left && right == pair.right;
-            }
-            return false;
-        }
-    }
-
 
 }

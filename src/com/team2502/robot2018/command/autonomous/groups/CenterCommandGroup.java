@@ -1,5 +1,6 @@
 package com.team2502.robot2018.command.autonomous.groups;
 
+import com.team2502.robot2018.Constants;
 import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.command.autonomous.ingredients.*;
 import edu.wpi.first.wpilibj.command.CommandGroup;
@@ -42,7 +43,7 @@ public class CenterCommandGroup extends CommandGroup
 
     private void emitCube()
     {
-        addSequential(new ElevatorAutonCommand(.8F));
+        addSequential(new ElevatorAutonCommand(.8F, Constants.SWITCH_ELEV_HEIGHT_FT));
         addSequential(new ActiveIntakeMove(0.35, 1));
         addSequential(new ShootCubeCommand(1));
     }
