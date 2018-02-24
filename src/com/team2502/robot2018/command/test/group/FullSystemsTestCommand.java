@@ -13,11 +13,13 @@ import com.team2502.robot2018.command.test.RotateStationaryCommand;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.command.WaitCommand;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class FullSystemsTestCommand extends CommandGroup
 {
+
+    Map<String,Boolean> statuses = new HashMap<>();
+
     public FullSystemsTestCommand()
     {
         messages.clear();
@@ -25,57 +27,70 @@ public class FullSystemsTestCommand extends CommandGroup
         print("Performing Full System Test");
         print("There are 3 second delays between each test");
 
-        print("Rotate Stationary Command Active");
+        newSection("Rotate Stationary Command Active");
         RotateStationaryCommand command = new RotateStationaryCommand(3);
         addSequential(command);
-        if(!command.getSuccess())
-        {
-            prompt("FAILURE. DO YOU UNDERSTAND?");
-        }
-        else
-        {
-            print("Success!");
-        }
 
         newSection("Active Intake Up");
         addSequential(new ActiveIntakeMove(3,-0.5));
         print("Active Intake Down");
         addSequential(new ActiveIntakeMove(3,0.5));
-        prompt("Did this occur?");
+        promptYesNo("Did this occur?","Active Intake Up/Down");
 
         newSection("Shooting OUT cube in active");
         addSequential(new ShootCubeCommand(3));
-        prompt("Did this occur?");
+        promptYesNo("Did this occur?","Shooting out cube");
 
         newSection("Toggling active intake grab");
         addSequential(new GrabCommand());
-        prompt("Did this occur?");
+        promptYesNo("Did this occur?","Active intake grab");
         addSequential(new GrabCommand());
 
         newSection("Toggling transmission");
         addSequential(new TransmissionCommand());
-        prompt("Did this occur?");
+        promptYesNo("Did this occur?","Transmission toggle");
         addSequential(new TransmissionCommand());
 
         newSection("Toggling climber solenoid");
         addSequential(new ShiftElevatorCommand());
-        prompt("Did this occur?");
+        promptYesNo("Did this occur?","Climber shift");
         addSequential(new ShiftElevatorCommand());
 
         newSection("Raising Elevator");
         addSequential(new ElevatorAutonCommand(1,1));
-        prompt("Did this occur?");
+        promptYesNo("Did this occur?","Raising elevator");
 
         newSection("Lowering Elevator");
         addSequential(new ElevatorAutonCommand(1,-0.5F));
-        prompt("Did this occur?");
+        promptYesNo("Did this occur?","Lowering elevator");
 
         newSection("Deploying Butterfly");
         addSequential(new ButterflySetCommand(true));
-        prompt("Did this occur?");
+        promptYesNo("Did this occur?","Deploying butterfly");
         addSequential(new ButterflySetCommand(false));
 
-        prompt("Systems test completed!");
+        print("Systems test completed!");
+        print("::: Results :::");
+        printResults();
+    }
+
+    void printResults()
+    {
+        String results = "{";
+
+        int i = 0;
+        Set<Map.Entry<String, Boolean>> entries = statuses.entrySet();
+        for(Map.Entry<String, Boolean> entry : entries)
+        {
+            i++;
+            results+=entry.getKey()+":"+entry.getValue();
+            if(i < entries.size() - 1)
+            {
+                results+=", ";
+            }
+        }
+        results+="}";
+        print(results);
     }
 
     private void print(String message)
@@ -90,10 +105,10 @@ public class FullSystemsTestCommand extends CommandGroup
         waitSome();
     }
 
-    private void prompt(String message)
+    private void promptYesNo(String message, String name)
     {
         print(message);
-        addSequential(new PromptCommand());
+        addSequential(new PromptCommand(name, statuses));
     }
 
     /**
