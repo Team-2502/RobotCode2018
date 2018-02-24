@@ -15,7 +15,7 @@ public interface ITranslationalVelocityEstimator
 
     float estimateSpeed();
 
-    default ITranslationalVelocityEstimator getInverted()
+    default ITranslationalVelocityEstimator getInvertedVelocity()
     {
         return new ITranslationalVelocityEstimator() {
             @Override

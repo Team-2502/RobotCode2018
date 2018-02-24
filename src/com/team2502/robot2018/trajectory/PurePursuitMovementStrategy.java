@@ -75,7 +75,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         else
         {
             this.tankRobot = tankRobot.getInverted();
-            this.translationalLocationEstimator = translationalLocationEstimator.getInverted();
+            this.translationalLocationEstimator = translationalLocationEstimator.getInvertedTranslationalLocation();
         }
         this.rotEstimator = rotEstimator;
         distanceStopSq = distanceStop * distanceStop;

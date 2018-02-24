@@ -6,7 +6,7 @@ public interface ITranslationalLocationEstimator
 {
     ImmutableVector2f estimateLocation();
 
-    default ITranslationalLocationEstimator getInverted()
+    default ITranslationalLocationEstimator getInvertedTranslationalLocation()
     {
         return () -> {
             ImmutableVector2f loc = ITranslationalLocationEstimator.this.estimateLocation();
