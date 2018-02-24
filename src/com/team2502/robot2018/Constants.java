@@ -2,6 +2,7 @@ package com.team2502.robot2018;
 
 import com.team2502.ctannotationprocessor.Undefined;
 import com.team2502.robot2018.trajectory.Lookahead;
+import com.team2502.robot2018.utils.InterpolationMap;
 
 /**
  * Note E (EVEL, ENC_RES, EPOS) is special encoder units
@@ -31,6 +32,8 @@ public class Constants
     public static final float AL_MAX = 4F;
     public static final float AR_MIN = -2F;
     public static final float AL_MIN = -2F;
+
+    public static InterpolationMap ACCELERATION_FOR_ELEVATOR_HEIGHT;
 
     // The lookahead distance (feet) for Pure Pursuit
     public static final float LOOKAHEAD_MIN_DISTANCE_FT = 3F;

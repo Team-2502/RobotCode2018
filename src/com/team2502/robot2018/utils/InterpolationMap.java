@@ -13,7 +13,7 @@ import java.util.*;
 public class InterpolationMap implements Map<Double, Double>
 {
 
-    private HashMap<Double, Double> table;
+    private Map<Double, Double> table;
 
     /**
      * @param firstKey   The first key to put into the hash table.
@@ -21,7 +21,7 @@ public class InterpolationMap implements Map<Double, Double>
      */
     public InterpolationMap(Double firstKey, Double firstValue)
     {
-        table = new HashMap<Double, Double>();
+        table = new HashMap<>();
         table.put(firstKey, firstValue);
     }
 
@@ -30,7 +30,7 @@ public class InterpolationMap implements Map<Double, Double>
      *
      * @param initTable The table to start with
      */
-    public InterpolationMap(HashMap<Double, Double> initTable)
+    public InterpolationMap(Map<Double, Double> initTable)
     {
         if(initTable.keySet().isEmpty())
         {

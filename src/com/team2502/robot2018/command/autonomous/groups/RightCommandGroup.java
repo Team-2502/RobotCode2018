@@ -46,19 +46,20 @@ public class RightCommandGroup extends CommandGroup
     private void goSwitch()
     {
         addSequential(new PurePursuitCommand(Paths.Right.rightSwitch));
-        addSequential(new ElevatorUpAutonCommand(.8F));
-        addSequential(new ActiveIntakeDown(0.35, 1));
+        addSequential(new ElevatorAutonCommand(.8F));
+        addSequential(new ActiveIntakeMove(0.35, 1));
+
         emitCube();
     }
 
     private void goScaleRight()
     {
         // TODO: Move things into constants
-        addParallel(new ActiveIntakeDown(0.7, 0.5));
+        addParallel(new ActiveIntakeMove(0.7, 0.5));
         addSequential(new PurePursuitCommand(Paths.Right.rightScale));
         addSequential(new WaitCommand(0.8F));
         addSequential(new RotateAutonStationary(-55));
-        addSequential(new ElevatorUpAutonCommand(2.7F));
+        addSequential(new ElevatorAutonCommand(2.7F));
         addSequential(new DeadreckoningDrive(0.5F, 2));
         emitCube();
     }

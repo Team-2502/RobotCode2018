@@ -42,8 +42,8 @@ public class CenterCommandGroup extends CommandGroup
 
     private void emitCube()
     {
-        addSequential(new ElevatorUpAutonCommand(.8F));
-        addSequential(new ActiveIntakeDown(0.35, 1));
+        addSequential(new ElevatorAutonCommand(.8F));
+        addSequential(new ActiveIntakeMove(0.35, 1));
         addSequential(new ShootCubeCommand(1));
     }
 

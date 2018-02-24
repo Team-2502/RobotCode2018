@@ -259,24 +259,6 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         return out;
     }
 
-    /**
-     * TODO: finish!!!!
-     *
-     * @param out the percent voltages of each wheel.
-     * @return
-     * @deprecated
-     */
-    private FloatPair getSpeedArcade(FloatPair out)
-    {
-        // ( v_l + v_r ) / 2
-        float vTan = (float) OI.JOYSTICK_DRIVE_RIGHT.getY();
-
-        // (vR - vL) / l
-        float rot = (float) OI.JOYSTICK_DRIVE_RIGHT.getX();
-
-        throw new UnsupportedOperationException();
-    }
-
     private FloatPair getSpeedTank()
     {
         return getSpeedTank(SPEED_CONTAINER);
