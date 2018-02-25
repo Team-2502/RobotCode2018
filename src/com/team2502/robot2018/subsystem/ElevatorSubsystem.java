@@ -49,7 +49,7 @@ public class ElevatorSubsystem extends Subsystem implements PIDTunable, Dashboar
         pidTuner = new SendablePIDTuner(this, this);
 
         DashboardData.addUpdater(this);
-        calibrateEncoder();
+
     }
 
     /**
@@ -213,12 +213,12 @@ public class ElevatorSubsystem extends Subsystem implements PIDTunable, Dashboar
 
     public double getVel()
     {
-        return elevatorBottom.getSelectedSensorVelocity(0) * Constants.EVEL_TO_FPS_DT;
+        return elevatorBottom.getSelectedSensorVelocity(0);
     }
 
     public double getPos()
     {
-        return elevatorBottom.getSelectedSensorPosition(0) * Constants.EVEL_TO_FPS_DT;
+        return elevatorBottom.getSelectedSensorPosition(0);
     }
 
     public void calibrateEncoder()

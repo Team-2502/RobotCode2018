@@ -27,6 +27,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import logger.Log;
 
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 public final class Robot extends IterativeRobot
@@ -45,9 +48,15 @@ public final class Robot extends IterativeRobot
     public static TransmissionSolenoid TRANSMISSION_SOLENOID;
     public static AHRS NAVX;
     public static SendableChooser<AutonStrategy> autonStrategySelector;
+    private static List<String> logLines = new ArrayList<>();
 
     public static void write(String string)
     { LOG_OUTPUT.println(string); }
+
+    public static void writeLog(String message)
+    {
+        logLines.add(message);
+    }
 
     /**
      * This function is run when the robot is first started up and should be
@@ -130,7 +139,21 @@ public final class Robot extends IterativeRobot
         // At the end of the match, we MUST lock the climber, which
         // will prevent our robot from falling, thus dropping two other
         // robots to the ground.
+
         Robot.CLIMBER_SOLENOID.lockElevator();
+
+        StringBuilder stringBuilder = new StringBuilder();
+        Iterator<String> iterator = logLines.iterator();
+
+        stringBuilder.append("::: LOG ::: \n");
+        while(iterator.hasNext())
+        {
+            String message = iterator.next();
+            stringBuilder.append(message);
+            stringBuilder.append('\n');
+            iterator.remove();
+        }
+        System.out.println(stringBuilder.toString());
     }
 
     public void disabledPeriodic()

@@ -32,10 +32,10 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
 
     private final SendablePIDTuner pidTuner;
 
-    double kP = 0.2;
+    double kP = .7D;
     double kI = 0.0;
     double kD = 0;
-    double kF = 0.03;
+    double kF = 0;
 
     private float lastLeft;
     private float lastRight;
@@ -110,7 +110,7 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
 
         setupTalons();
 
-//        Robot.TRANSMISSION_SOLENOID.setGear(true);
+        Robot.TRANSMISSION_SOLENOID.setHighGear(false);
     }
 
     public void setupTalons()
@@ -129,6 +129,7 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     public void setAutonSettings()
     {
         setupTalons();
+        Robot.TRANSMISSION_SOLENOID.setHighGear(true);
         // Set high gear
     }
 
@@ -190,8 +191,8 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     public void runMotors(ControlMode controlMode, float leftWheel, float rightWheel) // double z
     {
         // setting slaves as the talons w/ encoders is the only way it works ¯\_(ツ)_/¯
-        leftRearTalon.follow(leftRearTalon);
-        rightRearTalon.follow(rightRearTalon);
+        leftRearTalon.follow(leftFrontTalonEnc);
+        rightRearTalon.follow(rightFrontTalonEnc);
 
         leftFrontTalonEnc.set(controlMode, leftWheel);
         rightFrontTalonEnc.set(controlMode, rightWheel);

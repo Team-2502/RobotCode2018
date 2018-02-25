@@ -40,7 +40,7 @@ public class CalibrateRobotCommand extends Command
             velocity = Robot.CAL_VELOCITY;
 
             int actualVel = Robot.DRIVE_TRAIN.getRightRawVel();
-//            System.out.println("actualVel: " + actualVel);
+
             float dif = (float) (actualVel - velocity);
 
             error2.add(dif * dif);

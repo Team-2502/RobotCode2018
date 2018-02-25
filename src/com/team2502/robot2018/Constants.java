@@ -13,7 +13,7 @@ public class Constants
     /**
      * How high the elevator must be in order to put a cube in the switch
      */
-    public static final float SWITCH_ELEV_HEIGHT_FT = 1.5F;
+    public static final float SWITCH_ELEV_HEIGHT_FT = 2F;
 
     /**
      * How high the elevator must be in order to put a cube in the scale
@@ -40,10 +40,10 @@ public class Constants
     public static final float VL_MIN = -10F;
 
     // The max change in voltage per second (acceleration)
-    public static final float AR_MAX = 6F;
-    public static final float AL_MAX = 6F;
-    public static final float AR_MIN = -2F;
-    public static final float AL_MIN = -2F;
+    public static final float AR_MAX = 5F;
+    public static final float AL_MAX = 5F;
+    public static final float AR_MIN = -10F;
+    public static final float AL_MIN = -10F;
 
     public static InterpolationMap ACCELERATION_FOR_ELEVATOR_HEIGHT;
 
@@ -54,8 +54,7 @@ public class Constants
     public static final float LOOKAHEAD_MAX_SPEED_FPS = 8F;
     public static final Lookahead LOOKAHEAD = new Lookahead(LOOKAHEAD_MIN_DISTANCE_FT, LOOKAHEAD_MAX_DISTANCE_FT,
                                                             LOOKAHEAD_MIN_SPEED_FPS, LOOKAHEAD_MAX_SPEED_FPS);
-    public static final float STOP_DIST_TOLERANCE_FT = 0.5F;
-    public static final float DECCELERATE_EXTRA_DIST_FT = 0.5F;
+    public static final float STOP_DIST_TOLERANCE_FT = 1F;
 
     /*
     Physical / Other

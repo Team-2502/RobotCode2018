@@ -1,10 +1,12 @@
 package com.team2502.robot2018.trajectory;
 
 import com.team2502.robot2018.Constants;
+import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.trajectory.localization.IRotationalLocationEstimator;
 import com.team2502.robot2018.trajectory.localization.ITranslationalLocationEstimator;
 import com.team2502.robot2018.trajectory.localization.ITranslationalVelocityEstimator;
 import com.team2502.robot2018.utils.MathUtils;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import logger.Log;
 import org.joml.ImmutableVector2f;
 
@@ -40,6 +42,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
     private boolean finishedPath = false;
     private ImmutableVector2f usedEstimatedLocation = new ImmutableVector2f();
     private float usedHeading = 0.0F;
+    private float lastWaypointSpeed = 0;
 
     private int lastSegmentSearched = 0;
 
@@ -57,6 +60,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
     private double currentS;
     private float distanceLeft;
     private boolean brakeStage;
+    private float usedTangentialVelocity;
 
     /**
      * Strategize your movement!
@@ -192,14 +196,19 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         // If the closestGoalPoint vector is on the next segment, set that segment as the current segment
         if(closestVectorI >= nextPathSegmentI)
         {
+            // WAYPOINTS ARE REMOVED HERE
             // Execute commands for last waypoint
             Waypoint waypoint = waypoints.get(lastSegmentSearched);
             waypoint.executeCommands(this);
 
+            lastWaypointSpeed = speedUsed;
+
+
             ++lastSegmentSearched;
 
             lastUpdatedS = currentS;
-            System.out.println("removed a waypoint ::: lookAhead = " + lookAheadDistance + " ::: location: " + usedEstimatedLocation.get(0) + "," + usedEstimatedLocation.get(1));
+            Robot.writeLog("removed a waypoint ::: lookAhead = " + lookAheadDistance + " ::: location: " + waypoint.getLocation().x + "," + waypoint.getLocation().y);
+            Robot.writeLog("LAST WAYPOINT SPEED: "+lastWaypointSpeed);
         }
 
         // closestGoalPoint is our new goal point
@@ -216,13 +225,16 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
 
     float generateLookahead()
     {
-        float tangentialVelocity = velocityEstimator.estimateSpeed();
-        float lookaheadForSpeed = lookahead.getLookaheadForSpeed(tangentialVelocity);
+        usedTangentialVelocity = velocityEstimator.estimateSpeed();
+        float lookaheadForSpeed = lookahead.getLookaheadForSpeed(usedTangentialVelocity);
 
         Waypoint waypointStart = waypoints.get(lastSegmentSearched);
         ImmutableVector2f lineStartPoint = waypointStart.getLocation();
 
         Waypoint waypointEnd = waypoints.get(lastSegmentSearched + 1);
+
+        boolean lastWaypoint = lastSegmentSearched + 1 == waypoints.size() - 1;
+
         forward = waypointEnd.isForward();
         if(forward)
         {
@@ -247,17 +259,27 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
 
         distanceLeft = pathSegmentDistance - distanceAlongPath;
 
-        // p1 = p0 + vt + 1/2at^2 ...
-        // pathSegmentDistance = distanceAlongPath + tangentialVelocity*t + 1/2 * maxAcceleration
+        if(MathUtils.epsilonEquals(0F,distanceLeft))
+        {
+            brakeStage = true;
+            return Float.NaN;
+        }
 
-        float startSpeed = waypointStart.getMaxSpeed();
+        // p1 = p0 + vt + 1/2at^2 ...
+        // pathSegmentDistance = distanceAlongPath + usedTangentialVelocity*t + 1/2 * maxAcceleration
+
+//        float startSpeed = lastWaypointSpeed;
         float finalSpeed = waypointEnd.getMaxSpeed();
 
-        if(finalSpeed > startSpeed)
+        Robot.writeLog("distance left: "+distanceLeft);
+        Robot.writeLog("speed: "+speedUsed);
+
+        if(finalSpeed > lastWaypointSpeed)
         {
+            Robot.writeLog("accel");
             // what the motors should be
             float dTime = (float) (currentS - lastUpdatedS);
-            speedUsed = Math.min(finalSpeed, startSpeed + dTime * tankRobot.getA_lMax());
+            speedUsed = Math.min(finalSpeed, lastWaypointSpeed + dTime * tankRobot.getA_lMax());
         }
         else
         {
@@ -267,11 +289,11 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
             // Using basic physics kinematic equations we get 2a*x=vf^2-vi^2
             // so vi = \sqrt{vf^2 - 2a*x}
 
-            float fakeDistance = Math.max(0, distanceLeft - Constants.DECCELERATE_EXTRA_DIST_FT);
-            float maxVel = (float) Math.sqrt(finalSpeed * finalSpeed - 2 * tankRobot.getA_lMin() * fakeDistance);
-            System.out.println("distanceLeft: "+distanceLeft+", vel: "+maxVel);
+            float maxVel = (float) Math.sqrt(finalSpeed * finalSpeed - 2 * tankRobot.getA_lMin() * distanceLeft);
+//            System.out.println("distanceLeft: "+distanceLeft+", vel: "+maxVel);
+            Robot.writeLog("deccel, maxVel: "+maxVel);
 
-            speedUsed = Math.min(startSpeed, maxVel);
+            speedUsed = Math.min(lastWaypointSpeed, maxVel);
         }
 
         float dCP = distanceClosestPoint.length();
@@ -284,6 +306,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
      */
     public void update()
     {
+        //TODO: fix crap code here
 
         if(finishedPath)
         {
@@ -310,6 +333,15 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         usedHeading = rotEstimator.estimateHeading();
 
         usedLookahead = generateLookahead();
+        if(usedLookahead == Float.NaN)
+        {
+            wheelVelocities = new ImmutableVector2f(0,0);
+            if(Math.abs(velocityEstimator.estimateSpeed()) < 0.1F)
+            {
+                finishedPath = true;
+            }
+            return;
+        }
         absoluteGoalPoint = calculateAbsoluteGoalPoint(usedLookahead);
 
         if(finishedPath)
@@ -475,6 +507,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
                 throw new NullPointerException("bestVector is null!");
             }
 
+//            Robot.writeLog(String.format("wheel velocity (%.2f, %.2f) ... speedUsed: %.2f",bestVector.x,bestVector.y,speedUsed));
             rotVelocity = (bestVector.get(1) - bestVector.get(0)) / tankRobot.getLateralWheelDistance();
             motionRadius = 1 / curvature;
             leftWheelTanVel = Math.abs((motionRadius - tankRobot.getLateralWheelDistance() / 2) * rotVelocity);

@@ -130,20 +130,10 @@ public class PurePursuitCommand extends Command
         SmartDashboard.putNumber("PPwheelL", wheelVelocities.get(0));
         SmartDashboard.putNumber("PPwheelR", wheelVelocities.get(1));
 
-        float leftWheelFPS = wheelL * Constants.FPS_TO_EVEL_DT;
-        float rightWheelFPS = wheelR * Constants.FPS_TO_EVEL_DT;
+        float leftWheelEVEL = wheelL * Constants.FPS_TO_EVEL_DT;
+        float rightWheelEVEL = wheelR * Constants.FPS_TO_EVEL_DT;
 
-        if(purePursuitMovementStrategy.isBrakeStage())
-        {
-            // We are lazy and are going to overshoot for faster deceleration
-            Robot.DRIVE_TRAIN.runMotors(ControlMode.PercentOutput,-0.5F,-0.5F);
-        }
-        else
-        {
-            Robot.DRIVE_TRAIN.runMotors(ControlMode.Velocity, leftWheelFPS, rightWheelFPS);
-        }
-
-        float usedLookahead = purePursuitMovementStrategy.getUsedLookahead();
+        Robot.DRIVE_TRAIN.runMotors(ControlMode.Velocity, leftWheelEVEL, rightWheelEVEL);
     }
 
     @Override

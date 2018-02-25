@@ -81,7 +81,7 @@ public class EncoderDifferentialDriveLocationEstimator implements ITranslational
     @Override
     public float estimateSpeed()
     {
-        return (getLeftWheelSpeed() + getRightWheelSpeed()) / 2;
+        return (getLeftWheelSpeed() + getRightWheelSpeed()) / 2F;
     }
 }
 
