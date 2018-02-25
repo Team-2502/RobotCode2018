@@ -1,6 +1,6 @@
 package com.team2502.robot2018.command.test.group;
 
-import com.team2502.robot2018.command.autonomous.ingredients.ActiveIntakeMove;
+import com.team2502.robot2018.command.autonomous.ingredients.ActiveIntakeRotate;
 import com.team2502.robot2018.command.autonomous.ingredients.ElevatorAutonCommand;
 import com.team2502.robot2018.command.autonomous.ingredients.ShootCubeCommand;
 import com.team2502.robot2018.command.teleop.ButterflySetCommand;
@@ -37,9 +37,9 @@ public class FullSystemsTestCommand extends CommandGroup
         addSequential(command);
 
         newSection("Active Intake Up");
-        addSequential(new ActiveIntakeMove(0.5F, -0.5));
+        addSequential(new ActiveIntakeRotate(0.5F, -0.5));
         print("Active Intake Down");
-        addSequential(new ActiveIntakeMove(0.5F, 0.5));
+        addSequential(new ActiveIntakeRotate(0.5F, 0.5));
         promptYesNo("Did this occur?", "Active Intake Up/Down");
 
         newSection("Shooting OUT cube in active");

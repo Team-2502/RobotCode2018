@@ -12,9 +12,11 @@ public class LeftCommandGroup extends CommandGroup
 
     public LeftCommandGroup()
     {
+        Robot.TRANSMISSION_SOLENOID.setHighGear(true);
         String AUTO_GAME_DATA = Robot.GAME_DATA.substring(0, 2);
 
         Robot.NAVX.reset();
+        Robot.ELEVATOR.calibrateEncoder();
 
 
         switch(AUTO_GAME_DATA)
@@ -60,7 +62,7 @@ public class LeftCommandGroup extends CommandGroup
     {
         addSequential(new PurePursuitCommand(Paths.Left.leftSwitch));
         addSequential(new ElevatorAutonCommand(.8F, Constants.SWITCH_ELEV_HEIGHT_FT));
-        addSequential(new ActiveIntakeMove(0.35, 1));
+        addSequential(new ActiveIntakeRotate(0.35, 1));
 
         emitCube();
 
@@ -68,11 +70,21 @@ public class LeftCommandGroup extends CommandGroup
 
     private void goScaleLeft()
     {
-        addParallel(new ActiveIntakeMove(0.7, 0.5));
+
+
         addSequential(new PurePursuitCommand(Paths.Left.leftScale));
+
+
+        addParallel(new RaiseElevatorScale());
+
         addSequential(new WaitCommand(0.8F));
+
+        addParallel(new ActiveIntakeRotate(0.1, 0.5));
+
         addSequential(new RotateAutonStationary(55));
-        addSequential(new ElevatorAutonCommand(2.7F, Constants.SCALE_ELEV_HEIGHT_FT));
+
+        addParallel(new ActiveIntakeRotate(0.15F, -0.5));
+
         addSequential(new DeadreckoningDrive(0.5F, 2));
         emitCube();
 

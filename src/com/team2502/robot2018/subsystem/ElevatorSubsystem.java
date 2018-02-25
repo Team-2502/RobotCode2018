@@ -49,6 +49,7 @@ public class ElevatorSubsystem extends Subsystem implements PIDTunable, Dashboar
         pidTuner = new SendablePIDTuner(this, this);
 
         DashboardData.addUpdater(this);
+        calibrateEncoder();
 
     }
 
