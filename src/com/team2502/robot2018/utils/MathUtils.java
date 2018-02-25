@@ -4,6 +4,9 @@ package com.team2502.robot2018.utils;
 import com.team2502.robot2018.Robot;
 import org.joml.ImmutableVector2f;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @SuppressWarnings("unused")
 public final class MathUtils
 {
@@ -393,6 +396,34 @@ public final class MathUtils
 
     public static class Algebra
     {
+
+        public static Set<Float> quadratic(float a, float b, float c)
+        {
+            Set<Float> toReturn = new HashSet<>();
+            float discriminate = discriminate(a, b, c);
+            if(discriminate < 0)
+            {
+                return toReturn;
+            }
+            else if(discriminate == 0)
+            {
+                toReturn.add(b * b / (2 * a));
+            }
+            else
+            {
+                float LHS = -b / (2 * a);
+                float RHS = (float) (Math.sqrt(discriminate) / (2 * a));
+                toReturn.add(LHS + RHS);
+                toReturn.add(LHS - RHS);
+            }
+            return toReturn;
+        }
+
+        public static float discriminate(float a, float b, float c)
+        {
+            return b * b - 4F * a * c;
+        }
+
         /**
          * @return if a <= x <= b or b<= x <= a
          */
@@ -433,7 +464,7 @@ public final class MathUtils
          */
         public static float getPos(float p0, float v0, float a0, float dt)
         {
-            return p0 + v0 * dt + 1 / 2 * a0 * dt * dt;
+            return p0 + v0 * dt + 1 / 2F * a0 * dt * dt;
         }
 
         public static float getAngularVel(float vL, float vR, float l)
@@ -463,6 +494,11 @@ public final class MathUtils
             float dyRelative = -r * MathUtils.sin(-dTheta);
 
             return new ImmutableVector2f(dxRelative, dyRelative);
+        }
+
+        public static float getTangentialSpeed(float wheelL, float wheelR)
+        {
+            return (wheelL + wheelR)/2F;
         }
 
         /**

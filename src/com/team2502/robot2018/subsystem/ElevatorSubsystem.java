@@ -21,7 +21,8 @@ public class ElevatorSubsystem extends Subsystem implements PIDTunable, Dashboar
     private final WPI_TalonSRX climberTop;
     private final WPI_TalonSRX climberBottom;
     private final SendablePIDTuner pidTuner;
-    private double kP = 0D;
+
+    private double kP = 0.2D;
     private double kI = 0D;
     private double kD = 0D;
     private double kF = 0D;
@@ -43,11 +44,12 @@ public class ElevatorSubsystem extends Subsystem implements PIDTunable, Dashboar
 
         elevatorTop.follow(elevatorBottom);
         elevatorBottom.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute, 0, Constants.INIT_TIMEOUT);
+        elevatorBottom.setSensorPhase(true);
 
         pidTuner = new SendablePIDTuner(this, this);
 
         DashboardData.addUpdater(this);
-        calibrateEncoder();
+
     }
 
     /**
@@ -79,7 +81,8 @@ public class ElevatorSubsystem extends Subsystem implements PIDTunable, Dashboar
             timer = 0;
             Robot.CLIMBER_SOLENOID.unlockElevator();
         }
-        if(timer <= 15)
+        // 20ms per 1 loop
+        if(timer <= 6)
         {
             timer++;
         }
@@ -97,7 +100,7 @@ public class ElevatorSubsystem extends Subsystem implements PIDTunable, Dashboar
 
     public void setElevatorPos(float feet)
     {
-        float epos = feet * Constants.FEET_TO_EPOS;
+        double epos = feet * Constants.FEET_TO_EPOS_ELEV;
         moveElevator(ControlMode.Position, epos);
     }
 
@@ -210,12 +213,12 @@ public class ElevatorSubsystem extends Subsystem implements PIDTunable, Dashboar
 
     public double getVel()
     {
-        return elevatorBottom.getSelectedSensorVelocity(0) * Constants.EVEL_TO_FPS;
+        return elevatorBottom.getSelectedSensorVelocity(0);
     }
 
     public double getPos()
     {
-        return elevatorBottom.getSelectedSensorPosition(0) * Constants.EVEL_TO_FPS;
+        return elevatorBottom.getSelectedSensorPosition(0);
     }
 
     public void calibrateEncoder()

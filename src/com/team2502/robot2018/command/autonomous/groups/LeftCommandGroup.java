@@ -20,7 +20,7 @@ public class LeftCommandGroup extends CommandGroup
         switch(AUTO_GAME_DATA)
         {
             case "LL":
-                switch(Robot.AUTON_STRATEGY)
+                switch(Robot.autonStrategySelector.getSelected())
                 {
                     case SCALE:
                     {
@@ -58,20 +58,21 @@ public class LeftCommandGroup extends CommandGroup
 
     private void goSwitch()
     {
-        addSequential(new PurePursuitCommand(Paths.Left.leftSwitch, Constants.LOOKAHEAD_DISTANCE_FT, Constants.STOP_DIST_TOLERANCE_FT));
-        addSequential(new ElevatorUpAutonCommand(.8F));
-        addSequential(new ActiveIntakeDown(0.35, 1));
+        addSequential(new PurePursuitCommand(Paths.Left.leftSwitch));
+        addSequential(new ElevatorAutonCommand(.8F, Constants.SWITCH_ELEV_HEIGHT_FT));
+        addSequential(new ActiveIntakeMove(0.35, 1));
+
         emitCube();
 
     }
 
     private void goScaleLeft()
     {
-        addParallel(new ActiveIntakeDown(0.7, 0.5));
-        addSequential(new PurePursuitCommand(Paths.Left.leftScale, Constants.LOOKAHEAD_DISTANCE_FT, Constants.STOP_DIST_TOLERANCE_FT));
+        addParallel(new ActiveIntakeMove(0.7, 0.5));
+        addSequential(new PurePursuitCommand(Paths.Left.leftScale));
         addSequential(new WaitCommand(0.8F));
         addSequential(new RotateAutonStationary(55));
-        addSequential(new ElevatorUpAutonCommand(2.7F));
+        addSequential(new ElevatorAutonCommand(2.7F, Constants.SCALE_ELEV_HEIGHT_FT));
         addSequential(new DeadreckoningDrive(0.5F, 2));
         emitCube();
 

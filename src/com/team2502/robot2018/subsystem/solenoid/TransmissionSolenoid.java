@@ -1,33 +1,27 @@
 package com.team2502.robot2018.subsystem.solenoid;
 
-import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.RobotMap;
+import com.team2502.robot2018.utils.NonDefaultSubsystem;
 import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.command.Subsystem;
 
-public class TransmissionSolenoid extends Subsystem
+public class TransmissionSolenoid extends NonDefaultSubsystem
 {
-    private final Solenoid switcher;
+    private final Solenoid transmission;
     public boolean disabledAutoShifting = true;
-    public boolean highGear;
+    private boolean highGear;
 
     public TransmissionSolenoid()
     {
-        switcher = new Solenoid(RobotMap.Solenoid.TRANSMISSION_SWITCH);
+        transmission = new Solenoid(RobotMap.Solenoid.TRANSMISSION_SWITCH);
         highGear = false;
+        transmission.set(false);
     }
-
-    @Override
-    protected void initDefaultCommand() { }
 
     /**
      * Switch the gear from its current state
      */
-    public void switchGear()
-    {
-        setGear(highGear = !highGear);
-        Robot.SHIFTED = System.currentTimeMillis();
-    }
+    public void toggleGear()
+    { transmission.set(highGear = !highGear); }
 
     /**
      * @return if we are in high gear
@@ -40,18 +34,6 @@ public class TransmissionSolenoid extends Subsystem
      *
      * @param highGear Boolean saying "do you want to be in high gear?"
      */
-    public void setGear(boolean highGear)
-    {
-        if(this.highGear != highGear)
-        {
-            Robot.SHIFTED = System.currentTimeMillis();
-            switcher.set(this.highGear = highGear);
-        }
-    }
-
-    /**
-     * Autoshifting can be disabled during robot demonstrations. This method toggles it.
-     */
-    public void toggleAutoShifting()
-    { disabledAutoShifting = !disabledAutoShifting; }
+    public void setHighGear(boolean highGear)
+    { transmission.set(this.highGear = !highGear); }
 }

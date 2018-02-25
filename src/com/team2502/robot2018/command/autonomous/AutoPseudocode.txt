@@ -2,38 +2,54 @@ Each side of the field is identical as far as code goes. No need for red v blue 
 
 Left start position:
     LLx:
-        1. score in scale
+        1. score in the switch from side
+        2. grab left-most cube behind switch
+        3. score in scale
+        4. grab left-most cube behind switch
+        5. score in scale
     LRx:
         1. score in switch
+        2. grab right-most cube behind switch
+        3. score in the scale
     RLx:
         1. score in scale
+        2. grab right-most cube behind switch
+        3. score in the switch from back
     RRx:
-        1. cross line, position for scale (attempt score?)
-        2. cross line, position for switch, attempt score
-        3. rush scale (pure pursuit?)
+        1. score in scale
+        2. grab right-most cube behind switch
+        3. score in switch
 
 Center start position:
     LLx:
-        1. score in switch
+        1. score in switch (x2?)
         2. cross line (stay out of way)
     LRx:
-        1. score in switch
+        1. score in switch (x2?)
         2. cross line (stay out of way)
     RLx:
-        1. score in switch
+        1. score in switch (x2?)
         2. cross line (stay out of way)
     RRx:
-        1. score in switch
+        1. score in switch (x2?)
         2. cross line (stay out of way)
 
 Right start position:
     LLx:
-        1. cross line position for scale (attempt score?)
-        2. cross line, position for switch, attempt score
-        3. rush scale (pure pursuit?)
+        1. score in scale
+        2. grab left-most cube behind switch
+        3. score in switch
     LRx:
         1. score in scale
+        2. grab left-most cube behind switch
+        3. score in switch
     RLx:
         1. score in switch
+        2. grab left-most cube behind switch
+        3. score in scale
     RRx:
-        1. score in scale
+        1. score in switch
+        2. grab right-most cube behind switch
+        3. score in scale
+        4. grab right-most cube behind switch
+        5. score in scale

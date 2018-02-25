@@ -1,11 +1,9 @@
 package com.team2502.robot2018.command.autonomous.ingredients;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.kauailabs.navx.frc.AHRS;
 import com.team2502.robot2018.Constants;
 import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.sendables.SendableNavX;
-import com.team2502.robot2018.subsystem.DriveTrainSubsystem;
 import com.team2502.robot2018.trajectory.ITankRobotBounds;
 import com.team2502.robot2018.trajectory.Lookahead;
 import com.team2502.robot2018.trajectory.PurePursuitMovementStrategy;
@@ -15,7 +13,6 @@ import com.team2502.robot2018.trajectory.localization.NavXLocationEstimator;
 import com.team2502.robot2018.utils.MathUtils;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import logger.Log;
 import org.joml.ImmutableVector2f;
 
 import java.util.List;
@@ -26,29 +23,16 @@ public class PurePursuitCommand extends Command
     private final EncoderDifferentialDriveLocationEstimator transLocEstimator;
     private final NavXLocationEstimator rotLocEstimator;
     private final SendableNavX sendableNavX;
-    private final float stopDistance;
-    private float lookAheadDistance;
-    private DriveTrainSubsystem driveTrain;
-    private AHRS navx;
     private PurePursuitMovementStrategy purePursuitMovementStrategy;
-    private long lastTime = -1;
-    private float initAngleDegrees;
 
     public PurePursuitCommand(List<Waypoint> waypoints)
     {
-        this(waypoints, Constants.LOOKAHEAD_DISTANCE_FT, Constants.STOP_DIST_TOLERANCE_FT);
+        this(waypoints, Constants.LOOKAHEAD, Constants.STOP_DIST_TOLERANCE_FT);
     }
 
-    public PurePursuitCommand(List<Waypoint> waypoints, float lookAheadDistance, float stopDistance)
+    public PurePursuitCommand(List<Waypoint> waypoints, Lookahead lookahead, float stopDistance)
     {
-        navx = Robot.NAVX;
-        navx.resetDisplacement();
-
-        this.lookAheadDistance = lookAheadDistance;
         requires(Robot.DRIVE_TRAIN);
-        driveTrain = Robot.DRIVE_TRAIN;
-        initAngleDegrees = (float) navx.getAngle();
-        this.stopDistance = stopDistance;
 
         tankRobot = new ITankRobotBounds()
         {
@@ -116,28 +100,14 @@ public class PurePursuitCommand extends Command
         transLocEstimator = new EncoderDifferentialDriveLocationEstimator(rotLocEstimator);
 
         sendableNavX = new SendableNavX(() -> MathUtils.rad2Deg(-rotLocEstimator.estimateHeading()), "purePursuitHeading");
-        Lookahead lookahead = new Lookahead(3, 5, 1, 8);
         purePursuitMovementStrategy = new PurePursuitMovementStrategy(tankRobot, transLocEstimator, rotLocEstimator, transLocEstimator, waypoints, lookahead, stopDistance);
-        Log.info("initAngleDegrees: {0,number,0.00}\n" + initAngleDegrees);
-    }
-
-    /**
-     * @return difference in seconds since last time the method was called
-     */
-    double getDTime()
-    {
-        long nanoTime = System.nanoTime();
-        double dTime;
-        dTime = lastTime == -1 ? 0 : nanoTime - lastTime;
-        lastTime = nanoTime;
-        return (dTime / 1E6);
     }
 
     @Override
     protected void initialize()
     {
         SmartDashboard.putBoolean("PPisClose", purePursuitMovementStrategy.isClose());
-        SmartDashboard.putBoolean("PPisSuccess", purePursuitMovementStrategy.isSuccessfullyFinished());
+        SmartDashboard.putBoolean("PPisSuccess", purePursuitMovementStrategy.isWithinTolerences());
     }
 
     @Override
@@ -146,8 +116,6 @@ public class PurePursuitCommand extends Command
         purePursuitMovementStrategy.update();
 
         sendableNavX.updateDashboard();
-
-//        SmartDashboard.putNumber("purePursuitHeadingRad", purePursuitMovementStrategy.getUsedHeading());
 
         ImmutableVector2f usedEstimatedLocation = purePursuitMovementStrategy.getUsedEstimatedLocation();
 
@@ -162,27 +130,10 @@ public class PurePursuitCommand extends Command
         SmartDashboard.putNumber("PPwheelL", wheelVelocities.get(0));
         SmartDashboard.putNumber("PPwheelR", wheelVelocities.get(1));
 
-        ImmutableVector2f relativeGoalPoint = purePursuitMovementStrategy.getRelativeGoalPoint();
-        if(relativeGoalPoint != null)
-        {
-//            SmartDashboard.putNumber("rGPx", relativeGoalPoint.get(0));
-//            SmartDashboard.putNumber("rGPy", relativeGoalPoint.get(1));
-        }
+        float leftWheelEVEL = wheelL * Constants.FPS_TO_EVEL_DT;
+        float rightWheelEVEL = wheelR * Constants.FPS_TO_EVEL_DT;
 
-        ImmutableVector2f absGP = purePursuitMovementStrategy.getAbsoluteGoalPoint();
-        if(absGP != null)
-        {
-//            SmartDashboard.putNumber("GPx", absGP.get(0));
-//            SmartDashboard.putNumber("GPy", absGP.get(1));
-        }
-
-        float usedLookahead = purePursuitMovementStrategy.getUsedLookahead();
-
-//        SmartDashboard.putNumber("Lookahead", usedLookahead);
-
-        float leftWheelFPS = wheelL * Constants.FPS_TO_EVEL;
-        float rightWheelFPS = wheelR * Constants.FPS_TO_EVEL;
-        Robot.DRIVE_TRAIN.runMotors(ControlMode.Velocity, leftWheelFPS, rightWheelFPS);
+        Robot.DRIVE_TRAIN.runMotors(ControlMode.Velocity, leftWheelEVEL, rightWheelEVEL);
     }
 
     @Override
@@ -191,19 +142,14 @@ public class PurePursuitCommand extends Command
         boolean finishedPath = purePursuitMovementStrategy.isFinishedPath();
         if(finishedPath)
         {
-            SmartDashboard.putBoolean("PPisSuccess", purePursuitMovementStrategy.isSuccessfullyFinished());
-            System.out.println("\n!!!\nBRAKING\n!!!!\n");
-            Robot.DRIVE_TRAIN.leftRearTalon.set(ControlMode.Disabled, 0.0F);
-            Robot.DRIVE_TRAIN.rightRearTalon.set(ControlMode.Disabled, 0.0F);
-            System.out.println("\n\nFINISHED!\n\n");
+            SmartDashboard.putBoolean("PPisSuccess", purePursuitMovementStrategy.isWithinTolerences());
+            if(purePursuitMovementStrategy.isWithinTolerences())
+            {
+                System.out.println("\n\nSUCCESS!\n\n");
+            }
+            Robot.DRIVE_TRAIN.stop();
         }
         return finishedPath;
 
-    }
-
-    @Override
-    protected void end()
-    {
-        driveTrain.setTeleopSettings();
     }
 }

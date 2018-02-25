@@ -14,4 +14,33 @@ public interface ITranslationalVelocityEstimator
     float getRightWheelSpeed();
 
     float estimateSpeed();
+
+    default ITranslationalVelocityEstimator getInvertedVelocity()
+    {
+        return new ITranslationalVelocityEstimator() {
+            @Override
+            public ImmutableVector2f estimateAbsoluteVelocity()
+            {
+                return ITranslationalVelocityEstimator.this.estimateAbsoluteVelocity();
+            }
+
+            @Override
+            public float getLeftWheelSpeed()
+            {
+                return -ITranslationalVelocityEstimator.this.getRightWheelSpeed();
+            }
+
+            @Override
+            public float getRightWheelSpeed()
+            {
+                return -ITranslationalVelocityEstimator.this.getLeftWheelSpeed();
+            }
+
+            @Override
+            public float estimateSpeed()
+            {
+                return (getLeftWheelSpeed()+getRightWheelSpeed())/2F;
+            }
+        };
+    }
 }

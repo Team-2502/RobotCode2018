@@ -1,6 +1,6 @@
 package com.team2502.robot2018.trajectory;
 
-public class PathSegment
+// A 1D path segment
+public class PathSegment1D
 {
-
 }

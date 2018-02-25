@@ -1,12 +1,26 @@
 package com.team2502.robot2018;
 
 import com.team2502.ctannotationprocessor.Undefined;
+import com.team2502.robot2018.trajectory.Lookahead;
+import com.team2502.robot2018.utils.InterpolationMap;
 
 /**
  * Note E (EVEL, ENC_RES, EPOS) is special encoder units
  */
 public class Constants
 {
+
+    /**
+     * How high the elevator must be in order to put a cube in the switch
+     */
+    public static final float SWITCH_ELEV_HEIGHT_FT = 2F;
+
+    /**
+     * How high the elevator must be in order to put a cube in the scale
+     */
+    public static final float SCALE_ELEV_HEIGHT_FT = 7F;
+
+
 
     /*
     Tweak
@@ -20,20 +34,27 @@ public class Constants
      */
 
     // Currently the max percent ft/s that can be given to each to each wheel
-    public static final float VR_MAX = 2F;
-    public static final float VL_MAX = 2F;
-    public static final float VR_MIN = -2F;
-    public static final float VL_MIN = -2F;
+    public static final float VR_MAX = 10F;
+    public static final float VL_MAX = 10F;
+    public static final float VR_MIN = -10F;
+    public static final float VL_MIN = -10F;
 
     // The max change in voltage per second (acceleration)
-    public static final float AR_MAX = .3F;
-    public static final float AL_MAX = .3F;
-    public static final float AR_MIN = -.3F;
-    public static final float AL_MIN = -.3F;
+    public static final float AR_MAX = 5F;
+    public static final float AL_MAX = 5F;
+    public static final float AR_MIN = -10F;
+    public static final float AL_MIN = -10F;
+
+    public static InterpolationMap ACCELERATION_FOR_ELEVATOR_HEIGHT;
 
     // The lookahead distance (feet) for Pure Pursuit
-    public static final float LOOKAHEAD_DISTANCE_FT = 5F;
-    public static final float STOP_DIST_TOLERANCE_FT = 2F;
+    public static final float LOOKAHEAD_MIN_DISTANCE_FT = 3F;
+    public static final float LOOKAHEAD_MAX_DISTANCE_FT = 5F;
+    public static final float LOOKAHEAD_MIN_SPEED_FPS = 1F;
+    public static final float LOOKAHEAD_MAX_SPEED_FPS = 8F;
+    public static final Lookahead LOOKAHEAD = new Lookahead(LOOKAHEAD_MIN_DISTANCE_FT, LOOKAHEAD_MAX_DISTANCE_FT,
+                                                            LOOKAHEAD_MIN_SPEED_FPS, LOOKAHEAD_MAX_SPEED_FPS);
+    public static final float STOP_DIST_TOLERANCE_FT = 1F;
 
     /*
     Physical / Other
@@ -41,7 +62,7 @@ public class Constants
 
 
     // TODO: figure out why wheel diameter has to be much smaller than it should be (normally 6)
-    public static final float WHEEL_DIAMETER_INCH = 2F;
+    public static final float WHEEL_DIAMETER_INCH = 3.6944444443F;
     public static final float WHEEL_DIAMETER_FT = WHEEL_DIAMETER_INCH / 12F;
 
     // half of the width of the wheel that is in contact with the ground
@@ -55,18 +76,37 @@ public class Constants
 
     public static final float ENC_RES = 4096.0F;
 
-    public static final float EPOS_TO_FEET = (WHEEL_DIAMETER_FT * (float) Math.PI) / ENC_RES;
+
+    /* Drivetrain */
+    public static final float EPOS_TO_FEET_DT = (WHEEL_DIAMETER_FT * (float) Math.PI) / ENC_RES;
 
     // 600 = amount of 100 ms in a minute
     public static final float EVEL_TO_RPM = (600.0F / ENC_RES);
-    public static final float RPM_TO_FPS = (WHEEL_DIAMETER_FT * (float) Math.PI) / 60F;
-    public static final float EVEL_TO_FPS = EVEL_TO_RPM * RPM_TO_FPS;
+    public static final float RPM_TO_FPS_DT = (WHEEL_DIAMETER_FT * (float) Math.PI) / 60F;
+    public static final float EVEL_TO_FPS_DT = EVEL_TO_RPM * RPM_TO_FPS_DT;
 
-    public static final float FEET_TO_EPOS = 1 / EPOS_TO_FEET;
+    public static final float FEET_TO_EPOS_DT = 1 / EPOS_TO_FEET_DT;
 
-    public static final float FPS_TO_RPM = 60F / (WHEEL_DIAMETER_FT * (float) Math.PI);
-    public static final float RPM_TO_EVEL = ENC_RES / 600F;
-    public static final float FPS_TO_EVEL = FPS_TO_RPM * RPM_TO_EVEL;
+    public static final float FPS_TO_RPM_DT = 60F / (WHEEL_DIAMETER_FT * (float) Math.PI);
+    public static final float RPM_TO_EVEL_DT = ENC_RES / 600F;
+    public static final float FPS_TO_EVEL_DT = FPS_TO_RPM_DT * RPM_TO_EVEL_DT;
+
+    /* Elevator */
+    public static final double ELEV_SHAFT_DIAMETER_IN = 1;
+    public static final double ELEV_SHAFT_DIAMETER_FT = ELEV_SHAFT_DIAMETER_IN / 12D;
+
+    public static final double EPOS_TO_FEET_ELEV = (ELEV_SHAFT_DIAMETER_FT * (float) Math.PI) / ENC_RES;
+
+    // 600 = amount of 100 ms in a minute
+    public static final double EVEL_TO_RPM_ELEV = (600.0F / ENC_RES);
+    public static final double RPM_TO_FPS_ELEV = (ELEV_SHAFT_DIAMETER_FT * (float) Math.PI) / 60F;
+    public static final double EVEL_TO_FPS_ELEV = EVEL_TO_RPM_ELEV * RPM_TO_FPS_ELEV;
+
+    public static final double FEET_TO_EPOS_ELEV = 1 / EPOS_TO_FEET_ELEV;
+
+    public static final double FPS_TO_RPM_ELEV = 60F / (WHEEL_DIAMETER_FT * (float) Math.PI);
+    public static final double RPM_TO_EVEL_ELEV = ENC_RES / 600F;
+    public static final double FPS_TO_EVEL_ELEV = FPS_TO_RPM_ELEV * RPM_TO_EVEL_ELEV;
 
 
     public static final int INIT_TIMEOUT = 10; // When initializing a sensor/whatever, the timeout will be 10 ms

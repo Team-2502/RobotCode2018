@@ -18,7 +18,8 @@ public class ActiveIntakeCommand extends Command
     protected void execute()
     {
         // Continue to watch the rotation axis on joystick...
-        Robot.ACTIVE_INTAKE.rotateIntake(OI.JOYSTICK_FUNCTION.getY());
+        // Must be negative joystick value to be correct on Comp Bot
+        Robot.ACTIVE_INTAKE.rotateIntake(-OI.JOYSTICK_FUNCTION.getY());
 
         // ...but also rotate the intake
         Robot.ACTIVE_INTAKE.runIntake(_speed);

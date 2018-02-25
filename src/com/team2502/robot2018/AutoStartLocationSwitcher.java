@@ -4,6 +4,9 @@ package com.team2502.robot2018;
 import com.team2502.robot2018.command.autonomous.groups.CenterCommandGroup;
 import com.team2502.robot2018.command.autonomous.groups.LeftCommandGroup;
 import com.team2502.robot2018.command.autonomous.groups.RightCommandGroup;
+import com.team2502.robot2018.command.autonomous.groups.TestCommandGroup;
+import com.team2502.robot2018.command.teleop.CalibrateRobotCommand;
+import com.team2502.robot2018.command.test.group.FullSystemsTestCommand;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -30,24 +33,32 @@ class AutoStartLocationSwitcher
 
     public enum AutoMode
     {
-        CENTERAUTO("Center", CenterCommandGroup.class),
-        LEFTAUTO("Left", LeftCommandGroup.class),
-        RIGHTAUTO("Right", RightCommandGroup.class);
+        CENTERAUTO("Center", CenterCommandGroup::new),
+        LEFTAUTO("Left", LeftCommandGroup::new),
+        RIGHTAUTO("Right", RightCommandGroup::new),
+        TEST("Test", TestCommandGroup::new),
+        SYSTEMS_CHECK("Systems Check", FullSystemsTestCommand::new),
+        CALIBRATE("Calibrate", CalibrateRobotCommand::new);
 
-        private Class<? extends Command> autoCommand;
+        private CommandFactory commandFactory;
+
         private String name;
 
-        AutoMode(String name, Class<? extends Command> autoCommand)
+        AutoMode(String name, CommandFactory commandFactory)
         {
-            this.autoCommand = autoCommand;
+            this.commandFactory = commandFactory;
             this.name = name;
         }
 
         public Command getInstance()
         {
-            Command instance;
-            try { instance = autoCommand.newInstance(); } catch(InstantiationException | IllegalAccessException e) { return null; }
-            return instance;
+            return commandFactory.getInstance();
         }
     }
+
+    public interface CommandFactory
+    {
+        Command getInstance();
+    }
+
 }

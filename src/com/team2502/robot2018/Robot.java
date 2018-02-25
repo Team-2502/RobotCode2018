@@ -1,5 +1,6 @@
 package com.team2502.robot2018;
 
+import com.google.common.collect.ImmutableMap;
 import com.kauailabs.navx.frc.AHRS;
 import com.team2502.robot2018.command.autonomous.ingredients.AutonStrategy;
 import com.team2502.robot2018.sendables.SendableDriveStrategyType;
@@ -14,24 +15,28 @@ import com.team2502.robot2018.subsystem.solenoid.ButterflySolenoid;
 import com.team2502.robot2018.subsystem.solenoid.ClimberSolenoid;
 import com.team2502.robot2018.subsystem.solenoid.TransmissionSolenoid;
 import com.team2502.robot2018.utils.Files;
+import com.team2502.robot2018.utils.InterpolationMap;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import logger.Log;
 
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 public final class Robot extends IterativeRobot
 {
     public static double CAL_VELOCITY = 0D;
-    public static long SHIFTED;
     public static String GAME_DATA = "...";
 
-    public static AutonStrategy AUTON_STRATEGY;
     public static DriveTrainSubsystem DRIVE_TRAIN;
     public static ActiveIntakeSubsystem ACTIVE_INTAKE;
     public static Compressor COMPRESSOR;
@@ -42,10 +47,15 @@ public final class Robot extends IterativeRobot
     public static ButterflySolenoid BUTTERFLY_SOLENOID;
     public static TransmissionSolenoid TRANSMISSION_SOLENOID;
     public static AHRS NAVX;
+    public static SendableChooser<AutonStrategy> autonStrategySelector;
+    private static List<String> logLines = new ArrayList<>();
 
     public static void write(String string)
+    { LOG_OUTPUT.println(string); }
+
+    public static void writeLog(String message)
     {
-        LOG_OUTPUT.println(string);
+        logLines.add(message);
     }
 
     /**
@@ -55,11 +65,26 @@ public final class Robot extends IterativeRobot
     @Override
     public void robotInit()
     {
-        // TODO: needs to be changed in shuffleboard
-        AUTON_STRATEGY = AutonStrategy.SCALE;
+        autonStrategySelector = new SendableChooser<>();
+        AutonStrategy[] values = AutonStrategy.values();
+        for(int i = 0; i < values.length; i++)
+        {
+            AutonStrategy autonStrategy = values[i];
+            if(i == 0)
+            {
+                autonStrategySelector.addDefault(autonStrategy.getName(),autonStrategy);
+            }
+            else
+            {
+                autonStrategySelector.addObject(autonStrategy.getName(),autonStrategy);
+            }
+        }
+
+        SmartDashboard.putData("auto_strategy",autonStrategySelector);
 
         Log.createLogger(true);
 
+        TRANSMISSION_SOLENOID = new TransmissionSolenoid();
         COMPRESSOR = new Compressor();
         DRIVE_TRAIN = new DriveTrainSubsystem();
         NAVX = new AHRS(SPI.Port.kMXP);
@@ -68,10 +93,14 @@ public final class Robot extends IterativeRobot
         ACTIVE_INTAKE_SOLENOID = new ActiveIntakeSolenoid();
         CLIMBER_SOLENOID = new ClimberSolenoid();
         BUTTERFLY_SOLENOID = new ButterflySolenoid();
-        TRANSMISSION_SOLENOID = new TransmissionSolenoid();
-
         OI.init();
 
+
+        Map<Double, Double> map = ImmutableMap.<Double,Double>builder()
+                                                         .put(0D, 14D)
+                                                         .build();
+
+        Constants.ACCELERATION_FOR_ELEVATOR_HEIGHT = new InterpolationMap(map);
         AutoStartLocationSwitcher.putToSmartDashboard();
 
         SendableDriveTrain.init();
@@ -110,7 +139,21 @@ public final class Robot extends IterativeRobot
         // At the end of the match, we MUST lock the climber, which
         // will prevent our robot from falling, thus dropping two other
         // robots to the ground.
+
         Robot.CLIMBER_SOLENOID.lockElevator();
+
+        StringBuilder stringBuilder = new StringBuilder();
+        Iterator<String> iterator = logLines.iterator();
+
+        stringBuilder.append("::: LOG ::: \n");
+        while(iterator.hasNext())
+        {
+            String message = iterator.next();
+            stringBuilder.append(message);
+            stringBuilder.append('\n');
+            iterator.remove();
+        }
+        System.out.println(stringBuilder.toString());
     }
 
     public void disabledPeriodic()

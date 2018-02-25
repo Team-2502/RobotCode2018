@@ -3,12 +3,17 @@ package com.team2502.robot2018.command.autonomous.ingredients;
 import com.team2502.robot2018.Robot;
 import edu.wpi.first.wpilibj.command.TimedCommand;
 
-public class ActiveIntakeDown extends TimedCommand
+public class ActiveIntakeMove extends TimedCommand
 {
 
     private final double speed;
 
-    public ActiveIntakeDown(double timeout, double speed)
+    /**
+     * Positi
+     * @param timeout
+     * @param speed
+     */
+    public ActiveIntakeMove(double timeout, double speed)
     {
         super(timeout);
         this.speed = speed;

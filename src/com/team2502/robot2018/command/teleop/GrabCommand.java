@@ -6,9 +6,7 @@ import edu.wpi.first.wpilibj.command.InstantCommand;
 public class GrabCommand extends InstantCommand
 {
     public GrabCommand()
-    {
-        requires(Robot.ACTIVE_INTAKE_SOLENOID);
-    }
+    { requires(Robot.ACTIVE_INTAKE_SOLENOID); }
 
     @Override
     protected void execute()

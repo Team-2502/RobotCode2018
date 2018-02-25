@@ -13,7 +13,7 @@ public class DeadreckoningDrive extends TimedCommand
     public DeadreckoningDrive(double timeout, float speed)
     {
         super(timeout);
-        this.speed = speed * Constants.FPS_TO_EVEL;
+        this.speed = speed * Constants.FPS_TO_EVEL_DT;
     }
 
     @Override

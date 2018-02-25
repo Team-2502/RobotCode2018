@@ -6,17 +6,14 @@ import edu.wpi.first.wpilibj.command.InstantCommand;
 /**
  * Created by 64009334 on 2/18/18.
  */
-public class ShiftDriveTrainCommand extends InstantCommand
+public class TransmissionCommand extends InstantCommand
 {
-    public ShiftDriveTrainCommand()
-    {
-        requires(Robot.TRANSMISSION_SOLENOID);
-    }
+    public TransmissionCommand()
+    { requires(Robot.TRANSMISSION_SOLENOID); }
 
+    @Override
     protected void execute()
     {
-        Robot.TRANSMISSION_SOLENOID.switchGear();
+        Robot.TRANSMISSION_SOLENOID.toggleGear();
     }
-
-
 }

@@ -21,21 +21,21 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
 {
     private static final FloatPair SPEED_CONTAINER = new FloatPair();
 
-    public final WPI_TalonSRX leftFrontTalonEnc;
-    public final WPI_TalonSRX leftRearTalon;
-    public final WPI_TalonSRX rightFrontTalonEnc;
-    public final WPI_TalonSRX rightRearTalon;
+    private final WPI_TalonSRX leftFrontTalonEnc;
+    private final WPI_TalonSRX leftRearTalon;
+    private final WPI_TalonSRX rightFrontTalonEnc;
+    private final WPI_TalonSRX rightRearTalon;
 
-    public final DifferentialDrive drive;
-    public final SpeedControllerGroup spgLeft;
-    public final SpeedControllerGroup spgRight;
+    private final DifferentialDrive drive;
+    private final SpeedControllerGroup spgLeft;
+    private final SpeedControllerGroup spgRight;
 
     private final SendablePIDTuner pidTuner;
 
-    double kP = 0.2;
+    double kP = .7D;
     double kI = 0.0;
     double kD = 0;
-    double kF = 0.03;
+    double kF = 0;
 
     private float lastLeft;
     private float lastRight;
@@ -84,6 +84,7 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
 
     public void stop() { drive.stopMotor(); }
 
+
     private void setTeleopSettings(WPI_TalonSRX talon)
     {
         talon.set(ControlMode.PercentOutput, 0.0F);
@@ -108,6 +109,8 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         setTeleopSettings(rightRearTalon);
 
         setupTalons();
+
+        Robot.TRANSMISSION_SOLENOID.setHighGear(false);
     }
 
     public void setupTalons()
@@ -126,6 +129,8 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     public void setAutonSettings()
     {
         setupTalons();
+        Robot.TRANSMISSION_SOLENOID.setHighGear(true);
+        // Set high gear
     }
 
     public void setPID()
@@ -147,13 +152,13 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         this.kI = kI;
         this.kD = kD;
 
-        leftRearTalon.config_kP(0, kP, Constants.INIT_TIMEOUT);
-        leftRearTalon.config_kI(0, kI, Constants.INIT_TIMEOUT);
-        leftRearTalon.config_kD(0, kD, Constants.INIT_TIMEOUT);
+        leftFrontTalonEnc.config_kP(0, kP, Constants.INIT_TIMEOUT);
+        leftFrontTalonEnc.config_kI(0, kI, Constants.INIT_TIMEOUT);
+        leftFrontTalonEnc.config_kD(0, kD, Constants.INIT_TIMEOUT);
 
-        rightRearTalon.config_kP(0, kP, Constants.INIT_TIMEOUT);
-        rightRearTalon.config_kI(0, kI, Constants.INIT_TIMEOUT);
-        rightRearTalon.config_kD(0, kD, Constants.INIT_TIMEOUT);
+        rightFrontTalonEnc.config_kP(0, kP, Constants.INIT_TIMEOUT);
+        rightFrontTalonEnc.config_kI(0, kI, Constants.INIT_TIMEOUT);
+        rightFrontTalonEnc.config_kD(0, kD, Constants.INIT_TIMEOUT);
     }
 
     /**
@@ -186,11 +191,11 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     public void runMotors(ControlMode controlMode, float leftWheel, float rightWheel) // double z
     {
         // setting slaves as the talons w/ encoders is the only way it works ¯\_(ツ)_/¯
-        leftFrontTalonEnc.follow(leftRearTalon);
-        rightFrontTalonEnc.follow(rightRearTalon);
+        leftRearTalon.follow(leftFrontTalonEnc);
+        rightRearTalon.follow(rightFrontTalonEnc);
 
-        leftRearTalon.set(controlMode, leftWheel);
-        rightRearTalon.set(controlMode, rightWheel);
+        leftFrontTalonEnc.set(controlMode, leftWheel);
+        rightFrontTalonEnc.set(controlMode, rightWheel);
     }
 
     /**
@@ -255,24 +260,6 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         return out;
     }
 
-    /**
-     * TODO: finish!!!!
-     *
-     * @param out the percent voltages of each wheel.
-     * @return
-     * @deprecated
-     */
-    private FloatPair getSpeedArcade(FloatPair out)
-    {
-        // ( v_l + v_r ) / 2
-        float vTan = (float) OI.JOYSTICK_DRIVE_RIGHT.getY();
-
-        // (vR - vL) / l
-        float rot = (float) OI.JOYSTICK_DRIVE_RIGHT.getX();
-
-        throw new UnsupportedOperationException();
-    }
-
     private FloatPair getSpeedTank()
     {
         return getSpeedTank(SPEED_CONTAINER);
@@ -283,12 +270,6 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         FloatPair speed = getSpeedTank();
         SmartDashboard.putNumber("speedL", -speed.left);
         SmartDashboard.putNumber("speedR", -speed.right);
-
-        // Log.debug("Left: {0,number,#.###}\t\t Right: {0,number,#.###}", speed.right, speed.left);
-
-        if((OI.JOYSTICK_DRIVE_LEFT.getRawButton(RobotMap.Joystick.Button.INVERSE_DRIVER_CONTROLS) && !isNegativePressed)) { negative = !negative; }
-
-        isNegativePressed = OI.JOYSTICK_DRIVE_LEFT.getRawButton(RobotMap.Joystick.Button.INVERSE_DRIVER_CONTROLS);
 
         Nameable currentMode = SendableDriveStrategyType.getInstance().getCurrentMode();
 
@@ -325,22 +306,27 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     /**
      * @return Velocity as read by left encoder in Feet per Second
      */
-    public float getLeftVel() { return leftFrontTalonEnc.getSelectedSensorVelocity(0) * Constants.EVEL_TO_FPS; }
+    public float getLeftVel() { return getLeftRawVel() * Constants.EVEL_TO_FPS_DT; }
 
     /**
      * @return Velocity as read by right encoder in Feet per Second
      */
-    public float getRightVel() { return rightFrontTalonEnc.getSelectedSensorVelocity(0) * Constants.EVEL_TO_FPS; }
+
+    public float getRightVel() { return getRightRawVel() * Constants.EVEL_TO_FPS_DT; }
+
+    public int getRightRawVel() { return rightFrontTalonEnc.getSelectedSensorVelocity(0); }
+
+    public int getLeftRawVel() { return leftFrontTalonEnc.getSelectedSensorVelocity(0); }
 
     /**
      * @return Position as read by right encoder in Feet per Second
      */
-    public float getRightPos() { return rightFrontTalonEnc.getSelectedSensorPosition(0) * Constants.EPOS_TO_FEET; }
+    public float getRightPos() { return rightFrontTalonEnc.getSelectedSensorPosition(0) * Constants.EPOS_TO_FEET_DT; }
 
     /**
      * @return Position as read by left encoder in Feet per Second
      */
-    public float getLeftPos() { return leftFrontTalonEnc.getSelectedSensorPosition(0) * Constants.EPOS_TO_FEET; }
+    public float getLeftPos() { return leftFrontTalonEnc.getSelectedSensorPosition(0) * Constants.EPOS_TO_FEET_DT; }
 
 
     @Override
@@ -406,8 +392,8 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     public void setkF(double kF)
     {
         this.kF = kF;
-        leftRearTalon.config_kF(0, kF, Constants.INIT_TIMEOUT);
-        rightRearTalon.config_kF(0, kF, Constants.INIT_TIMEOUT);
+        leftFrontTalonEnc.config_kF(0, kF, Constants.INIT_TIMEOUT);
+        rightFrontTalonEnc.config_kF(0, kF, Constants.INIT_TIMEOUT);
     }
 
     public enum DriveStrategyType implements Nameable
@@ -440,62 +426,6 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     private interface DriveStrategy
     {
         void drive(float joystickLeft, float joystickRight);
-    }
-
-    /**
-     * A generic data structure to store a pair of objects.
-     *
-     * @param <L> The left value
-     * @param <R> The right value
-     */
-    @Deprecated
-    private static class Pair<L, R>
-    {
-        public L left;
-        public R right;
-
-        private String nameL;
-        private String nameR;
-
-        public Pair(L left, R right)
-        {
-            this.left = left;
-            this.right = right;
-            this.nameL = left.getClass().getSimpleName();
-            this.nameR = right.getClass().getSimpleName();
-        }
-
-        public Pair() { }
-
-        @Override
-        public String toString()
-        {
-            return new StringBuilder(100 + nameL.length() + nameR.length()).append("Pair<").append(nameL).append(',')
-                                                                           .append(nameR).append("> { \"left\": \"").append(left).append("\", \"right\": \"").append(right)
-                                                                           .append("\" }").toString();
-        }
-
-        @Override
-        public int hashCode()
-        {
-            return left.hashCode() * 13 + (right == null ? 0 : right.hashCode());
-        }
-
-        @Override
-        public boolean equals(Object o)
-        {
-            if(this == o)
-            {
-                return true;
-            }
-            if(o instanceof Pair)
-            {
-                Pair pair = (Pair) o;
-                return (left != null ? left.equals(pair.left) : pair.left == null)
-                       && (left != null ? left.equals(pair.left) : pair.left == null);
-            }
-            return false;
-        }
     }
 
     /**
@@ -540,49 +470,5 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
             return false;
         }
     }
-
-    /**
-     * A data structure to store a pair of doubles.
-     */
-    private static class DoublePair
-    {
-        public double left;
-        public double right;
-
-        public DoublePair(double left, double right)
-        {
-            this.left = left;
-            this.right = right;
-        }
-
-        public DoublePair() { }
-
-        @Override
-        public String toString()
-        {
-            return new StringBuilder(47).append("Pair: { \"left\": \"")
-                                        .append(String.format("%.05f", left)).append("\", \"right\": \"")
-                                        .append(String.format("%.05f", right)).append("\" }").toString();
-        }
-
-        @Override
-        public int hashCode()
-        {
-            return (int) (((Double.doubleToLongBits(left) * 31) + (Double.doubleToLongBits(right) * 7)) % Integer.MAX_VALUE);
-        }
-
-        @Override
-        public boolean equals(Object o)
-        {
-            if(this == o) { return true; }
-            if(o instanceof FloatPair)
-            {
-                FloatPair pair = (FloatPair) o;
-                return left == pair.left && right == pair.right;
-            }
-            return false;
-        }
-    }
-
 
 }

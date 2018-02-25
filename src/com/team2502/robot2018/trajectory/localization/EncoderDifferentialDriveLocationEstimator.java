@@ -1,6 +1,5 @@
 package com.team2502.robot2018.trajectory.localization;
 
-import com.team2502.robot2018.Constants;
 import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.utils.MathUtils;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -9,7 +8,6 @@ import org.joml.ImmutableVector2f;
 public class EncoderDifferentialDriveLocationEstimator implements ITranslationalLocationEstimator, IRotationalLocationEstimator, ITranslationalVelocityEstimator
 {
     ImmutableVector2f location;
-    float angularVel = 0;
     float encHeading = 0;
     private long lastTime = -1;
     private IRotationalLocationEstimator rotationalLocationEstimator;
@@ -71,19 +69,19 @@ public class EncoderDifferentialDriveLocationEstimator implements ITranslational
     @Override
     public float getLeftWheelSpeed()
     {
-        return Robot.DRIVE_TRAIN.leftRearTalon.getSelectedSensorVelocity(0) * Constants.EVEL_TO_FPS;
+        return Robot.DRIVE_TRAIN.getLeftVel();
     }
 
     @Override
     public float getRightWheelSpeed()
     {
-        return Robot.DRIVE_TRAIN.rightRearTalon.getSelectedSensorVelocity(0) * Constants.EVEL_TO_FPS;
+        return Robot.DRIVE_TRAIN.getRightVel();
     }
 
     @Override
     public float estimateSpeed()
     {
-        return (getLeftWheelSpeed() + getRightWheelSpeed()) / 2;
+        return (getLeftWheelSpeed() + getRightWheelSpeed()) / 2F;
     }
 }
 

@@ -12,7 +12,7 @@ public class RotateAutonStationary extends Command
 {
 
     private final float degrees;
-    private final float wheelSpeed = 2 * Constants.FPS_TO_EVEL;
+    private final float wheelSpeed = 2 * Constants.FPS_TO_EVEL_DT;
     private final AHRS navx;
     private final DriveTrainSubsystem driveTrain;
     private final boolean cw;

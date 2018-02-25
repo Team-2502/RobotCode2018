@@ -1,5 +1,6 @@
 package com.team2502.robot2018.command.teleop;
 
+
 import com.team2502.ctannotationprocessor.Undefined;
 import edu.wpi.first.wpilibj.command.InstantCommand;
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -15,10 +16,14 @@ public class QuickCommand extends InstantCommand
     @Undefined(safe = true)
     final Runnable action;
 
+    public QuickCommand(Runnable action)
+    {
+        this.action = action;
+    }
     public QuickCommand(Subsystem subsystem, Runnable action)
     {
+        this(action);
         requires(subsystem);
-        this.action = action;
     }
 
 

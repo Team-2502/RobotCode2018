@@ -25,10 +25,11 @@ public class MotionState1D
      * @param time
      * @return
      */
-    float extrapForPositionAtTime(float time)
+    MotionState1D extrapAtTime(float time)
     {
         float dt = time - this.time;
-        return MathUtils.Kinematics.getPos(position, velocity, acceleration, dt);
+
+        return new MotionState1D(MathUtils.Kinematics.getPos(position, velocity, acceleration, dt), velocity + acceleration * dt, acceleration, time);
     }
 
     public float getPosition()
@@ -52,7 +53,7 @@ public class MotionState1D
     }
 
     /**
-     * Extrapolate what the time will be at a certain position. The inverse of {@link #extrapForPositionAtTime(float)}.
+     * Extrapolate what the time will be at a certain position. The near-inverse of {@link #extrapAtTime(float)}.
      *
      * @param position
      * @return
