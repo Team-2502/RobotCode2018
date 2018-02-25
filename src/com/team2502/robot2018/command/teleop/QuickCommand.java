@@ -20,6 +20,7 @@ public class QuickCommand extends InstantCommand
     {
         this.action = action;
     }
+
     public QuickCommand(Subsystem subsystem, Runnable action)
     {
         this(action);

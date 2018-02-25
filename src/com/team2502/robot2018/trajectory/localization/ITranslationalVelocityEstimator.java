@@ -17,7 +17,8 @@ public interface ITranslationalVelocityEstimator
 
     default ITranslationalVelocityEstimator getInvertedVelocity()
     {
-        return new ITranslationalVelocityEstimator() {
+        return new ITranslationalVelocityEstimator()
+        {
             @Override
             public ImmutableVector2f estimateAbsoluteVelocity()
             {
@@ -39,7 +40,7 @@ public interface ITranslationalVelocityEstimator
             @Override
             public float estimateSpeed()
             {
-                return (getLeftWheelSpeed()+getRightWheelSpeed())/2F;
+                return (getLeftWheelSpeed() + getRightWheelSpeed()) / 2F;
             }
         };
     }

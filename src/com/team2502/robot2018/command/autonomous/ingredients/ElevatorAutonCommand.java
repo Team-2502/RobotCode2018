@@ -11,10 +11,12 @@ public class ElevatorAutonCommand extends TimedCommand
 
     public ElevatorAutonCommand(double timeout)
     {
-        this(timeout,1);
+        this(timeout, 1);
     }
+
     /**
      * Positive voltage is up by default is up
+     *
      * @param timeout
      * @param feet
      */

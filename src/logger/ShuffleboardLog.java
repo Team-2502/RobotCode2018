@@ -9,13 +9,12 @@ public class ShuffleboardLog
 {
 
     private static ShuffleboardLog instance;
+    private List<String> messages = new ArrayList<>(4);
 
     public static ShuffleboardLog getInstance()
     {
         return instance == null ? instance = new ShuffleboardLog() : instance;
     }
-
-    private List<String> messages = new ArrayList<>(4);
 
     private String get(int index)
     {

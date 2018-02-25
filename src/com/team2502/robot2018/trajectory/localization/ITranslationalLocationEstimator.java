@@ -10,7 +10,7 @@ public interface ITranslationalLocationEstimator
     {
         return () -> {
             ImmutableVector2f loc = ITranslationalLocationEstimator.this.estimateLocation();
-            return new ImmutableVector2f(-loc.x,-loc.y);
+            return new ImmutableVector2f(-loc.x, -loc.y);
         };
     }
 }

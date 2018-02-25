@@ -1,12 +1,10 @@
 package com.team2502.robot2018.trajectory;
 
-import com.team2502.robot2018.Constants;
 import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.trajectory.localization.IRotationalLocationEstimator;
 import com.team2502.robot2018.trajectory.localization.ITranslationalLocationEstimator;
 import com.team2502.robot2018.trajectory.localization.ITranslationalVelocityEstimator;
 import com.team2502.robot2018.utils.MathUtils;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import logger.Log;
 import org.joml.ImmutableVector2f;
 
@@ -23,19 +21,17 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
     // The curvature at which we should use lines as approximation instead of arcs
     private static final float THRESHOLD_CURVATURE = 0.001F;
     public final List<Waypoint> waypoints;
-
-    private ITranslationalLocationEstimator translationalLocationEstimator;
-    private ITankRobotBounds tankRobot;
     private final IRotationalLocationEstimator rotEstimator;
-
     private final float distanceStopSq;
     private final Lookahead lookahead;
     private final ITranslationalVelocityEstimator velocityEstimator;
     private final ITankRobotBounds tankRobotNorm;
     private final ITranslationalLocationEstimator normTransLocEst;
-    private boolean forward;
     private final ITankRobotBounds tankRobotInverted;
     private final ITranslationalLocationEstimator invertedTranslationalLocation;
+    private ITranslationalLocationEstimator translationalLocationEstimator;
+    private ITankRobotBounds tankRobot;
+    private boolean forward;
     private ImmutableVector2f relativeGoalPoint;
     private float motionRadius;
     private float rotVelocity;
@@ -64,11 +60,12 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
 
     /**
      * Strategize your movement!
-     *  @param tankRobot      An instance of ITanRobotBounds, an interface that has getters for robot max speed and accel.
+     *
+     * @param tankRobot                      An instance of ITanRobotBounds, an interface that has getters for robot max speed and accel.
      * @param translationalLocationEstimator An estimator for the absolute position of the robot
-     * @param rotEstimator   An estimator for the heading of the robot
-     * @param waypoints      A list of waypoints for the robot to drive through
-     * @param lookahead      The lookahead distance for the pure pursuit algorithm
+     * @param rotEstimator                   An estimator for the heading of the robot
+     * @param waypoints                      A list of waypoints for the robot to drive through
+     * @param lookahead                      The lookahead distance for the pure pursuit algorithm
      * @param distanceStop
      */
     public PurePursuitMovementStrategy(ITankRobotBounds tankRobot, ITranslationalLocationEstimator translationalLocationEstimator,
@@ -208,7 +205,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
 
             lastUpdatedS = currentS;
             Robot.writeLog("removed a waypoint ::: lookAhead = " + lookAheadDistance + " ::: location: " + waypoint.getLocation().x + "," + waypoint.getLocation().y);
-            Robot.writeLog("LAST WAYPOINT SPEED: "+lastWaypointSpeed);
+            Robot.writeLog("LAST WAYPOINT SPEED: " + lastWaypointSpeed);
         }
 
         // closestGoalPoint is our new goal point
@@ -259,7 +256,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
 
         distanceLeft = pathSegmentDistance - distanceAlongPath;
 
-        if(MathUtils.epsilonEquals(0F,distanceLeft))
+        if(MathUtils.epsilonEquals(0F, distanceLeft))
         {
             brakeStage = true;
             return Float.NaN;
@@ -271,8 +268,8 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
 //        float startSpeed = lastWaypointSpeed;
         float finalSpeed = waypointEnd.getMaxSpeed();
 
-        Robot.writeLog("distance left: "+distanceLeft);
-        Robot.writeLog("speed: "+speedUsed);
+        Robot.writeLog("distance left: " + distanceLeft);
+        Robot.writeLog("speed: " + speedUsed);
 
         if(finalSpeed > lastWaypointSpeed)
         {
@@ -291,7 +288,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
 
             float maxVel = (float) Math.sqrt(finalSpeed * finalSpeed - 2 * tankRobot.getA_lMin() * distanceLeft);
 //            System.out.println("distanceLeft: "+distanceLeft+", vel: "+maxVel);
-            Robot.writeLog("deccel, maxVel: "+maxVel);
+            Robot.writeLog("deccel, maxVel: " + maxVel);
 
             speedUsed = Math.min(lastWaypointSpeed, maxVel);
         }
@@ -316,7 +313,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         if(isBrakeStage())
         {
 //            Log.info("\nBraking!!!!\n");
-            wheelVelocities = new ImmutableVector2f(0,0);
+            wheelVelocities = new ImmutableVector2f(0, 0);
             if(Math.abs(velocityEstimator.estimateSpeed()) < 0.1F)
             {
                 finishedPath = true;
@@ -335,7 +332,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         usedLookahead = generateLookahead();
         if(usedLookahead == Float.NaN)
         {
-            wheelVelocities = new ImmutableVector2f(0,0);
+            wheelVelocities = new ImmutableVector2f(0, 0);
             if(Math.abs(velocityEstimator.estimateSpeed()) < 0.1F)
             {
                 finishedPath = true;
@@ -352,7 +349,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         if(isBrakeStage())
         {
 //            Log.info("\nBraking!!!!\n");
-            wheelVelocities = new ImmutableVector2f(0,0);
+            wheelVelocities = new ImmutableVector2f(0, 0);
             if(Math.abs(velocityEstimator.estimateSpeed()) < 0.1F)
             {
                 finishedPath = true;
@@ -522,17 +519,17 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         }
         else
         {
-            return new ImmutableVector2f(-bestVector.y,-bestVector.x);
+            return new ImmutableVector2f(-bestVector.y, -bestVector.x);
         }
     }
 
     private float getSpeed(float wheelL, float wheelR, float minWheelSpeed, float maxWheelSpeed)
     {
         if(!MathUtils.Algebra.bounded(minWheelSpeed, wheelL, maxWheelSpeed))
-            return Float.NaN;
-        if(MathUtils.Algebra.bounded(minWheelSpeed,wheelR,maxWheelSpeed))
-            return Float.NaN;
-        return MathUtils.Kinematics.getTangentialSpeed(wheelL,wheelR);
+        { return Float.NaN; }
+        if(MathUtils.Algebra.bounded(minWheelSpeed, wheelR, maxWheelSpeed))
+        { return Float.NaN; }
+        return MathUtils.Kinematics.getTangentialSpeed(wheelL, wheelR);
     }
 
     /**

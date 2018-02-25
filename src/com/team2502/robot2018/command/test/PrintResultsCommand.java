@@ -8,11 +8,11 @@ import java.util.Set;
 
 public class PrintResultsCommand extends InstantCommand
 {
-    private final Map<String,Boolean> resultsMap;
+    private final Map<String, Boolean> resultsMap;
 
     public PrintResultsCommand(Map<String, Boolean> resultsMap)
     {
-        this.resultsMap= resultsMap;
+        this.resultsMap = resultsMap;
     }
 
     @Override

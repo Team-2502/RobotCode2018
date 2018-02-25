@@ -42,6 +42,8 @@ public class Paths
                 new Waypoint(new ImmutableVector2f(6F, 5), 16),
                 new Waypoint(new ImmutableVector2f(6F, 11), 3F)
                                                                       );
+
+
         /**
          * Move from the center of the starting wall to the left side of the switch
          */

@@ -498,7 +498,7 @@ public final class MathUtils
 
         public static float getTangentialSpeed(float wheelL, float wheelR)
         {
-            return (wheelL + wheelR)/2F;
+            return (wheelL + wheelR) / 2F;
         }
 
         /**

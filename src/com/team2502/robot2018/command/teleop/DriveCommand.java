@@ -2,8 +2,6 @@ package com.team2502.robot2018.command.teleop;
 
 import com.kauailabs.navx.frc.AHRS;
 import com.team2502.robot2018.Robot;
-import com.team2502.robot2018.subsystem.DriveTrainSubsystem;
-import com.team2502.robot2018.subsystem.solenoid.TransmissionSolenoid;
 import com.team2502.robot2018.trajectory.localization.EncoderDifferentialDriveLocationEstimator;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;

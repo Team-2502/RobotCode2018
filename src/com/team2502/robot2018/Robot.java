@@ -72,15 +72,15 @@ public final class Robot extends IterativeRobot
             AutonStrategy autonStrategy = values[i];
             if(i == 0)
             {
-                autonStrategySelector.addDefault(autonStrategy.getName(),autonStrategy);
+                autonStrategySelector.addDefault(autonStrategy.getName(), autonStrategy);
             }
             else
             {
-                autonStrategySelector.addObject(autonStrategy.getName(),autonStrategy);
+                autonStrategySelector.addObject(autonStrategy.getName(), autonStrategy);
             }
         }
 
-        SmartDashboard.putData("auto_strategy",autonStrategySelector);
+        SmartDashboard.putData("auto_strategy", autonStrategySelector);
 
         Log.createLogger(true);
 
@@ -96,9 +96,9 @@ public final class Robot extends IterativeRobot
         OI.init();
 
 
-        Map<Double, Double> map = ImmutableMap.<Double,Double>builder()
-                                                         .put(0D, 14D)
-                                                         .build();
+        Map<Double, Double> map = ImmutableMap.<Double, Double>builder()
+                .put(0D, 14D)
+                .build();
 
         Constants.ACCELERATION_FOR_ELEVATOR_HEIGHT = new InterpolationMap(map);
         AutoStartLocationSwitcher.putToSmartDashboard();

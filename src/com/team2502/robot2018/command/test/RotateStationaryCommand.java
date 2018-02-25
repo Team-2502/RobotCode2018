@@ -76,13 +76,13 @@ RotateStationaryCommand extends TimedCommand implements TestResult
         {
             success = false;
             ShuffleboardLog.getInstance().log("Left encoder position detected was supposed to be < " + -ENCODER_THRESHOLD + ", but it actually was " + encoderLeft + ". " +
-                       "1) Is the left encoder backwards? 2) Is the left encoder working?");
+                                              "1) Is the left encoder backwards? 2) Is the left encoder working?");
         }
         else if(encoderRight <= ENCODER_THRESHOLD)
         {
             success = false;
             ShuffleboardLog.getInstance().log("Right encoder position detected was supposed to be > " + ENCODER_THRESHOLD + ", but it actually was " + encoderLeft + ". " +
-                       "Is the right encoder backwards? 2) Is the right encoder working?");
+                                              "Is the right encoder backwards? 2) Is the right encoder working?");
         }
         else
         {
@@ -91,7 +91,7 @@ RotateStationaryCommand extends TimedCommand implements TestResult
             {
                 success = false;
                 ShuffleboardLog.getInstance().log("When adding encoder positions the result should be near 0. The threshold was (-1000,1000), " +
-                           "but encoderRight-encoderLeft was actually " + encDif + ". 1) Are the encoders different? (one quadrature one mag)");
+                                                  "but encoderRight-encoderLeft was actually " + encDif + ". 1) Are the encoders different? (one quadrature one mag)");
             }
         }
     }

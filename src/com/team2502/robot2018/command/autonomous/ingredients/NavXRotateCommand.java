@@ -67,19 +67,19 @@ public class NavXRotateCommand extends Command implements PIDOutput
     @Override
     protected void initialize()
     {
-        if (reset)
+        if(reset)
         {
             navx.reset();
         }
 
 
-        if (!turnController.isEnabled())
+        if(!turnController.isEnabled())
         {
             turnController.setSetpoint(targetYaw);
             turnController.enable();
         }
 
-        if (turnController.onTarget() && !onTarget)
+        if(turnController.onTarget() && !onTarget)
         {
             onTarget = true;
             alignedTime = System.currentTimeMillis();

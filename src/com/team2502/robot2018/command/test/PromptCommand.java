@@ -12,7 +12,7 @@ public class PromptCommand extends Command
     private final String name;
     boolean success = false;
 
-    public PromptCommand(String name, Map<String,Boolean> statuses)
+    public PromptCommand(String name, Map<String, Boolean> statuses)
     {
         this.statuses = statuses;
         this.name = name;
@@ -46,8 +46,8 @@ public class PromptCommand extends Command
     @Override
     protected void end()
     {
-        System.out.println("Put ... "+name+": "+success);
-        statuses.put(name,success);
+        System.out.println("Put ... " + name + ": " + success);
+        statuses.put(name, success);
     }
 
     public boolean isSuccess()
@@ -57,8 +57,8 @@ public class PromptCommand extends Command
 
     private void reset()
     {
-        SmartDashboard.putBoolean("prompt_success",false);
-        SmartDashboard.putBoolean("prompt_failure",false);
+        SmartDashboard.putBoolean("prompt_success", false);
+        SmartDashboard.putBoolean("prompt_failure", false);
     }
 
 

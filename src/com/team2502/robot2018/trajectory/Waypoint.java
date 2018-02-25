@@ -14,7 +14,7 @@ public class Waypoint
 
     public Waypoint(ImmutableVector2f location, float maxSpeed)
     {
-        this(location,maxSpeed,true);
+        this(location, maxSpeed, true);
     }
 
     public Waypoint(ImmutableVector2f location, float maxSpeed, boolean forward, Command... commands)
@@ -57,7 +57,6 @@ public class Waypoint
             }
         }
     }
-
 
 
     @Override
