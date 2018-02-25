@@ -7,23 +7,33 @@ import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.subsystem.DriveTrainSubsystem;
 import com.team2502.robot2018.utils.MathUtils;
 import edu.wpi.first.wpilibj.command.Command;
+import javafx.scene.transform.Rotate;
 
 public class RotateAutonStationary extends Command
 {
 
     private final float degrees;
-    private final float wheelSpeed = 2 * Constants.FPS_TO_EVEL_DT;
+
+    private final float wheelSpeed;
     private final AHRS navx;
     private final DriveTrainSubsystem driveTrain;
     private final boolean cw;
 
     public RotateAutonStationary(float degrees)
     {
+        this(degrees, 2);
+    }
+
+    public RotateAutonStationary(float degrees, float fps)
+    {
         driveTrain = Robot.DRIVE_TRAIN;
         requires(driveTrain);
         this.degrees = degrees;
         navx = Robot.NAVX;
         cw = degrees > 0;
+        wheelSpeed = fps * Constants.FPS_TO_EVEL_DT;
+
+
     }
 
     @Override

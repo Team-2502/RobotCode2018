@@ -46,7 +46,9 @@ public class LeftCommandGroup extends CommandGroup
                 break;
 
             case "RR":
-                crossLine();
+                System.out.println("Going cross country!");
+//                crossLine();
+                goScaleRight();
                 break;
         }
 
@@ -72,27 +74,50 @@ public class LeftCommandGroup extends CommandGroup
     {
 
 
+
         addSequential(new PurePursuitCommand(Paths.Left.leftScale));
 
 
-        addParallel(new RaiseElevatorScale());
-
-        addSequential(new WaitCommand(0.8F));
-
         addParallel(new ActiveIntakeRotate(0.1, 0.5));
 
-        addSequential(new RotateAutonStationary(55));
+        addSequential(new RaiseElevatorScale());
 
-        addParallel(new ActiveIntakeRotate(0.15F, -0.5));
+
+
+        addSequential(new RotateAutonStationary(25));
+
+//        addParallel(new ActiveIntakeRotate(.5F, -1));
 
         addSequential(new DeadreckoningDrive(0.5F, 2));
+
         emitCube();
+
+    }
+
+    private void goScaleRight()
+    {
+        addSequential(new PurePursuitCommand(Paths.Left.rightScale));
+
+        addParallel(new ActiveIntakeRotate(0.3, 0.5));
+
+        addSequential(new RaiseElevatorScale());
+
+
+
+        addSequential(new RotateAutonStationary(-80, 5));
+
+        addParallel(new ActiveIntakeRotate(1F, -0.5));
+
+        addSequential(new DeadreckoningDrive(1F, 2.2F));
+
+        emitCube();
+
 
     }
 
     private void emitCube()
     {
-        addSequential(new ShootCubeCommand(1));
+        addSequential(new ShootCubeCommand(5, 1F));
 
     }
 
