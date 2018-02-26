@@ -81,8 +81,6 @@ public class Paths
                 new Waypoint(new ImmutableVector2f(3.0F, 20.5F), 25F),
                 new Waypoint(new ImmutableVector2f(26.0F, 20.5F), 20F),
                 new Waypoint(new ImmutableVector2f(26.0F, 30F), 0F)
-
-//                new Waypoint(new ImmutableVector2f(20.0F, 24.5F), 0F)
                                                                       );
 
     }
@@ -95,6 +93,8 @@ public class Paths
         public static final List<Waypoint> rightSwitch = flipY(Left.leftSwitch);
 
         public static final List<Waypoint> rightScale = flipY(Left.leftScale);
+
+        public static final List<Waypoint> leftScale = flipY(Left.rightScale);
 
     }
 

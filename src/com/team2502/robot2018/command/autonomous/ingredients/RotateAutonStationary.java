@@ -39,7 +39,7 @@ public class RotateAutonStationary extends Command
     @Override
     protected void initialize()
     {
-        navx.reset();
+//        navx.reset();
     }
 
     @Override
