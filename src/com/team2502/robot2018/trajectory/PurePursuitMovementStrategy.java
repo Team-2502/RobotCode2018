@@ -25,10 +25,6 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
     private final float distanceStopSq;
     private final Lookahead lookahead;
     private final ITranslationalVelocityEstimator velocityEstimator;
-    private final ITankRobotBounds tankRobotNorm;
-    private final ITranslationalLocationEstimator normTransLocEst;
-    private final ITankRobotBounds tankRobotInverted;
-    private final ITranslationalLocationEstimator invertedTranslationalLocation;
     private ITranslationalLocationEstimator translationalLocationEstimator;
     private ITankRobotBounds tankRobot;
     private boolean forward;
@@ -73,14 +69,9 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
                                        List<Waypoint> waypoints, Lookahead lookahead, float distanceStop)
     {
         this.waypoints = new ArrayList<>(waypoints);
-        tankRobotInverted = tankRobot.getInverted();
-        invertedTranslationalLocation = translationalLocationEstimator.getInvertedTranslationalLocation();
 
-        tankRobotNorm = tankRobot;
-        normTransLocEst = translationalLocationEstimator;
-
-        this.tankRobot = tankRobotNorm;
-        this.translationalLocationEstimator = normTransLocEst;
+        this.tankRobot = tankRobot;
+        this.translationalLocationEstimator = translationalLocationEstimator;
 
         this.rotEstimator = rotEstimator;
         distanceStopSq = distanceStop * distanceStop;
@@ -232,19 +223,6 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
 
         boolean lastWaypoint = lastSegmentSearched + 1 == waypoints.size() - 1;
 
-        forward = waypointEnd.isForward();
-        if(forward)
-        {
-            tankRobot = tankRobotNorm;
-            translationalLocationEstimator = normTransLocEst;
-        }
-        else
-        {
-            tankRobot = tankRobotInverted;
-            translationalLocationEstimator = invertedTranslationalLocation;
-        }
-
-
         ImmutableVector2f lineEndPoint = waypointEnd.getLocation();
 
         float pathSegmentDistance = lineStartPoint.sub(lineEndPoint).length();
@@ -266,12 +244,12 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         // pathSegmentDistance = distanceAlongPath + usedTangentialVelocity*t + 1/2 * maxAcceleration
 
 //        float startSpeed = lastWaypointSpeed;
-        float finalSpeed = waypointEnd.getMaxSpeed();
+        float finalSpeed = waypointEnd.isForward() ? waypointEnd.getMaxSpeed() : -waypointEnd.getMaxSpeed();
 
         Robot.writeLog("distance left: " + distanceLeft);
         Robot.writeLog("speed: " + speedUsed);
 
-        if(finalSpeed > lastWaypointSpeed)
+        if((finalSpeed > 0 && finalSpeed > lastWaypointSpeed) || (finalSpeed < 0 && finalSpeed < lastWaypointSpeed))
         {
             Robot.writeLog("accel");
             // what the motors should be
@@ -358,6 +336,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         }
 
         relativeGoalPoint = MathUtils.LinearAlgebra.absoluteToRelativeCoord(absoluteGoalPoint, usedEstimatedLocation, usedHeading);
+
         wheelVelocities = calculateWheelVelocities();
     }
 
