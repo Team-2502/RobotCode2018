@@ -290,12 +290,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
 
         if(isBrakeStage())
         {
-//            Log.info("\nBraking!!!!\n");
-            wheelVelocities = new ImmutableVector2f(0, 0);
-            if(Math.abs(velocityEstimator.estimateSpeed()) < 0.1F)
-            {
-                finishedPath = true;
-            }
+            commenceBreak();
             return;
         }
 
@@ -310,11 +305,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         usedLookahead = generateLookahead();
         if(usedLookahead == Float.NaN)
         {
-            wheelVelocities = new ImmutableVector2f(0, 0);
-            if(Math.abs(velocityEstimator.estimateSpeed()) < 0.1F)
-            {
-                finishedPath = true;
-            }
+            commenceBreak();
             return;
         }
         absoluteGoalPoint = calculateAbsoluteGoalPoint(usedLookahead);
@@ -326,18 +317,22 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
 
         if(isBrakeStage())
         {
-//            Log.info("\nBraking!!!!\n");
-            wheelVelocities = new ImmutableVector2f(0, 0);
-            if(Math.abs(velocityEstimator.estimateSpeed()) < 0.1F)
-            {
-                finishedPath = true;
-            }
+            commenceBreak();
             return;
         }
 
         relativeGoalPoint = MathUtils.LinearAlgebra.absoluteToRelativeCoord(absoluteGoalPoint, usedEstimatedLocation, usedHeading);
 
         wheelVelocities = calculateWheelVelocities();
+    }
+
+    private void commenceBreak()
+    {
+        wheelVelocities = new ImmutableVector2f(0, 0);
+        if(Math.abs(velocityEstimator.estimateSpeed()) < 0.1F)
+        {
+            finishedPath = true;
+        }
     }
 
     public boolean isBrakeStage()
@@ -483,7 +478,6 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
                 throw new NullPointerException("bestVector is null!");
             }
 
-//            Robot.writeLog(String.format("wheel velocity (%.2f, %.2f) ... speedUsed: %.2f",bestVector.x,bestVector.y,speedUsed));
             rotVelocity = (bestVector.get(1) - bestVector.get(0)) / tankRobot.getLateralWheelDistance();
             motionRadius = 1 / curvature;
             leftWheelTanVel = Math.abs((motionRadius - tankRobot.getLateralWheelDistance() / 2) * rotVelocity);

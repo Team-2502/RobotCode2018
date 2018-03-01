@@ -515,9 +515,9 @@ public final class MathUtils
         public static ImmutableVector2f getAbsoluteDPosLine(float vL, float vR, float dt, float robotHeading)
         {
             float tangentialSpeed = getTangentialSpeed(vL, vR);
-            float tangentialDPos = getTangentialSpeed(vL, vR)*dt;
+            float tangentialDPos = getTangentialSpeed(vL, vR) * dt;
             ImmutableVector2f dPos = VECTOR_STRAIGHT.mul(tangentialDPos);
-            return LinearAlgebra.rotate2D(dPos,robotHeading);
+            return LinearAlgebra.rotate2D(dPos, robotHeading);
         }
 
         public static ImmutableVector2f getAbsoluteDPosCurve(float vL, float vR, float l, float dt, float robotHeading)

@@ -6,7 +6,6 @@ import com.team2502.robot2018.command.autonomous.ingredients.*;
 import com.team2502.robot2018.command.teleop.GrabCommand;
 import com.team2502.robot2018.command.teleop.QuickCommand;
 import edu.wpi.first.wpilibj.command.CommandGroup;
-import edu.wpi.first.wpilibj.command.WaitCommand;
 
 public class LeftCommandGroup extends CommandGroup
 {
@@ -93,7 +92,7 @@ public class LeftCommandGroup extends CommandGroup
 
         addSequential(new GrabCommand());
         addParallel(new ShootCubeCommand(2, -1));
-        addSequential(new DeadreckoningDrive(1.5,5));
+        addSequential(new DeadreckoningDrive(1.5, 5));
 
         addSequential(new GrabCommand());
 

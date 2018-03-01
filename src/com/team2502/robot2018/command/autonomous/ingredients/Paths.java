@@ -81,7 +81,7 @@ public class Paths
                 new Waypoint(new ImmutableVector2f(3.0F, 20.5F), 25F),
                 new Waypoint(new ImmutableVector2f(26.0F, 20.5F), 20F),
                 new Waypoint(new ImmutableVector2f(26.0F, 30F), 0F)
-                                                                      );
+                                                                     );
 
     }
 

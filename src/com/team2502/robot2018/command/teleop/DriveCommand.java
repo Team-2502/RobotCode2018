@@ -31,13 +31,13 @@ public class DriveCommand extends Command
     @Override
     protected void execute()
     {
-        float dTime = stopwatch.dTime()*10F;
+        float dTime = stopwatch.dTime() * 10F;
 
         int leftRawVel = Robot.DRIVE_TRAIN.getLeftRawVel();
         int rightRawVel = Robot.DRIVE_TRAIN.getRightRawVel();
 
-        float dPosL = leftRawVel*dTime;
-        float dPosR = rightRawVel*dTime;
+        float dPosL = leftRawVel * dTime;
+        float dPosR = rightRawVel * dTime;
 
         Robot.writeLog(String.format("l %.2f, r %.2f"));
         SmartDashboard.putBoolean("DT: AutoShifting Enabled?", !Robot.TRANSMISSION_SOLENOID.disabledAutoShifting);
