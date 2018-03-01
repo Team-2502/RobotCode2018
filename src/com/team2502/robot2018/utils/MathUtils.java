@@ -477,7 +477,7 @@ public final class MathUtils
             return (l * (vR + vL)) / (2 * (vR - vL));
         }
 
-        public static ImmutableVector2f getRelativeDPos(float vL, float vR, float l, float dt)
+        public static ImmutableVector2f getRelativeDPosCurve(float vL, float vR, float l, float dt)
         {
             // To account for an infinite trajectory radius when going straight
             if(Math.abs(vL - vR) <= (vL + vR) * 1E-2)
@@ -512,9 +512,17 @@ public final class MathUtils
             return heading;
         }
 
-        public static ImmutableVector2f getAbsoluteDPos(float vL, float vR, float l, float dt, float robotHeading)
+        public static ImmutableVector2f getAbsoluteDPosLine(float vL, float vR, float dt, float robotHeading)
         {
-            ImmutableVector2f relativeDPos = getRelativeDPos(vL, vR, l, dt);
+            float tangentialSpeed = getTangentialSpeed(vL, vR);
+            float tangentialDPos = getTangentialSpeed(vL, vR)*dt;
+            ImmutableVector2f dPos = VECTOR_STRAIGHT.mul(tangentialDPos);
+            return LinearAlgebra.rotate2D(dPos,robotHeading);
+        }
+
+        public static ImmutableVector2f getAbsoluteDPosCurve(float vL, float vR, float l, float dt, float robotHeading)
+        {
+            ImmutableVector2f relativeDPos = getRelativeDPosCurve(vL, vR, l, dt);
             ImmutableVector2f rotated = MathUtils.LinearAlgebra.rotate2D(relativeDPos, robotHeading);
             return rotated;
         }
