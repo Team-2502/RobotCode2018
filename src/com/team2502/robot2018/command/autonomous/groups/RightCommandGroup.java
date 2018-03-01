@@ -37,6 +37,8 @@ public class RightCommandGroup extends CommandGroup
                     case SWITCH:
                         goSwitch();
                         break;
+                    case SWITCH_SCALE:
+                        break;
                 }
                 break;
 

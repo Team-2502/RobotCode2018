@@ -62,9 +62,9 @@ public class Paths
     {
         public static final List<Waypoint> leftScale = Arrays.asList(
                 new Waypoint(new ImmutableVector2f(0, 0), 0),
-                new Waypoint(new ImmutableVector2f(-.5F, 10.5F), 25F),
-                new Waypoint(new ImmutableVector2f(-.5F, 22.5F), 25F),
-                new Waypoint(new ImmutableVector2f(-.5F, 26.5F), 0F)
+                new Waypoint(new ImmutableVector2f(0F, 10.5F), 25F),
+                new Waypoint(new ImmutableVector2f(0F, 22.5F), 25F),
+                new Waypoint(new ImmutableVector2f(0F, 26.5F), 0F)
                                                                     );
 
         public static final List<Waypoint> leftSwitch = Arrays.asList(
@@ -73,6 +73,15 @@ public class Paths
                 new Waypoint(new ImmutableVector2f(4.67F, 7), 6F),
                 new Waypoint(new ImmutableVector2f(4.67F, 12), 2F)
                                                                      );
+
+        public static final List<Waypoint> rightScale = Arrays.asList(
+                new Waypoint(new ImmutableVector2f(0, 0), 0),
+                new Waypoint(new ImmutableVector2f(0F, 10.5F), 25F),
+                new Waypoint(new ImmutableVector2f(0F, 20.0F), 25F),
+                new Waypoint(new ImmutableVector2f(3.0F, 20.5F), 25F),
+                new Waypoint(new ImmutableVector2f(26.0F, 20.5F), 20F),
+                new Waypoint(new ImmutableVector2f(26.0F, 30F), 0F)
+                                                                      );
 
     }
 
@@ -84,6 +93,8 @@ public class Paths
         public static final List<Waypoint> rightSwitch = flipY(Left.leftSwitch);
 
         public static final List<Waypoint> rightScale = flipY(Left.leftScale);
+
+        public static final List<Waypoint> leftScale = flipY(Left.rightScale);
 
     }
 
