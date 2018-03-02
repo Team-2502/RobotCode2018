@@ -97,7 +97,7 @@ public class LeftCommandGroup extends CommandGroup
 
         addSequential(new GrabCommand());
 
-        addParallel(new ActiveIntakeRotate(1F, -0.7));
+        addParallel(new ActiveIntakeRotate(12F, -0.7));
         addSequential(new ElevatorAutonCommand(3F, Constants.SWITCH_ELEV_HEIGHT_FT + 1));
 
         emitCube();

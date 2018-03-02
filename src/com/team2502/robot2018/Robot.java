@@ -16,10 +16,8 @@ import com.team2502.robot2018.subsystem.solenoid.ClimberSolenoid;
 import com.team2502.robot2018.subsystem.solenoid.TransmissionSolenoid;
 import com.team2502.robot2018.utils.Files;
 import com.team2502.robot2018.utils.InterpolationMap;
-import edu.wpi.first.wpilibj.Compressor;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.IterativeRobot;
-import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.cscore.UsbCamera;
+import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -49,6 +47,7 @@ public final class Robot extends IterativeRobot
     public static AHRS NAVX;
     public static SendableChooser<AutonStrategy> autonStrategySelector;
     private static List<String> logLines = new ArrayList<>();
+    public static UsbCamera CAMERA;
 
     public static void write(String string)
     { LOG_OUTPUT.println(string); }
@@ -65,6 +64,12 @@ public final class Robot extends IterativeRobot
     @Override
     public void robotInit()
     {
+//        CAMERA = new UsbCamera("cam0", 0);
+//        CAMERA.free();
+//        CameraServer.getInstance().startAutomaticCapture(CAMERA);
+
+        CameraServer.getInstance().startAutomaticCapture();
+
         autonStrategySelector = new SendableChooser<>();
         AutonStrategy[] values = AutonStrategy.values();
         for(int i = 0; i < values.length; i++)

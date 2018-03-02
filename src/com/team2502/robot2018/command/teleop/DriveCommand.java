@@ -39,7 +39,7 @@ public class DriveCommand extends Command
         float dPosL = leftRawVel*dTime;
         float dPosR = rightRawVel*dTime;
 
-        Robot.writeLog(String.format("l %.2f, r %.2f"));
+//        Robot.writeLog(String.format("l %.2f, r %.2f"));
         SmartDashboard.putBoolean("DT: AutoShifting Enabled?", !Robot.TRANSMISSION_SOLENOID.disabledAutoShifting);
         Robot.DRIVE_TRAIN.drive();
 
