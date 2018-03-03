@@ -48,7 +48,7 @@ public final class Robot extends IterativeRobot
     public static AHRS NAVX;
     public static SendableChooser<AutonStrategy> autonStrategySelector;
     private static List<String> logLines = new ArrayList<>();
-    public static RobotLocalizationThread ROBOT_LOCALIZATION_THREAD;
+//    public static RobotLocalizationThread ROBOT_LOCALIZATION_THREAD;
 
     public static void write(String string)
     { LOG_OUTPUT.println(string); }
@@ -90,10 +90,9 @@ public final class Robot extends IterativeRobot
         COMPRESSOR = new Compressor();
         DRIVE_TRAIN = new DriveTrainSubsystem();
 
-        NavXLocationEstimator rotEstimator = new NavXLocationEstimator();
-        EncoderDifferentialDriveLocationEstimator encoderDifferentialDriveLocationEstimator = new EncoderDifferentialDriveLocationEstimator(rotEstimator);
-        ROBOT_LOCALIZATION_THREAD = new RobotLocalizationThread(rotEstimator, encoderDifferentialDriveLocationEstimator, encoderDifferentialDriveLocationEstimator, 5);
-        ROBOT_LOCALIZATION_THREAD.start();
+//        NavXLocationEstimator rotEstimator = new NavXLocationEstimator();
+//        EncoderDifferentialDriveLocationEstimator encoderDifferentialDriveLocationEstimator = new EncoderDifferentialDriveLocationEstimator(rotEstimator);
+//        ROBOT_LOCALIZATION_THREAD = new RobotLocalizationThread(rotEstimator, encoderDifferentialDriveLocationEstimator, encoderDifferentialDriveLocationEstimator, 5);
 
         ACTIVE_INTAKE = new ActiveIntakeSubsystem();
         ELEVATOR = new ElevatorSubsystem();
@@ -162,7 +161,7 @@ public final class Robot extends IterativeRobot
         }
         System.out.println(stringBuilder.toString());
 
-        ROBOT_LOCALIZATION_THREAD.interrupt();
+//        ROBOT_LOCALIZATION_THREAD.interrupt();
     }
 
     public void disabledPeriodic()
@@ -187,6 +186,8 @@ public final class Robot extends IterativeRobot
     public void autonomousInit()
     {
         DRIVE_TRAIN.setAutonSettings();
+
+//        ROBOT_LOCALIZATION_THREAD.start();
 
         // 144 inches front = 12 ft
         // 53 inches left/right = 4.42 ft

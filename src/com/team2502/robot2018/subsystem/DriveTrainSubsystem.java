@@ -210,7 +210,10 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
      */
     public void runMotorsVelocity(float leftWheel, float rightWheel)
     {
-        runMotors(ControlMode.Velocity,fakeToRealEncUnits(leftWheel*Constants.FPS_TO_EVEL_DT),fakeToRealEncUnits(rightWheel*Constants.FPS_TO_EVEL_DT));
+        float left = fakeToRealEncUnits(leftWheel * Constants.FPS_TO_EVEL_DT);
+        float right = fakeToRealEncUnits(rightWheel * Constants.FPS_TO_EVEL_DT);
+        Robot.writeLog("left: %.2f, right: %.2f",left,right);
+        runMotors(ControlMode.Velocity, left, right);
     }
 
     public void runMotorsRawVelocity(float leftWheel, float rightWheel)

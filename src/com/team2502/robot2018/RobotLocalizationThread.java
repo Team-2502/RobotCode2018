@@ -7,7 +7,6 @@ import org.joml.ImmutableVector2f;
 
 public class RobotLocalizationThread extends Thread implements ITranslationalLocationEstimator, ITranslationalVelocityEstimator, IRotationalLocationEstimator
 {
-
     private final IRotationalLocationEstimator rotEstimator;
     private final ITranslationalVelocityEstimator velocityEstimator;
     private final ITranslationalLocationEstimator locationEstimator;
@@ -27,12 +26,14 @@ public class RobotLocalizationThread extends Thread implements ITranslationalLoc
     @Override
     public void run()
     {
-        while(!isInterrupted())
+        System.out.println("running!!!! ");
+        while(!Thread.currentThread().isInterrupted())
         {
             heading = rotEstimator.estimateHeading();
             leftWheelSpeed = velocityEstimator.getLeftWheelSpeed();
             rightWheelSpeed = velocityEstimator.getRightWheelSpeed();
             location = locationEstimator.estimateLocation();
+            System.out.printf("locationX %.2f, locationY %.2f",location.x,location.y);
             velocity = velocityEstimator.estimateAbsoluteVelocity();
             speed = velocityEstimator.estimateSpeed();
             try

@@ -2,10 +2,14 @@ package com.team2502.robot2018.command.autonomous.ingredients;
 
 import com.team2502.robot2018.Constants;
 import com.team2502.robot2018.Robot;
+import com.team2502.robot2018.sendables.SendableNavX;
 import com.team2502.robot2018.trajectory.ITankRobotBounds;
 import com.team2502.robot2018.trajectory.Lookahead;
 import com.team2502.robot2018.trajectory.PurePursuitMovementStrategy;
 import com.team2502.robot2018.trajectory.Waypoint;
+import com.team2502.robot2018.trajectory.localization.EncoderDifferentialDriveLocationEstimator;
+import com.team2502.robot2018.trajectory.localization.NavXLocationEstimator;
+import com.team2502.robot2018.utils.MathUtils;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.joml.ImmutableVector2f;
@@ -15,6 +19,9 @@ import java.util.List;
 public class PurePursuitCommand extends Command
 {
     private final ITankRobotBounds tankRobot;
+    private final EncoderDifferentialDriveLocationEstimator transLocEstimator;
+    private final NavXLocationEstimator rotLocEstimator;
+    private final SendableNavX sendableNavX;
     private PurePursuitMovementStrategy purePursuitMovementStrategy;
 
     public PurePursuitCommand(List<Waypoint> waypoints)
@@ -88,11 +95,11 @@ public class PurePursuitCommand extends Command
             { return Constants.LATERAL_WHEEL_DISTANCE_FT; }
         };
 
-//        rotLocEstimator = new NavXLocationEstimator();
-//        transLocEstimator = new EncoderDifferentialDriveLocationEstimator(rotLocEstimator);
-//
-//        sendableNavX = new SendableNavX(() -> MathUtils.rad2Deg(-rotLocEstimator.estimateHeading()), "purePursuitHeading");
-        purePursuitMovementStrategy = new PurePursuitMovementStrategy(tankRobot, Robot.ROBOT_LOCALIZATION_THREAD, Robot.ROBOT_LOCALIZATION_THREAD, Robot.ROBOT_LOCALIZATION_THREAD, waypoints, lookahead, stopDistance);
+        rotLocEstimator = new NavXLocationEstimator();
+        transLocEstimator = new EncoderDifferentialDriveLocationEstimator(rotLocEstimator);
+
+        sendableNavX = new SendableNavX(() -> MathUtils.rad2Deg(-rotLocEstimator.estimateHeading()), "purePursuitHeading");
+        purePursuitMovementStrategy = new PurePursuitMovementStrategy(tankRobot, transLocEstimator, rotLocEstimator, transLocEstimator, waypoints, lookahead, stopDistance);
     }
 
     @Override
@@ -107,6 +114,8 @@ public class PurePursuitCommand extends Command
     {
         purePursuitMovementStrategy.update();
 
+        sendableNavX.updateDashboard();
+
         ImmutableVector2f usedEstimatedLocation = purePursuitMovementStrategy.getUsedEstimatedLocation();
 
         SmartDashboard.putNumber("purePursuitLocX", usedEstimatedLocation.get(0));
@@ -120,10 +129,10 @@ public class PurePursuitCommand extends Command
         SmartDashboard.putNumber("PPwheelL", wheelVelocities.get(0));
         SmartDashboard.putNumber("PPwheelR", wheelVelocities.get(1));
 
-        float leftWheelEVEL = wheelL;
-        float rightWheelEVEL = wheelR;
+        float leftWheelVel = wheelL;
+        float rightWheelVel = wheelR;
 
-        Robot.DRIVE_TRAIN.runMotorsVelocity(leftWheelEVEL, rightWheelEVEL);
+        Robot.DRIVE_TRAIN.runMotorsVelocity(leftWheelVel, rightWheelVel);
     }
 
     @Override

@@ -32,14 +32,20 @@ public class Constants
      */
 
     // Currently the max percent ft/s that can be given to each to each wheel
-    public static final float VR_MAX = 10F;
-    public static final float VL_MAX = 10F;
-    public static final float VR_MIN = -10F;
-    public static final float VL_MIN = -10F;
+
+    // DO NOTHING
+    @Deprecated
+    public static final float VR_MAX = 16F;
+    @Deprecated
+    public static final float VL_MAX = 16F;
+    @Deprecated
+    public static final float VR_MIN = -16F;
+    @Deprecated
+    public static final float VL_MIN = -16F;
 
     // The max change in voltage per second (acceleration)
-    public static final float AR_MAX = 15F;
-    public static final float AL_MAX = 15F;
+    public static final float AR_MAX = 10F;
+    public static final float AL_MAX = 10F;
     public static final float AR_MIN = -10F;
     public static final float AL_MIN = -10F;
     // The lookahead distance (feet) for Pure Pursuit
