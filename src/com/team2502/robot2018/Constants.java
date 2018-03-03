@@ -34,14 +34,14 @@ public class Constants
     // Currently the max percent ft/s that can be given to each to each wheel
 
     // DO NOTHING
-    @Deprecated
-    public static final float VR_MAX = 16F;
-    @Deprecated
-    public static final float VL_MAX = 16F;
-    @Deprecated
-    public static final float VR_MIN = -16F;
-    @Deprecated
-    public static final float VL_MIN = -16F;
+//    @Deprecated
+//    public static final float VR_MAX = 16F;
+//    @Deprecated
+//    public static final float VL_MAX = 16F;
+//    @Deprecated
+//    public static final float VR_MIN = -16F;
+//    @Deprecated
+//    public static final float VL_MIN = -16F;
 
     // The max change in voltage per second (acceleration)
     public static final float AR_MAX = 10F;

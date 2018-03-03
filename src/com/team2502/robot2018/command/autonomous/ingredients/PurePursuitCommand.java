@@ -40,7 +40,7 @@ public class PurePursuitCommand extends Command
              */
             @Override
             public float getV_rMax()
-            { return Constants.VR_MAX; }
+            { return Float.NaN; } // Not used in PurePursuitMovementStrategy
 
             @Override
             public float getA_rMax()
@@ -53,7 +53,7 @@ public class PurePursuitCommand extends Command
              */
             @Override
             public float getV_lMax()
-            { return Constants.VL_MAX; }
+            { return Float.NaN; }
 
             @Override
             public float getA_lMax()
@@ -66,7 +66,7 @@ public class PurePursuitCommand extends Command
              */
             @Override
             public float getV_lMin()
-            { return Constants.VL_MIN; }
+            { return Float.NaN; }
 
             @Override
             public float getA_lMin()
@@ -79,7 +79,7 @@ public class PurePursuitCommand extends Command
              */
             @Override
             public float getV_rMin()
-            { return Constants.VR_MIN; }
+            { return Float.NaN; }
 
             @Override
             public float getA_rMin()
