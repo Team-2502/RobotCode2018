@@ -46,7 +46,7 @@ public final class OI
         INTAKE_OUT_SLOW.whileHeld(new ActiveIntakeCommand(-0.5));
         INTAKE_OUT_FAST.whileHeld(new ActiveIntakeCommand(-1.0));
 
-        OPEN_INTAKE.whenPressed(new GrabCommand());
+        OPEN_INTAKE.whenPressed(new ToggleIntakeCommand());
 
         // Climber button (wait to re-implement until elevator is working properly
         CLIMBER.whileHeld(new ClimberCommand(1.0));

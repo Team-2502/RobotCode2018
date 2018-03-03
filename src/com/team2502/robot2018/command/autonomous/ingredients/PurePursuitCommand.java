@@ -20,9 +20,9 @@ import java.util.List;
 public class PurePursuitCommand extends Command
 {
     private final ITankRobotBounds tankRobot;
-    private final EncoderDifferentialDriveLocationEstimator transLocEstimator;
-    private final NavXLocationEstimator rotLocEstimator;
-    private final SendableNavX sendableNavX;
+//    private final EncoderDifferentialDriveLocationEstimator transLocEstimator;
+//    private final NavXLocationEstimator rotLocEstimator;
+//    private final SendableNavX sendableNavX;
     private PurePursuitMovementStrategy purePursuitMovementStrategy;
 
     public PurePursuitCommand(List<Waypoint> waypoints)
@@ -96,11 +96,11 @@ public class PurePursuitCommand extends Command
             { return Constants.LATERAL_WHEEL_DISTANCE_FT; }
         };
 
-        rotLocEstimator = new NavXLocationEstimator();
-        transLocEstimator = new EncoderDifferentialDriveLocationEstimator(rotLocEstimator);
-
-        sendableNavX = new SendableNavX(() -> MathUtils.rad2Deg(-rotLocEstimator.estimateHeading()), "purePursuitHeading");
-        purePursuitMovementStrategy = new PurePursuitMovementStrategy(tankRobot, transLocEstimator, rotLocEstimator, transLocEstimator, waypoints, lookahead, stopDistance);
+//        rotLocEstimator = new NavXLocationEstimator();
+//        transLocEstimator = new EncoderDifferentialDriveLocationEstimator(rotLocEstimator);
+//
+//        sendableNavX = new SendableNavX(() -> MathUtils.rad2Deg(-rotLocEstimator.estimateHeading()), "purePursuitHeading");
+        purePursuitMovementStrategy = new PurePursuitMovementStrategy(tankRobot, Robot.ROBOT_LOCALIZATION_THREAD, Robot.ROBOT_LOCALIZATION_THREAD, Robot.ROBOT_LOCALIZATION_THREAD, waypoints, lookahead, stopDistance);
     }
 
     @Override
@@ -114,8 +114,6 @@ public class PurePursuitCommand extends Command
     protected void execute()
     {
         purePursuitMovementStrategy.update();
-
-        sendableNavX.updateDashboard();
 
         ImmutableVector2f usedEstimatedLocation = purePursuitMovementStrategy.getUsedEstimatedLocation();
 

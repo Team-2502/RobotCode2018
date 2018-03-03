@@ -221,6 +221,8 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
 
         Waypoint waypointEnd = waypoints.get(lastSegmentSearched + 1);
 
+        forward = waypointEnd.isForward();
+
         boolean lastWaypoint = lastSegmentSearched + 1 == waypoints.size() - 1;
 
         ImmutableVector2f lineEndPoint = waypointEnd.getLocation();
@@ -251,10 +253,19 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
 
         if((finalSpeed > 0 && finalSpeed > lastWaypointSpeed) || (finalSpeed < 0 && finalSpeed < lastWaypointSpeed))
         {
-            Robot.writeLog("accel");
             // what the motors should be
             float dTime = (float) (currentS - lastUpdatedS);
-            speedUsed = Math.min(finalSpeed, lastWaypointSpeed + dTime * tankRobot.getA_lMax());
+            if(forward)
+            {
+                Robot.writeLog("forward");
+                speedUsed = MathUtils.minF(finalSpeed, lastWaypointSpeed + dTime * tankRobot.getA_lMax());
+            }
+            else
+            {
+                Robot.writeLog("not forward");
+                speedUsed = MathUtils.maxF(finalSpeed, lastWaypointSpeed + dTime * tankRobot.getA_lMin());
+            }
+            Robot.writeLog("accel ... speedUsed: %.2f, dTime: %.2f, lastSpeed: %.2f, aMax %.2f",speedUsed,dTime,lastWaypointSpeed,tankRobot.getA_lMax());
         }
         else
         {
@@ -264,11 +275,18 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
             // Using basic physics kinematic equations we get 2a*x=vf^2-vi^2
             // so vi = \sqrt{vf^2 - 2a*x}
 
-            float maxVel = (float) Math.sqrt(finalSpeed * finalSpeed - 2 * tankRobot.getA_lMin() * distanceLeft);
-//            System.out.println("distanceLeft: "+distanceLeft+", vel: "+maxVel);
-            Robot.writeLog("deccel, maxVel: " + maxVel);
-
-            speedUsed = Math.min(lastWaypointSpeed, maxVel);
+            if(forward)
+            {
+                float maxVel = (float) Math.sqrt(finalSpeed * finalSpeed - 2 * tankRobot.getA_lMin() * distanceLeft);
+                speedUsed = Math.min(lastWaypointSpeed, maxVel);
+            }
+            else
+            {
+                // TODO: Not sure this works
+                // closest to 0 ft/s speed
+                float minVel = (float) Math.sqrt(finalSpeed * finalSpeed + 2 * tankRobot.getA_lMax() * distanceLeft);
+                speedUsed = Math.max(lastWaypointSpeed, minVel);
+            }
         }
 
         float dCP = distanceClosestPoint.length();

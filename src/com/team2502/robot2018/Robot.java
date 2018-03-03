@@ -14,12 +14,11 @@ import com.team2502.robot2018.subsystem.solenoid.ActiveIntakeSolenoid;
 import com.team2502.robot2018.subsystem.solenoid.ButterflySolenoid;
 import com.team2502.robot2018.subsystem.solenoid.ClimberSolenoid;
 import com.team2502.robot2018.subsystem.solenoid.TransmissionSolenoid;
+import com.team2502.robot2018.trajectory.localization.EncoderDifferentialDriveLocationEstimator;
+import com.team2502.robot2018.trajectory.localization.NavXLocationEstimator;
 import com.team2502.robot2018.utils.Files;
 import com.team2502.robot2018.utils.InterpolationMap;
-import edu.wpi.first.wpilibj.Compressor;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.IterativeRobot;
-import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -49,13 +48,14 @@ public final class Robot extends IterativeRobot
     public static AHRS NAVX;
     public static SendableChooser<AutonStrategy> autonStrategySelector;
     private static List<String> logLines = new ArrayList<>();
+    public static RobotLocalizationThread ROBOT_LOCALIZATION_THREAD;
 
     public static void write(String string)
     { LOG_OUTPUT.println(string); }
 
-    public static void writeLog(String message)
+    public static void writeLog(String message, Object... objects)
     {
-        logLines.add(message);
+        logLines.add(String.format(message,objects));
     }
 
     /**
@@ -65,6 +65,8 @@ public final class Robot extends IterativeRobot
     @Override
     public void robotInit()
     {
+        NAVX = new AHRS(SPI.Port.kMXP);
+        CameraServer.getInstance().startAutomaticCapture();
         autonStrategySelector = new SendableChooser<>();
         AutonStrategy[] values = AutonStrategy.values();
         for(int i = 0; i < values.length; i++)
@@ -87,7 +89,12 @@ public final class Robot extends IterativeRobot
         TRANSMISSION_SOLENOID = new TransmissionSolenoid();
         COMPRESSOR = new Compressor();
         DRIVE_TRAIN = new DriveTrainSubsystem();
-        NAVX = new AHRS(SPI.Port.kMXP);
+
+        NavXLocationEstimator rotEstimator = new NavXLocationEstimator();
+        EncoderDifferentialDriveLocationEstimator encoderDifferentialDriveLocationEstimator = new EncoderDifferentialDriveLocationEstimator(rotEstimator);
+        ROBOT_LOCALIZATION_THREAD = new RobotLocalizationThread(rotEstimator, encoderDifferentialDriveLocationEstimator, encoderDifferentialDriveLocationEstimator, 5);
+        ROBOT_LOCALIZATION_THREAD.start();
+
         ACTIVE_INTAKE = new ActiveIntakeSubsystem();
         ELEVATOR = new ElevatorSubsystem();
         ACTIVE_INTAKE_SOLENOID = new ActiveIntakeSolenoid();
@@ -154,6 +161,8 @@ public final class Robot extends IterativeRobot
             iterator.remove();
         }
         System.out.println(stringBuilder.toString());
+
+        ROBOT_LOCALIZATION_THREAD.interrupt();
     }
 
     public void disabledPeriodic()

@@ -52,6 +52,16 @@ public final class MathUtils
     public static float sin(final float value)
     { return SIN_TABLE[(int) (value * 10430.378F) & 65535]; }
 
+    public static float minAbs(final float a, final float b)
+    {
+        return Math.abs(a) > Math.abs(b) ? b : a;
+    }
+
+    public static float maxAbs(final float a, final float b)
+    {
+        return Math.abs(a) < Math.abs(b) ? b : a;
+    }
+
     /**
      * cos looked up in the sin table with the appropriate offset
      */

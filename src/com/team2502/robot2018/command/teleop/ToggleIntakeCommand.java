@@ -3,9 +3,9 @@ package com.team2502.robot2018.command.teleop;
 import com.team2502.robot2018.Robot;
 import edu.wpi.first.wpilibj.command.InstantCommand;
 
-public class GrabCommand extends InstantCommand
+public class ToggleIntakeCommand extends InstantCommand
 {
-    public GrabCommand()
+    public ToggleIntakeCommand()
     { requires(Robot.ACTIVE_INTAKE_SOLENOID); }
 
     @Override

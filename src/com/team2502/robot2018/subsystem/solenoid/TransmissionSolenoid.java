@@ -8,12 +8,12 @@ public class TransmissionSolenoid extends NonDefaultSubsystem
 {
     private final Solenoid transmission;
     public boolean disabledAutoShifting = true;
-    private boolean highGear;
+    private boolean lowGear;
 
     public TransmissionSolenoid()
     {
         transmission = new Solenoid(RobotMap.Solenoid.TRANSMISSION_SWITCH);
-        highGear = false;
+        lowGear = false;
         transmission.set(false);
     }
 
@@ -21,19 +21,19 @@ public class TransmissionSolenoid extends NonDefaultSubsystem
      * Switch the gear from its current state
      */
     public void toggleGear()
-    { transmission.set(highGear = !highGear); }
+    { transmission.set(lowGear = !lowGear); }
 
     /**
      * @return if we are in high gear
      */
-    public boolean getGear()
-    { return highGear; }
+    public boolean isHigh()
+    { return !lowGear; }
 
     /**
      * Set the transmission to a specific high gear or low gear
      *
-     * @param highGear Boolean saying "do you want to be in high gear?"
+     * @param lowGear Boolean saying "do you want to be in high gear?"
      */
-    public void setHighGear(boolean highGear)
-    { transmission.set(this.highGear = !highGear); }
+    public void setLowGear(boolean lowGear)
+    { transmission.set(this.lowGear = !lowGear); }
 }

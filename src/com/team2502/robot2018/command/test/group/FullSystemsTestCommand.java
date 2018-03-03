@@ -4,7 +4,7 @@ import com.team2502.robot2018.command.autonomous.ingredients.ActiveIntakeRotate;
 import com.team2502.robot2018.command.autonomous.ingredients.ElevatorAutonCommand;
 import com.team2502.robot2018.command.autonomous.ingredients.ShootCubeCommand;
 import com.team2502.robot2018.command.teleop.ButterflySetCommand;
-import com.team2502.robot2018.command.teleop.GrabCommand;
+import com.team2502.robot2018.command.teleop.ToggleIntakeCommand;
 import com.team2502.robot2018.command.teleop.ShiftElevatorCommand;
 import com.team2502.robot2018.command.teleop.TransmissionCommand;
 import com.team2502.robot2018.command.test.PrintCommand;
@@ -51,9 +51,9 @@ public class FullSystemsTestCommand extends CommandGroup
         promptYesNo("Did this occur?", "Pulling in cube");
 
         newSection("Toggling active intake grab");
-        addSequential(new GrabCommand());
+        addSequential(new ToggleIntakeCommand());
         promptYesNo("Did this occur?", "Active intake grab");
-        addSequential(new GrabCommand());
+        addSequential(new ToggleIntakeCommand());
 
         newSection("Toggling transmission");
         addSequential(new TransmissionCommand());

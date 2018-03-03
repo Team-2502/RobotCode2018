@@ -110,7 +110,7 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
 
         setupTalons();
 
-        Robot.TRANSMISSION_SOLENOID.setHighGear(false);
+        Robot.TRANSMISSION_SOLENOID.setLowGear(false);
     }
 
     public void setupTalons()
@@ -129,7 +129,7 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     public void setAutonSettings()
     {
         setupTalons();
-        Robot.TRANSMISSION_SOLENOID.setHighGear(true);
+        Robot.TRANSMISSION_SOLENOID.setLowGear(true);
         // Set high gear
     }
 
@@ -306,13 +306,18 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     /**
      * @return Velocity as read by left encoder in Feet per Second
      */
-    public float getLeftVel() { return getLeftRawVel() * Constants.EVEL_TO_FPS_DT; }
+    public float getLeftVel() { return getLeftRawVel() * Constants.FAKE_EVEL_TO_FPS_DT; }
 
     /**
      * @return Velocity as read by right encoder in Feet per Second
      */
 
-    public float getRightVel() { return getRightRawVel() * Constants.EVEL_TO_FPS_DT; }
+    public float getEncToWheelRev(float rawUnits)
+    {
+//        Robot.TRANSMISSION_SOLENOID.isHigh()
+    }
+
+    public float getRightVel() { return getRightRawVel() * Constants.FAKE_EVEL_TO_FPS_DT; }
 
     public int getRightRawVel() { return rightFrontTalonEnc.getSelectedSensorVelocity(0); }
 
@@ -321,12 +326,16 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     /**
      * @return Position as read by right encoder in Feet per Second
      */
-    public float getRightPos() { return rightFrontTalonEnc.getSelectedSensorPosition(0) * Constants.EPOS_TO_FEET_DT; }
+    public float getRightPos() { return getRightPosRaw() * Constants.EPOS_TO_FEET_DT; }
 
     /**
      * @return Position as read by left encoder in Feet per Second
      */
-    public float getLeftPos() { return leftFrontTalonEnc.getSelectedSensorPosition(0) * Constants.EPOS_TO_FEET_DT; }
+    public float getLeftPos() { return getLeftPosRaw() * Constants.EPOS_TO_FEET_DT; }
+
+    public float getLeftPosRaw() { return leftFrontTalonEnc.getSelectedSensorPosition(0);}
+
+    public float getRightPosRaw() { return rightFrontTalonEnc.getSelectedSensorPosition(0);}
 
 
     @Override
@@ -435,12 +444,6 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     {
         public float left;
         public float right;
-
-        public FloatPair(float left, float right)
-        {
-            this.left = left;
-            this.right = right;
-        }
 
         public FloatPair() { }
 

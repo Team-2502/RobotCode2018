@@ -3,6 +3,7 @@ package com.team2502.robot2018.trajectory.localization;
 import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.utils.MathUtils;
 import com.team2502.robot2018.utils.Stopwatch;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.joml.ImmutableVector2f;
 
 public class EncoderDifferentialDriveLocationEstimator implements ITranslationalLocationEstimator, ITranslationalVelocityEstimator
@@ -26,7 +27,11 @@ public class EncoderDifferentialDriveLocationEstimator implements ITranslational
         float rightVel = Robot.DRIVE_TRAIN.getRightVel();
 
         ImmutableVector2f dPos = MathUtils.Kinematics.getAbsoluteDPosLine(leftVel, rightVel, dTime, rotEstimator.estimateHeading());
+
         location = location.add(dPos);
+
+        SmartDashboard.putNumber("posX",location.x);
+        SmartDashboard.putNumber("posY",location.y);
 
         return location;
     }
