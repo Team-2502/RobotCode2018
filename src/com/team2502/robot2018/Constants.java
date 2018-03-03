@@ -51,7 +51,7 @@ public class Constants
                                                             LOOKAHEAD_MIN_SPEED_FPS, LOOKAHEAD_MAX_SPEED_FPS);
     public static final float STOP_DIST_TOLERANCE_FT = 1F;
     // TODO: figure out why wheel diameter has to be much smaller than it should be (normally 6)
-    public static final float WHEEL_DIAMETER_INCH = 3.6944444443F;
+    public static final float WHEEL_DIAMETER_INCH = 6F; // 3.6944444443F;
 
     public static final float WHEEL_REV_TO_ENC_REV_LOW = 4.285F;
     public static final float WHEEL_REV_TO_ENC_REV_HIGH = 2.083F;

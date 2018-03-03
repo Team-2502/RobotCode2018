@@ -188,7 +188,7 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
      * @param controlMode The mode that the motors are being driven in
      */
 
-    public void runMotors(ControlMode controlMode, float leftWheel, float rightWheel) // double z
+    private void runMotors(ControlMode controlMode, float leftWheel, float rightWheel) // double z
     {
         // setting slaves as the talons w/ encoders is the only way it works ¯\_(ツ)_/¯
         leftRearTalon.follow(leftFrontTalonEnc);
@@ -196,6 +196,26 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
 
         leftFrontTalonEnc.set(controlMode, leftWheel);
         rightFrontTalonEnc.set(controlMode, rightWheel);
+    }
+
+    public void runMotorsVoltage(float leftWheel, float rightWheel)
+    {
+        runMotors(ControlMode.PercentOutput,leftWheel,rightWheel);
+    }
+
+    /**
+     * Uses fps
+     * @param leftWheel
+     * @param rightWheel
+     */
+    public void runMotorsVelocity(float leftWheel, float rightWheel)
+    {
+        runMotors(ControlMode.Velocity,fakeToRealEncUnits(leftWheel*Constants.FPS_TO_EVEL_DT),fakeToRealEncUnits(rightWheel*Constants.FPS_TO_EVEL_DT));
+    }
+
+    public void runMotorsRawVelocity(float leftWheel, float rightWheel)
+    {
+        runMotors(ControlMode.Velocity,leftWheel,rightWheel);
     }
 
     /**
@@ -306,18 +326,22 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     /**
      * @return Velocity as read by left encoder in Feet per Second
      */
-    public float getLeftVel() { return getLeftRawVel() * Constants.FAKE_EVEL_TO_FPS_DT; }
+    public float getLeftVel() { return fakeToRealWheelRev(getLeftRawVel() * Constants.FAKE_EVEL_TO_FPS_DT); }
 
     /**
      * @return Velocity as read by right encoder in Feet per Second
      */
-
-    public float getEncToWheelRev(float rawUnits)
+    public float fakeToRealWheelRev(float wheelRev)
     {
-//        Robot.TRANSMISSION_SOLENOID.isHigh()
+        return Robot.TRANSMISSION_SOLENOID.isHigh() ? wheelRev/Constants.WHEEL_REV_TO_ENC_REV_HIGH : wheelRev/Constants.WHEEL_REV_TO_ENC_REV_LOW;
     }
 
-    public float getRightVel() { return getRightRawVel() * Constants.FAKE_EVEL_TO_FPS_DT; }
+    public float fakeToRealEncUnits(float rawUnits)
+    {
+        return Robot.TRANSMISSION_SOLENOID.isHigh() ? rawUnits*Constants.WHEEL_REV_TO_ENC_REV_HIGH : rawUnits*Constants.WHEEL_REV_TO_ENC_REV_LOW;
+    }
+
+    public float getRightVel() { return fakeToRealWheelRev(getRightRawVel() * Constants.FAKE_EVEL_TO_FPS_DT); }
 
     public int getRightRawVel() { return rightFrontTalonEnc.getSelectedSensorVelocity(0); }
 
@@ -326,12 +350,12 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     /**
      * @return Position as read by right encoder in Feet per Second
      */
-    public float getRightPos() { return getRightPosRaw() * Constants.EPOS_TO_FEET_DT; }
+    public float getRightPos() { return fakeToRealWheelRev(getRightPosRaw() * Constants.EPOS_TO_FEET_DT); }
 
     /**
      * @return Position as read by left encoder in Feet per Second
      */
-    public float getLeftPos() { return getLeftPosRaw() * Constants.EPOS_TO_FEET_DT; }
+    public float getLeftPos() { return fakeToRealWheelRev(getLeftPosRaw() * Constants.EPOS_TO_FEET_DT); }
 
     public float getLeftPosRaw() { return leftFrontTalonEnc.getSelectedSensorPosition(0);}
 

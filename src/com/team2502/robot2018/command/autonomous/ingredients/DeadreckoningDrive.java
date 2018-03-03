@@ -13,12 +13,12 @@ public class DeadreckoningDrive extends TimedCommand
     public DeadreckoningDrive(double timeout, float speed)
     {
         super(timeout);
-        this.speed = speed * Constants.FPS_TO_EVEL_DT;
+        this.speed = speed;
     }
 
     @Override
     protected void execute()
     {
-        Robot.DRIVE_TRAIN.runMotors(ControlMode.Velocity, speed, speed);
+        Robot.DRIVE_TRAIN.runMotorsVelocity(speed, speed);
     }
 }
