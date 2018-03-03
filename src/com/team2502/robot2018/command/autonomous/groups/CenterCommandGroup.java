@@ -2,6 +2,7 @@ package com.team2502.robot2018.command.autonomous.groups;
 
 import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.command.autonomous.ingredients.*;
+import com.team2502.robot2018.command.teleop.ToggleIntakeCommand;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 
@@ -30,14 +31,14 @@ public class CenterCommandGroup extends CommandGroup
     {
         moveElevator();
         addSequential(new PurePursuitCommand(Paths.Center.leftSwitch));
-        emitCube();
+        emitCubeSwitch();
     }
 
     private void goSwitchRight()
     {
         moveElevator();
         addSequential(new PurePursuitCommand(Paths.Center.rightSwitch));
-        emitCube();
+        emitCubeSwitch();
     }
 
     private void moveElevator()
@@ -45,10 +46,11 @@ public class CenterCommandGroup extends CommandGroup
         addParallel(new RaiseElevatorSwitch());
     }
 
-    private void emitCube()
+    private void emitCubeSwitch()
     {
         addSequential(new ActiveIntakeRotate(0.35, 1));
-        addSequential(new ShootCubeCommand(1));
+        addParallel(new ToggleIntakeCommand());
+//        addSequential(new ShootCubeCommand(1));
     }
 
 }

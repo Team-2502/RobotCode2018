@@ -9,7 +9,6 @@ import com.team2502.robot2018.utils.InterpolationMap;
  */
 public class Constants
 {
-
     /**
      * How high the elevator must be in order to put a cube in the switch
      */
@@ -52,7 +51,10 @@ public class Constants
                                                             LOOKAHEAD_MIN_SPEED_FPS, LOOKAHEAD_MAX_SPEED_FPS);
     public static final float STOP_DIST_TOLERANCE_FT = 1F;
     // TODO: figure out why wheel diameter has to be much smaller than it should be (normally 6)
-    public static final float WHEEL_DIAMETER_INCH = 3.6944444443F;
+    public static final float WHEEL_DIAMETER_INCH = 6F; // 3.6944444443F;
+
+    public static final float WHEEL_REV_TO_ENC_REV_LOW = 4.285F;
+    public static final float WHEEL_REV_TO_ENC_REV_HIGH = 2.083F;
 
     /*
     Physical / Other
@@ -70,7 +72,10 @@ public class Constants
     // 600 = amount of 100 ms in a minute
     public static final float EVEL_TO_RPM = (600.0F / ENC_RES);
     public static final float RPM_TO_FPS_DT = (WHEEL_DIAMETER_FT * (float) Math.PI) / 60F;
-    public static final float EVEL_TO_FPS_DT = EVEL_TO_RPM * RPM_TO_FPS_DT;
+
+    //TODO: change bad name
+    public static final float FAKE_EVEL_TO_FPS_DT = EVEL_TO_RPM * RPM_TO_FPS_DT;
+
     public static final float FEET_TO_EPOS_DT = 1 / EPOS_TO_FEET_DT;
     public static final float FPS_TO_RPM_DT = 60F / (WHEEL_DIAMETER_FT * (float) Math.PI);
     public static final float RPM_TO_EVEL_DT = ENC_RES / 600F;

@@ -4,10 +4,7 @@ import com.team2502.robot2018.Robot;
 import edu.wpi.first.wpilibj.command.TimedCommand;
 import logger.ShuffleboardLog;
 
-public class
-
-
-RotateStationaryCommand extends TimedCommand implements TestResult
+public class RotateStationaryCommand extends TimedCommand implements TestResult
 {
     private final static int DEGREE_THRESHOLD = 10;
     private final static int ENCODER_THRESHOLD = 8000;

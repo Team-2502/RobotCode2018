@@ -3,10 +3,9 @@ package com.team2502.robot2018.command.autonomous.groups;
 import com.team2502.robot2018.Constants;
 import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.command.autonomous.ingredients.*;
-import com.team2502.robot2018.command.teleop.GrabCommand;
+import com.team2502.robot2018.command.teleop.ToggleIntakeCommand;
 import com.team2502.robot2018.command.teleop.QuickCommand;
 import edu.wpi.first.wpilibj.command.CommandGroup;
-import edu.wpi.first.wpilibj.command.WaitCommand;
 
 public class LeftCommandGroup extends CommandGroup
 {
@@ -14,7 +13,7 @@ public class LeftCommandGroup extends CommandGroup
 
     public LeftCommandGroup()
     {
-        Robot.TRANSMISSION_SOLENOID.setHighGear(true);
+        Robot.TRANSMISSION_SOLENOID.setLowGear(true);
         String AUTO_GAME_DATA = Robot.GAME_DATA.substring(0, 2);
 
         Robot.NAVX.reset();
@@ -91,11 +90,11 @@ public class LeftCommandGroup extends CommandGroup
         addSequential(new ElevatorAutonCommand(3F, -Constants.SCALE_ELEV_HEIGHT_FT));
         addSequential(new QuickCommand(Robot.ELEVATOR::calibrateEncoder));
 
-        addSequential(new GrabCommand());
+        addSequential(new ToggleIntakeCommand());
         addParallel(new ShootCubeCommand(2, -1));
-        addSequential(new DeadreckoningDrive(1.5,5));
+        addSequential(new DeadreckoningDrive(1.5, 5));
 
-        addSequential(new GrabCommand());
+        addSequential(new ToggleIntakeCommand());
 
         addParallel(new ActiveIntakeRotate(12F, -0.7));
         addSequential(new ElevatorAutonCommand(3F, Constants.SWITCH_ELEV_HEIGHT_FT + 1));

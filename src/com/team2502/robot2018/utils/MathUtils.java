@@ -52,6 +52,16 @@ public final class MathUtils
     public static float sin(final float value)
     { return SIN_TABLE[(int) (value * 10430.378F) & 65535]; }
 
+    public static float minAbs(final float a, final float b)
+    {
+        return Math.abs(a) > Math.abs(b) ? b : a;
+    }
+
+    public static float maxAbs(final float a, final float b)
+    {
+        return Math.abs(a) < Math.abs(b) ? b : a;
+    }
+
     /**
      * cos looked up in the sin table with the appropriate offset
      */
@@ -515,9 +525,9 @@ public final class MathUtils
         public static ImmutableVector2f getAbsoluteDPosLine(float vL, float vR, float dt, float robotHeading)
         {
             float tangentialSpeed = getTangentialSpeed(vL, vR);
-            float tangentialDPos = getTangentialSpeed(vL, vR)*dt;
+            float tangentialDPos = getTangentialSpeed(vL, vR) * dt;
             ImmutableVector2f dPos = VECTOR_STRAIGHT.mul(tangentialDPos);
-            return LinearAlgebra.rotate2D(dPos,robotHeading);
+            return LinearAlgebra.rotate2D(dPos, robotHeading);
         }
 
         public static ImmutableVector2f getAbsoluteDPosCurve(float vL, float vR, float l, float dt, float robotHeading)

@@ -9,7 +9,7 @@ public class Waypoint
 
     private final float maxSpeed;
     private final ImmutableVector2f location;
-    private boolean forward = false;
+    private boolean forward = true;
     private Command[] commands;
 
     public Waypoint(ImmutableVector2f location, float maxSpeed)

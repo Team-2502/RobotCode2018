@@ -1,6 +1,8 @@
 package com.team2502.robot2018.command.teleop;
 
 import com.team2502.robot2018.Robot;
+import com.team2502.robot2018.trajectory.localization.EncoderDifferentialDriveLocationEstimator;
+import com.team2502.robot2018.trajectory.localization.NavXLocationEstimator;
 import com.team2502.robot2018.utils.Stopwatch;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -21,6 +23,7 @@ public class DriveCommand extends Command
 {
 
     private final Stopwatch stopwatch;
+    private EncoderDifferentialDriveLocationEstimator locationEstimator;
 
     public DriveCommand()
     {
@@ -29,17 +32,16 @@ public class DriveCommand extends Command
     }
 
     @Override
+    protected void initialize()
+    {
+        locationEstimator = new EncoderDifferentialDriveLocationEstimator(new NavXLocationEstimator());
+    }
+
+    @Override
     protected void execute()
     {
-        float dTime = stopwatch.dTime()*10F;
+        locationEstimator.estimateLocation();
 
-        int leftRawVel = Robot.DRIVE_TRAIN.getLeftRawVel();
-        int rightRawVel = Robot.DRIVE_TRAIN.getRightRawVel();
-
-        float dPosL = leftRawVel*dTime;
-        float dPosR = rightRawVel*dTime;
-
-//        Robot.writeLog(String.format("l %.2f, r %.2f"));
         SmartDashboard.putBoolean("DT: AutoShifting Enabled?", !Robot.TRANSMISSION_SOLENOID.disabledAutoShifting);
         Robot.DRIVE_TRAIN.drive();
 

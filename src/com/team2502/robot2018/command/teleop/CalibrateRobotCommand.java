@@ -59,7 +59,7 @@ public class CalibrateRobotCommand extends Command
             SmartDashboard.putNumber("enc_velocity", actualVel);
 
 //            System.out.println("run @ " + velocity);
-            Robot.DRIVE_TRAIN.runMotors(ControlMode.Velocity, (float) velocity, (float) velocity);
+            Robot.DRIVE_TRAIN.runMotorsRawVelocity((float) velocity, (float) velocity);
         }
     }
 

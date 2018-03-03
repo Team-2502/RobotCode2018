@@ -27,7 +27,11 @@ public class EncoderDifferentialDriveLocationEstimator implements ITranslational
         float rightVel = Robot.DRIVE_TRAIN.getRightVel();
 
         ImmutableVector2f dPos = MathUtils.Kinematics.getAbsoluteDPosLine(leftVel, rightVel, dTime, rotEstimator.estimateHeading());
+
         location = location.add(dPos);
+
+        SmartDashboard.putNumber("posX",location.x);
+        SmartDashboard.putNumber("posY",location.y);
 
         return location;
     }
@@ -54,7 +58,7 @@ public class EncoderDifferentialDriveLocationEstimator implements ITranslational
     @Override
     public float estimateSpeed()
     {
-        return MathUtils.Kinematics.getTangentialSpeed(getLeftWheelSpeed(),getRightWheelSpeed());
+        return MathUtils.Kinematics.getTangentialSpeed(getLeftWheelSpeed(), getRightWheelSpeed());
     }
 }
 
