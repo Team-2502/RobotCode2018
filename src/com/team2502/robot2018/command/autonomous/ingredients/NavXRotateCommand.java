@@ -90,7 +90,9 @@ public class NavXRotateCommand extends Command implements PIDOutput
     @Override
     protected void execute()
     {
-        driveTrain.runMotors(turnRate, turnRate);
+        turnRate = (float) turnController.get();
+        System.out.println("turnRate: "+turnRate);
+        driveTrain.runMotorsVoltage(turnRate, -turnRate);
     }
 
     @Override

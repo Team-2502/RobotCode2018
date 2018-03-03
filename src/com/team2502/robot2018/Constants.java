@@ -17,7 +17,7 @@ public class Constants
     /**
      * How high the elevator must be in order to put a cube in the scale
      */
-    public static final float SCALE_ELEV_HEIGHT_FT = 7F;
+    public static final float SCALE_ELEV_HEIGHT_FT = 5.75F;
 
 
     /*
@@ -44,10 +44,10 @@ public class Constants
 //    public static final float VL_MIN = -16F;
 
     // The max change in voltage per second (acceleration)
-    public static final float AR_MAX = 10F;
-    public static final float AL_MAX = 10F;
-    public static final float AR_MIN = -10F;
-    public static final float AL_MIN = -10F;
+//    public static final float AR_MAX = 4F;
+//    public static final float AL_MAX = 4F;
+//    public static final float AR_MIN = -4F;
+//    public static final float AL_MIN = -4F;
     // The lookahead distance (feet) for Pure Pursuit
     public static final float LOOKAHEAD_MIN_DISTANCE_FT = 3F;
     public static final float LOOKAHEAD_MAX_DISTANCE_FT = 5F;

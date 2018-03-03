@@ -27,6 +27,12 @@ public class ElevatorAutonCommand extends TimedCommand
     }
 
     @Override
+    protected void initialize()
+    {
+        Robot.writeLog("ElevatorAutonCommand init",10);
+    }
+
+    @Override
     protected void execute()
     {
         Robot.ELEVATOR.setElevatorPos(feet);

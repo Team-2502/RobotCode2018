@@ -14,8 +14,7 @@ import com.team2502.robot2018.subsystem.solenoid.ActiveIntakeSolenoid;
 import com.team2502.robot2018.subsystem.solenoid.ButterflySolenoid;
 import com.team2502.robot2018.subsystem.solenoid.ClimberSolenoid;
 import com.team2502.robot2018.subsystem.solenoid.TransmissionSolenoid;
-import com.team2502.robot2018.trajectory.localization.EncoderDifferentialDriveLocationEstimator;
-import com.team2502.robot2018.trajectory.localization.NavXLocationEstimator;
+
 import com.team2502.robot2018.utils.Files;
 import com.team2502.robot2018.utils.InterpolationMap;
 import edu.wpi.first.wpilibj.*;
@@ -53,9 +52,13 @@ public final class Robot extends IterativeRobot
     public static void write(String string)
     { LOG_OUTPUT.println(string); }
 
-    public static void writeLog(String message, Object... objects)
+    private static int LEVEL = 2;
+    public static void writeLog(String message, int level, Object... objects)
     {
-        logLines.add(String.format(message,objects));
+        if(level >= LEVEL)
+        {
+            logLines.add("("+level+") "+String.format(message,objects));
+        }
     }
 
     /**

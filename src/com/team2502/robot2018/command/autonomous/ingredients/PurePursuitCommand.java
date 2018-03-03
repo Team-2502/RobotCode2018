@@ -45,7 +45,7 @@ public class PurePursuitCommand extends Command
             @Override
             public float getA_rMax()
             {
-                return Constants.AR_MAX;
+                return Float.NaN;
             }
 
             /**
@@ -58,7 +58,7 @@ public class PurePursuitCommand extends Command
             @Override
             public float getA_lMax()
             {
-                return Constants.AL_MAX;
+                return Float.NaN;
             }
 
             /**
@@ -71,7 +71,7 @@ public class PurePursuitCommand extends Command
             @Override
             public float getA_lMin()
             {
-                return Constants.AL_MIN;
+                return Float.NaN;
             }
 
             /**
@@ -84,7 +84,7 @@ public class PurePursuitCommand extends Command
             @Override
             public float getA_rMin()
             {
-                return Constants.AR_MIN;
+                return Float.NaN;
             }
 
             /**
@@ -129,10 +129,7 @@ public class PurePursuitCommand extends Command
         SmartDashboard.putNumber("PPwheelL", wheelVelocities.get(0));
         SmartDashboard.putNumber("PPwheelR", wheelVelocities.get(1));
 
-        float leftWheelVel = wheelL;
-        float rightWheelVel = wheelR;
-
-        Robot.DRIVE_TRAIN.runMotorsVelocity(leftWheelVel, rightWheelVel);
+        Robot.DRIVE_TRAIN.runMotorsVelocity(wheelL, wheelR);
     }
 
     @Override

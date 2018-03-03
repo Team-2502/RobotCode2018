@@ -26,6 +26,7 @@ public class LeftCommandGroup extends CommandGroup
                     case SCALE:
                     {
                         goScaleLeft();
+                        secondCubeLeft();
                         break;
                     }
                     case SWITCH:
@@ -73,18 +74,24 @@ public class LeftCommandGroup extends CommandGroup
     private void goScaleLeft()
     {
 
+        addParallel(new ActiveIntakeRotate(1, 0.5));
         addSequential(new PurePursuitCommand(Paths.Left.leftScale));
+//        addSequential(new RaiseElevatorScale());
 
-        addParallel(new ActiveIntakeRotate(0.1, 0.5));
-        addSequential(new RaiseElevatorScale());
+//        addSequential(new NavXRotateCommand(40,3));
 
-        addSequential(new RotateAutonStationary(40));
+//        addSequential(new DeadreckoningDrive(0.5F,0.5F));
 
+        addSequential(new ToggleIntakeCommand());
         addSequential(new ActiveIntakeRotate(.25F, -0.5));
-//        addSequential(new DeadreckoningDrive(0.5F, 2));
 
         emitCube();
 
+
+    }
+
+    private void secondCubeLeft()
+    {
         addParallel(new ActiveIntakeRotate(0.5F, 0.5));
         addParallel(new RotateAutonStationary(140));
         addSequential(new ElevatorAutonCommand(3F, -Constants.SCALE_ELEV_HEIGHT_FT));
