@@ -114,8 +114,8 @@ public final class Robot extends IterativeRobot
 
         DashboardData.addUpdater(SendableDriveStrategyType.getInstance());
 
-        SendableVersioning.getInstance().init();
-        SmartDashboard.putData(SendableVersioning.getInstance());
+        SendableVersioning.INSTANCE.init();
+        SmartDashboard.putData(SendableVersioning.INSTANCE);
 
         SendableNavX.init();
         DashboardData.addUpdater(SendableNavX.getInstance());
