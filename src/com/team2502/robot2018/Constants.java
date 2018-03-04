@@ -19,17 +19,12 @@ public class Constants
      */
     public static final float SCALE_ELEV_HEIGHT_FT = 5.75F;
 
-
-    /*
-    Tweak
-     */
+    /* Tweak */
     public static final float INTAKE_SPEED_PERCENT_LIMIT = 0.1F;
     public static final float ELEVATOR_SPEED_PERCENT_LIMIT = 0.6F;
     public static final float MAX_ROT_DEG_PER_SEC = 30;
 
-    /*
-    Pure Pursuit
-     */
+    /* Pure Pursuit */
 
     // Currently the max percent ft/s that can be given to each to each wheel
 

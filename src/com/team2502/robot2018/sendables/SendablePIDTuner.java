@@ -1,6 +1,5 @@
 package com.team2502.robot2018.sendables;
 
-
 import com.team2502.robot2018.DashboardData;
 import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -9,16 +8,15 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class SendablePIDTuner implements Sendable, DashboardData.DashboardUpdater
 {
+    private String name;
+    private String subsystem;
+    private PIDTunable pidValues;
 
-    String name = "PIDTuner";
-    String subsystem;
-    PIDTunable pid_values;
-
-
-    public SendablePIDTuner(Subsystem subsystem, PIDTunable pid_values)
+    public SendablePIDTuner(Subsystem subsystem, PIDTunable pidValues)
     {
+        this.name = "PIDTuner";
         this.subsystem = subsystem.getName() + "Tuner";
-        this.pid_values = pid_values;
+        this.pidValues = pidValues;
     }
 
     @Override
@@ -31,7 +29,6 @@ public class SendablePIDTuner implements Sendable, DashboardData.DashboardUpdate
     public void setName(String name)
     {
         this.name = name;
-
     }
 
     @Override
@@ -50,10 +47,10 @@ public class SendablePIDTuner implements Sendable, DashboardData.DashboardUpdate
     public void initSendable(SendableBuilder builder)
     {
         builder.setSmartDashboardType("PIDController");
-        builder.addDoubleProperty("p", pid_values::getkP, pid_values::setkP);
-        builder.addDoubleProperty("i", pid_values::getkI, pid_values::setkI);
-        builder.addDoubleProperty("d", pid_values::getkD, pid_values::setkD);
-        builder.addDoubleProperty("f", pid_values::getkF, pid_values::setkF);
+        builder.addDoubleProperty("p", pidValues::getkP, pidValues::setkP);
+        builder.addDoubleProperty("i", pidValues::getkI, pidValues::setkI);
+        builder.addDoubleProperty("d", pidValues::getkD, pidValues::setkD);
+        builder.addDoubleProperty("f", pidValues::getkF, pidValues::setkF);
     }
 
     @Override

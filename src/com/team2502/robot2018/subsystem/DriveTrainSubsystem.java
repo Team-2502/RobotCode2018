@@ -295,7 +295,7 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         SmartDashboard.putNumber("speedL", -speed.left);
         SmartDashboard.putNumber("speedR", -speed.right);
 
-        Nameable currentMode = SendableDriveStrategyType.getInstance().getCurrentMode();
+        Nameable currentMode = SendableDriveStrategyType.INSTANCE.getCurrentMode();
 
         if(!(currentMode instanceof DriveStrategyType))
         {

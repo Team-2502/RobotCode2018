@@ -110,15 +110,15 @@ public final class Robot extends IterativeRobot
         AutoStartLocationSwitcher.putToSmartDashboard();
 
         SendableDriveTrain.init();
-        DashboardData.addUpdater(SendableDriveTrain.getInstance());
+        DashboardData.addUpdater(SendableDriveTrain.INSTANCE);
 
-        DashboardData.addUpdater(SendableDriveStrategyType.getInstance());
+        DashboardData.addUpdater(SendableDriveStrategyType.INSTANCE);
 
         SendableVersioning.INSTANCE.init();
         SmartDashboard.putData(SendableVersioning.INSTANCE);
 
         SendableNavX.init();
-        DashboardData.addUpdater(SendableNavX.getInstance());
+        DashboardData.addUpdater(SendableNavX.INSTANCE);
 
         DashboardData.addUpdater(() -> {
             Robot.CAL_VELOCITY = SmartDashboard.getNumber("calibration_velocity", 0);

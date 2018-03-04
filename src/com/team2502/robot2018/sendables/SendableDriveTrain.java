@@ -14,17 +14,18 @@ import java.util.function.DoubleConsumer;
  */
 public class SendableDriveTrain implements Sendable, DashboardData.DashboardUpdater
 {
+    public static final SendableDriveTrain INSTANCE = new SendableDriveTrain();
 
-    private static SendableDriveTrain instance = new SendableDriveTrain();
+    private DoubleConsumer doNothing;
+    private String name;
 
-    DoubleConsumer doNothing = (double value) -> {};
-    String name = "EncoderDriveTrain";
+    private SendableDriveTrain()
+    {
+        this.doNothing = value -> {};
+        this.name = "EncoderDriveTrain";
+    }
 
-    private SendableDriveTrain() {}
-
-    public static void init() {}
-
-    public static SendableDriveTrain getInstance() {return instance;}
+    public static void init() { }
 
     @Override
     public String getName()
@@ -36,7 +37,6 @@ public class SendableDriveTrain implements Sendable, DashboardData.DashboardUpda
     public void setName(String name)
     {
         this.name = name;
-
     }
 
     @Override
