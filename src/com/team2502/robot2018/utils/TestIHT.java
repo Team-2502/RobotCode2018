@@ -8,22 +8,18 @@ class TestIHT
     public static void main(String[] args)
     {
 
-        InterpolationMap wheee = new InterpolationMap(1d, 1d);
+        InterpolationMap wheee = new InterpolationMap(2d, 2d);
 
-        System.out.println(wheee.get(100.0)); // should be 1
-        System.out.println(wheee.get(-100.0)); // should be 1
+        System.out.println(wheee.get(100.0)); // should be 2
+        System.out.println(wheee.integrate(0, 1)); // should be 2
 
-        wheee.put(1002D, 101D); // slope: 1
+        wheee.put(0D, 0D);
 
-        System.out.println(wheee.get(60.0)); // should be 61
-        System.out.println(wheee.get(-60.0)); // should be 1
-        System.out.println(wheee.get(600.0)); // should be 101
+        System.out.println(wheee.get(100.0)); // should be 2 (flattening after max)
+        System.out.println(wheee.get(1D)); // should be 1
+        System.out.println(wheee.integrate(0, 2)); // should be 1
+        System.out.println(wheee.integrate(0, 1)); // should be .5
 
-        wheee.put(200D, 1D); // slope: -1
-
-        System.out.println(wheee.get(60.0)); // should be 61
-        System.out.println(wheee.get(100.0)); // should be 101
-        System.out.println(wheee.get(150.0)); // should be 51
 
     }
 }

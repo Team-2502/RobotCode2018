@@ -1,6 +1,8 @@
 package com.team2502.robot2018.utils;
 
 import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
+import org.joml.ImmutableVector2d;
+import org.joml.ImmutableVector2f;
 
 import java.util.*;
 
@@ -10,7 +12,7 @@ import java.util.*;
  * You put in (x, f(x)) pairs of the function that you know for sure,
  * and linear regression is used to find the pairs you didn't explicitly put in.
  */
-public class InterpolationMap implements Map<Double, Double>
+public class InterpolationMap implements Map<Double, Double>, MathUtils.Integrable
 {
 
     private Map<Double, Double> table;
@@ -163,11 +165,11 @@ public class InterpolationMap implements Map<Double, Double>
             i++;
         }
 
-        if(upperBound == null) // i.e all the keys are smaller
+        if(upperBound == null) // i.e all the keys are smaller than the value we want to grab
         {
             return table.get(keys.get(keys.size() - 1)); // get the f(x) for the biggest x. we can't do real interpolation
         }
-        else if(lowerBound == null) // i.e all the keys are bigger
+        else if(lowerBound == null) // i.e all the keys are bigger than the value we want to grab
         {
             return table.get(keys.get(0)); // get the f(x) for the smallest x. we can't do real interpolation.
         }
@@ -185,5 +187,54 @@ public class InterpolationMap implements Map<Double, Double>
             // table.get(upperBound) is y1
             return ((slope * key) - (slope * upperBound)) + table.get(upperBound);
         }
+    }
+
+    /**
+     * Use if you know what you're doing. Does useful stuff like turn pos into vel or accel into vel
+     * @param a Beginning of integration range
+     * @param b End of integration range
+     * @return Area under the "curve"
+     */
+    @Override
+    public double integrate(double a, double b)
+    {
+        List<MathUtils.Geometry.Line> lines = new ArrayList<>();
+        double integralTotal = 0;
+
+        List<Double> significantPoints = new ArrayList<>(keySet());
+
+        significantPoints.sort(null);
+
+        if(significantPoints.size() == 1)
+        {
+            lines.add(new MathUtils.Geometry.Line(new ImmutableVector2d(a, get(a)),
+                                                  new ImmutableVector2d(b, get(b))));
+        }
+        else
+        {
+            for(int i = 1; i < significantPoints.size(); i++)
+            {
+                double x1, x2;
+
+                x1 = significantPoints.get(i - 1);
+                x2 = significantPoints.get(i);
+
+                lines.add(new MathUtils.Geometry.Line(new ImmutableVector2d(x1, get(x1)),
+                                                      new ImmutableVector2d(x2, get(x2))));
+
+            }
+
+        }
+
+        lines.sort(Comparator.comparingDouble(line -> line.x1));
+
+
+        for(MathUtils.Geometry.Line line : lines)
+        {
+            integralTotal += line.integrate();
+        }
+        return integralTotal;
+
+
     }
 }
