@@ -14,6 +14,8 @@ import com.team2502.robot2018.subsystem.solenoid.ActiveIntakeSolenoid;
 import com.team2502.robot2018.subsystem.solenoid.ButterflySolenoid;
 import com.team2502.robot2018.subsystem.solenoid.ClimberSolenoid;
 import com.team2502.robot2018.subsystem.solenoid.TransmissionSolenoid;
+import com.team2502.robot2018.trajectory.localization.EncoderDifferentialDriveLocationEstimator;
+import com.team2502.robot2018.trajectory.localization.NavXLocationEstimator;
 import com.team2502.robot2018.utils.Files;
 import com.team2502.robot2018.utils.InterpolationMap;
 import edu.wpi.first.wpilibj.*;
@@ -46,8 +48,8 @@ public final class Robot extends IterativeRobot
     public static AHRS NAVX;
     public static SendableChooser<AutonStrategy> autonStrategySelector;
     private static List<String> logLines = new ArrayList<>();
-    //    public static RobotLocalizationThread ROBOT_LOCALIZATION_THREAD;
-    private static int LEVEL = 30;
+    public static RobotLocalizationCommand ROBOT_LOCALIZATION_COMMAND;
+    private static int LEVEL = 40;
 
     public static void write(String string)
     { LOG_OUTPUT.println(string); }
@@ -91,10 +93,6 @@ public final class Robot extends IterativeRobot
         TRANSMISSION_SOLENOID = new TransmissionSolenoid();
         COMPRESSOR = new Compressor();
         DRIVE_TRAIN = new DriveTrainSubsystem();
-
-//        NavXLocationEstimator rotEstimator = new NavXLocationEstimator();
-//        EncoderDifferentialDriveLocationEstimator encoderDifferentialDriveLocationEstimator = new EncoderDifferentialDriveLocationEstimator(rotEstimator);
-//        ROBOT_LOCALIZATION_THREAD = new RobotLocalizationThread(rotEstimator, encoderDifferentialDriveLocationEstimator, encoderDifferentialDriveLocationEstimator, 5);
 
         ACTIVE_INTAKE = new ActiveIntakeSubsystem();
         ELEVATOR = new ElevatorSubsystem();
@@ -187,6 +185,13 @@ public final class Robot extends IterativeRobot
      */
     public void autonomousInit()
     {
+        NavXLocationEstimator rotEstimator = new NavXLocationEstimator();
+        EncoderDifferentialDriveLocationEstimator encoderDifferentialDriveLocationEstimator = new EncoderDifferentialDriveLocationEstimator(rotEstimator);
+        ROBOT_LOCALIZATION_COMMAND = new RobotLocalizationCommand(rotEstimator, encoderDifferentialDriveLocationEstimator, encoderDifferentialDriveLocationEstimator);
+
+//        ROBOT_LOCALIZATION_COMMAND.execute();
+        Scheduler.getInstance().add(ROBOT_LOCALIZATION_COMMAND);
+
         DRIVE_TRAIN.setAutonSettings();
 
 //        ROBOT_LOCALIZATION_THREAD.start();

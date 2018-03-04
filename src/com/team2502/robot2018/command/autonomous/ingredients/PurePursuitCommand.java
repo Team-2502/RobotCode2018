@@ -19,9 +19,9 @@ import java.util.List;
 public class PurePursuitCommand extends Command
 {
     private final ITankRobotBounds tankRobot;
-    private final EncoderDifferentialDriveLocationEstimator transLocEstimator;
-    private final NavXLocationEstimator rotLocEstimator;
-    private final SendableNavX sendableNavX;
+//    private final EncoderDifferentialDriveLocationEstimator transLocEstimator;
+//    private final NavXLocationEstimator rotLocEstimator;
+//    private final SendableNavX sendableNavX;
     private PurePursuitMovementStrategy purePursuitMovementStrategy;
 
     public PurePursuitCommand(List<Waypoint> waypoints)
@@ -95,11 +95,11 @@ public class PurePursuitCommand extends Command
             { return Constants.LATERAL_WHEEL_DISTANCE_FT; }
         };
 
-        rotLocEstimator = new NavXLocationEstimator();
-        transLocEstimator = new EncoderDifferentialDriveLocationEstimator(rotLocEstimator);
-
-        sendableNavX = new SendableNavX(() -> MathUtils.rad2Deg(-rotLocEstimator.estimateHeading()), "purePursuitHeading");
-        purePursuitMovementStrategy = new PurePursuitMovementStrategy(tankRobot, transLocEstimator, rotLocEstimator, transLocEstimator, waypoints, lookahead, stopDistance);
+//        rotLocEstimator = new NavXLocationEstimator();
+//        transLocEstimator = new EncoderDifferentialDriveLocationEstimator(rotLocEstimator);
+//
+//        sendableNavX = new SendableNavX(() -> MathUtils.rad2Deg(-rotLocEstimator.estimateHeading()), "purePursuitHeading");
+        purePursuitMovementStrategy = new PurePursuitMovementStrategy(tankRobot, Robot.ROBOT_LOCALIZATION_COMMAND, Robot.ROBOT_LOCALIZATION_COMMAND, Robot.ROBOT_LOCALIZATION_COMMAND, waypoints, lookahead, stopDistance);
     }
 
     @Override
@@ -114,7 +114,7 @@ public class PurePursuitCommand extends Command
     {
         purePursuitMovementStrategy.update();
 
-        sendableNavX.updateDashboard();
+//        sendableNavX.updateDashboard();
 
         ImmutableVector2f usedEstimatedLocation = purePursuitMovementStrategy.getUsedEstimatedLocation();
 
@@ -129,7 +129,10 @@ public class PurePursuitCommand extends Command
         SmartDashboard.putNumber("PPwheelL", wheelVelocities.get(0));
         SmartDashboard.putNumber("PPwheelR", wheelVelocities.get(1));
 
-        Robot.DRIVE_TRAIN.runMotorsVelocity(wheelL, wheelR);
+        float leftWheelVel = wheelL;
+        float rightWheelVel = wheelR;
+
+        Robot.DRIVE_TRAIN.runMotorsVelocity(leftWheelVel, rightWheelVel);
     }
 
     @Override

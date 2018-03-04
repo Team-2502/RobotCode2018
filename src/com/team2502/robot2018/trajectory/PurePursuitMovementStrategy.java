@@ -147,7 +147,6 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         }
 
         // closestGoalPoint is our new goal point
-        Robot.writeLog("closestGoalPoint: (%.2f,%.2f)", 1, closestGoalPoint.x, closestGoalPoint.y);
         return closestGoalPoint;
     }
 
@@ -231,8 +230,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
 
     private float generateLookahead()
     {
-        usedTangentialVelocity = velocityEstimator.avgWheelSpeed();
-        Robot.writeLog("usedVel: %.2f",30,usedTangentialVelocity);
+        usedTangentialVelocity = velocityEstimator.estimateSpeed();
         float lookaheadForSpeed = lookahead.getLookaheadForSpeed(usedTangentialVelocity);
 
         PathSegment current = path.getCurrent();
@@ -309,7 +307,10 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
 
         float dCP = distanceClosestPoint.length();
 
-        return lookaheadForSpeed + dCP;
+        float usedLookahead = lookaheadForSpeed + dCP;
+
+        Robot.writeLog("usedVel: %.2f, usedLookahead %.2f",30,usedTangentialVelocity,usedLookahead);
+        return usedLookahead;
     }
 
     private float getMaxSpeed(float finalSpeed, float distanceLeft, boolean forward, float currentMaxAccel, float currentMaxDeccel)
@@ -378,6 +379,8 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         }
 
         relativeGoalPoint = MathUtils.LinearAlgebra.absoluteToRelativeCoord(absoluteGoalPoint, usedEstimatedLocation, usedHeading);
+
+        Robot.writeLog("relativeGP: (%.2f,%.2f)", 30, relativeGoalPoint.x, relativeGoalPoint.y);
 
         wheelVelocities = calculateWheelVelocities();
     }

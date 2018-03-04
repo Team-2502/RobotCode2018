@@ -61,11 +61,16 @@ public class Paths
     public static class Left
     {
         public static final List<Waypoint> leftScale = Arrays.asList(
-                new Waypoint(new ImmutableVector2f(0, 0), 0, 10, -5),
-                new Waypoint(new ImmutableVector2f(0F, 8.589F), 20F, 10, -5),
-                new Waypoint(new ImmutableVector2f(0F, 12.405F), 20F, 10, -5),
-                new Waypoint(new ImmutableVector2f(0F, 16.405F), 7F, 10, -5, true, new RaiseElevatorScale()),
-                new Waypoint(new ImmutableVector2f(2F, 20.5F), 0F, 10, -5) // max deceleration appears to be -7 ft / s^2
+                new Waypoint(new ImmutableVector2f(0, 0), 0, 20, -9),
+                new Waypoint(new ImmutableVector2f(-0.5F, 8.589F), 16F, 20, -7,true),
+                new Waypoint(new ImmutableVector2f(-0.5F, 12.405F), 5F, 20, -7,true,new RaiseElevatorScale()),
+                new Waypoint(new ImmutableVector2f(-0.5F, 20.5F), 3F, 20, -7, true),
+                new Waypoint(new ImmutableVector2f(2F, 23.0F), 0F, 20, -7) // max deceleration appears to be -7 ft / s^2
+                                                                    );
+
+        public static final List<Waypoint> leftScaleToSwitch = Arrays.asList(
+                new Waypoint(new ImmutableVector2f(1F, 21.2F), 0F, 20, -9), // max deceleration appears to be -7 ft / s^2
+                new Waypoint(new ImmutableVector2f(10F, 15F), 3F, 10, -9)
                                                                     );
 
         public static final List<Waypoint> leftSwitch = Arrays.asList(
@@ -78,11 +83,11 @@ public class Paths
         public static final List<Waypoint> rightScale = Arrays.asList(
                 new Waypoint(new ImmutableVector2f(0, 0), 0, 20, -10),
                 new Waypoint(new ImmutableVector2f(0F, 8.589F), 25F, 20, -10),
-                new Waypoint(new ImmutableVector2f(0F, 15.5F), 25F, 20, -10),
+                new Waypoint(new ImmutableVector2f(0F, 17.0F), 25F, 20, -10),
                 new Waypoint(new ImmutableVector2f(2.454F, 17.5F), 25F, 20, -10),
                 new Waypoint(new ImmutableVector2f(15.0F, 17.5F), 3F, 20, -5, true, new RaiseElevatorScale(), new ActiveIntakeRotate(0.3, 0.5)),
-                new Waypoint(new ImmutableVector2f(20.3F, 17.5F), 3F, 20, -5),
-                new Waypoint(new ImmutableVector2f(16F, 22F), 0F, 10, -5)
+                new Waypoint(new ImmutableVector2f(21F-0.1666666667F, 17.5F), 3F, 20, -5),
+                new Waypoint(new ImmutableVector2f(17F-0.1666666667F, 22F), 0F, 10, -5)
                                                                      );
 
     }
