@@ -78,10 +78,10 @@ public class Paths
         public static final List<Waypoint> rightScale = Arrays.asList(
                 new Waypoint(new ImmutableVector2f(0, 0), 0,5,-5),
                 new Waypoint(new ImmutableVector2f(0F, 8.589F), 25F,5,-5),
-                new Waypoint(new ImmutableVector2f(0F, 16.36F), 25F,5,-5),
-                new Waypoint(new ImmutableVector2f(2.454F, 16.7727F), 25F,5,-5),
-                new Waypoint(new ImmutableVector2f(21.27F, 16.7727F), 20F,5,-5),
-                new Waypoint(new ImmutableVector2f(21.27F, 24.545F), 0F,5,-5)
+                new Waypoint(new ImmutableVector2f(0F, 17F), 25F,5,-5),
+                new Waypoint(new ImmutableVector2f(2.454F, 17.5F), 25F,5,-5),
+                new Waypoint(new ImmutableVector2f(19F, 17.5F), 3F,5,-5,true,new RaiseElevatorScale(),new ActiveIntakeRotate(0.3, 0.5)),
+                new Waypoint(new ImmutableVector2f(22F, 17.5F), 0F,5,-5)
                                                                      );
 
     }

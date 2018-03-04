@@ -113,13 +113,12 @@ public class LeftCommandGroup extends CommandGroup
     {
         addSequential(new PurePursuitCommand(Paths.Left.rightScale));
 
-        addParallel(new ActiveIntakeRotate(0.3, 0.5));
-        addSequential(new RaiseElevatorScale());
+//        addSequential(new RaiseElevatorScale());
 
-        addSequential(new RotateAutonStationary(-80, 5));
+//        addSequential(new RotateAutonStationary(-80, 5));
 
         addParallel(new ActiveIntakeRotate(1F, -0.5));
-        addSequential(new DeadreckoningDrive(1F, 2.2F));
+//        addSequential(new DeadreckoningDrive(1F, 2.2F));
 
         emitCube();
 

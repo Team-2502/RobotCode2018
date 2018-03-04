@@ -52,7 +52,7 @@ public class Constants
     public static final float LOOKAHEAD_MIN_DISTANCE_FT = 3F;
     public static final float LOOKAHEAD_MAX_DISTANCE_FT = 5F;
     public static final float LOOKAHEAD_MIN_SPEED_FPS = 1F;
-    public static final float LOOKAHEAD_MAX_SPEED_FPS = 8F;
+    public static final float LOOKAHEAD_MAX_SPEED_FPS = 16F;
     public static final Lookahead LOOKAHEAD = new Lookahead(LOOKAHEAD_MIN_DISTANCE_FT, LOOKAHEAD_MAX_DISTANCE_FT,
                                                             LOOKAHEAD_MIN_SPEED_FPS, LOOKAHEAD_MAX_SPEED_FPS);
     public static final float STOP_DIST_TOLERANCE_FT = 1F;
@@ -70,7 +70,7 @@ public class Constants
     public static final float WHEEL_ROLLING_RADIUS_INCH = 1.5F;
     public static final float WHEEL_ROLLING_RADIUS_FT = WHEEL_ROLLING_RADIUS_INCH * 1.5F / 12F;
     // The distance between wheels (laterally) in feet. Measure from the centerpoints of the wheels.
-    public static final float LATERAL_WHEEL_DISTANCE_FT = 23.25F / 12F * 5F; //* 10F;
+    public static final float LATERAL_WHEEL_DISTANCE_FT = 23.25F / 12F * 4.5F; //* 10F;
     public static final float MAX_FPS_SPEED = 18.0F;
     public static final float ENC_RES = 4096.0F;
     /* Drivetrain */

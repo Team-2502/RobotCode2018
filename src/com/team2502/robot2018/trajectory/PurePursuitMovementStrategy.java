@@ -139,7 +139,10 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         // If the closestGoalPoint vector is on the next segment, set that segment as the current segment
         if(closestVectorI >= nextPathSegmentI)
         {
+            Robot.writeLog("intersections: "+intersections,20);
+            Robot.writeLog("closest goal point: (%.2f,%.2f), nextPathSegmentI: %d, closestVectorI: %d",20,closestGoalPoint.x,closestGoalPoint.y,nextPathSegmentI,closestVectorI);
             moveNextSegment();
+
             path.moveNextSegment();
         }
 
@@ -171,7 +174,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
 
         float distanceWaypointSq = lineP2.sub(origin).lengthSquared();
 
-        if(pathSegment.isEnd())
+        if(pathSegment.isEnd() && path.getCurrent() == pathSegment)
         {
             if(distanceWaypointSq <= radius*radius)
             {
@@ -207,7 +210,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         if(nextWaypoint != null)
         {
             ImmutableVector2f locationB = nextWaypoint.getLocation();
-            Robot.writeLog("next waypoint (%.2f,%.2f)", 10, locationB.x,locationB.y);
+            Robot.writeLog("next waypoint (%.2f,%.2f) ... lookahead: %.2f ... pos: (%.2f,%.2f)", 10, locationB.x,locationB.y,usedLookahead,usedEstimatedLocation.x,usedEstimatedLocation.y);
             nextWaypoint.executeCommands(this);
         }
 

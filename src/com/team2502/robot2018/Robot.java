@@ -52,7 +52,7 @@ public final class Robot extends IterativeRobot
     public static void write(String string)
     { LOG_OUTPUT.println(string); }
 
-    private static int LEVEL = 2;
+    private static int LEVEL = 10;
     public static void writeLog(String message, int level, Object... objects)
     {
         if(level >= LEVEL)
