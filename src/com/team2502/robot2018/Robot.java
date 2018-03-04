@@ -47,7 +47,7 @@ public final class Robot extends IterativeRobot
     public static SendableChooser<AutonStrategy> autonStrategySelector;
     private static List<String> logLines = new ArrayList<>();
     //    public static RobotLocalizationThread ROBOT_LOCALIZATION_THREAD;
-    private static int LEVEL = 10;
+    private static int LEVEL = 30;
 
     public static void write(String string)
     { LOG_OUTPUT.println(string); }

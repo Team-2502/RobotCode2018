@@ -231,7 +231,8 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
 
     private float generateLookahead()
     {
-        usedTangentialVelocity = velocityEstimator.estimateSpeed();
+        usedTangentialVelocity = velocityEstimator.avgWheelSpeed();
+        Robot.writeLog("usedVel: %.2f",30,usedTangentialVelocity);
         float lookaheadForSpeed = lookahead.getLookaheadForSpeed(usedTangentialVelocity);
 
         PathSegment current = path.getCurrent();
