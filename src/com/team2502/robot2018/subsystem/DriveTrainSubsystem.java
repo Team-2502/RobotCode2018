@@ -200,11 +200,12 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
 
     public void runMotorsVoltage(float leftWheel, float rightWheel)
     {
-        runMotors(ControlMode.PercentOutput,leftWheel,rightWheel);
+        runMotors(ControlMode.PercentOutput, leftWheel, rightWheel);
     }
 
     /**
      * Uses fps
+     *
      * @param leftWheel
      * @param rightWheel
      */
@@ -212,13 +213,13 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     {
         float left = fakeToRealEncUnits(leftWheel * Constants.FPS_TO_EVEL_DT);
         float right = fakeToRealEncUnits(rightWheel * Constants.FPS_TO_EVEL_DT);
-        Robot.writeLog("left: %.2f, right: %.2f",1,left,right);
+        Robot.writeLog("left: %.2f, right: %.2f", 1, left, right);
         runMotors(ControlMode.Velocity, left, right);
     }
 
     public void runMotorsRawVelocity(float leftWheel, float rightWheel)
     {
-        runMotors(ControlMode.Velocity,leftWheel,rightWheel);
+        runMotors(ControlMode.Velocity, leftWheel, rightWheel);
     }
 
     /**
@@ -336,12 +337,12 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
      */
     public float fakeToRealWheelRev(float wheelRev)
     {
-        return Robot.TRANSMISSION_SOLENOID.isHigh() ? wheelRev/Constants.WHEEL_REV_TO_ENC_REV_HIGH : wheelRev/Constants.WHEEL_REV_TO_ENC_REV_LOW;
+        return Robot.TRANSMISSION_SOLENOID.isHigh() ? wheelRev / Constants.WHEEL_REV_TO_ENC_REV_HIGH : wheelRev / Constants.WHEEL_REV_TO_ENC_REV_LOW;
     }
 
     public float fakeToRealEncUnits(float rawUnits)
     {
-        return Robot.TRANSMISSION_SOLENOID.isHigh() ? rawUnits*Constants.WHEEL_REV_TO_ENC_REV_HIGH : rawUnits*Constants.WHEEL_REV_TO_ENC_REV_LOW;
+        return Robot.TRANSMISSION_SOLENOID.isHigh() ? rawUnits * Constants.WHEEL_REV_TO_ENC_REV_HIGH : rawUnits * Constants.WHEEL_REV_TO_ENC_REV_LOW;
     }
 
     public float getRightVel() { return fakeToRealWheelRev(getRightRawVel() * Constants.FAKE_EVEL_TO_FPS_DT); }

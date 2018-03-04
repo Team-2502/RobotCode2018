@@ -119,7 +119,7 @@ public final class MathUtils
     { return Math.abs(y - x) < 1.0E-5F; }
 
     public static boolean epsilonEquals(ImmutableVector2f vecA, ImmutableVector2f vecB)
-    { return epsilonEquals(vecA.x,vecB.x) && epsilonEquals(vecA.y,vecB.y); }
+    { return epsilonEquals(vecA.x, vecB.x) && epsilonEquals(vecA.y, vecB.y); }
 
     /**
      * Checks if two numbers are equal while accounting for

@@ -11,8 +11,8 @@ public class RobotLocalizationThread extends Thread implements ITranslationalLoc
     private final ITranslationalVelocityEstimator velocityEstimator;
     private final ITranslationalLocationEstimator locationEstimator;
     private final long msPeriod;
-    private float heading, leftWheelSpeed, rightWheelSpeed,speed;
-    private ImmutableVector2f location,velocity;
+    private float heading, leftWheelSpeed, rightWheelSpeed, speed;
+    private ImmutableVector2f location, velocity;
 
     public RobotLocalizationThread(IRotationalLocationEstimator rotEstimator,
                                    ITranslationalVelocityEstimator velocityEstimator, ITranslationalLocationEstimator locationEstimator, long msPeriod)
@@ -33,7 +33,7 @@ public class RobotLocalizationThread extends Thread implements ITranslationalLoc
             leftWheelSpeed = velocityEstimator.getLeftWheelSpeed();
             rightWheelSpeed = velocityEstimator.getRightWheelSpeed();
             location = locationEstimator.estimateLocation();
-            System.out.printf("locationX %.2f, locationY %.2f",location.x,location.y);
+            System.out.printf("locationX %.2f, locationY %.2f", location.x, location.y);
             velocity = velocityEstimator.estimateAbsoluteVelocity();
             speed = velocityEstimator.estimateSpeed();
             try

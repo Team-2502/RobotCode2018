@@ -14,7 +14,6 @@ import com.team2502.robot2018.subsystem.solenoid.ActiveIntakeSolenoid;
 import com.team2502.robot2018.subsystem.solenoid.ButterflySolenoid;
 import com.team2502.robot2018.subsystem.solenoid.ClimberSolenoid;
 import com.team2502.robot2018.subsystem.solenoid.TransmissionSolenoid;
-
 import com.team2502.robot2018.utils.Files;
 import com.team2502.robot2018.utils.InterpolationMap;
 import edu.wpi.first.wpilibj.*;
@@ -47,17 +46,17 @@ public final class Robot extends IterativeRobot
     public static AHRS NAVX;
     public static SendableChooser<AutonStrategy> autonStrategySelector;
     private static List<String> logLines = new ArrayList<>();
-//    public static RobotLocalizationThread ROBOT_LOCALIZATION_THREAD;
+    //    public static RobotLocalizationThread ROBOT_LOCALIZATION_THREAD;
+    private static int LEVEL = 10;
 
     public static void write(String string)
     { LOG_OUTPUT.println(string); }
 
-    private static int LEVEL = 10;
     public static void writeLog(String message, int level, Object... objects)
     {
         if(level >= LEVEL)
         {
-            logLines.add("("+level+") "+String.format(message,objects));
+            logLines.add("(" + level + ") " + String.format(message, objects));
         }
     }
 

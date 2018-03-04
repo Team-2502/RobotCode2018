@@ -107,7 +107,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         if(!current.isEnd())
         {
             nextPathSegmentI = intersections.size();
-            intersections.addAll(getIntersections(path.getNext(),usedEstimatedLocation,lookAheadDistance));
+            intersections.addAll(getIntersections(path.getNext(), usedEstimatedLocation, lookAheadDistance));
         }
 
         // The last goal point we are comparing the intersections to. We will want to chose the one closestGoalPoint to last intersection
@@ -139,15 +139,15 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         // If the closestGoalPoint vector is on the next segment, set that segment as the current segment
         if(closestVectorI >= nextPathSegmentI)
         {
-            Robot.writeLog("intersections: "+intersections,20);
-            Robot.writeLog("closest goal point: (%.2f,%.2f), nextPathSegmentI: %d, closestVectorI: %d",20,closestGoalPoint.x,closestGoalPoint.y,nextPathSegmentI,closestVectorI);
+            Robot.writeLog("intersections: " + intersections, 20);
+            Robot.writeLog("closest goal point: (%.2f,%.2f), nextPathSegmentI: %d, closestVectorI: %d", 20, closestGoalPoint.x, closestGoalPoint.y, nextPathSegmentI, closestVectorI);
             moveNextSegment();
 
             path.moveNextSegment();
         }
 
         // closestGoalPoint is our new goal point
-        Robot.writeLog("closestGoalPoint: (%.2f,%.2f)",1,closestGoalPoint.x,closestGoalPoint.y);
+        Robot.writeLog("closestGoalPoint: (%.2f,%.2f)", 1, closestGoalPoint.x, closestGoalPoint.y);
         return closestGoalPoint;
     }
 
@@ -176,7 +176,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
 
         if(pathSegment.isEnd() && path.getCurrent() == pathSegment)
         {
-            if(distanceWaypointSq <= radius*radius)
+            if(distanceWaypointSq <= radius * radius)
             {
                 // We want to stop if the distance is within the desired amount
                 if(distanceWaypointSq < distanceStopSq)
@@ -210,7 +210,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         if(nextWaypoint != null)
         {
             ImmutableVector2f locationB = nextWaypoint.getLocation();
-            Robot.writeLog("next waypoint (%.2f,%.2f) ... lookahead: %.2f ... pos: (%.2f,%.2f)", 10, locationB.x,locationB.y,usedLookahead,usedEstimatedLocation.x,usedEstimatedLocation.y);
+            Robot.writeLog("next waypoint (%.2f,%.2f) ... lookahead: %.2f ... pos: (%.2f,%.2f)", 10, locationB.x, locationB.y, usedLookahead, usedEstimatedLocation.x, usedEstimatedLocation.y);
             nextWaypoint.executeCommands(this);
         }
 
@@ -218,7 +218,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
 
         lastUpdatedS = currentS;
 
-        Robot.writeLog("LAST WAYPOINT SPEED: " + lastWaypointSpeed,1);
+        Robot.writeLog("LAST WAYPOINT SPEED: " + lastWaypointSpeed, 1);
     }
 
     /**
@@ -246,11 +246,11 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         float closestPointPathDistance = path.getClosestPointPathDistance(closestPoint);
         ImmutableVector2f distanceClosestPoint = usedEstimatedLocation.sub(closestPoint);
 
-        float distanceAlongPath = closestPointPathDistance-current.getDistanceStart();
+        float distanceAlongPath = closestPointPathDistance - current.getDistanceStart();
 
         distanceLeft = pathSegmentLength - distanceAlongPath;
 
-        Robot.writeLog("distanceLeft: %.2f, pathSegmentLength: %.2f, distanceAlongPath: %.2f",1,distanceLeft,pathSegmentLength,distanceAlongPath);
+        Robot.writeLog("distanceLeft: %.2f, pathSegmentLength: %.2f, distanceAlongPath: %.2f", 1, distanceLeft, pathSegmentLength, distanceAlongPath);
         if(MathUtils.epsilonEquals(0F, distanceLeft))
         {
             brakeStage = true;
@@ -263,8 +263,8 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
 //        float startSpeed = lastWaypointSpeed;
         float finalSpeed = waypointEnd.isForward() ? waypointEnd.getMaxSpeed() : -waypointEnd.getMaxSpeed();
 
-        Robot.writeLog("distance left: " + distanceLeft,1);
-        Robot.writeLog("speedUsed: " + speedUsed,1);
+        Robot.writeLog("distance left: " + distanceLeft, 1);
+        Robot.writeLog("speedUsed: " + speedUsed, 1);
 
         float speed = Float.MAX_VALUE;
         for(PathSegment pathSegment : path.nextSegmentsInclusive(15))
@@ -274,7 +274,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
             {
                 float distanceTo = pathSegment.getDistanceEnd() - closestPointPathDistance;
                 float maxSpeed = getMaxSpeed(last.getMaxSpeed(), distanceTo, last.isForward(), waypointEnd.getMaxAccel(), waypointEnd.getMaxDeccel());
-                Robot.writeLog("maxSpeed: %.2f, distanceTo: %.2f",10,maxSpeed, distanceTo);
+                Robot.writeLog("maxSpeed: %.2f, distanceTo: %.2f", 10, maxSpeed, distanceTo);
 
                 if(maxSpeed < speed)
                 {
@@ -293,18 +293,18 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
             float dTime = (float) (currentS - lastUpdatedS);
             if(forward)
             {
-                Robot.writeLog("forward",1);
+                Robot.writeLog("forward", 1);
                 speedUsed = MathUtils.minF(finalSpeed, lastWaypointSpeed + dTime * waypointEnd.getMaxAccel());
             }
             else
             {
-                Robot.writeLog("not forward",1);
+                Robot.writeLog("not forward", 1);
                 speedUsed = MathUtils.maxF(finalSpeed, lastWaypointSpeed + dTime * waypointEnd.getMaxDeccel());
             }
-            Robot.writeLog("accel ... speedUsed: %.2f, dTime: %.2f, lastSpeed: %.2f, aMax %.2f",1,speedUsed,dTime,lastWaypointSpeed,waypointEnd.getMaxAccel());
+            Robot.writeLog("accel ... speedUsed: %.2f, dTime: %.2f, lastSpeed: %.2f, aMax %.2f", 1, speedUsed, dTime, lastWaypointSpeed, waypointEnd.getMaxAccel());
         }
 
-        Robot.writeLog("speed %.2f, speedUsed: %.2f" ,2,speed,speedUsed);
+        Robot.writeLog("speed %.2f, speedUsed: %.2f", 2, speed, speedUsed);
 
         float dCP = distanceClosestPoint.length();
 
@@ -334,7 +334,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
      */
     public void update()
     {
-        Robot.writeLog("update",1);
+        Robot.writeLog("update", 1);
         //TODO: fix crap code here
 
         if(finishedPath)
@@ -357,7 +357,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         usedHeading = rotEstimator.estimateHeading();
 
         usedLookahead = generateLookahead();
-        Robot.writeLog("generated Lookahead, %.2f",1,usedLookahead);
+        Robot.writeLog("generated Lookahead, %.2f", 1, usedLookahead);
         if(usedLookahead == Float.NaN)
         {
             commenceBreak();
@@ -614,7 +614,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
      */
     public boolean isFinishedPath()
     {
-        Robot.writeLog("isFinised? %b, %b", 1,finishedPath, !path.exists());
+        Robot.writeLog("isFinised? %b, %b", 1, finishedPath, !path.exists());
         return finishedPath || !path.exists();
     }
 

@@ -3,8 +3,8 @@ package com.team2502.robot2018.command.autonomous.groups;
 import com.team2502.robot2018.Constants;
 import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.command.autonomous.ingredients.*;
-import com.team2502.robot2018.command.teleop.ToggleIntakeCommand;
 import com.team2502.robot2018.command.teleop.QuickCommand;
+import com.team2502.robot2018.command.teleop.ToggleIntakeCommand;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 public class LeftCommandGroup extends CommandGroup

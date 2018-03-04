@@ -19,12 +19,12 @@ public class Path
     {
         pathSegments = new ArrayList<>();
         float distance = 0;
-        for(int i = 0; i < waypointList.size()-1; i++)
+        for(int i = 0; i < waypointList.size() - 1; i++)
         {
             Waypoint waypoint1 = waypointList.get(i);
-            Waypoint waypoint2 = waypointList.get(i+1);
+            Waypoint waypoint2 = waypointList.get(i + 1);
             float length = waypoint1.getLocation().distance(waypoint2.getLocation());
-            PathSegment pathSegment = new PathSegment(waypoint1,waypoint2, i == 0, i == waypointList.size()-2,distance,distance+=length,length);
+            PathSegment pathSegment = new PathSegment(waypoint1, waypoint2, i == 0, i == waypointList.size() - 2, distance, distance += length, length);
             pathSegments.add(pathSegment);
         }
         moveNextSegment();
@@ -35,7 +35,7 @@ public class Path
      */
     boolean moveNextSegment()
     {
-        if(segmentOnI < pathSegments.size()-1)
+        if(segmentOnI < pathSegments.size() - 1)
         {
             segmentOnI++;
             segmentOn = pathSegments.get(segmentOnI);
@@ -66,7 +66,7 @@ public class Path
     {
         PathSegment current = getCurrent();
         ImmutableVector2f firstLocation = current.getFirst().getLocation();
-        return current.getDistanceStart()+firstLocation.distance(closestPoint);
+        return current.getDistanceStart() + firstLocation.distance(closestPoint);
     }
 
     List<PathSegment> nextSegmentsInclusive(float maxAheadDistance)
@@ -77,7 +77,7 @@ public class Path
         for(int i = segmentOnI; i < pathSegments.size(); i++)
         {
             PathSegment pathSegment = pathSegments.get(i);
-            if(pathSegment.getDistanceStart()-distanceStart < maxAheadDistance)
+            if(pathSegment.getDistanceStart() - distanceStart < maxAheadDistance)
             {
                 segments.add(pathSegment);
             }
@@ -96,7 +96,7 @@ public class Path
 
     PathSegment getNext()
     {
-        return pathSegments.get(segmentOnI+1);
+        return pathSegments.get(segmentOnI + 1);
     }
 
     Waypoint getStart()
@@ -106,7 +106,7 @@ public class Path
 
     Waypoint getEnd()
     {
-        return pathSegments.get(pathSegments.size()-1).getLast();
+        return pathSegments.get(pathSegments.size() - 1).getLast();
     }
 
 }
