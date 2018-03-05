@@ -35,7 +35,7 @@ public class ElevatorAutonCommand extends TimedCommand
     @Override
     protected void execute()
     {
-        Robot.ELEVATOR.setElevatorPos(feet);
+        Robot.ELEVATOR.setElevatorPosSmooth(feet);
     }
 
     @Override

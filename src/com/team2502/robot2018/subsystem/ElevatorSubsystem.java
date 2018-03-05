@@ -46,6 +46,10 @@ public class ElevatorSubsystem extends Subsystem implements PIDTunable, Dashboar
         elevatorBottom.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute, 0, Constants.INIT_TIMEOUT);
         elevatorBottom.setSensorPhase(true);
 
+        elevatorBottom.configMotionCruiseVelocity((int) (Constants.ELEV_CRUISE_VEL_FPS * Constants.FPS_TO_EVEL_ELEV), Constants.INIT_TIMEOUT);
+        elevatorBottom.configMotionAcceleration((int) (Constants.ELEV_MAGIC_ACCEL_FPS2 * Constants.FPS_TO_EVEL_ELEV), Constants.INIT_TIMEOUT);
+
+
         pidTuner = new SendablePIDTuner(this, this);
 
         DashboardData.addUpdater(this);
@@ -99,10 +103,16 @@ public class ElevatorSubsystem extends Subsystem implements PIDTunable, Dashboar
         moveElevator(ControlMode.PercentOutput, speed);
     }
 
-    public void setElevatorPos(float feet)
+    public void setElevatorPos(double feet)
     {
         double epos = feet * Constants.FEET_TO_EPOS_ELEV;
         moveElevator(ControlMode.Position, epos);
+    }
+
+    public void setElevatorPosSmooth(double feet)
+    {
+        double epos = feet * Constants.FEET_TO_EPOS_ELEV;
+        moveElevator(ControlMode.MotionMagic, epos);
     }
 
     /**

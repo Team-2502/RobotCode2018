@@ -100,5 +100,7 @@ public class Constants
     @Undefined(safe = true)
     public static final double SHIFT_DOWN_THRESHOLD = RobotMap.UNDEFINED;
     public static final float RAW_UNIT_PER_ROT = 4096F;
+    public static final double ELEV_CRUISE_VEL_FPS = 5;
+    public static final double ELEV_MAGIC_ACCEL_FPS2 = 2;
     public static InterpolationMap ACCELERATION_FOR_ELEVATOR_HEIGHT;
 }
