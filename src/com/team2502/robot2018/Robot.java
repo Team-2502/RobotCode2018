@@ -101,13 +101,60 @@ public final class Robot extends IterativeRobot
      * @see TransmissionSolenoid
      */
     public static TransmissionSolenoid TRANSMISSION_SOLENOID;
+
+    /**
+     * The NavX on the robot. To fully recalibrate,
+     *
+     * <ul>
+     *     <li>Press and hold the CAL button on the NavX for 5(?) seconds</li>
+     *     <li>Press the reset button</li>
+     *     <li>Wait until the orange light on the NavX stops flashing</li>
+     * </ul>
+     *
+     * @see AHRS
+     */
     public static AHRS NAVX;
+
+    /**
+     * Select our autonomous strategy for the match
+     *
+     * @see AutonStrategy
+     */
     public static SendableChooser<AutonStrategy> autonStrategySelector;
+
+    /**
+     * A list of log messages that will get printed out once the robot is disabled
+     *
+     * @see Robot#writeLog(String, int, Object...)
+     */
     private static List<String> logLines = new ArrayList<>();
+
+    /**
+     * A continuously running command that localizes the robot
+     * 
+     * @see Robot#autonomousInit() 
+     * @see RobotLocalizationCommand
+     */
     public static RobotLocalizationCommand ROBOT_LOCALIZATION_COMMAND;
+
+    /**
+     * Specifies the minimum level of log message to print out
+     * 
+     * @see Robot#writeLog(String, int, Object...) 
+     */
     private static int LEVEL = 40;
 
 
+    /**
+     * Save a log message for later so that it can be printed out once disabled
+     * @param message A string that can be used with String.format
+     * @param level The level of the log message (how important it is)
+     * @param objects The objects to format the string with
+     * 
+     * @see Robot#disabledInit() 
+     * @see Robot#logLines
+     * @see String#format(String, Object...) 
+     */
     public static void writeLog(String message, int level, Object... objects)
     {
         if(level >= LEVEL)
@@ -117,14 +164,19 @@ public final class Robot extends IterativeRobot
     }
 
     /**
-     * This function is run when the robot is first started up and should be
+     * This method is run when the robot is first started up and should be
      * used for any initialization code.
      */
     @Override
     public void robotInit()
     {
+        // Initialize NavX
         NAVX = new AHRS(SPI.Port.kMXP);
+        
+        // Start pushing video from the camera to the DS
         CameraServer.getInstance().startAutomaticCapture();
+        
+        // Create the autonomous strategy selector
         autonStrategySelector = new SendableChooser<>();
         AutonStrategy[] values = AutonStrategy.values();
         for(int i = 0; i < values.length; i++)
@@ -139,11 +191,13 @@ public final class Robot extends IterativeRobot
                 autonStrategySelector.addObject(autonStrategy.getName(), autonStrategy);
             }
         }
-
+        
         SmartDashboard.putData("auto_strategy", autonStrategySelector);
 
+        // Make Donovan's logger
         Log.createLogger(true);
 
+        // Initialize all subsystems
         TRANSMISSION_SOLENOID = new TransmissionSolenoid();
         COMPRESSOR = new Compressor();
         DRIVE_TRAIN = new DriveTrainSubsystem();
@@ -153,9 +207,11 @@ public final class Robot extends IterativeRobot
         ACTIVE_INTAKE_SOLENOID = new ActiveIntakeSolenoid();
         CLIMBER_SOLENOID = new ClimberSolenoid();
         BUTTERFLY_SOLENOID = new ButterflySolenoid();
+        
+        // Initialize OI 
         OI.init();
-
-
+        
+        // Initialize the ACCELERATION_FOR_ELEVATOR_HEIGHT interpolation map. 
         Map<Double, Double> map = ImmutableMap.<Double, Double>builder()
                 .put(0D, 14D)
                 .build();
@@ -163,6 +219,7 @@ public final class Robot extends IterativeRobot
         Constants.ACCELERATION_FOR_ELEVATOR_HEIGHT = new InterpolationMap(map);
         AutoStartLocationSwitcher.putToSmartDashboard();
 
+        // Initialize our sendables
         SendableDriveTrain.init();
         DashboardData.addUpdater(SendableDriveTrain.INSTANCE);
 
@@ -188,7 +245,7 @@ public final class Robot extends IterativeRobot
     }
 
     /**
-     * This function is called once each time the robot enters Disabled mode.
+     * This method is called once each time the robot enters Disabled mode.
      * You can use it to reset any subsystem information you want to clear when
      * the robot is disabled.
      */
@@ -197,11 +254,12 @@ public final class Robot extends IterativeRobot
     {
         // Must lock climber when disabled
         // At the end of the match, we MUST lock the climber, which
-        // will prevent our robot from falling, thus dropping two other
-        // robots to the ground.
+        // will prevent our robot from falling. If it fell, we might drop two other
+        // robots to the ground (which would be bad)
 
         Robot.CLIMBER_SOLENOID.lockElevator();
 
+        // Print out the logs we saved up
         StringBuilder stringBuilder = new StringBuilder();
         Iterator<String> iterator = logLines.iterator();
 
@@ -218,6 +276,9 @@ public final class Robot extends IterativeRobot
 //        ROBOT_LOCALIZATION_THREAD.interrupt();
     }
 
+    /**
+     * Periodically runs while disabled
+     */
     public void disabledPeriodic()
     {
         Scheduler.getInstance().run();
@@ -239,13 +300,17 @@ public final class Robot extends IterativeRobot
      */
     public void autonomousInit()
     {
+        // Initialize estimators
         NavXLocationEstimator rotEstimator = new NavXLocationEstimator();
         EncoderDifferentialDriveLocationEstimator encoderDifferentialDriveLocationEstimator = new EncoderDifferentialDriveLocationEstimator(rotEstimator);
+        
+        // Begin running the localization routine
         ROBOT_LOCALIZATION_COMMAND = new RobotLocalizationCommand(rotEstimator, encoderDifferentialDriveLocationEstimator, encoderDifferentialDriveLocationEstimator);
 
 //        ROBOT_LOCALIZATION_COMMAND.execute();
         Scheduler.getInstance().add(ROBOT_LOCALIZATION_COMMAND);
 
+        // Ensure that the motors are in slave mode like they should be
         DRIVE_TRAIN.setAutonSettings();
 
 //        ROBOT_LOCALIZATION_THREAD.start();
@@ -253,13 +318,12 @@ public final class Robot extends IterativeRobot
         // 144 inches front = 12 ft
         // 53 inches left/right = 4.42 ft
 
-//        Scheduler.getInstance().add(new CenterCommandGroup());
-
+        // Drive the selected autonomous
         Scheduler.getInstance().add(AutoStartLocationSwitcher.getAutoInstance());
     }
 
     /**
-     * This function is called periodically during autonomous
+     * This method is called periodically during autonomous
      */
     public void autonomousPeriodic()
     {
@@ -267,13 +331,16 @@ public final class Robot extends IterativeRobot
         DashboardData.update();
     }
 
+    /**
+     * This method is run once when Teleop is enabled
+     */
     public void teleopInit()
     {
         DRIVE_TRAIN.setTeleopSettings();
     }
 
     /**
-     * This function is called periodically during operator control
+     * This method is called periodically during operator control
      */
     public void teleopPeriodic()
     {
@@ -282,7 +349,7 @@ public final class Robot extends IterativeRobot
     }
 
     /**
-     * This function is called periodically during test mode
+     * This method is called periodically during test mode
      */
     public void testPeriodic()
     {
