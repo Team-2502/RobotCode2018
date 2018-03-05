@@ -1,6 +1,5 @@
 package com.team2502.robot2018.command.teleop;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.team2502.robot2018.Robot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -59,7 +58,7 @@ public class CalibrateRobotCommand extends Command
             SmartDashboard.putNumber("enc_velocity", actualVel);
 
 //            System.out.println("run @ " + velocity);
-            Robot.DRIVE_TRAIN.runMotors(ControlMode.Velocity, (float) velocity, (float) velocity);
+            Robot.DRIVE_TRAIN.runMotorsRawVelocity((float) velocity, (float) velocity);
         }
     }
 

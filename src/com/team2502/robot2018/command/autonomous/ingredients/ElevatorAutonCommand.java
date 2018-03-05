@@ -11,10 +11,12 @@ public class ElevatorAutonCommand extends TimedCommand
 
     public ElevatorAutonCommand(double timeout)
     {
-        this(timeout,1);
+        this(timeout, 1);
     }
+
     /**
      * Positive voltage is up by default is up
+     *
      * @param timeout
      * @param feet
      */
@@ -22,6 +24,12 @@ public class ElevatorAutonCommand extends TimedCommand
     {
         super(timeout);
         this.feet = feet;
+    }
+
+    @Override
+    protected void initialize()
+    {
+        Robot.writeLog("ElevatorAutonCommand init", 10);
     }
 
     @Override

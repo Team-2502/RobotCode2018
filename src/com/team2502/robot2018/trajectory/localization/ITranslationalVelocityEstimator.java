@@ -15,9 +15,15 @@ public interface ITranslationalVelocityEstimator
 
     float estimateSpeed();
 
+    default float avgWheelSpeed()
+    {
+        return (Math.abs(getLeftWheelSpeed())+Math.abs(getRightWheelSpeed()))/2F;
+    }
+
     default ITranslationalVelocityEstimator getInvertedVelocity()
     {
-        return new ITranslationalVelocityEstimator() {
+        return new ITranslationalVelocityEstimator()
+        {
             @Override
             public ImmutableVector2f estimateAbsoluteVelocity()
             {
@@ -39,7 +45,7 @@ public interface ITranslationalVelocityEstimator
             @Override
             public float estimateSpeed()
             {
-                return (getLeftWheelSpeed()+getRightWheelSpeed())/2F;
+                return (getLeftWheelSpeed() + getRightWheelSpeed()) / 2F;
             }
         };
     }

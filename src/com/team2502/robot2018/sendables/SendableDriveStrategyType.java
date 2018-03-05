@@ -8,19 +8,15 @@ import java.util.Arrays;
 
 public class SendableDriveStrategyType extends ToggleSendable implements DashboardData.DashboardUpdater
 {
-
-    private final static SendableDriveStrategyType INSTANCE = new SendableDriveStrategyType();
-    private String name = "DriveStrategyType";
-    private String subsystem = "DriveTrainSubsystem";
+    public static final SendableDriveStrategyType INSTANCE = new SendableDriveStrategyType();
+    private String name;
+    private String subsystem;
 
     public SendableDriveStrategyType()
     {
         super(Arrays.asList(DriveTrainSubsystem.DriveStrategyType.values()), DriveTrainSubsystem.DriveStrategyType.values()[0]);
-    }
-
-    public static SendableDriveStrategyType getInstance()
-    {
-        return INSTANCE;
+        this.name = "DriveStrategyType";
+        this.subsystem = name;
     }
 
     @Override

@@ -16,6 +16,6 @@ public class PrintCommand extends InstantCommand
     @Override
     protected void initialize()
     {
-        ShuffleboardLog.getInstance().log(message);
+        ShuffleboardLog.log(message);
     }
 }

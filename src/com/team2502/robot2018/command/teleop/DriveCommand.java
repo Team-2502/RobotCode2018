@@ -1,14 +1,11 @@
 package com.team2502.robot2018.command.teleop;
 
-import com.kauailabs.navx.frc.AHRS;
 import com.team2502.robot2018.Robot;
-import com.team2502.robot2018.subsystem.DriveTrainSubsystem;
-import com.team2502.robot2018.subsystem.solenoid.TransmissionSolenoid;
 import com.team2502.robot2018.trajectory.localization.EncoderDifferentialDriveLocationEstimator;
+import com.team2502.robot2018.trajectory.localization.NavXLocationEstimator;
+import com.team2502.robot2018.utils.Stopwatch;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import org.joml.ImmutableVector2f;
-import org.joml.Vector2f;
 
 /**
  * Takes care of all Drivetrain related operations during Teleop, including automatic shifting
@@ -24,48 +21,27 @@ import org.joml.Vector2f;
  */
 public class DriveCommand extends Command
 {
-    private final ImmutableVector2f estimatedLocation = new ImmutableVector2f(0, 0);
-    public float heading = 0;
-    private AHRS navx;
-    private long lastTime = -1;
-    private float initAngleDegrees;
-    private EncoderDifferentialDriveLocationEstimator encoderLocationEstimator;
-    private ImmutableVector2f lastEstimatedLocation = new ImmutableVector2f();
+
+    private final Stopwatch stopwatch;
+    private EncoderDifferentialDriveLocationEstimator locationEstimator;
 
     public DriveCommand()
     {
+        stopwatch = new Stopwatch();
         requires(Robot.DRIVE_TRAIN);
-        navx = Robot.NAVX;
-        initAngleDegrees = (float) navx.getAngle();
-    }
-
-    private static float compare(Vector2f a, Vector2f b)
-    {
-        float xDiff = Math.abs(a.x - b.x);
-        float yDiff = Math.abs(a.y - b.y);
-        return (xDiff + yDiff) / 2.0F;
-    }
-
-    /**
-     * @return difference in seconds since last time the method was called
-     */
-    double getDTime()
-    {
-        long nanoTime = System.nanoTime();
-        double dTime;
-        dTime = lastTime == -1 ? 0 : nanoTime - lastTime;
-        lastTime = nanoTime;
-        return (dTime / 1E6);
     }
 
     @Override
     protected void initialize()
-    { encoderLocationEstimator = new EncoderDifferentialDriveLocationEstimator(); }
+    {
+        locationEstimator = new EncoderDifferentialDriveLocationEstimator(new NavXLocationEstimator());
+    }
 
     @Override
     protected void execute()
     {
-        ImmutableVector2f estimateLocation = encoderLocationEstimator.estimateLocation();
+        locationEstimator.estimateLocation();
+
         SmartDashboard.putBoolean("DT: AutoShifting Enabled?", !Robot.TRANSMISSION_SOLENOID.disabledAutoShifting);
         Robot.DRIVE_TRAIN.drive();
 

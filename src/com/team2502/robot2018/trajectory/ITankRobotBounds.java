@@ -23,7 +23,8 @@ public interface ITankRobotBounds
 
     default ITankRobotBounds getInverted()
     {
-        return new ITankRobotBounds() {
+        return new ITankRobotBounds()
+        {
             @Override
             public float getV_rMax()
             {

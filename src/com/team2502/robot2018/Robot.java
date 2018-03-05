@@ -14,12 +14,11 @@ import com.team2502.robot2018.subsystem.solenoid.ActiveIntakeSolenoid;
 import com.team2502.robot2018.subsystem.solenoid.ButterflySolenoid;
 import com.team2502.robot2018.subsystem.solenoid.ClimberSolenoid;
 import com.team2502.robot2018.subsystem.solenoid.TransmissionSolenoid;
+import com.team2502.robot2018.trajectory.localization.EncoderDifferentialDriveLocationEstimator;
+import com.team2502.robot2018.trajectory.localization.NavXLocationEstimator;
 import com.team2502.robot2018.utils.Files;
 import com.team2502.robot2018.utils.InterpolationMap;
-import edu.wpi.first.wpilibj.Compressor;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.IterativeRobot;
-import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -49,13 +48,18 @@ public final class Robot extends IterativeRobot
     public static AHRS NAVX;
     public static SendableChooser<AutonStrategy> autonStrategySelector;
     private static List<String> logLines = new ArrayList<>();
+    public static RobotLocalizationCommand ROBOT_LOCALIZATION_COMMAND;
+    private static int LEVEL = 40;
 
     public static void write(String string)
     { LOG_OUTPUT.println(string); }
 
-    public static void writeLog(String message)
+    public static void writeLog(String message, int level, Object... objects)
     {
-        logLines.add(message);
+        if(level >= LEVEL)
+        {
+            logLines.add("(" + level + ") " + String.format(message, objects));
+        }
     }
 
     /**
@@ -65,6 +69,8 @@ public final class Robot extends IterativeRobot
     @Override
     public void robotInit()
     {
+        NAVX = new AHRS(SPI.Port.kMXP);
+        CameraServer.getInstance().startAutomaticCapture();
         autonStrategySelector = new SendableChooser<>();
         AutonStrategy[] values = AutonStrategy.values();
         for(int i = 0; i < values.length; i++)
@@ -72,22 +78,22 @@ public final class Robot extends IterativeRobot
             AutonStrategy autonStrategy = values[i];
             if(i == 0)
             {
-                autonStrategySelector.addDefault(autonStrategy.getName(),autonStrategy);
+                autonStrategySelector.addDefault(autonStrategy.getName(), autonStrategy);
             }
             else
             {
-                autonStrategySelector.addObject(autonStrategy.getName(),autonStrategy);
+                autonStrategySelector.addObject(autonStrategy.getName(), autonStrategy);
             }
         }
 
-        SmartDashboard.putData("auto_strategy",autonStrategySelector);
+        SmartDashboard.putData("auto_strategy", autonStrategySelector);
 
         Log.createLogger(true);
 
         TRANSMISSION_SOLENOID = new TransmissionSolenoid();
         COMPRESSOR = new Compressor();
         DRIVE_TRAIN = new DriveTrainSubsystem();
-        NAVX = new AHRS(SPI.Port.kMXP);
+
         ACTIVE_INTAKE = new ActiveIntakeSubsystem();
         ELEVATOR = new ElevatorSubsystem();
         ACTIVE_INTAKE_SOLENOID = new ActiveIntakeSolenoid();
@@ -96,23 +102,23 @@ public final class Robot extends IterativeRobot
         OI.init();
 
 
-        Map<Double, Double> map = ImmutableMap.<Double,Double>builder()
-                                                         .put(0D, 14D)
-                                                         .build();
+        Map<Double, Double> map = ImmutableMap.<Double, Double>builder()
+                .put(0D, 14D)
+                .build();
 
         Constants.ACCELERATION_FOR_ELEVATOR_HEIGHT = new InterpolationMap(map);
         AutoStartLocationSwitcher.putToSmartDashboard();
 
         SendableDriveTrain.init();
-        DashboardData.addUpdater(SendableDriveTrain.getInstance());
+        DashboardData.addUpdater(SendableDriveTrain.INSTANCE);
 
-        DashboardData.addUpdater(SendableDriveStrategyType.getInstance());
+        DashboardData.addUpdater(SendableDriveStrategyType.INSTANCE);
 
-        SendableVersioning.getInstance().init();
-        SmartDashboard.putData(SendableVersioning.getInstance());
+        SendableVersioning.INSTANCE.init();
+        SmartDashboard.putData(SendableVersioning.INSTANCE);
 
         SendableNavX.init();
-        DashboardData.addUpdater(SendableNavX.getInstance());
+        DashboardData.addUpdater(SendableNavX.INSTANCE);
 
         DashboardData.addUpdater(() -> {
             Robot.CAL_VELOCITY = SmartDashboard.getNumber("calibration_velocity", 0);
@@ -154,6 +160,8 @@ public final class Robot extends IterativeRobot
             iterator.remove();
         }
         System.out.println(stringBuilder.toString());
+
+//        ROBOT_LOCALIZATION_THREAD.interrupt();
     }
 
     public void disabledPeriodic()
@@ -177,7 +185,16 @@ public final class Robot extends IterativeRobot
      */
     public void autonomousInit()
     {
+        NavXLocationEstimator rotEstimator = new NavXLocationEstimator();
+        EncoderDifferentialDriveLocationEstimator encoderDifferentialDriveLocationEstimator = new EncoderDifferentialDriveLocationEstimator(rotEstimator);
+        ROBOT_LOCALIZATION_COMMAND = new RobotLocalizationCommand(rotEstimator, encoderDifferentialDriveLocationEstimator, encoderDifferentialDriveLocationEstimator);
+
+//        ROBOT_LOCALIZATION_COMMAND.execute();
+        Scheduler.getInstance().add(ROBOT_LOCALIZATION_COMMAND);
+
         DRIVE_TRAIN.setAutonSettings();
+
+//        ROBOT_LOCALIZATION_THREAD.start();
 
         // 144 inches front = 12 ft
         // 53 inches left/right = 4.42 ft

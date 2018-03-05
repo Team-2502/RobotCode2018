@@ -37,6 +37,8 @@ public class RightCommandGroup extends CommandGroup
                     case SWITCH:
                         goSwitch();
                         break;
+                    case SWITCH_SCALE:
+                        break;
                 }
                 break;
 
@@ -48,7 +50,7 @@ public class RightCommandGroup extends CommandGroup
     {
         addSequential(new PurePursuitCommand(Paths.Right.rightSwitch));
         addSequential(new ElevatorAutonCommand(.8F, Constants.SWITCH_ELEV_HEIGHT_FT));
-        addSequential(new ActiveIntakeMove(0.35, 1));
+        addSequential(new ActiveIntakeRotate(0.35, 1));
 
         emitCube();
     }
@@ -56,7 +58,7 @@ public class RightCommandGroup extends CommandGroup
     private void goScaleRight()
     {
         // TODO: Move things into constants
-        addParallel(new ActiveIntakeMove(0.7, 0.5));
+        addParallel(new ActiveIntakeRotate(0.7, 0.5));
         addSequential(new PurePursuitCommand(Paths.Right.rightScale));
         addSequential(new WaitCommand(0.8F));
         addSequential(new RotateAutonStationary(-55));

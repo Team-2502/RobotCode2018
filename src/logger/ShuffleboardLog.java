@@ -7,23 +7,20 @@ import java.util.List;
 
 public class ShuffleboardLog
 {
-
-    private static ShuffleboardLog instance;
+    private static List<String> messages = new ArrayList<>(4);
 
     public static ShuffleboardLog getInstance()
     {
-        return instance == null ? instance = new ShuffleboardLog() : instance;
+        return null;
     }
 
-    private List<String> messages = new ArrayList<>(4);
-
-    private String get(int index)
+    private static String get(int index)
     {
         try { return messages.get(index); }
         catch(Exception e) { return ""; }
     }
 
-    public void log(String message)
+    public static void log(String message)
     {
 //        Log.info(message);
         messages.add(message);

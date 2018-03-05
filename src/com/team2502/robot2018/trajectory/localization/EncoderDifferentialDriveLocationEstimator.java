@@ -2,67 +2,44 @@ package com.team2502.robot2018.trajectory.localization;
 
 import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.utils.MathUtils;
+import com.team2502.robot2018.utils.Stopwatch;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.joml.ImmutableVector2f;
 
-public class EncoderDifferentialDriveLocationEstimator implements ITranslationalLocationEstimator, IRotationalLocationEstimator, ITranslationalVelocityEstimator
+public class EncoderDifferentialDriveLocationEstimator implements ITranslationalLocationEstimator, ITranslationalVelocityEstimator
 {
-    ImmutableVector2f location;
-    float encHeading = 0;
-    private long lastTime = -1;
-    private IRotationalLocationEstimator rotationalLocationEstimator;
+    private ImmutableVector2f location;
+    private IRotationalLocationEstimator rotEstimator;
+    private Stopwatch stopwatch;
 
-    public EncoderDifferentialDriveLocationEstimator()
+    public EncoderDifferentialDriveLocationEstimator(IRotationalLocationEstimator rotEstimator)
     {
         location = new ImmutableVector2f(0, 0);
-        this.rotationalLocationEstimator = () -> encHeading;
-    }
-
-    public EncoderDifferentialDriveLocationEstimator(IRotationalLocationEstimator rotationalLocationEstimator)
-    {
-        location = new ImmutableVector2f(0, 0);
-        this.rotationalLocationEstimator = rotationalLocationEstimator;
-    }
-
-    private float getDTime()
-    {
-        long nanoTime = System.nanoTime();
-        double dTime = lastTime == -1 ? 0 : nanoTime - lastTime;
-        lastTime = nanoTime;
-        return (float) (dTime / 1E9);
+        stopwatch = new Stopwatch();
+        this.rotEstimator = rotEstimator;
     }
 
     @Override
     public ImmutableVector2f estimateLocation()
     {
-        // How many time passed
-        float dTime = getDTime();
-
-        // talon inversed
+        float dTime = stopwatch.dTime();
         float leftVel = Robot.DRIVE_TRAIN.getLeftVel();
-
         float rightVel = Robot.DRIVE_TRAIN.getRightVel();
 
-        SmartDashboard.putNumber("encL", leftVel);
-        SmartDashboard.putNumber("encR", rightVel);
+        ImmutableVector2f dPos = MathUtils.Kinematics.getAbsoluteDPosLine(leftVel, rightVel, dTime, rotEstimator.estimateHeading());
 
-        ImmutableVector2f immutableVector2f = MathUtils.LinearAlgebra.rotate2D(new ImmutableVector2f(0, (leftVel + rightVel) * dTime / 2), estimateHeading());
+        location = location.add(dPos);
 
-        location = location.add(immutableVector2f);
+        SmartDashboard.putNumber("posX", location.x);
+        SmartDashboard.putNumber("posY", location.y);
 
         return location;
     }
 
     @Override
-    public float estimateHeading()
-    {
-        return rotationalLocationEstimator.estimateHeading();
-    }
-
-    @Override
     public ImmutableVector2f estimateAbsoluteVelocity()
     {
-        ImmutableVector2f vector = MathUtils.Geometry.getVector(estimateSpeed(), estimateHeading());
+        ImmutableVector2f vector = MathUtils.Geometry.getVector(estimateSpeed(), rotEstimator.estimateHeading());
         return vector;
     }
 
@@ -81,7 +58,7 @@ public class EncoderDifferentialDriveLocationEstimator implements ITranslational
     @Override
     public float estimateSpeed()
     {
-        return (getLeftWheelSpeed() + getRightWheelSpeed()) / 2F;
+        return MathUtils.Kinematics.getTangentialSpeed(getLeftWheelSpeed(), getRightWheelSpeed());
     }
 }
 

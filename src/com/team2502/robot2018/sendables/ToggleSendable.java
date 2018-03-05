@@ -7,7 +7,7 @@ import java.util.List;
 
 public abstract class ToggleSendable implements Sendable
 {
-    private final List<Nameable> modes;
+    public final List<Nameable> modes;
     private Nameable currentMode;
 
     /**
@@ -23,11 +23,6 @@ public abstract class ToggleSendable implements Sendable
     public Nameable getCurrentMode()
     {
         return currentMode;
-    }
-
-    public List<Nameable> getModes()
-    {
-        return modes;
     }
 
     @Override
