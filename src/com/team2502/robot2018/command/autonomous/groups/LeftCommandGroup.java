@@ -6,6 +6,7 @@ import com.team2502.robot2018.command.autonomous.ingredients.*;
 import com.team2502.robot2018.command.teleop.QuickCommand;
 import com.team2502.robot2018.command.teleop.ToggleIntakeCommand;
 import edu.wpi.first.wpilibj.command.CommandGroup;
+import edu.wpi.first.wpilibj.command.WaitCommand;
 
 public class LeftCommandGroup extends CommandGroup
 {
@@ -26,7 +27,6 @@ public class LeftCommandGroup extends CommandGroup
                     case SCALE:
                     {
                         goScaleLeft();
-                        //secondCubeLeft();
                         break;
                     }
                     case SWITCH:
@@ -34,10 +34,14 @@ public class LeftCommandGroup extends CommandGroup
                         goSwitch();
                         break;
                     }
+                    case SWITCH_SCALE: //TODO: make sure this is mirrored
+                        goScaleLeft();
+                        secondCubeLeft();
+                        break;
                 }
                 break;
             case "LR":
-                goSwitch();
+                goScaleRight();
                 break;
 
 
@@ -87,14 +91,17 @@ public class LeftCommandGroup extends CommandGroup
 
         emitCube();
 
+        addSequential(new DeadreckoningDrive(0.7F,-4F));
+        addSequential(new ElevatorAutonCommand(2.5, 0));
 
     }
 
     private void secondCubeLeft()
     {
+        addSequential(new WaitCommand(2));
         addParallel(new ActiveIntakeRotate(0.5F, 0.5));
 //        addParallel(new RotateAutonStationary(140));
-        addParallel(new PurePursuitCommand(Paths.Left.leftScaleToSwitch));
+        addSequential(new PurePursuitCommand(Paths.Left.leftScaleToSwitch));
 
         addSequential(new ElevatorAutonCommand(3F, -Constants.SCALE_ELEV_HEIGHT_FT));
         addSequential(new QuickCommand(Robot.ELEVATOR::calibrateEncoder));
@@ -124,11 +131,14 @@ public class LeftCommandGroup extends CommandGroup
 
         emitCube();
 
+        addSequential(new DeadreckoningDrive(0.7F,-4F));
+        addSequential(new ElevatorAutonCommand(2.5, 0));
+
     }
 
     private void emitCube()
     {
-        addSequential(new ShootCubeCommand(1, 1F));
+        addSequential(new ShootCubeCommand(1, .5F));
 
     }
 

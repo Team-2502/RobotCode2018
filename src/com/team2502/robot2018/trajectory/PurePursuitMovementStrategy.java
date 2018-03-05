@@ -116,8 +116,8 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         // if there is no last goal point, then just chose the first intersection
         if(toCompare == null)
         {
-            toCompare = path.getStart().getLocation();
-            absoluteGoalPoint = toCompare;
+            toCompare = usedEstimatedLocation;
+//            absoluteGoalPoint = toCompare;
         }
 
 
@@ -336,7 +336,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
      */
     public void update()
     {
-        Robot.writeLog("update", 1);
+        Robot.writeLog("update", 80);
         //TODO: fix crap code here
 
         if(finishedPath)
