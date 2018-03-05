@@ -1,5 +1,6 @@
 package com.team2502.robot2018.utils.srxmotionprofiling;
 
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.team2502.robot2018.utils.InterpolationMap;
 
 
@@ -77,6 +78,11 @@ public class Profile
 
             waypoints.add(point);
         }
+
+    }
+
+    public void streamPoints(WPI_TalonSRX... talons)
+    {
 
     }
 }

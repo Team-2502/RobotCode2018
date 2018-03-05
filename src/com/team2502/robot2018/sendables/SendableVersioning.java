@@ -10,27 +10,32 @@ import java.util.jar.Manifest;
 public class SendableVersioning implements Sendable
 {
 
-    private static SendableVersioning instance = new SendableVersioning();
+    public static final SendableVersioning INSTANCE = new SendableVersioning();
 
-    String name = "Versioning";
-    String branch = "unknown";
-    String commit = "unknown";
-    String version = "unknown";
-    String time = "unknown";
-    String blame = "unknown";
+    private String name;
+    private String branch;
+    private String commit;
+    private String version;
+    private String time;
+    private String blame;
 
-    private SendableVersioning() {}
+    private SendableVersioning()
+    {
+        this.name = "Versioning";
+        this.branch = "unknown";
+        this.commit = "unknown";
+        this.version = "unknown";
+        this.time = "unknown";
+        this.blame = "unknown";
+    }
 
-    public static SendableVersioning getInstance() {return instance;}
-
-    private void versioning()
+    public void init()
     {
         Class clazz = SendableVersioning.class;
         String className = clazz.getSimpleName() + ".class";
         String classPath = clazz.getResource(className).toString();
         if(!classPath.startsWith("jar")) { return; }
-        String manifestPath = classPath.substring(0, classPath.lastIndexOf("!") + 1) +
-                              "/META-INF/MANIFEST.MF";
+        String manifestPath = classPath.substring(0, classPath.lastIndexOf("!") + 1) + "/META-INF/MANIFEST.MF";
         Manifest manifest;
         try
         {
@@ -42,10 +47,8 @@ public class SendableVersioning implements Sendable
             time = attr.getValue("time");
             blame = attr.getValue("blame");
         }
-        catch(Exception ignored) {}
+        catch(Exception ignored) { }
     }
-
-    public void init() { versioning(); }
 
     @Override
     public void initSendable(SendableBuilder builder)
@@ -58,14 +61,18 @@ public class SendableVersioning implements Sendable
     }
 
     @Override
-    public String getSubsystem() { return name; }
+    public String getSubsystem()
+    { return name; }
 
     @Override
-    public void setSubsystem(String subsystem) { this.name = subsystem; }
+    public void setSubsystem(String subsystem)
+    { this.name = subsystem; }
 
     @Override
-    public String getName() { return name; }
+    public String getName()
+    { return name; }
 
     @Override
-    public void setName(String name) { this.name = name; }
+    public void setName(String name)
+    { this.name = name; }
 }

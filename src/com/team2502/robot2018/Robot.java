@@ -50,15 +50,19 @@ public final class Robot extends IterativeRobot
     public static SendableChooser<AutonStrategy> autonStrategySelector;
     private static List<String> logLines = new ArrayList<>();
 
-    public static RobotLocalizationThread ROBOT_LOCALIZATION_THREAD;
+    public static RobotLocalizationCommand ROBOT_LOCALIZATION_COMMAND;
+    private static int LEVEL = 40;
 
 
     public static void write(String string)
     { LOG_OUTPUT.println(string); }
 
-    public static void writeLog(String message, Object... objects)
+    public static void writeLog(String message, int level, Object... objects)
     {
-        logLines.add(String.format(message,objects));
+        if(level >= LEVEL)
+        {
+            logLines.add("(" + level + ") " + String.format(message, objects));
+        }
     }
 
     /**
@@ -95,11 +99,6 @@ public final class Robot extends IterativeRobot
         COMPRESSOR = new Compressor();
         DRIVE_TRAIN = new DriveTrainSubsystem();
 
-        NavXLocationEstimator rotEstimator = new NavXLocationEstimator();
-        EncoderDifferentialDriveLocationEstimator encoderDifferentialDriveLocationEstimator = new EncoderDifferentialDriveLocationEstimator(rotEstimator);
-        ROBOT_LOCALIZATION_THREAD = new RobotLocalizationThread(rotEstimator, encoderDifferentialDriveLocationEstimator, encoderDifferentialDriveLocationEstimator, 5);
-        ROBOT_LOCALIZATION_THREAD.start();
-
         ACTIVE_INTAKE = new ActiveIntakeSubsystem();
         ELEVATOR = new ElevatorSubsystem();
         ACTIVE_INTAKE_SOLENOID = new ActiveIntakeSolenoid();
@@ -116,15 +115,15 @@ public final class Robot extends IterativeRobot
         AutoStartLocationSwitcher.putToSmartDashboard();
 
         SendableDriveTrain.init();
-        DashboardData.addUpdater(SendableDriveTrain.getInstance());
+        DashboardData.addUpdater(SendableDriveTrain.INSTANCE);
 
-        DashboardData.addUpdater(SendableDriveStrategyType.getInstance());
+        DashboardData.addUpdater(SendableDriveStrategyType.INSTANCE);
 
-        SendableVersioning.getInstance().init();
-        SmartDashboard.putData(SendableVersioning.getInstance());
+        SendableVersioning.INSTANCE.init();
+        SmartDashboard.putData(SendableVersioning.INSTANCE);
 
         SendableNavX.init();
-        DashboardData.addUpdater(SendableNavX.getInstance());
+        DashboardData.addUpdater(SendableNavX.INSTANCE);
 
         DashboardData.addUpdater(() -> {
             Robot.CAL_VELOCITY = SmartDashboard.getNumber("calibration_velocity", 0);
@@ -167,7 +166,7 @@ public final class Robot extends IterativeRobot
         }
         System.out.println(stringBuilder.toString());
 
-        ROBOT_LOCALIZATION_THREAD.interrupt();
+//        ROBOT_LOCALIZATION_THREAD.interrupt();
     }
 
     public void disabledPeriodic()
@@ -191,7 +190,16 @@ public final class Robot extends IterativeRobot
      */
     public void autonomousInit()
     {
+        NavXLocationEstimator rotEstimator = new NavXLocationEstimator();
+        EncoderDifferentialDriveLocationEstimator encoderDifferentialDriveLocationEstimator = new EncoderDifferentialDriveLocationEstimator(rotEstimator);
+        ROBOT_LOCALIZATION_COMMAND = new RobotLocalizationCommand(rotEstimator, encoderDifferentialDriveLocationEstimator, encoderDifferentialDriveLocationEstimator);
+
+//        ROBOT_LOCALIZATION_COMMAND.execute();
+        Scheduler.getInstance().add(ROBOT_LOCALIZATION_COMMAND);
+
         DRIVE_TRAIN.setAutonSettings();
+
+//        ROBOT_LOCALIZATION_THREAD.start();
 
         // 144 inches front = 12 ft
         // 53 inches left/right = 4.42 ft

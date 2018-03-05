@@ -30,8 +30,8 @@ public class EncoderDifferentialDriveLocationEstimator implements ITranslational
 
         location = location.add(dPos);
 
-        SmartDashboard.putNumber("posX",location.x);
-        SmartDashboard.putNumber("posY",location.y);
+        SmartDashboard.putNumber("posX", location.x);
+        SmartDashboard.putNumber("posY", location.y);
 
         return location;
     }

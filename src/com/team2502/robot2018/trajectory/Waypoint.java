@@ -1,5 +1,6 @@
 package com.team2502.robot2018.trajectory;
 
+import com.team2502.robot2018.Robot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import org.joml.ImmutableVector2f;
@@ -11,18 +12,33 @@ public class Waypoint
     private final ImmutableVector2f location;
     private boolean forward = true;
     private Command[] commands;
+    private float maxAccel;
+    private float maxDeccel;
 
-    public Waypoint(ImmutableVector2f location, float maxSpeed)
+    public Waypoint(ImmutableVector2f location, float maxSpeed, float maxAccel, float maxDeccel)
     {
-        this(location, maxSpeed, true);
+        this(location, maxSpeed, maxAccel, maxDeccel, true);
     }
 
-    public Waypoint(ImmutableVector2f location, float maxSpeed, boolean forward, Command... commands)
+    public Waypoint(ImmutableVector2f location, float maxSpeed, float maxAccel, float maxDeccel, boolean forward, Command... commands)
     {
         this.location = location;
         this.maxSpeed = maxSpeed;
+        this.maxAccel = maxAccel;
         this.forward = forward;
         this.commands = commands;
+        this.maxDeccel = maxDeccel;
+        this.maxDeccel = maxDeccel;
+    }
+
+    public float getMaxDeccel()
+    {
+        return maxDeccel;
+    }
+
+    public float getMaxAccel()
+    {
+        return maxAccel;
     }
 
     public float getMaxSpeed()
@@ -49,6 +65,7 @@ public class Waypoint
     {
         for(Command command : commands)
         {
+            Robot.writeLog("scheduling command", 10);
             Scheduler.getInstance().add(command);
             if(command instanceof PurePursuitReciever)
             {

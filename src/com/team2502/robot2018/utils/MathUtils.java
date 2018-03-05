@@ -120,6 +120,9 @@ public final class MathUtils
     public static boolean epsilonEquals(final float x, final float y)
     { return Math.abs(y - x) < 1.0E-5F; }
 
+    public static boolean epsilonEquals(ImmutableVector2f vecA, ImmutableVector2f vecB)
+    { return epsilonEquals(vecA.x, vecB.x) && epsilonEquals(vecA.y, vecB.y); }
+
     /**
      * Checks if two numbers are equal while accounting for
      * the possibility of a floating point error.

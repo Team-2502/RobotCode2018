@@ -18,22 +18,15 @@ public class PrintResultsCommand extends InstantCommand
     @Override
     protected void execute()
     {
-        String results;
-
         int i = 0;
         Set<Map.Entry<String, Boolean>> entries = resultsMap.entrySet();
-        StringBuilder resultsBuilder = new StringBuilder("{");
+        StringBuilder sb = new StringBuilder("{");
         for(Map.Entry<String, Boolean> entry : entries)
         {
-            i++;
-            resultsBuilder.append(entry.getKey()).append(":").append(entry.getValue());
-            if(i < entries.size() - 1)
-            {
-                resultsBuilder.append(", ");
-            }
+            sb.append(entry.getKey()).append(":").append(entry.getValue());
+            if(++i < entries.size() - 1) { sb.append(", "); }
         }
-        resultsBuilder.append("}");
-        results = resultsBuilder.toString();
-        ShuffleboardLog.getInstance().log(results);
+        sb.append('}');
+        ShuffleboardLog.log(sb.toString());
     }
 }

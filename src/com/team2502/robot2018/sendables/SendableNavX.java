@@ -17,10 +17,10 @@ import java.util.function.DoubleSupplier;
  */
 public class SendableNavX implements Sendable, DashboardData.DashboardUpdater
 {
-    private static SendableNavX instance = new SendableNavX();
+    public static final SendableNavX INSTANCE = new SendableNavX();
 
-    DoubleSupplier getAngle;
-    DoubleConsumer takeAngle = (double value) -> {};
+    private DoubleSupplier getAngle;
+    private DoubleConsumer takeAngle;
     private String name;
 
     /**
@@ -29,30 +29,21 @@ public class SendableNavX implements Sendable, DashboardData.DashboardUpdater
     public SendableNavX()
     {
         this.getAngle = () -> 180 + Robot.NAVX.getYaw();
+        this.takeAngle = value -> { };
         this.name = "Sendable NavX";
     }
 
     public SendableNavX(DoubleSupplier getAngle, String name)
     {
         this.getAngle = getAngle;
+        this.takeAngle = value -> { };
         this.name = name;
     }
-
 
     /**
      * Activate all the static items
      */
-    public static void init()
-    {
-
-    }
-
-    /**
-     * Grab the one and only instance of SendableNavX
-     *
-     * @return the one and only instance of SendableNavX
-     */
-    public static SendableNavX getInstance() { return instance; }
+    public static void init() { }
 
     @Override
     public String getName()
@@ -64,7 +55,6 @@ public class SendableNavX implements Sendable, DashboardData.DashboardUpdater
     public void setName(String name)
     {
         this.name = name;
-
     }
 
     @Override

@@ -17,39 +17,40 @@ public class Constants
     /**
      * How high the elevator must be in order to put a cube in the scale
      */
-    public static final float SCALE_ELEV_HEIGHT_FT = 7F;
+    public static final float SCALE_ELEV_HEIGHT_FT = 5.75F;
 
-
-    /*
-    Tweak
-     */
+    /* Tweak */
     public static final float INTAKE_SPEED_PERCENT_LIMIT = 0.1F;
     public static final float ELEVATOR_SPEED_PERCENT_LIMIT = 0.6F;
     public static final float MAX_ROT_DEG_PER_SEC = 30;
 
-    /*
-    Pure Pursuit
-     */
+    /* Pure Pursuit */
 
     // Currently the max percent ft/s that can be given to each to each wheel
-    public static final float VR_MAX = 10F;
-    public static final float VL_MAX = 10F;
-    public static final float VR_MIN = -10F;
-    public static final float VL_MIN = -10F;
+
+    // DO NOTHING
+//    @Deprecated
+//    public static final float VR_MAX = 16F;
+//    @Deprecated
+//    public static final float VL_MAX = 16F;
+//    @Deprecated
+//    public static final float VR_MIN = -16F;
+//    @Deprecated
+//    public static final float VL_MIN = -16F;
 
     // The max change in voltage per second (acceleration)
-    public static final float AR_MAX = 15F;
-    public static final float AL_MAX = 15F;
-    public static final float AR_MIN = -10F;
-    public static final float AL_MIN = -10F;
+//    public static final float AR_MAX = 4F;
+//    public static final float AL_MAX = 4F;
+//    public static final float AR_MIN = -4F;
+//    public static final float AL_MIN = -4F;
     // The lookahead distance (feet) for Pure Pursuit
-    public static final float LOOKAHEAD_MIN_DISTANCE_FT = 3F;
-    public static final float LOOKAHEAD_MAX_DISTANCE_FT = 5F;
+    public static final float LOOKAHEAD_MIN_DISTANCE_FT = 2F;
+    public static final float LOOKAHEAD_MAX_DISTANCE_FT = 5.5F;
     public static final float LOOKAHEAD_MIN_SPEED_FPS = 1F;
-    public static final float LOOKAHEAD_MAX_SPEED_FPS = 8F;
+    public static final float LOOKAHEAD_MAX_SPEED_FPS = 10F;
     public static final Lookahead LOOKAHEAD = new Lookahead(LOOKAHEAD_MIN_DISTANCE_FT, LOOKAHEAD_MAX_DISTANCE_FT,
                                                             LOOKAHEAD_MIN_SPEED_FPS, LOOKAHEAD_MAX_SPEED_FPS);
-    public static final float STOP_DIST_TOLERANCE_FT = 1F;
+    public static final float STOP_DIST_TOLERANCE_FT = 1.5F; //TODO: completely remove tolerance
     // TODO: figure out why wheel diameter has to be much smaller than it should be (normally 6)
     public static final float WHEEL_DIAMETER_INCH = 6F; // 3.6944444443F;
 
