@@ -7,3 +7,5 @@ All programmed autonomous paths work with 1 cube. Note: INVERSE PATHS HAVE NOT B
 We did test left -> right scale, left -> left scale, center -> left switch, center -> right switch.
 
 This is the last commit that has been tested on a field before Duluth.
+
+**BUG: paths not reflected properly!** https://github.com/Team-2502/RobotCode2018/commits/important-paths-reflect
