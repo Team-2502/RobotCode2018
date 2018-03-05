@@ -31,19 +31,75 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+
+/**
+ * Software manifestation of Daedalus. If you delete this class you're doing something wrong.
+ */
 public final class Robot extends IterativeRobot
 {
     public static double CAL_VELOCITY = 0D;
     public static String GAME_DATA = "...";
 
+    /**
+     * One and only instance of DriveTrainSubsystem. The transmission is in its own class.
+     *
+     * @see DriveTrainSubsystem
+     * @see TransmissionSolenoid
+     */
     public static DriveTrainSubsystem DRIVE_TRAIN;
+
+    /**
+     * One and only instance of Active Intake. The grabber solenoid is in its own class.
+     *
+     * @see ActiveIntakeSubsystem
+     * @see ActiveIntakeSolenoid
+     */
     public static ActiveIntakeSubsystem ACTIVE_INTAKE;
+
+    /**
+     * The compressor. It compresses air for us
+     *
+     * @see Compressor
+     */
     public static Compressor COMPRESSOR;
-    public static PrintWriter LOG_OUTPUT;
+
+    /**
+     * The elevator and climber. The climber solenoid is in its own class
+     *
+     * @see ElevatorSubsystem
+     * @see ClimberSolenoid
+     */
     public static ElevatorSubsystem ELEVATOR;
+
+    /**
+     * The grabber solenoid for the active intake
+     *
+     * @see ActiveIntakeSubsystem
+     * @see ActiveIntakeSolenoid
+     */
     public static ActiveIntakeSolenoid ACTIVE_INTAKE_SOLENOID;
+
+    /**
+     * The climber solenoid. When activated, the climber is engaged and the elevator cannot go up
+     *
+     * @see ClimberSolenoid
+     * @see ElevatorSubsystem
+     */
     public static ClimberSolenoid CLIMBER_SOLENOID;
+
+    /**
+     * The butterfly solenoid. When toggled, the butterfly will drop.
+     *
+     * @see ButterflySolenoid
+     */
     public static ButterflySolenoid BUTTERFLY_SOLENOID;
+
+    /**
+     * One and only instance of the Transmission Solenoid. The Drivetrain is in another class
+     *
+     * @see DriveTrainSubsystem
+     * @see TransmissionSolenoid
+     */
     public static TransmissionSolenoid TRANSMISSION_SOLENOID;
     public static AHRS NAVX;
     public static SendableChooser<AutonStrategy> autonStrategySelector;
@@ -51,8 +107,6 @@ public final class Robot extends IterativeRobot
     public static RobotLocalizationCommand ROBOT_LOCALIZATION_COMMAND;
     private static int LEVEL = 40;
 
-    public static void write(String string)
-    { LOG_OUTPUT.println(string); }
 
     public static void writeLog(String message, int level, Object... objects)
     {

@@ -36,6 +36,9 @@ public class EncoderDifferentialDriveLocationEstimator implements ITranslational
         return location;
     }
 
+    /**
+     * @return A unit vector pointing in the direction of our movement.
+     */
     @Override
     public ImmutableVector2f estimateAbsoluteVelocity()
     {

@@ -18,6 +18,9 @@ public class RobotMap
 
     private RobotMap() { }
 
+    /**
+     * Define Joystick ID's and button ID's
+     */
     public static final class Joystick
     {
         public static final int JOYSTICK_DRIVE_LEFT = 1;
@@ -26,6 +29,9 @@ public class RobotMap
 
         private Joystick() { }
 
+        /**
+         * Define Button ID's, which should be used in OI.java
+         */
         public static final class Button
         {
             public static final int TOGGLE_TRANSMISSION = 1;
@@ -61,11 +67,9 @@ public class RobotMap
         }
     }
 
-    public static final class Electrical
-    {
-        private Electrical() { }
-    }
-
+    /**
+     * Define Talon ID's
+     */
     public static final class Motor
     {
         /*                            Name - Talon ID - Log ID
@@ -95,6 +99,9 @@ public class RobotMap
         private Motor() { }
     }
 
+    /**
+     * Define file names for logging purposes
+     */
     public static final class Files
     {
         public static String[] NAMES = { "Right Pos", "Left Pos" };
@@ -104,6 +111,9 @@ public class RobotMap
         private Files() { }
     }
 
+    /**
+     * Define Solenoid ID's
+     */
     public class Solenoid
     {
         /*
