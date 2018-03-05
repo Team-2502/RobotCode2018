@@ -309,7 +309,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
 
         float usedLookahead = lookaheadForSpeed + dCP;
 
-        Robot.writeLog("usedVel: %.2f, usedLookahead %.2f",30,usedTangentialVelocity,usedLookahead);
+        Robot.writeLog("usedVel: %.2f, usedLookahead %.2f", 30, usedTangentialVelocity, usedLookahead);
         return usedLookahead;
     }
 

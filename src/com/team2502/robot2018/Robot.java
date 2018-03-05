@@ -47,8 +47,8 @@ public final class Robot extends IterativeRobot
     public static TransmissionSolenoid TRANSMISSION_SOLENOID;
     public static AHRS NAVX;
     public static SendableChooser<AutonStrategy> autonStrategySelector;
-    private static List<String> logLines = new ArrayList<>();
     public static RobotLocalizationCommand ROBOT_LOCALIZATION_COMMAND;
+    private static List<String> logLines = new ArrayList<>();
     private static int LEVEL = 40;
 
     public static void write(String string)

@@ -91,7 +91,7 @@ public class LeftCommandGroup extends CommandGroup
 
         emitCube();
 
-        addSequential(new DeadreckoningDrive(0.7F,-4F));
+        addSequential(new DeadreckoningDrive(0.7F, -4F));
         addSequential(new ElevatorAutonCommand(2.5, 0));
 
     }
@@ -131,7 +131,7 @@ public class LeftCommandGroup extends CommandGroup
 
         emitCube();
 
-        addSequential(new DeadreckoningDrive(0.7F,-4F));
+        addSequential(new DeadreckoningDrive(0.7F, -4F));
         addSequential(new ElevatorAutonCommand(2.5, 0));
 
     }

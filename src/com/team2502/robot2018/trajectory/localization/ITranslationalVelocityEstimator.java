@@ -17,7 +17,7 @@ public interface ITranslationalVelocityEstimator
 
     default float avgWheelSpeed()
     {
-        return (Math.abs(getLeftWheelSpeed())+Math.abs(getRightWheelSpeed()))/2F;
+        return (Math.abs(getLeftWheelSpeed()) + Math.abs(getRightWheelSpeed())) / 2F;
     }
 
     default ITranslationalVelocityEstimator getInvertedVelocity()

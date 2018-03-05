@@ -12,7 +12,7 @@ public class RobotLocalizationCommand extends Command implements ITranslationalL
     private final IRotationalLocationEstimator rotEstimator;
     private final ITranslationalVelocityEstimator velocityEstimator;
     private final ITranslationalLocationEstimator locationEstimator;
-//    private final long msPeriod;
+    //    private final long msPeriod;
     private float heading, leftWheelSpeed, rightWheelSpeed, speed;
     private ImmutableVector2f location, velocity;
 
