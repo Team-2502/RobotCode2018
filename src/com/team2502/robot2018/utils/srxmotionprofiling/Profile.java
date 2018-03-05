@@ -2,21 +2,36 @@ package com.team2502.robot2018.utils.srxmotionprofiling;
 
 import com.team2502.robot2018.utils.InterpolationMap;
 
+
 import java.security.InvalidParameterException;
-import java.util.Collection;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by 64009334 on 3/2/18.
  */
 public class Profile
 {
-    final double[][] waypoints;
+    final List<Map<Point, Double>> waypoints;
     final int numWaypoints;
 
+    /**
+     * Given a double-array-array, make a motion profile
+     * @param waypoints A double double array of waypoints as the provided Talon SRX Motion Profile Generator might generate
+     */
     public Profile(double[][] waypoints)
     {
-        this.waypoints = waypoints;
+        this.waypoints = new ArrayList<>();
+
+        for(double[] point : waypoints)
+        {
+            Map<Point, Double> new_point = new HashMap<>();
+            new_point.put(Point.POS, point[0]);
+            new_point.put(Point.VEL, point[1]);
+            new_point.put(Point.DT, point[2]);
+
+            this.waypoints.add(new_point);
+        }
+
         numWaypoints = waypoints.length;
     }
 
@@ -24,34 +39,43 @@ public class Profile
      * Make a new profile from a trapezoid and the interval between waypoints
      * @param velocity_trapezoid An interpolating map representing the trapezoid function for velocity, where the x-axis represents ms.
      * @param dt Interval (in ms) between waypoints
+     * @throws InvalidParameterException Only thrown if your velocity_trapezoid is not set up right
      */
     public Profile(InterpolationMap velocity_trapezoid, int dt) throws InvalidParameterException
     {
+        waypoints = new ArrayList<>();
 
         Set<Double> keySet = velocity_trapezoid.keySet();
-        Collection<Double> valueSet = velocity_trapezoid.values();
 
         if(keySet.size() < 3)
         {
             throw new InvalidParameterException("The interpolation must have at least 3 defined points for the velocity curve.");
         }
 
-        double lastTime = 0;
+        double finalTime = 0;
 
         for(double t : keySet)
         {
-            lastTime = Math.max(t, lastTime);
+            finalTime = Math.max(t, finalTime);
         }
 
-        this.numWaypoints = (int) lastTime / dt;
-
-        waypoints = new double[numWaypoints][3];
-
-        for(int i = 0; i < waypoints.length; i++)
+        if(velocity_trapezoid.get(finalTime) != 0)
         {
-            waypoints[i][0] = 0D;
-            waypoints[i][1] = velocity_trapezoid.get((double) dt * i);
-            waypoints[i][2] = dt;
+            throw new InvalidParameterException("Your motion profile does not slow down after speeding up; remember, it's a velocity profile that you're giving us.");
+        }
+
+        this.numWaypoints = (int) (finalTime / dt + 0.5D);
+
+        for(int i = 0; i < numWaypoints; i++)
+        {
+            double timeElapsed = (double) dt * i;
+            Map<Point, Double> point = new HashMap<>();
+
+            point.put(Point.POS, velocity_trapezoid.integrate(0, timeElapsed));
+            point.put(Point.VEL, velocity_trapezoid.get(timeElapsed));
+            point.put(Point.DT, (double) dt);
+
+            waypoints.add(point);
         }
 
     }
