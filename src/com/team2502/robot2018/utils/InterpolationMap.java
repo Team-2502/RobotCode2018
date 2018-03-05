@@ -191,6 +191,8 @@ public class InterpolationMap implements Map<Double, Double>, MathUtils.Integrab
 
     /**
      * Use if you know what you're doing. Does useful stuff like turn pos into vel or accel into vel
+     *
+     * Ensure a < b.
      * @param a Beginning of integration range
      * @param b End of integration range
      * @return Area under the "curve"
@@ -219,9 +221,16 @@ public class InterpolationMap implements Map<Double, Double>, MathUtils.Integrab
                 x1 = significantPoints.get(i - 1);
                 x2 = significantPoints.get(i);
 
-                lines.add(new MathUtils.Geometry.Line(new ImmutableVector2d(x1, get(x1)),
-                                                      new ImmutableVector2d(x2, get(x2))));
+                // front of line within range or back of line within range
+                if(x1 < b && x2 > a)
+                {
+                    x1 = Math.max(a, x1);
+                    x2 = Math.min(b, x2);
 
+                    // use "entire" line
+                    lines.add(new MathUtils.Geometry.Line(new ImmutableVector2d(x1, get(x1)),
+                                                          new ImmutableVector2d(x2, get(x2))));
+                }
             }
 
         }
