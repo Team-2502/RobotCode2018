@@ -36,7 +36,7 @@ public class RotateStationaryCommand extends TimedCommand implements TestResult
     protected void execute()
     {
         // rotate counterclockwise
-        Robot.DRIVE_TRAIN.runMotors(-0.5F, 0.5F);
+        Robot.DRIVE_TRAIN.runMotorsVoltage(-0.5F, 0.5F);
     }
 
     @Override

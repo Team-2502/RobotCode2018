@@ -5,6 +5,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import java.util.Map;
 
+/**
+ * A command which prompts the user (on Shuffleboard) whether what just happened was a success or failure.
+ * After this, it records if the test was a success to a given String -> Boolean map.
+ */
 public class PromptCommand extends Command
 {
 

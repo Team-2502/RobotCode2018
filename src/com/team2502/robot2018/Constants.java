@@ -26,23 +26,6 @@ public class Constants
 
     /* Pure Pursuit */
 
-    // Currently the max percent ft/s that can be given to each to each wheel
-
-    // DO NOTHING
-//    @Deprecated
-//    public static final float VR_MAX = 16F;
-//    @Deprecated
-//    public static final float VL_MAX = 16F;
-//    @Deprecated
-//    public static final float VR_MIN = -16F;
-//    @Deprecated
-//    public static final float VL_MIN = -16F;
-
-    // The max change in voltage per second (acceleration)
-//    public static final float AR_MAX = 4F;
-//    public static final float AL_MAX = 4F;
-//    public static final float AR_MIN = -4F;
-//    public static final float AL_MIN = -4F;
     // The lookahead distance (feet) for Pure Pursuit
     public static final float LOOKAHEAD_MIN_DISTANCE_FT = 2F;
     public static final float LOOKAHEAD_MAX_DISTANCE_FT = 5.5F;

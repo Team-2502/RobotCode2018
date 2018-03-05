@@ -84,6 +84,6 @@ public class RotateAutonStationary extends Command
 
     private void rotateCW()
     {
-        driveTrain.runMotors(wheelSpeed, -wheelSpeed);
+        driveTrain.runMotorsVelocity(wheelSpeed, -wheelSpeed);
     }
 }
