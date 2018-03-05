@@ -39,12 +39,22 @@ public class RightCommandGroup extends CommandGroup
                         goSwitch();
                         break;
                     case SWITCH_SCALE:
+                        goScaleRight();
+                        secondCubeRight();
                         break;
                 }
                 break;
 
         }
 
+    }
+
+    /**
+     * @deprecated should be tested on left side before mirroring on right side... tis a bit of a mess rn and might not
+     * mirror perfectly... we aren't doing this at Duluth anyway.
+     */
+    private void secondCubeRight()
+    {
     }
 
     private void goScaleLeft()
