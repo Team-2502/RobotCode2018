@@ -17,7 +17,8 @@ public class RightCommandGroup extends CommandGroup
         switch(AUTO_GAME_DATA)
         {
             case "LL":
-                crossLine();
+                System.out.println("Going cross country!");
+                goScaleLeft();
                 break;
 
             case "LR":
@@ -44,6 +45,18 @@ public class RightCommandGroup extends CommandGroup
 
         }
 
+    }
+
+    private void goScaleLeft()
+    {
+        addSequential(new PurePursuitCommand(Paths.Right.leftScale));
+
+        addParallel(new ActiveIntakeRotate(1F, -0.5));
+
+        emitCube();
+
+        addSequential(new DeadreckoningDrive(0.7F, -4F));
+        addSequential(new ElevatorAutonCommand(2.5, 0));
     }
 
     private void goSwitch()
@@ -75,7 +88,7 @@ public class RightCommandGroup extends CommandGroup
 
     private void emitCube()
     {
-        addSequential(new ShootCubeCommand(1));
+        addSequential(new ShootCubeCommand(1,.5));
 
     }
 }
