@@ -65,9 +65,9 @@ public class LeftCommandGroup extends CommandGroup
 
     private void goSwitch()
     {
-        addSequential(new PurePursuitCommand(Paths.Left.leftSwitch));
+        addParallel(new RaiseElevatorSwitch());
 
-        addSequential(new ElevatorAutonCommand(.8F, Constants.SWITCH_ELEV_HEIGHT_FT));
+        addSequential(new PurePursuitCommand(Paths.Left.leftSwitch));
 
         addSequential(new ActiveIntakeRotate(0.35, 1));
 
