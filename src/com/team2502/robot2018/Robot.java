@@ -183,6 +183,11 @@ public final class Robot extends IterativeRobot
      */
     public void autonomousInit()
     {
+        
+        String fileName = "/home/lvuser/FILES";
+        Files.setFileName(fileName);
+        Files.newFile(fileName);
+
         NavXLocationEstimator rotEstimator = new NavXLocationEstimator();
         EncoderDifferentialDriveLocationEstimator encoderDifferentialDriveLocationEstimator = new EncoderDifferentialDriveLocationEstimator(rotEstimator);
         ROBOT_LOCALIZATION_COMMAND = new RobotLocalizationCommand(rotEstimator, encoderDifferentialDriveLocationEstimator, encoderDifferentialDriveLocationEstimator);
@@ -243,10 +248,10 @@ public final class Robot extends IterativeRobot
         String fileName = "/home/lvuser/FILES";
         Files.setFileName(fileName);
 
-        if((System.currentTimeMillis() % 10000) == 0) { Files.newFile(fileName); }
+//        if((System.currentTimeMillis() % 10000) == 0) { Files.newFile(fileName); }
 
-        Files.setNameAndValue("Right Pos", DRIVE_TRAIN.getRightPos());
-        Files.setNameAndValue("Left Pos", DRIVE_TRAIN.getLeftPos());
+//        Files.setNameAndValue("Right Pos", DRIVE_TRAIN.getRightPos());
+//        Files.setNameAndValue("Left Pos", DRIVE_TRAIN.getLeftPos());
 //        Files.writeToFile();
 //        Files.s
     }
