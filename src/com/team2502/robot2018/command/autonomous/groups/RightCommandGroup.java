@@ -39,6 +39,9 @@ public class RightCommandGroup extends CommandGroup
                         break;
                     case SWITCH_SCALE:
                         break;
+                    case STRAIGHT:
+                        crossLine();
+                        break;
                 }
                 break;
 

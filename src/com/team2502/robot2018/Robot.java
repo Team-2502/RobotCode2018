@@ -211,6 +211,7 @@ public final class Robot extends IterativeRobot
     {
         Scheduler.getInstance().run();
         DashboardData.update();
+        Files.writeToFile();
     }
 
     public void teleopInit()
@@ -246,6 +247,7 @@ public final class Robot extends IterativeRobot
 
         Files.setNameAndValue("Right Pos", DRIVE_TRAIN.getRightPos());
         Files.setNameAndValue("Left Pos", DRIVE_TRAIN.getLeftPos());
-        Files.writeToFile();
+//        Files.writeToFile();
+//        Files.s
     }
 }

@@ -4,10 +4,12 @@ import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.trajectory.localization.IRotationalLocationEstimator;
 import com.team2502.robot2018.trajectory.localization.ITranslationalLocationEstimator;
 import com.team2502.robot2018.trajectory.localization.ITranslationalVelocityEstimator;
+import com.team2502.robot2018.utils.Files;
 import com.team2502.robot2018.utils.MathUtils;
 import logger.Log;
 import org.joml.ImmutableVector2f;
 
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -259,7 +261,6 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         // p1 = p0 + vt + 1/2at^2 ...
         // pathSegmentLength = distanceAlongPath + usedTangentialVelocity*t + 1/2 * maxAcceleration
 
-//        [float startSpeed = lastWaypointSpeed;
         float finalSpeed = waypointEnd.isForward() ? waypointEnd.getMaxSpeed() : -waypointEnd.getMaxSpeed();
 
         Robot.writeLog("distance left: " + distanceLeft, 1);
@@ -383,6 +384,18 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         Robot.writeLog("relativeGP: (%.2f,%.2f)", 30, relativeGoalPoint.x, relativeGoalPoint.y);
 
         wheelVelocities = calculateWheelVelocities();
+
+        Files.setNameAndValue("Wheel Velocity (planned) L", wheelVelocities.x);
+        Files.setNameAndValue("Wheel Velocity (planned) R", wheelVelocities.y);
+
+        Files.setNameAndValue("Relative Goal Point x", relativeGoalPoint.x);
+        Files.setNameAndValue("Relative Goal Point y", relativeGoalPoint.y);
+
+        Files.setNameAndValue("Abs Goal Point x", absoluteGoalPoint.x);
+        Files.setNameAndValue("Abs Goal Point y", absoluteGoalPoint.y);
+
+        Files.setNameAndValue("Est Loc x", usedEstimatedLocation.x);
+        Files.setNameAndValue("Abs Goal Point y", usedEstimatedLocation.y);
     }
 
     private void commenceBreak()

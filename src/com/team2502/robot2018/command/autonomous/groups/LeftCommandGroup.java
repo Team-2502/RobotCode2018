@@ -34,6 +34,9 @@ public class LeftCommandGroup extends CommandGroup
                         goSwitch();
                         break;
                     }
+                    case STRAIGHT:
+                        crossLine();
+                        break;
                 }
                 break;
             case "LR":
@@ -88,13 +91,8 @@ public class LeftCommandGroup extends CommandGroup
     private void secondCubeLeft()
     {
         addParallel(new ActiveIntakeRotate(0.5F, 0.5));
-<<<<<<< Updated upstream
-//        addParallel(new RotateAutonStationary(140));
-        addParallel(new PurePursuitCommand(Paths.Left.leftScaleToSwitch));
-=======
 
-        addSequential(new PurePursuitCommand(Paths.Left.leftScaleToSwitch));
->>>>>>> Stashed changes
+        addParallel(new PurePursuitCommand(Paths.Left.leftScaleToSwitch));
 
         addSequential(new ElevatorAutonCommand(3F, -Constants.SCALE_ELEV_HEIGHT_FT));
         addSequential(new QuickCommand(Robot.ELEVATOR::calibrateEncoder));

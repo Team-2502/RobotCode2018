@@ -41,7 +41,7 @@ public class Paths
                 new Waypoint(new ImmutableVector2f(0, 0), 0, 10, -10),
                 new Waypoint(new ImmutableVector2f(2F, 2.45F), 16, 10, -10),
                 new Waypoint(new ImmutableVector2f(4F, 4F), 16, 10, -10),
-                new Waypoint(new ImmutableVector2f(4F, 8.5F), 1F, 10, -10)
+                new Waypoint(new ImmutableVector2f(4F, 10F), 1F, 10, -10)
                                                                       );
 
         /**
@@ -49,9 +49,9 @@ public class Paths
          */
         public static final List<Waypoint> leftSwitch = Arrays.asList(
                 new Waypoint(new ImmutableVector2f(0, 0), 0, 5, -5),
-                new Waypoint(new ImmutableVector2f(-1.75F, 2.45F), 16, 5, -5),
-                new Waypoint(new ImmutableVector2f(-5.25F, 4), 16, 5, -5),
-                new Waypoint(new ImmutableVector2f(-5.25F, 9), 3F, 5, -5)
+                new Waypoint(new ImmutableVector2f(0, 2F), 16, 5, -5),
+                new Waypoint(new ImmutableVector2f(-4.5F, 4), 16, 5, -5),
+                new Waypoint(new ImmutableVector2f(-4.5F, 10), 1F, 5, -5)
                                                                      );
     }
 
