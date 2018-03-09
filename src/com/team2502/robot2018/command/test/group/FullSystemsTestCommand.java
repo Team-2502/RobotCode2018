@@ -19,6 +19,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Tests all robot systems
+ */
 public class FullSystemsTestCommand extends CommandGroup
 {
 

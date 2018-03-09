@@ -14,6 +14,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * The main logic behind Pure Pursuit
+ */
 public class PurePursuitMovementStrategy implements ITankMovementStrategy
 {
     /**
@@ -118,8 +121,8 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         // if there is no last goal point, then just chose the first intersection
         if(toCompare == null)
         {
-            toCompare = path.getStart().getLocation();
-            absoluteGoalPoint = toCompare;
+            toCompare = usedEstimatedLocation;
+//            absoluteGoalPoint = toCompare;
         }
 
 
@@ -301,7 +304,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
                 Robot.writeLog("not forward", 1);
                 speedUsed = MathUtils.maxF(finalSpeed, lastWaypointSpeed + dTime * waypointEnd.getMaxDeccel());
             }
-            Robot.writeLog("accel ... speedUsed: %.2f, dTime: %.2f, lastSpeed: %.2f, aMax %.2f", 1, speedUsed, dTime, lastWaypointSpeed, waypointEnd.getMaxAccel());
+            Robot.writeLog("accel ... speedUsed: %.2f, poll: %.2f, lastSpeed: %.2f, aMax %.2f", 1, speedUsed, dTime, lastWaypointSpeed, waypointEnd.getMaxAccel());
         }
 
         Robot.writeLog("speed %.2f, speedUsed: %.2f", 2, speed, speedUsed);
@@ -310,7 +313,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
 
         float usedLookahead = lookaheadForSpeed + dCP;
 
-        Robot.writeLog("usedVel: %.2f, usedLookahead %.2f",30,usedTangentialVelocity,usedLookahead);
+        Robot.writeLog("usedVel: %.2f, usedLookahead %.2f", 30, usedTangentialVelocity, usedLookahead);
         return usedLookahead;
     }
 
@@ -337,7 +340,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
      */
     public void update()
     {
-        Robot.writeLog("update", 1);
+        Robot.writeLog("update", 80);
         //TODO: fix crap code here
 
         if(finishedPath)

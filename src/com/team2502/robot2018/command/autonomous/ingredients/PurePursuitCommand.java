@@ -2,14 +2,10 @@ package com.team2502.robot2018.command.autonomous.ingredients;
 
 import com.team2502.robot2018.Constants;
 import com.team2502.robot2018.Robot;
-import com.team2502.robot2018.sendables.SendableNavX;
 import com.team2502.robot2018.trajectory.ITankRobotBounds;
 import com.team2502.robot2018.trajectory.Lookahead;
 import com.team2502.robot2018.trajectory.PurePursuitMovementStrategy;
 import com.team2502.robot2018.trajectory.Waypoint;
-import com.team2502.robot2018.trajectory.localization.EncoderDifferentialDriveLocationEstimator;
-import com.team2502.robot2018.trajectory.localization.NavXLocationEstimator;
-import com.team2502.robot2018.utils.MathUtils;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.joml.ImmutableVector2f;
@@ -19,10 +15,11 @@ import java.util.List;
 public class PurePursuitCommand extends Command
 {
     private final ITankRobotBounds tankRobot;
-//    private final EncoderDifferentialDriveLocationEstimator transLocEstimator;
-//    private final NavXLocationEstimator rotLocEstimator;
-//    private final SendableNavX sendableNavX;
+
     private PurePursuitMovementStrategy purePursuitMovementStrategy;
+    private List<Waypoint> waypoints;
+    private Lookahead lookahead;
+    private float stopDistance;
 
     public PurePursuitCommand(List<Waypoint> waypoints)
     {
@@ -31,6 +28,9 @@ public class PurePursuitCommand extends Command
 
     public PurePursuitCommand(List<Waypoint> waypoints, Lookahead lookahead, float stopDistance)
     {
+        this.waypoints = waypoints;
+        this.lookahead = lookahead;
+        this.stopDistance = stopDistance;
         requires(Robot.DRIVE_TRAIN);
 
         tankRobot = new ITankRobotBounds()
@@ -99,12 +99,13 @@ public class PurePursuitCommand extends Command
 //        transLocEstimator = new EncoderDifferentialDriveLocationEstimator(rotLocEstimator);
 //
 //        sendableNavX = new SendableNavX(() -> MathUtils.rad2Deg(-rotLocEstimator.estimateHeading()), "purePursuitHeading");
-        purePursuitMovementStrategy = new PurePursuitMovementStrategy(tankRobot, Robot.ROBOT_LOCALIZATION_COMMAND, Robot.ROBOT_LOCALIZATION_COMMAND, Robot.ROBOT_LOCALIZATION_COMMAND, waypoints, lookahead, stopDistance);
     }
 
     @Override
     protected void initialize()
     {
+        Robot.writeLog("init PP", 80);
+        purePursuitMovementStrategy = new PurePursuitMovementStrategy(tankRobot, Robot.ROBOT_LOCALIZATION_COMMAND, Robot.ROBOT_LOCALIZATION_COMMAND, Robot.ROBOT_LOCALIZATION_COMMAND, waypoints, lookahead, stopDistance);
         SmartDashboard.putBoolean("PPisClose", purePursuitMovementStrategy.isClose());
         SmartDashboard.putBoolean("PPisSuccess", purePursuitMovementStrategy.isWithinTolerences());
     }
@@ -113,8 +114,6 @@ public class PurePursuitCommand extends Command
     protected void execute()
     {
         purePursuitMovementStrategy.update();
-
-//        sendableNavX.updateDashboard();
 
         ImmutableVector2f usedEstimatedLocation = purePursuitMovementStrategy.getUsedEstimatedLocation();
 
@@ -129,10 +128,7 @@ public class PurePursuitCommand extends Command
         SmartDashboard.putNumber("PPwheelL", wheelVelocities.get(0));
         SmartDashboard.putNumber("PPwheelR", wheelVelocities.get(1));
 
-        float leftWheelVel = wheelL;
-        float rightWheelVel = wheelR;
-
-        Robot.DRIVE_TRAIN.runMotorsVelocity(leftWheelVel, rightWheelVel);
+        Robot.DRIVE_TRAIN.runMotorsVelocity(wheelL, wheelR);
     }
 
     @Override

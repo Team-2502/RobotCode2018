@@ -17,7 +17,8 @@ public class RightCommandGroup extends CommandGroup
         switch(AUTO_GAME_DATA)
         {
             case "LL":
-                crossLine();
+                System.out.println("Going cross country!");
+                goScaleLeft();
                 break;
 
             case "LR":
@@ -38,6 +39,8 @@ public class RightCommandGroup extends CommandGroup
                         goSwitch();
                         break;
                     case SWITCH_SCALE:
+                        goScaleRight();
+                        secondCubeRight();
                         break;
                     case STRAIGHT:
                         crossLine();
@@ -47,6 +50,26 @@ public class RightCommandGroup extends CommandGroup
 
         }
 
+    }
+
+    /**
+     * @deprecated should be tested on left side before mirroring on right side... tis a bit of a mess rn and might not
+     * mirror perfectly... we aren't doing this at Duluth anyway.
+     */
+    private void secondCubeRight()
+    {
+    }
+
+    private void goScaleLeft()
+    {
+        addSequential(new PurePursuitCommand(Paths.Right.leftScale));
+
+        addParallel(new ActiveIntakeRotate(1F, -0.5));
+
+        emitCube();
+
+        addSequential(new DeadreckoningDrive(0.7F, -4F));
+        addSequential(new ElevatorAutonCommand(2.5, 0));
     }
 
     private void goSwitch()
@@ -78,7 +101,7 @@ public class RightCommandGroup extends CommandGroup
 
     private void emitCube()
     {
-        addSequential(new ShootCubeCommand(1));
+        addSequential(new ShootCubeCommand(1,.5));
 
     }
 }

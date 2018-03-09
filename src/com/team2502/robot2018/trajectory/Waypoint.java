@@ -5,6 +5,10 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import org.joml.ImmutableVector2f;
 
+/**
+ * A human-entered waypoint that we want the robot to go to. Has parameters to set max speeds, acceleration and deceleration.
+ * Also commands can be activated when the Waypoint is reached.
+ */
 public class Waypoint
 {
 

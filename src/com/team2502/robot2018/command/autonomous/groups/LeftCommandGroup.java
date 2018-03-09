@@ -6,6 +6,7 @@ import com.team2502.robot2018.command.autonomous.ingredients.*;
 import com.team2502.robot2018.command.teleop.QuickCommand;
 import com.team2502.robot2018.command.teleop.ToggleIntakeCommand;
 import edu.wpi.first.wpilibj.command.CommandGroup;
+import edu.wpi.first.wpilibj.command.WaitCommand;
 
 public class LeftCommandGroup extends CommandGroup
 {
@@ -26,7 +27,6 @@ public class LeftCommandGroup extends CommandGroup
                     case SCALE:
                     {
                         goScaleLeft();
-                        //secondCubeLeft();
                         break;
                     }
                     case SWITCH:
@@ -40,7 +40,7 @@ public class LeftCommandGroup extends CommandGroup
                 }
                 break;
             case "LR":
-                goSwitch();
+                goScaleRight();
                 break;
 
 
@@ -85,11 +85,14 @@ public class LeftCommandGroup extends CommandGroup
 
         emitCube();
 
+        addSequential(new DeadreckoningDrive(0.7F, -4F));
+        addSequential(new ElevatorAutonCommand(2.5, 0));
 
     }
 
     private void secondCubeLeft()
     {
+        addSequential(new WaitCommand(2));
         addParallel(new ActiveIntakeRotate(0.5F, 0.5));
 
         addParallel(new PurePursuitCommand(Paths.Left.leftScaleToSwitch));
@@ -113,20 +116,18 @@ public class LeftCommandGroup extends CommandGroup
     {
         addSequential(new PurePursuitCommand(Paths.Left.rightScale));
 
-//        addSequential(new RaiseElevatorScale());
-
-//        addSequential(new RotateAutonStationary(-80, 5));
-
         addParallel(new ActiveIntakeRotate(1F, -0.5));
-//        addSequential(new DeadreckoningDrive(1F, 2.2F));
 
         emitCube();
+
+        addSequential(new DeadreckoningDrive(0.7F, -4F));
+        addSequential(new ElevatorAutonCommand(2.5, 0));
 
     }
 
     private void emitCube()
     {
-        addSequential(new ShootCubeCommand(1, 1F));
+        addSequential(new ShootCubeCommand(1, .5F));
 
     }
 
