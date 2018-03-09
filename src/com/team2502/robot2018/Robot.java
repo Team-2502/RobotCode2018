@@ -160,8 +160,6 @@ public final class Robot extends IterativeRobot
             iterator.remove();
         }
         System.out.println(stringBuilder.toString());
-
-//        ROBOT_LOCALIZATION_THREAD.interrupt();
     }
 
     public void disabledPeriodic()
@@ -194,6 +192,8 @@ public final class Robot extends IterativeRobot
 
         DRIVE_TRAIN.setAutonSettings();
 
+        ELEVATOR.calibrateEncoder();
+
 //        ROBOT_LOCALIZATION_THREAD.start();
 
         // 144 inches front = 12 ft
@@ -216,6 +216,7 @@ public final class Robot extends IterativeRobot
     public void teleopInit()
     {
         DRIVE_TRAIN.setTeleopSettings();
+        ELEVATOR.calibrateEncoder();
     }
 
     /**

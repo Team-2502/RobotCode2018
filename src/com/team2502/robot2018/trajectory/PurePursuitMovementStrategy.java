@@ -20,7 +20,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
 
     // The curvature at which we should use lines as approximation instead of arcs
     private static final float THRESHOLD_CURVATURE = 0.001F;
-    public final Path path;
+    private final Path path;
     private final IRotationalLocationEstimator rotEstimator;
     private final float distanceStopSq;
     private final Lookahead lookahead;
@@ -259,7 +259,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         // p1 = p0 + vt + 1/2at^2 ...
         // pathSegmentLength = distanceAlongPath + usedTangentialVelocity*t + 1/2 * maxAcceleration
 
-//        float startSpeed = lastWaypointSpeed;
+//        [float startSpeed = lastWaypointSpeed;
         float finalSpeed = waypointEnd.isForward() ? waypointEnd.getMaxSpeed() : -waypointEnd.getMaxSpeed();
 
         Robot.writeLog("distance left: " + distanceLeft, 1);

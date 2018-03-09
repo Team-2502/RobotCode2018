@@ -76,11 +76,6 @@ public class LeftCommandGroup extends CommandGroup
 
         addParallel(new ActiveIntakeRotate(1, 0.5));
         addSequential(new PurePursuitCommand(Paths.Left.leftScale));
-//        addSequential(new RaiseElevatorScale());
-
-//        addSequential(new NavXRotateCommand(40,3));
-
-//        addSequential(new DeadreckoningDrive(0.5F,0.5F));
 
         addSequential(new ToggleIntakeCommand());
         addSequential(new ActiveIntakeRotate(.25F, -0.5));
@@ -93,8 +88,13 @@ public class LeftCommandGroup extends CommandGroup
     private void secondCubeLeft()
     {
         addParallel(new ActiveIntakeRotate(0.5F, 0.5));
+<<<<<<< Updated upstream
 //        addParallel(new RotateAutonStationary(140));
         addParallel(new PurePursuitCommand(Paths.Left.leftScaleToSwitch));
+=======
+
+        addSequential(new PurePursuitCommand(Paths.Left.leftScaleToSwitch));
+>>>>>>> Stashed changes
 
         addSequential(new ElevatorAutonCommand(3F, -Constants.SCALE_ELEV_HEIGHT_FT));
         addSequential(new QuickCommand(Robot.ELEVATOR::calibrateEncoder));

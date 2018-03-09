@@ -8,8 +8,8 @@ public class RaiseElevatorSwitch extends CommandGroup
 {
     public RaiseElevatorSwitch()
     {
-        addSequential(new WaitCommand(1.5));
-        addParallel(new ElevatorAutonCommand(.8F, Constants.SWITCH_ELEV_HEIGHT_FT));
+        addSequential(new WaitCommand(0.5));
+        addParallel(new ElevatorAutonCommand(1.0F, Constants.SWITCH_ELEV_HEIGHT_FT));
 
     }
 }
