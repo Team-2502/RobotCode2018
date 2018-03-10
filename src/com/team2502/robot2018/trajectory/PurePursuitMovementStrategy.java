@@ -28,6 +28,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
     private final IRotationalLocationEstimator rotEstimator;
     private final Lookahead lookahead;
     private final ITranslationalVelocityEstimator velocityEstimator;
+    private final boolean driftAtEnd;
     private ITranslationalLocationEstimator translationalLocationEstimator;
     private ITankRobotBounds tankRobot;
     private boolean forward;
@@ -66,7 +67,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
      */
     public PurePursuitMovementStrategy(ITankRobotBounds tankRobot, ITranslationalLocationEstimator translationalLocationEstimator,
                                        IRotationalLocationEstimator rotEstimator, ITranslationalVelocityEstimator velocityEstimator,
-                                       List<Waypoint> waypoints, Lookahead lookahead)
+                                       List<Waypoint> waypoints, Lookahead lookahead, boolean driftAtEnd)
     {
         this.path = new Path(waypoints);
 
@@ -76,6 +77,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         this.rotEstimator = rotEstimator;
         this.lookahead = lookahead;
         this.velocityEstimator = velocityEstimator;
+        this.driftAtEnd = driftAtEnd;
     }
 
     /**
@@ -253,8 +255,16 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         Robot.writeLog("distanceLeft: %.2f, pathSegmentLength: %.2f, distanceAlongPath: %.2f", 1, distanceLeft, pathSegmentLength, distanceAlongPath);
         if(distanceLeft <= 0 && current.isEnd())
         {
-            Robot.writeLog("Commencing brake (getLookahead())",100);
-            brakeStage = true;
+            if(driftAtEnd)
+            {
+                Robot.writeLog("Commencing drift",100);
+                finishedPath = true;
+            }
+            else
+            {
+                Robot.writeLog("Commencing brake (getLookahead())",100);
+                brakeStage = true;
+            }
             return Float.NaN;
         }
 
