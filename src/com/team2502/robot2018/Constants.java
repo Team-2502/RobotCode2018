@@ -33,9 +33,8 @@ public class Constants
     public static final float LOOKAHEAD_MAX_SPEED_FPS = 10F;
     public static final Lookahead LOOKAHEAD = new Lookahead(LOOKAHEAD_MIN_DISTANCE_FT, LOOKAHEAD_MAX_DISTANCE_FT,
                                                             LOOKAHEAD_MIN_SPEED_FPS, LOOKAHEAD_MAX_SPEED_FPS);
-//    public static final float STOP_DIST_TOLERANCE_FT = 1.5F; //TODO: completely remove tolerance
-    // TODO: figure out why wheel diameter has to be much smaller than it should be (normally 6)
-    public static final float WHEEL_DIAMETER_INCH = 6F; // 3.6944444443F;
+
+    public static final float WHEEL_DIAMETER_INCH = 6F;
 
     public static final float WHEEL_REV_TO_ENC_REV_LOW = 4.285F;
     public static final float WHEEL_REV_TO_ENC_REV_HIGH = 2.083F;

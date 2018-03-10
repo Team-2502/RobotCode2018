@@ -14,19 +14,21 @@ import java.util.List;
 
 public class PurePursuitCommand extends Command
 {
-    private final ITankRobotBounds tankRobot;
+    private ITankRobotBounds tankRobot;
 
     private PurePursuitMovementStrategy purePursuitMovementStrategy;
     private List<Waypoint> waypoints;
     private Lookahead lookahead;
+    private boolean drift;
 
-    public PurePursuitCommand(List<Waypoint> waypoints)
+    public PurePursuitCommand(List<Waypoint> waypoints, boolean drift)
     {
-        this(waypoints, Constants.LOOKAHEAD);
+        this(waypoints, Constants.LOOKAHEAD,drift);
     }
 
-    public PurePursuitCommand(List<Waypoint> waypoints, Lookahead lookahead)
+    public PurePursuitCommand(List<Waypoint> waypoints, Lookahead lookahead, boolean drift)
     {
+        this.drift = drift;
         this.waypoints = waypoints;
         this.lookahead = lookahead;
         requires(Robot.DRIVE_TRAIN);
@@ -103,7 +105,7 @@ public class PurePursuitCommand extends Command
     protected void initialize()
     {
         Robot.writeLog("init PP", 80);
-        purePursuitMovementStrategy = new PurePursuitMovementStrategy(tankRobot, Robot.ROBOT_LOCALIZATION_COMMAND, Robot.ROBOT_LOCALIZATION_COMMAND, Robot.ROBOT_LOCALIZATION_COMMAND, waypoints, lookahead);
+        purePursuitMovementStrategy = new PurePursuitMovementStrategy(tankRobot, Robot.ROBOT_LOCALIZATION_COMMAND, Robot.ROBOT_LOCALIZATION_COMMAND, Robot.ROBOT_LOCALIZATION_COMMAND, waypoints, lookahead,true);
         SmartDashboard.putBoolean("PPisClose", purePursuitMovementStrategy.isClose());
         SmartDashboard.putBoolean("PPisSuccess", purePursuitMovementStrategy.isWithinTolerences());
     }

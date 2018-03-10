@@ -445,7 +445,6 @@ public final class MathUtils
             return bounded(a, x, b) || bounded(b, x, a);
         }
 
-        // TODO: between and bounded are probably not the best names
         public static boolean bounded(final float a, final float x, final float b)
         {
             return a <= x && x <= b;
