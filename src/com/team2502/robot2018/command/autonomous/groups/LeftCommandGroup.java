@@ -19,40 +19,44 @@ public class LeftCommandGroup extends CommandGroup
 
         Robot.NAVX.reset();
 
-        switch(AUTO_GAME_DATA)
+        if(Robot.autonStrategySelector.getSelected() == AutonStrategy.STRAIGHT)
         {
-            case "LL":
-                switch(Robot.autonStrategySelector.getSelected())
-                {
-                    case SCALE:
+            crossLine();
+        }
+        else
+        {
+            switch(AUTO_GAME_DATA)
+            {
+                case "LL":
+                    switch(Robot.autonStrategySelector.getSelected())
                     {
-                        goScaleLeft();
-                        break;
+                        case SCALE:
+                        {
+                            goScaleLeft();
+                            break;
+                        }
+                        case SWITCH:
+                        {
+                            goSwitch();
+                            break;
+                        }
                     }
-                    case SWITCH:
-                    {
-                        goSwitch();
-                        break;
-                    }
-                    case STRAIGHT:
-                        crossLine();
-                        break;
-                }
-                break;
-            case "LR":
-                goScaleRight();
-                break;
+                    break;
+                case "LR":
+                    System.out.println("Going cross country");
+                    goScaleRight();
+                    break;
 
 
-            case "RL":
-                goScaleLeft();
-                break;
+                case "RL":
+                    goScaleLeft();
+                    break;
 
-            case "RR":
-                System.out.println("Going cross country!");
-//                crossLine();
-                goScaleRight();
-                break;
+                case "RR":
+                    System.out.println("Going cross country!");
+                    goScaleRight();
+                    break;
+            }
         }
 
 

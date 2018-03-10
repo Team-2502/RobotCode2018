@@ -14,42 +14,46 @@ public class RightCommandGroup extends CommandGroup
 
         String AUTO_GAME_DATA = Robot.GAME_DATA.substring(0, 2);
 
-        switch(AUTO_GAME_DATA)
+        if(Robot.autonStrategySelector.getSelected() == AutonStrategy.STRAIGHT)
         {
-            case "LL":
-                System.out.println("Going cross country!");
-                goScaleLeft();
-                break;
-
-            case "LR":
-                goScaleRight();
-                break;
-
-            case "RL":
-                goSwitch();
-                break;
-
-            case "RR":
-                switch(Robot.autonStrategySelector.getSelected())
-                {
-                    case SCALE:
-                        goScaleRight();
-                        break;
-                    case SWITCH:
-                        goSwitch();
-                        break;
-                    case SWITCH_SCALE:
-                        goScaleRight();
-                        secondCubeRight();
-                        break;
-                    case STRAIGHT:
-                        crossLine();
-                        break;
-                }
-                break;
-
+            crossLine();
         }
+        else
+        {
+            switch(AUTO_GAME_DATA)
+            {
+                case "LL":
+                    System.out.println("Going cross country!");
+                    goScaleLeft();
+                    break;
 
+                case "LR":
+                    goScaleRight();
+                    break;
+
+                case "RL":
+                    System.out.println("Going cross country!");
+                    goScaleLeft();
+                    break;
+
+                case "RR":
+                    switch(Robot.autonStrategySelector.getSelected())
+                    {
+                        case SCALE:
+                            goScaleRight();
+                            break;
+                        case SWITCH:
+                            goSwitch();
+                            break;
+                        case SWITCH_SCALE:
+                            goScaleRight();
+                            secondCubeRight();
+                            break;
+                    }
+                    break;
+
+            }
+        }
     }
 
     /**
