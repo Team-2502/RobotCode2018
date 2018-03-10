@@ -183,7 +183,7 @@ public final class Robot extends IterativeRobot
      */
     public void autonomousInit()
     {
-        
+
         String fileName = "/home/lvuser/FILES";
         Files.setFileName(fileName);
         Files.newFile(fileName);

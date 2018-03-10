@@ -9,13 +9,12 @@ public class DeadreckoningDrive extends TimedCommand
     private final float speedFPS;
 
     //TODO: add PID drive
+
     /**
-     *
+     * @param timeout  The time that the command will be run
+     * @param speedFPS The speed in feet per second that the motors should run at
      * @deprecated When possible use {@link PurePursuitCommand}
      * or in the future, a PID-Trapezoidal Motion Profiling drive distance command
-     * @param timeout The time that the command will be run
-     * @param speedFPS The speed in feet per second that the motors should run at
-     *
      */
     public DeadreckoningDrive(double timeout, float speedFPS)
     {

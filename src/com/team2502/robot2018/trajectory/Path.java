@@ -7,10 +7,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *  A path is the conglomerate of several {@link PathSegment}s, which are in turn made from two {@link Waypoint}s.
- *  Thus, a Path is the overall Path that the robot will take formed by Waypoints.
- *  This class is very helpful when it comes to tracking which segment is currently on and getting the distance
- *  on the path at any point (taking arclength ... basically making path 1D).
+ * A path is the conglomerate of several {@link PathSegment}s, which are in turn made from two {@link Waypoint}s.
+ * Thus, a Path is the overall Path that the robot will take formed by Waypoints.
+ * This class is very helpful when it comes to tracking which segment is currently on and getting the distance
+ * on the path at any point (taking arclength ... basically making path 1D).
  */
 public class Path
 {

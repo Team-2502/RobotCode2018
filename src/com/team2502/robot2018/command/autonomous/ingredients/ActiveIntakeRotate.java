@@ -9,7 +9,6 @@ public class ActiveIntakeRotate extends TimedCommand
     private final double speed;
 
     /**
-     *
      * @param timeout
      * @param speed
      */

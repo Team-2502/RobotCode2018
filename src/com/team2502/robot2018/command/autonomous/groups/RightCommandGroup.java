@@ -101,7 +101,7 @@ public class RightCommandGroup extends CommandGroup
 
     private void emitCube()
     {
-        addSequential(new ShootCubeCommand(1,.5));
+        addSequential(new ShootCubeCommand(1, .5));
 
     }
 }

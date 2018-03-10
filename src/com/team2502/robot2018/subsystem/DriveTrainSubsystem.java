@@ -227,7 +227,6 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
      * <br>
      * Make sure to set the motors according to the control mode. In auton, it's position. In teleop, it's percent voltage.
      *
-     *
      * @param leftWheel  Units for the left side of drivetrain
      * @param rightWheel Units for the right side of drivetrain
      */

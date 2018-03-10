@@ -1,7 +1,6 @@
 package com.team2502.robot2018.command.autonomous.ingredients;
 
 import com.team2502.robot2018.Robot;
-import com.team2502.robot2018.subsystem.ElevatorSubsystem;
 import edu.wpi.first.wpilibj.command.TimedCommand;
 
 //TODO: Replace with encoder
