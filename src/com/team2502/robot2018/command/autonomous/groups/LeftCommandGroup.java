@@ -78,7 +78,7 @@ public class LeftCommandGroup extends CommandGroup
     {
 
         addParallel(new ActiveIntakeRotate(1, 0.5));
-        addSequential(new PurePursuitCommand(Paths.Left.leftScale,true));
+        addSequential(new PurePursuitCommand(Paths.Left.leftScale,false));
 
         addSequential(new ToggleIntakeCommand());
         addSequential(new ActiveIntakeRotate(.25F, -0.5));
@@ -114,7 +114,7 @@ public class LeftCommandGroup extends CommandGroup
 
     private void goScaleRight()
     {
-        addSequential(new PurePursuitCommand(Paths.Left.rightScale,true));
+        addSequential(new PurePursuitCommand(Paths.Left.rightScale,false));
 
         addParallel(new ActiveIntakeRotate(1F, -0.5));
 

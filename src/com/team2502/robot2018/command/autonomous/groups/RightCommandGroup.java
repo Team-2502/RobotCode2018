@@ -62,7 +62,7 @@ public class RightCommandGroup extends CommandGroup
 
     private void goScaleLeft()
     {
-        addSequential(new PurePursuitCommand(Paths.Right.leftScale,true));
+        addSequential(new PurePursuitCommand(Paths.Right.leftScale,false));
 
         addParallel(new ActiveIntakeRotate(1F, -0.5));
 
@@ -85,7 +85,7 @@ public class RightCommandGroup extends CommandGroup
     {
         // TODO: Move things into constants
         addParallel(new ActiveIntakeRotate(0.7, 0.5));
-        addSequential(new PurePursuitCommand(Paths.Right.rightScale,true));
+        addSequential(new PurePursuitCommand(Paths.Right.rightScale,false));
         addSequential(new WaitCommand(0.8F));
         addSequential(new RotateAutonStationary(-55));
         addSequential(new ElevatorAutonCommand(2.7F, Constants.SCALE_ELEV_HEIGHT_FT));
