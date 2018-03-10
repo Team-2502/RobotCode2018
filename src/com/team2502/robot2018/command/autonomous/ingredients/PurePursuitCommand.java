@@ -19,18 +19,16 @@ public class PurePursuitCommand extends Command
     private PurePursuitMovementStrategy purePursuitMovementStrategy;
     private List<Waypoint> waypoints;
     private Lookahead lookahead;
-    private float stopDistance;
 
     public PurePursuitCommand(List<Waypoint> waypoints)
     {
-        this(waypoints, Constants.LOOKAHEAD, Constants.STOP_DIST_TOLERANCE_FT);
+        this(waypoints, Constants.LOOKAHEAD);
     }
 
-    public PurePursuitCommand(List<Waypoint> waypoints, Lookahead lookahead, float stopDistance)
+    public PurePursuitCommand(List<Waypoint> waypoints, Lookahead lookahead)
     {
         this.waypoints = waypoints;
         this.lookahead = lookahead;
-        this.stopDistance = stopDistance;
         requires(Robot.DRIVE_TRAIN);
 
         tankRobot = new ITankRobotBounds()
@@ -105,7 +103,7 @@ public class PurePursuitCommand extends Command
     protected void initialize()
     {
         Robot.writeLog("init PP", 80);
-        purePursuitMovementStrategy = new PurePursuitMovementStrategy(tankRobot, Robot.ROBOT_LOCALIZATION_COMMAND, Robot.ROBOT_LOCALIZATION_COMMAND, Robot.ROBOT_LOCALIZATION_COMMAND, waypoints, lookahead, stopDistance);
+        purePursuitMovementStrategy = new PurePursuitMovementStrategy(tankRobot, Robot.ROBOT_LOCALIZATION_COMMAND, Robot.ROBOT_LOCALIZATION_COMMAND, Robot.ROBOT_LOCALIZATION_COMMAND, waypoints, lookahead);
         SmartDashboard.putBoolean("PPisClose", purePursuitMovementStrategy.isClose());
         SmartDashboard.putBoolean("PPisSuccess", purePursuitMovementStrategy.isWithinTolerences());
     }

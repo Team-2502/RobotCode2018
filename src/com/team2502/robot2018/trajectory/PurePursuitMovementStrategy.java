@@ -26,7 +26,6 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
     private static final float THRESHOLD_CURVATURE = 0.001F;
     private final Path path;
     private final IRotationalLocationEstimator rotEstimator;
-    private final float distanceStopSq;
     private final Lookahead lookahead;
     private final ITranslationalVelocityEstimator velocityEstimator;
     private ITranslationalLocationEstimator translationalLocationEstimator;
@@ -64,11 +63,10 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
      * @param rotEstimator                   An estimator for the heading of the robot
      * @param waypoints                      A list of waypoints for the robot to drive through
      * @param lookahead                      The lookahead distance for the pure pursuit algorithm
-     * @param distanceStop
      */
     public PurePursuitMovementStrategy(ITankRobotBounds tankRobot, ITranslationalLocationEstimator translationalLocationEstimator,
                                        IRotationalLocationEstimator rotEstimator, ITranslationalVelocityEstimator velocityEstimator,
-                                       List<Waypoint> waypoints, Lookahead lookahead, float distanceStop)
+                                       List<Waypoint> waypoints, Lookahead lookahead)
     {
         this.path = new Path(waypoints);
 
@@ -76,7 +74,6 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         this.translationalLocationEstimator = translationalLocationEstimator;
 
         this.rotEstimator = rotEstimator;
-        distanceStopSq = distanceStop * distanceStop;
         this.lookahead = lookahead;
         this.velocityEstimator = velocityEstimator;
     }
@@ -179,17 +176,17 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
 
         if(pathSegment.isEnd() && path.getCurrent() == pathSegment)
         {
-            if(distanceWaypointSq <= radius * radius)
-            {
-                // We want to stop if the distance is within the desired amount
-                if(distanceWaypointSq < distanceStopSq)
-                {
-                    withinTolerences = true;
-                    System.out.println("success: " + distanceWaypointSq);
-                    brakeStage = true;
-                    return null;
-                }
-            }
+//            if(distanceWaypointSq <= radius * radius)
+//            {
+//                // We want to stop if the distance is within the desired amount
+//                if(distanceWaypointSq < distanceStopSq)
+//                {
+//                    withinTolerences = true;
+//                    System.out.println("success: " + distanceWaypointSq);
+//                    brakeStage = true;
+//                    return null;
+//                }
+//            }
         }
 
         else
@@ -254,8 +251,9 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         distanceLeft = pathSegmentLength - distanceAlongPath;
 
         Robot.writeLog("distanceLeft: %.2f, pathSegmentLength: %.2f, distanceAlongPath: %.2f", 1, distanceLeft, pathSegmentLength, distanceAlongPath);
-        if(MathUtils.epsilonEquals(0F, distanceLeft))
+        if(distanceLeft <= 0 && current.isEnd())
         {
+            Robot.writeLog("Commencing brake (getLookahead())",100);
             brakeStage = true;
             return Float.NaN;
         }
