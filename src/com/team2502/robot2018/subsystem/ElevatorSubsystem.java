@@ -102,6 +102,7 @@ public class ElevatorSubsystem extends Subsystem implements PIDTunable, Dashboar
     public void setElevatorPos(float feet)
     {
         double epos = feet * Constants.FEET_TO_EPOS_ELEV;
+        System.out.println("epos target: "+epos);
         moveElevator(ControlMode.Position, epos);
     }
 
@@ -219,7 +220,9 @@ public class ElevatorSubsystem extends Subsystem implements PIDTunable, Dashboar
 
     public double getPos()
     {
-        return elevatorBottom.getSelectedSensorPosition(0);
+        int selectedSensorPosition = elevatorBottom.getSelectedSensorPosition(0);
+        System.out.println("epos real: "+selectedSensorPosition);
+        return selectedSensorPosition;
     }
 
     public void calibrateEncoder()
@@ -230,8 +233,8 @@ public class ElevatorSubsystem extends Subsystem implements PIDTunable, Dashboar
     @Override
     public void updateDashboard()
     {
-        SmartDashboard.putNumber("Elevator: Velocity (fps)", getVel());
-        SmartDashboard.putNumber("Elevator: Position (ft)", getPos());
+        SmartDashboard.putNumber("Elevator: Velocity (fps)", getVel() * Constants.EVEL_TO_FPS_ELEV);
+        SmartDashboard.putNumber("Elevator: Position (ft)", getPos() * Constants.EPOS_TO_FEET_ELEV);
 
         pidTuner.updateDashboard();
     }

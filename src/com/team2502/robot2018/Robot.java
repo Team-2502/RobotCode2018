@@ -47,8 +47,8 @@ public final class Robot extends IterativeRobot
     public static TransmissionSolenoid TRANSMISSION_SOLENOID;
     public static AHRS NAVX;
     public static SendableChooser<AutonStrategy> autonStrategySelector;
-    private static List<String> logLines = new ArrayList<>();
     public static RobotLocalizationCommand ROBOT_LOCALIZATION_COMMAND;
+    private static List<String> logLines = new ArrayList<>();
     private static int LEVEL = 40;
 
     public static void write(String string)
@@ -160,8 +160,6 @@ public final class Robot extends IterativeRobot
             iterator.remove();
         }
         System.out.println(stringBuilder.toString());
-
-//        ROBOT_LOCALIZATION_THREAD.interrupt();
     }
 
     public void disabledPeriodic()
@@ -185,6 +183,11 @@ public final class Robot extends IterativeRobot
      */
     public void autonomousInit()
     {
+        
+        String fileName = "/home/lvuser/FILES";
+        Files.setFileName(fileName);
+        Files.newFile(fileName);
+
         NavXLocationEstimator rotEstimator = new NavXLocationEstimator();
         EncoderDifferentialDriveLocationEstimator encoderDifferentialDriveLocationEstimator = new EncoderDifferentialDriveLocationEstimator(rotEstimator);
         ROBOT_LOCALIZATION_COMMAND = new RobotLocalizationCommand(rotEstimator, encoderDifferentialDriveLocationEstimator, encoderDifferentialDriveLocationEstimator);
@@ -193,6 +196,8 @@ public final class Robot extends IterativeRobot
         Scheduler.getInstance().add(ROBOT_LOCALIZATION_COMMAND);
 
         DRIVE_TRAIN.setAutonSettings();
+
+        ELEVATOR.calibrateEncoder();
 
 //        ROBOT_LOCALIZATION_THREAD.start();
 
@@ -211,11 +216,13 @@ public final class Robot extends IterativeRobot
     {
         Scheduler.getInstance().run();
         DashboardData.update();
+        Files.writeToFile();
     }
 
     public void teleopInit()
     {
         DRIVE_TRAIN.setTeleopSettings();
+        ELEVATOR.calibrateEncoder();
     }
 
     /**
@@ -241,10 +248,11 @@ public final class Robot extends IterativeRobot
         String fileName = "/home/lvuser/FILES";
         Files.setFileName(fileName);
 
-        if((System.currentTimeMillis() % 10000) == 0) { Files.newFile(fileName); }
+//        if((System.currentTimeMillis() % 10000) == 0) { Files.newFile(fileName); }
 
-        Files.setNameAndValue("Right Pos", DRIVE_TRAIN.getRightPos());
-        Files.setNameAndValue("Left Pos", DRIVE_TRAIN.getLeftPos());
-        Files.writeToFile();
+//        Files.setNameAndValue("Right Pos", DRIVE_TRAIN.getRightPos());
+//        Files.setNameAndValue("Left Pos", DRIVE_TRAIN.getLeftPos());
+//        Files.writeToFile();
+//        Files.s
     }
 }

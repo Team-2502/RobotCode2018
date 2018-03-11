@@ -2,14 +2,10 @@ package com.team2502.robot2018.command.autonomous.ingredients;
 
 import com.team2502.robot2018.Constants;
 import com.team2502.robot2018.Robot;
-import com.team2502.robot2018.sendables.SendableNavX;
 import com.team2502.robot2018.trajectory.ITankRobotBounds;
 import com.team2502.robot2018.trajectory.Lookahead;
 import com.team2502.robot2018.trajectory.PurePursuitMovementStrategy;
 import com.team2502.robot2018.trajectory.Waypoint;
-import com.team2502.robot2018.trajectory.localization.EncoderDifferentialDriveLocationEstimator;
-import com.team2502.robot2018.trajectory.localization.NavXLocationEstimator;
-import com.team2502.robot2018.utils.MathUtils;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.joml.ImmutableVector2f;

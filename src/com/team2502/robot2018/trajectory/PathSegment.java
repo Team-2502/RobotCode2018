@@ -1,6 +1,8 @@
 package com.team2502.robot2018.trajectory;
 
-// A 1D path segment
+/**
+ *  Makes segments created by two {@link Waypoint}s easier to work with in {@link Path}
+ */
 public class PathSegment
 {
     private final Waypoint first;
@@ -11,7 +13,7 @@ public class PathSegment
     private final float distanceStart;
     private final float distanceEnd;
 
-    public PathSegment(Waypoint first, Waypoint last, boolean start, boolean end, float distanceStart, float distanceEnd, float length)
+    protected PathSegment(Waypoint first, Waypoint last, boolean start, boolean end, float distanceStart, float distanceEnd, float length)
     {
         this.first = first;
         this.last = last;

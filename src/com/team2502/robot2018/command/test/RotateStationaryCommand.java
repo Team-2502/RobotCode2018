@@ -36,7 +36,7 @@ public class RotateStationaryCommand extends TimedCommand implements TestResult
     protected void execute()
     {
         // rotate counterclockwise
-        Robot.DRIVE_TRAIN.runMotors(-0.5F, 0.5F);
+        Robot.DRIVE_TRAIN.runMotorsVoltage(-0.5F, 0.5F);
     }
 
     @Override
@@ -67,19 +67,19 @@ public class RotateStationaryCommand extends TimedCommand implements TestResult
         {
             success = false;
             ShuffleboardLog.log("Degrees rotated (navX Gyro) was supposed to be greater than " + DEGREE_THRESHOLD + ", but it actually was " + degreesRotated + ". " +
-                                              "1) Did the robot not turn counterclockwise? 2) Is the navX working?");
+                                "1) Did the robot not turn counterclockwise? 2) Is the navX working?");
         }
         else if(encoderLeft >= -ENCODER_THRESHOLD)
         {
             success = false;
             ShuffleboardLog.log("Left encoder position detected was supposed to be < " + -ENCODER_THRESHOLD + ", but it actually was " + encoderLeft + ". " +
-                                              "1) Is the left encoder backwards? 2) Is the left encoder working?");
+                                "1) Is the left encoder backwards? 2) Is the left encoder working?");
         }
         else if(encoderRight <= ENCODER_THRESHOLD)
         {
             success = false;
             ShuffleboardLog.log("Right encoder position detected was supposed to be > " + ENCODER_THRESHOLD + ", but it actually was " + encoderLeft + ". " +
-                                              "Is the right encoder backwards? 2) Is the right encoder working?");
+                                "Is the right encoder backwards? 2) Is the right encoder working?");
         }
         else
         {
@@ -88,7 +88,7 @@ public class RotateStationaryCommand extends TimedCommand implements TestResult
             {
                 success = false;
                 ShuffleboardLog.log("When adding encoder positions the result should be near 0. The threshold was (-1000,1000), " +
-                                                  "but encoderRight-encoderLeft was actually " + encDif + ". 1) Are the encoders different? (one quadrature one mag)");
+                                    "but encoderRight-encoderLeft was actually " + encDif + ". 1) Are the encoders different? (one quadrature one mag)");
             }
         }
     }

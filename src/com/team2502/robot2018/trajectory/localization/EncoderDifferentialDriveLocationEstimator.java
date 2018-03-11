@@ -6,6 +6,11 @@ import com.team2502.robot2018.utils.Stopwatch;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.joml.ImmutableVector2f;
 
+/**
+ *  Localization using encoders which can is primarily used for estimating the speed of the robot.
+ *  If an {@link IRotationalLocationEstimator} such as {@link NavXLocationEstimator} is added, it can do much more,
+ *  estimating the absolute position of the robot.
+ */
 public class EncoderDifferentialDriveLocationEstimator implements ITranslationalLocationEstimator, ITranslationalVelocityEstimator
 {
     private ImmutableVector2f location;
@@ -22,7 +27,7 @@ public class EncoderDifferentialDriveLocationEstimator implements ITranslational
     @Override
     public ImmutableVector2f estimateLocation()
     {
-        float dTime = stopwatch.dTime();
+        float dTime = stopwatch.poll();
         float leftVel = Robot.DRIVE_TRAIN.getLeftVel();
         float rightVel = Robot.DRIVE_TRAIN.getRightVel();
 

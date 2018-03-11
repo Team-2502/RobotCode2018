@@ -19,41 +19,44 @@ public class LeftCommandGroup extends CommandGroup
 
         Robot.NAVX.reset();
 
-        switch(AUTO_GAME_DATA)
+        if(Robot.autonStrategySelector.getSelected() == AutonStrategy.STRAIGHT)
         {
-            case "LL":
-                switch(Robot.autonStrategySelector.getSelected())
-                {
-                    case SCALE:
+            crossLine();
+        }
+        else
+        {
+            switch(AUTO_GAME_DATA)
+            {
+                case "LL":
+                    switch(Robot.autonStrategySelector.getSelected())
                     {
-                        goScaleLeft();
-                        break;
+                        case SCALE:
+                        {
+                            goScaleLeft();
+                            break;
+                        }
+                        case SWITCH:
+                        {
+                            goSwitch();
+                            break;
+                        }
                     }
-                    case SWITCH:
-                    {
-                        goSwitch();
-                        break;
-                    }
-                    case SWITCH_SCALE: //TODO: make sure this is mirrored
-                        goScaleLeft();
-                        secondCubeLeft();
-                        break;
-                }
-                break;
-            case "LR":
-                goScaleRight();
-                break;
+                    break;
+                case "LR":
+                    System.out.println("Going cross country");
+                    goScaleRight();
+                    break;
 
 
-            case "RL":
-                goScaleLeft();
-                break;
+                case "RL":
+                    goScaleLeft();
+                    break;
 
-            case "RR":
-                System.out.println("Going cross country!");
-//                crossLine();
-                goScaleRight();
-                break;
+                case "RR":
+                    System.out.println("Going cross country!");
+                    goScaleRight();
+                    break;
+            }
         }
 
 
@@ -66,9 +69,9 @@ public class LeftCommandGroup extends CommandGroup
 
     private void goSwitch()
     {
-        addSequential(new PurePursuitCommand(Paths.Left.leftSwitch));
+        addParallel(new RaiseElevatorSwitch());
 
-        addSequential(new ElevatorAutonCommand(.8F, Constants.SWITCH_ELEV_HEIGHT_FT));
+        addSequential(new PurePursuitCommand(Paths.Left.leftSwitch));
 
         addSequential(new ActiveIntakeRotate(0.35, 1));
 
@@ -80,18 +83,13 @@ public class LeftCommandGroup extends CommandGroup
 
         addParallel(new ActiveIntakeRotate(1, 0.5));
         addSequential(new PurePursuitCommand(Paths.Left.leftScale));
-//        addSequential(new RaiseElevatorScale());
-
-//        addSequential(new NavXRotateCommand(40,3));
-
-//        addSequential(new DeadreckoningDrive(0.5F,0.5F));
 
         addSequential(new ToggleIntakeCommand());
         addSequential(new ActiveIntakeRotate(.25F, -0.5));
 
         emitCube();
 
-        addSequential(new DeadreckoningDrive(0.7F,-4F));
+        addSequential(new DeadreckoningDrive(0.7F, -4F));
         addSequential(new ElevatorAutonCommand(2.5, 0));
 
     }
@@ -100,8 +98,8 @@ public class LeftCommandGroup extends CommandGroup
     {
         addSequential(new WaitCommand(2));
         addParallel(new ActiveIntakeRotate(0.5F, 0.5));
-//        addParallel(new RotateAutonStationary(140));
-        addSequential(new PurePursuitCommand(Paths.Left.leftScaleToSwitch));
+
+        addParallel(new PurePursuitCommand(Paths.Left.leftScaleToSwitch));
 
         addSequential(new ElevatorAutonCommand(3F, -Constants.SCALE_ELEV_HEIGHT_FT));
         addSequential(new QuickCommand(Robot.ELEVATOR::calibrateEncoder));
@@ -122,16 +120,11 @@ public class LeftCommandGroup extends CommandGroup
     {
         addSequential(new PurePursuitCommand(Paths.Left.rightScale));
 
-//        addSequential(new RaiseElevatorScale());
-
-//        addSequential(new RotateAutonStationary(-80, 5));
-
         addParallel(new ActiveIntakeRotate(1F, -0.5));
-//        addSequential(new DeadreckoningDrive(1F, 2.2F));
 
         emitCube();
 
-        addSequential(new DeadreckoningDrive(0.7F,-4F));
+        addSequential(new DeadreckoningDrive(0.7F, -4F));
         addSequential(new ElevatorAutonCommand(2.5, 0));
 
     }

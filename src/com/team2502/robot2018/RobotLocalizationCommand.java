@@ -7,12 +7,16 @@ import edu.wpi.first.wpilibj.command.Command;
 import org.joml.ImmutableVector2f;
 
 
+/**
+ * A command that runs 24/7 to calculate and cache the state of the robot (x,y,heading,dx,dv...).
+ * @deprecated Should be made into a Thread running at a period of <i>x</i> ms. However, this needs to be tested.
+ */
 public class RobotLocalizationCommand extends Command implements ITranslationalLocationEstimator, ITranslationalVelocityEstimator, IRotationalLocationEstimator
 {
     private final IRotationalLocationEstimator rotEstimator;
     private final ITranslationalVelocityEstimator velocityEstimator;
     private final ITranslationalLocationEstimator locationEstimator;
-//    private final long msPeriod;
+    //    private final long msPeriod;
     private float heading, leftWheelSpeed, rightWheelSpeed, speed;
     private ImmutableVector2f location, velocity;
 
