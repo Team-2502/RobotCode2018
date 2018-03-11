@@ -3,6 +3,7 @@ package com.team2502.robot2018.command.autonomous.groups;
 import com.team2502.robot2018.Constants;
 import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.command.autonomous.ingredients.*;
+import com.team2502.robot2018.command.teleop.ToggleIntakeCommand;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.command.WaitCommand;
 
@@ -88,13 +89,18 @@ public class RightCommandGroup extends CommandGroup
     private void goScaleRight()
     {
         // TODO: Move things into constants
-        addParallel(new ActiveIntakeRotate(0.7, 0.5));
+        addParallel(new ActiveIntakeRotate(1, 0.5));
         addSequential(new PurePursuitCommand(Paths.Right.rightScale));
-        addSequential(new WaitCommand(0.8F));
-        addSequential(new RotateAutonStationary(-55));
-        addSequential(new ElevatorAutonCommand(2.7F, Constants.SCALE_ELEV_HEIGHT_FT));
-        addSequential(new DeadreckoningDrive(0.5F, 2));
+
+        addSequential(new ToggleIntakeCommand());
+        addSequential(new ActiveIntakeRotate(.25F, -0.5));
+
         emitCube();
+
+        addSequential(new DeadreckoningDrive(0.7F, -4F));
+        addSequential(new ElevatorAutonCommand(2.5, 0));
+
+
     }
 
     private void crossLine()
