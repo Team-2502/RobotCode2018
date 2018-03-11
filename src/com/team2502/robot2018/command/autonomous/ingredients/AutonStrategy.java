@@ -4,7 +4,8 @@ public enum AutonStrategy
 {
     SWITCH("Switch"),
     SCALE("Scale"),
-    SWITCH_SCALE("Switch then Scale");
+    SWITCH_SCALE("Switch then Scale"),
+    STRAIGHT("Straight");
 
     private final String name;
 
