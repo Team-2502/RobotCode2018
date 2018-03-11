@@ -12,3 +12,8 @@ This is the last commit that has been tested on a field before Duluth.
 [Northern Lights Quals 48](https://www.thebluealliance.com/match/2018mndu2_qm48)
 - We undershot switch (even though previously had overshot it and no change?) ... need to fix
   - However previous overshoot MIGHT have been because it had accidentily been 10 ft forward instead of what we thought (9 ft).. about 20% chance.
+  
+### a368b82064a3e02a265d343f82066bfc858ca35e
+- Cross country works (confirmed in a competition)
+- Straight scale works
+- Center -> Right Switch and Center -> Left Switch work
