@@ -68,22 +68,28 @@ public class Path
         return MathUtils.Geometry.getClosestPoint(current.getFirst().getLocation(), current.getLast().getLocation(), robotLocationClosestPoint);
     }
 
+    boolean progressIfNeeded(ImmutableVector2f closestPoint)
+    {
+        PathSegment pathSegment = pathSegments.get(segmentOnI);
+        pathSegment.getDistanceLeftEff(closestPoint) <
+    }
+
     float getClosestPointPathDistance(ImmutableVector2f closestPoint)
     {
         PathSegment current = getCurrent();
         ImmutableVector2f firstLocation = current.getFirst().getLocation();
-        return current.getDistanceStart() + firstLocation.distance(closestPoint);
+        return current.getAbsoluteDistanceStart() + firstLocation.distance(closestPoint);
     }
 
     List<PathSegment> nextSegmentsInclusive(float maxAheadDistance)
     {
         List<PathSegment> segments = new ArrayList<>();
         PathSegment startSegment = pathSegments.get(segmentOnI);
-        float distanceStart = startSegment.getDistanceEnd();
+        float distanceStart = startSegment.getAbsoluteDistanceEnd();
         for(int i = segmentOnI; i < pathSegments.size(); i++)
         {
             PathSegment pathSegment = pathSegments.get(i);
-            if(pathSegment.getDistanceStart() - distanceStart < maxAheadDistance)
+            if(pathSegment.getAbsoluteDistanceStart() - distanceStart < maxAheadDistance)
             {
                 segments.add(pathSegment);
             }

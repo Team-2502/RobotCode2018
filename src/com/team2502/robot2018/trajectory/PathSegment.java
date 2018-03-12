@@ -1,5 +1,8 @@
 package com.team2502.robot2018.trajectory;
 
+import com.team2502.robot2018.utils.MathUtils;
+import org.joml.ImmutableVector2f;
+
 /**
  * Makes segments created by two {@link Waypoint}s easier to work with in {@link Path}
  */
@@ -24,12 +27,54 @@ public class PathSegment
         this.distanceEnd = distanceEnd;
     }
 
-    public float getDistanceStart()
+    /**
+     * Get the "distance" left in an efficient manner
+     * Instead of calculating sqrt(dx^2 + dy^2) we simply calculate dx + dy
+     * @param point a close point
+     * @return
+     */
+    public float getDistanceLeftEff(ImmutableVector2f point)
+    {
+        ImmutableVector2f lastLocation = last.getLocation();
+        return Math.abs(point.x - lastLocation.x) + Math.abs(point.y - lastLocation.y);
+    }
+
+    /**
+     * Get the distance left squared
+     * @param point a close point
+     * @return
+     */
+    public float getDistanceLeft2(ImmutableVector2f point)
+    {
+        ImmutableVector2f lastLocation = last.getLocation();
+        return lastLocation.sub(point).lengthSquared();
+    }
+
+    /**
+     * Get the distance left
+     * @param point a close point
+     * @return
+     */
+    public float getDistanceLeft(ImmutableVector2f point)
+    {
+        return (float) Math.sqrt(getDistanceLeft2(point));
+    }
+
+    public boolean isPast(ImmutableVector2f point)
+    {
+        ImmutableVector2f firstLocation = first.getLocation();
+        ImmutableVector2f lastLocation = last.getLocation();
+        boolean pastX = lastLocation.x - firstLocation.x > 0 ? point.x > lastLocation.x : point.x < lastLocation.x;
+        boolean pastY = lastLocation.y - firstLocation.y > 0 ? point.y > lastLocation.y : point.y < lastLocation.y;
+        return pastX && pastY;
+    }
+
+    public float getAbsoluteDistanceStart()
     {
         return distanceStart;
     }
 
-    public float getDistanceEnd()
+    public float getAbsoluteDistanceEnd()
     {
         return distanceEnd;
     }

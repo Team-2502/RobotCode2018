@@ -44,8 +44,7 @@ public class EncoderDifferentialDriveLocationEstimator implements ITranslational
     @Override
     public ImmutableVector2f estimateAbsoluteVelocity()
     {
-        ImmutableVector2f vector = MathUtils.Geometry.getVector(estimateSpeed(), rotEstimator.estimateHeading());
-        return vector;
+        return MathUtils.Geometry.getVector(estimateSpeed(), rotEstimator.estimateHeading());
     }
 
     @Override
