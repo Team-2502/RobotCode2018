@@ -84,7 +84,7 @@ public class Path
             {
                 PathSegment pathSegment = pathSegments.get(i);
                 float length = pathSegment.getLength();
-                if(lookahead > length)
+                if(lookahead > length && !pathSegment.isEnd())
                 {
                     lookahead-= length;
                 }
