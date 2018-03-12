@@ -227,10 +227,11 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
      * <br>
      * Make sure to set the motors according to the control mode. In auton, it's position. In teleop, it's percent voltage.
      *
+     *
      * @param leftWheel  Units for the left side of drivetrain
      * @param rightWheel Units for the right side of drivetrain
      */
-    public void runMotors(float leftWheel, float rightWheel) // double z
+    private void runMotorsTankDrive(float leftWheel, float rightWheel) // double z
     {
         drive.tankDrive(leftWheel, rightWheel, true);
     }
@@ -436,7 +437,7 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     public enum DriveStrategyType implements Nameable
     {
         VOLTAGE("VOLTAGE", (joystickLeft, joystickRight) -> {
-            Robot.DRIVE_TRAIN.runMotors(joystickLeft, joystickRight);
+            Robot.DRIVE_TRAIN.runMotorsTankDrive(joystickLeft, joystickRight);
         });
 
         private final String name;

@@ -142,6 +142,7 @@ public final class Robot extends IterativeRobot
      * 
      * @see Robot#writeLog(String, int, Object...) 
      */
+
     private static int LEVEL = 40;
 
 
@@ -272,8 +273,6 @@ public final class Robot extends IterativeRobot
             iterator.remove();
         }
         System.out.println(stringBuilder.toString());
-
-//        ROBOT_LOCALIZATION_THREAD.interrupt();
     }
 
     /**
@@ -300,7 +299,11 @@ public final class Robot extends IterativeRobot
      */
     public void autonomousInit()
     {
-        // Initialize estimators
+        String fileName = "/home/lvuser/FILES";
+        Files.setFileName(fileName);
+        Files.newFile(fileName);
+
+        // Initialize Estimators
         NavXLocationEstimator rotEstimator = new NavXLocationEstimator();
         EncoderDifferentialDriveLocationEstimator encoderDifferentialDriveLocationEstimator = new EncoderDifferentialDriveLocationEstimator(rotEstimator);
         
@@ -312,6 +315,8 @@ public final class Robot extends IterativeRobot
 
         // Ensure that the motors are in slave mode like they should be
         DRIVE_TRAIN.setAutonSettings();
+
+        ELEVATOR.calibrateEncoder();
 
 //        ROBOT_LOCALIZATION_THREAD.start();
 
@@ -329,6 +334,7 @@ public final class Robot extends IterativeRobot
     {
         Scheduler.getInstance().run();
         DashboardData.update();
+        Files.writeToFile();
     }
 
     /**
@@ -337,6 +343,7 @@ public final class Robot extends IterativeRobot
     public void teleopInit()
     {
         DRIVE_TRAIN.setTeleopSettings();
+        ELEVATOR.calibrateEncoder();
     }
 
     /**
@@ -362,10 +369,11 @@ public final class Robot extends IterativeRobot
         String fileName = "/home/lvuser/FILES";
         Files.setFileName(fileName);
 
-        if((System.currentTimeMillis() % 10000) == 0) { Files.newFile(fileName); }
+//        if((System.currentTimeMillis() % 10000) == 0) { Files.newFile(fileName); }
 
-        Files.setNameAndValue("Right Pos", DRIVE_TRAIN.getRightPos());
-        Files.setNameAndValue("Left Pos", DRIVE_TRAIN.getLeftPos());
-        Files.writeToFile();
+//        Files.setNameAndValue("Right Pos", DRIVE_TRAIN.getRightPos());
+//        Files.setNameAndValue("Left Pos", DRIVE_TRAIN.getLeftPos());
+//        Files.writeToFile();
+//        Files.s
     }
 }
