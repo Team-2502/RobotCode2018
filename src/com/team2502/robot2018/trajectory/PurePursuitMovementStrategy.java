@@ -55,6 +55,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
     private double lastUpdatedS = -1;
     private double currentS;
     private boolean brakeStage;
+    private float distanceLeft;
 
     /**
      * Strategize your movement!
@@ -86,7 +87,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
      * We want to drive at it.
      * @see <a href="https://www.chiefdelphi.com/forums/showthread.php?threadid=162713">Velocity and End Behavior (Chief Delphi)</a>
      */
-    public ImmutableVector2f calculateAbsoluteGoalPoint(float lookAheadDistance)
+    public ImmutableVector2f calculateAbsoluteGoalPoint(float distanceCurrentSegmentLeft, float lookAheadDistance)
     {
         // The path is finished — there are no more goal points to compute
         if(brakeStage || finishedPath) { return null; }
@@ -95,61 +96,9 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         // radius lookAheadDistance. These intersections will determine the "goal point" we
         // will generate an arc to go to.
 
-        // We have intersections.get(nextPathSegmentI) as the first goal intersection on the next segment.
-        // This is Integer.MAX_VALUE as there might not be any.
-        int nextPathSegmentI = Integer.MAX_VALUE;
+        ImmutableVector2f goalPoint = path.getGoalPoint(distanceCurrentSegmentLeft, lookAheadDistance);
 
-        // Loop looks for intersections on last segment searched and one after that
-        PathSegment current = path.getCurrent();
-        List<ImmutableVector2f> intersectionsSubsection = getIntersections(current, usedEstimatedLocation, lookAheadDistance);
-        if(brakeStage) // If the intersections say we are within tolerances and should brake.
-        {
-            return null;
-        }
-        List<ImmutableVector2f> intersections = new ArrayList<>(intersectionsSubsection);
-        if(!current.isEnd())
-        {
-            nextPathSegmentI = intersections.size();
-            intersections.addAll(getIntersections(path.getNext(), usedEstimatedLocation, lookAheadDistance));
-        }
-
-        // The last goal point we are comparing the intersections to. We will want to chose the one closestGoalPoint to last intersection
-        ImmutableVector2f toCompare = absoluteGoalPoint;
-
-        // if there is no last goal point, then just chose the first intersection
-        if(toCompare == null)
-        {
-            toCompare = usedEstimatedLocation;
-        }
-
-
-        // Finds segmentOn where ||\vec{toCompare} - \vec{intersections_i}|| (the distance between the 2 vectors) is minimized
-        int closestVectorI = bestGoalPoint(toCompare, intersections);
-
-        // There is no closestGoalPoint vector ==> finish path
-        if(closestVectorI == -1)
-        {
-            Log.info("closestGoalPoint vector not found!");
-            System.out.printf("loc: %.2f, %.2f\n", usedEstimatedLocation.get(0), usedEstimatedLocation.get(1));
-            System.out.println("usedLookAhead: " + usedLookahead);
-            brakeStage = true;
-            return null;
-        }
-
-        ImmutableVector2f closestGoalPoint = intersections.get(closestVectorI);
-
-        // If the closestGoalPoint vector is on the next segment, set that segment as the current segment
-        if(closestVectorI >= nextPathSegmentI)
-        {
-            Robot.writeLog("intersections: " + intersections, 20);
-            Robot.writeLog("closest goal point: (%.2f,%.2f), nextPathSegmentI: %d, closestVectorI: %d", 20, closestGoalPoint.x, closestGoalPoint.y, nextPathSegmentI, closestVectorI);
-            moveNextSegment();
-
-            path.moveNextSegment();
-        }
-
-        // closestGoalPoint is our new goal point
-        return closestGoalPoint;
+        return goalPoint;
     }
 
     private List<ImmutableVector2f> getIntersections(PathSegment pathSegment, ImmutableVector2f origin, float radius)
@@ -229,7 +178,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
 
         float distanceAlongPath = closestPointPathDistance - current.getAbsoluteDistanceStart();
 
-        float distanceLeft = pathSegmentLength - distanceAlongPath;
+        distanceLeft = pathSegmentLength - distanceAlongPath;
 
         Robot.writeLog("distanceLeft: %.2f, pathSegmentLength: %.2f, distanceAlongPath: %.2f", 1, distanceLeft, pathSegmentLength, distanceAlongPath);
         if(distanceLeft <= 0 && current.isEnd())
@@ -300,6 +249,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         float usedLookahead = lookaheadForSpeed + dCP;
 
         Robot.writeLog("usedVel: %.2f, usedLookahead %.2f", 30, usedTangentialVelocity, usedLookahead);
+        path.progressIfNeeded(closestPoint);
         return usedLookahead;
     }
 
@@ -355,7 +305,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
             commenceBreak();
             return;
         }
-        absoluteGoalPoint = calculateAbsoluteGoalPoint(usedLookahead);
+        absoluteGoalPoint = calculateAbsoluteGoalPoint(distanceLeft,usedLookahead);
 
         if(finishedPath)
         {
@@ -404,31 +354,6 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
     public float getUsedLookahead()
     {
         return usedLookahead;
-    }
-
-    /**
-     * Chooses which goal point should be chosen given a list of possible goal points (generated by circle-line intersection)
-     *
-     * @param origin             the absolute location of the robot
-     * @param possibleGoalPoints the absolute location of goal points
-     */
-    int bestGoalPoint(ImmutableVector2f origin, List<ImmutableVector2f> possibleGoalPoints)
-    {
-        float minMagSquared = Float.MAX_VALUE;
-        int minVectorI = -1;
-        for(int i = 0; i < possibleGoalPoints.size(); i++)
-        {
-            ImmutableVector2f vector = possibleGoalPoints.get(i);
-
-            float magnitudeSquared = origin.sub(vector).lengthSquared(); // find dist squared
-
-            if(magnitudeSquared < minMagSquared)
-            {
-                minMagSquared = magnitudeSquared;
-                minVectorI = i;
-            }
-        }
-        return minVectorI;
     }
 
     /**

@@ -56,17 +56,17 @@ public class Path
         return !pathSegments.isEmpty();
     }
 
-    ImmutableVector2f getClosestPoint(ImmutableVector2f robotLocationClosestPoint) // TODO: it might be better to not look purely at the current pathsegment and instead previous path segments
+    ImmutableVector2f getClosestPoint(ImmutableVector2f origin) // TODO: it might be better to not look purely at the current pathsegment and instead previous path segments
     {
-        if(this.robotLocationClosestPoint != null && MathUtils.epsilonEquals(this.robotLocationClosestPoint, robotLocationClosestPoint))
+        if(this.robotLocationClosestPoint != null && MathUtils.epsilonEquals(this.robotLocationClosestPoint, origin))
         {
             return closestPoint;
         }
 
-        this.robotLocationClosestPoint = robotLocationClosestPoint;
+        this.robotLocationClosestPoint = origin;
         PathSegment current = getCurrent();
-        closestPoint = MathUtils.Geometry.getClosestPoint(current.getFirst().getLocation(), current.getLast().getLocation(), robotLocationClosestPoint);
-        return MathUtils.Geometry.getClosestPoint(current.getFirst().getLocation(), current.getLast().getLocation(), robotLocationClosestPoint);
+        closestPoint = MathUtils.Geometry.getClosestPoint(current.getFirst().getLocation(), current.getLast().getLocation(), origin);
+        return MathUtils.Geometry.getClosestPoint(current.getFirst().getLocation(), current.getLast().getLocation(), origin);
     }
 
     ImmutableVector2f getGoalPoint(float distanceLeftCurrentSegment, float lookahead)
