@@ -8,15 +8,33 @@ import org.joml.ImmutableVector2f;
 
 
 /**
- * A command that runs 24/7 to calculate and cache the state of the robot (x,y,heading,dx,dv...).
+ * An uninterruptable command that runs 24/7 (even when disabled) to calculate and cache the state of the robot (x,y,heading,dx,dv...).
  * @deprecated Should be made into a Thread running at a period of <i>x</i> ms. However, this needs to be tested.
  */
 public class RobotLocalizationCommand extends Command implements ITranslationalLocationEstimator, ITranslationalVelocityEstimator, IRotationalLocationEstimator
 {
+    /**
+     * A lambda that estimates the robot's rotation
+     */
     private final IRotationalLocationEstimator rotEstimator;
+
+    /**
+     * A lambda that estimates the robot's velocity
+     */
     private final ITranslationalVelocityEstimator velocityEstimator;
+
+    /**
+     * A lambda that estimates the robot's location
+     */
     private final ITranslationalLocationEstimator locationEstimator;
+
+//    /**
+//     * How often to run (in ms)
+//     */
     //    private final long msPeriod;
+
+    // self-explanatory.
+    // These variables store info about the robot's velocity, position, and heading
     private float heading, leftWheelSpeed, rightWheelSpeed, speed;
     private ImmutableVector2f location, velocity;
 
@@ -29,6 +47,8 @@ public class RobotLocalizationCommand extends Command implements ITranslationalL
     public RobotLocalizationCommand(IRotationalLocationEstimator rotEstimator,
                                     ITranslationalVelocityEstimator velocityEstimator, ITranslationalLocationEstimator locationEstimator)
     {
+        setRunWhenDisabled(true);
+        setInterruptible(false);
         this.rotEstimator = rotEstimator;
         this.velocityEstimator = velocityEstimator;
         this.locationEstimator = locationEstimator;
@@ -139,10 +159,10 @@ public class RobotLocalizationCommand extends Command implements ITranslationalL
     }
 
     /**
-     * More often than not, our robot is moving along a curve.
-     * At any given time, the robot's velocity is tangent to the curve on which it is driving.
-     * (Imagine a dot moving in a circular path - if you freed it from the circle, it would continue in a path tangent to the circle)
-     * The robot's tangential speed is the robot's speed tangent to the curve.
+     * More often than not, our robot is moving along a curve. <br>
+     * At any given time, the robot's velocity is tangent to the curve on which it is driving.<br>
+     * (Imagine a dot moving in a circular path - if you freed it from the circle, it would continue in a path tangent to the circle)<br>
+     * The robot's tangential speed is the robot's speed tangent to the curve.<br>
      * @return tangential speed
      */
     @Override
