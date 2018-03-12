@@ -32,7 +32,8 @@ public class Constants
     public static final float LOOKAHEAD_MIN_SPEED_FPS = 1F;
     public static final float LOOKAHEAD_MAX_SPEED_FPS = 10F;
 
-    public static final float DISTANCE_COMPLETE_SEGMENT_TOLERANCE = 1;
+    // feet
+    public static final float DISTANCE_COMPLETE_SEGMENT_TOLERANCE = 0.1F;
 
     public static final Lookahead LOOKAHEAD = new Lookahead(LOOKAHEAD_MIN_DISTANCE_FT, LOOKAHEAD_MAX_DISTANCE_FT,
                                                             LOOKAHEAD_MIN_SPEED_FPS, LOOKAHEAD_MAX_SPEED_FPS);

@@ -29,14 +29,14 @@ public class CenterCommandGroup extends CommandGroup
     private void goSwitchLeft()
     {
         moveElevator();
-        addSequential(new PurePursuitCommand(Paths.Center.leftSwitch,true));
+        addSequential(new PurePursuitCommand(PathConfig.Center.leftSwitch, true));
         emitCubeSwitch();
     }
 
     private void goSwitchRight()
     {
         moveElevator();
-        addSequential(new PurePursuitCommand(Paths.Center.rightSwitch,true));
+        addSequential(new PurePursuitCommand(PathConfig.Center.rightSwitch, true));
         emitCubeSwitch();
     }
 

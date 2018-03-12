@@ -1,5 +1,6 @@
 package com.team2502.robot2018.trajectory;
 
+import com.team2502.robot2018.Constants;
 import com.team2502.robot2018.utils.MathUtils;
 import org.joml.ImmutableVector2f;
 
@@ -68,10 +69,42 @@ public class Path
         return MathUtils.Geometry.getClosestPoint(current.getFirst().getLocation(), current.getLast().getLocation(), robotLocationClosestPoint);
     }
 
+    ImmutableVector2f getGoalPoint(float distanceLeftCurrentSegment, float lookahead)
+    {
+        if(lookahead < distanceLeftCurrentSegment)
+        {
+            PathSegment current = getCurrent();
+            return current.getPoint(current.getLength() - distanceLeftCurrentSegment + lookahead);
+        }
+        else
+        {
+            lookahead-=distanceLeftCurrentSegment;
+
+            for(int i = segmentOnI; i < pathSegments.size(); i++)
+            {
+                PathSegment pathSegment = pathSegments.get(i);
+                float length = pathSegment.getLength();
+                if(lookahead > length)
+                {
+                    lookahead-= length;
+                }
+                else
+                {
+                    return pathSegment.getPoint(lookahead);
+                }
+            }
+        }
+        return null; // Should never occur
+    }
+
     boolean progressIfNeeded(ImmutableVector2f closestPoint)
     {
         PathSegment pathSegment = pathSegments.get(segmentOnI);
-        pathSegment.getDistanceLeftEff(closestPoint) <
+        if(pathSegment.getDistanceLeftEff(closestPoint) < Constants.DISTANCE_COMPLETE_SEGMENT_TOLERANCE)
+        {
+            return moveNextSegment();
+        }
+        return false;
     }
 
     float getClosestPointPathDistance(ImmutableVector2f closestPoint)

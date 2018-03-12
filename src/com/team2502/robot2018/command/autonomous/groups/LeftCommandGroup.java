@@ -71,7 +71,7 @@ public class LeftCommandGroup extends CommandGroup
     {
         addParallel(new RaiseElevatorSwitch());
 
-        addSequential(new PurePursuitCommand(Paths.Left.leftSwitch,true));
+        addSequential(new PurePursuitCommand(PathConfig.Left.leftSwitch, true));
 
         addSequential(new ActiveIntakeRotate(0.35, 1));
 
@@ -82,7 +82,7 @@ public class LeftCommandGroup extends CommandGroup
     {
 
         addParallel(new ActiveIntakeRotate(1, 0.5));
-        addSequential(new PurePursuitCommand(Paths.Left.leftScale,false));
+        addSequential(new PurePursuitCommand(PathConfig.Left.leftScale, false));
 
         addSequential(new ToggleIntakeCommand());
         addSequential(new ActiveIntakeRotate(.25F, -0.5));
@@ -99,7 +99,7 @@ public class LeftCommandGroup extends CommandGroup
         addSequential(new WaitCommand(2));
         addParallel(new ActiveIntakeRotate(0.5F, 0.5));
 
-        addParallel(new PurePursuitCommand(Paths.Left.leftScaleToSwitch,true));
+        addParallel(new PurePursuitCommand(PathConfig.Left.leftScaleToSwitch, true));
 
         addSequential(new ElevatorAutonCommand(3F, -Constants.SCALE_ELEV_HEIGHT_FT));
         addSequential(new QuickCommand(Robot.ELEVATOR::calibrateEncoder));
@@ -118,7 +118,7 @@ public class LeftCommandGroup extends CommandGroup
 
     private void goScaleRight()
     {
-        addSequential(new PurePursuitCommand(Paths.Left.rightScale,false));
+        addSequential(new PurePursuitCommand(PathConfig.Left.rightScale, false));
 
         addParallel(new ActiveIntakeRotate(1F, -0.5));
 

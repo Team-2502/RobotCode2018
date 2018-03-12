@@ -1,6 +1,5 @@
 package com.team2502.robot2018.trajectory;
 
-import com.team2502.robot2018.utils.MathUtils;
 import org.joml.ImmutableVector2f;
 
 /**
@@ -15,6 +14,7 @@ public class PathSegment
     private final boolean start;
     private final float distanceStart;
     private final float distanceEnd;
+    private final ImmutableVector2f dPos;
 
     protected PathSegment(Waypoint first, Waypoint last, boolean start, boolean end, float distanceStart, float distanceEnd, float length)
     {
@@ -25,6 +25,12 @@ public class PathSegment
         this.start = start;
         this.distanceStart = distanceStart;
         this.distanceEnd = distanceEnd;
+        dPos = last.getLocation().sub(first.getLocation());
+    }
+
+    public ImmutableVector2f getPoint(float relativeDistance)
+    {
+        return dPos.mul(relativeDistance/length);
     }
 
     /**

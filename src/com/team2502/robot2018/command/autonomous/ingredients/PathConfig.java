@@ -14,7 +14,7 @@ import java.util.List;
  * <p>
  * If you want, you can graph these on Desmos to see where they go.
  */
-public class Paths
+public class PathConfig
 {
     private static List<Waypoint> flipY(List<Waypoint> waypoints)
     {
