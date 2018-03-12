@@ -6,21 +6,37 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A class with mostly static members to manage putting things onto the dashboard
+ */
 public final class DashboardData
 {
 
-    private static List<DashboardUpdater> updaters = new ArrayList<DashboardUpdater>(4);
+    /**
+     * A list of subsystems (which extend the functional interface DashboardUpdater)
+     */
+    private static List<DashboardUpdater> updaters = new ArrayList<>(4);
 
     private DashboardData() { }
 
+    /**
+     * Run each updater to update the dashboard
+     */
     static void update()
     {
         for(DashboardUpdater subsystem : updaters) { subsystem.updateDashboard(); }
         updateNavX();
     }
 
+    /**
+     * Add an updater
+     * @param subsystem An updater (which is usually a subsystem) that will continually put stuff on the smartdashboard
+     */
     public static void addUpdater(DashboardUpdater subsystem) { updaters.add(subsystem); }
 
+    /**
+     * Update the heading data for the NavX, because AHRS does not extend our functional interface.
+     */
     private static void updateNavX()
     {
         SmartDashboard.putNumber("NavX: Yaw", Robot.NAVX.getYaw());
@@ -35,6 +51,7 @@ public final class DashboardData
      * An interface to allow you to automatically update stuff
      * on the Smart Dashboard.
      */
+    @FunctionalInterface
     public interface DashboardUpdater
     {
         /**
