@@ -34,13 +34,26 @@ public class RobotMap
          */
         public static final class Button
         {
+            /**
+             * Used to shift gearbox on Left drive stick
+             */
             public static final int TOGGLE_TRANSMISSION = 1;
 
+            // Trigger
+            public static final int OPEN_INTAKE = 1;
+
+            // Side button for thumb
+            public static final int INTAKE_OUT_FAST = 2;
+
+            // On function joystick face
             /*
              * Eventually, once we have encoders, these buttons will go all the way up/down
              */
             public static final int RAISE_ELEVATOR = 5;
             public static final int LOWER_ELEVATOR = 3;
+
+            public static final int INTAKE_OUT_SLOW = 4;
+            public static final int INTAKE_IN = 6;
 
             /*
              * Then, these buttons will let Driver 2 adjust it manually
@@ -48,18 +61,16 @@ public class RobotMap
             public static final int ADJUST_ELEVATOR_UP = 3;
             public static final int ADJUST_ELEVATOR_DOWN = 3;
 
+            // On lower platform
             public static final int CLIMBER = 10;
 
             public static final int SHIFT_GEARBOX_ELEV = 11;
 
-            public static final int OPEN_INTAKE = 1;
-            public static final int INTAKE_IN = 6;
-            public static final int INTAKE_OUT_SLOW = 4;
-            public static final int INTAKE_OUT_FAST = 2;
-
-
             public static final int DEPLOY_BUTTERFLY = 7;
 
+            /*
+             * Debug buttons on Right drive stick
+             */
             public static final int RUN_DEBUG_TESTS = 9;
             public static final int CALIBRATE_ELEV_ENCODER = 11;
 

@@ -55,8 +55,8 @@ public class SendableDriveTrain implements Sendable, DashboardData.DashboardUpda
     public void initSendable(SendableBuilder builder)
     {
         builder.setSmartDashboardType("DifferentialDrive");
-        builder.addDoubleProperty("Left Motor Speed", () -> Robot.DRIVE_TRAIN.getLeftVel() / Constants.MAX_FPS_SPEED, doNothing);
-        builder.addDoubleProperty("Right Motor Speed", () -> Robot.DRIVE_TRAIN.getRightVel() / Constants.MAX_FPS_SPEED, doNothing);
+        builder.addDoubleProperty("Left Motor Speed", () -> Robot.DRIVE_TRAIN.getLeftVel() / Constants.Physical.DriveTrain.MAX_FPS_SPEED, doNothing);
+        builder.addDoubleProperty("Right Motor Speed", () -> Robot.DRIVE_TRAIN.getRightVel() / Constants.Physical.DriveTrain.MAX_FPS_SPEED, doNothing);
     }
 
     @Override

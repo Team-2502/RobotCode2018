@@ -23,7 +23,7 @@ public class PurePursuitCommand extends Command
 
     public PurePursuitCommand(List<Waypoint> waypoints)
     {
-        this(waypoints, Constants.LOOKAHEAD, Constants.STOP_DIST_TOLERANCE_FT);
+        this(waypoints, Constants.PurePursuit.LOOKAHEAD, Constants.PurePursuit.STOP_DIST_TOLERANCE_FT);
     }
 
     public PurePursuitCommand(List<Waypoint> waypoints, Lookahead lookahead, float stopDistance)
@@ -92,7 +92,7 @@ public class PurePursuitCommand extends Command
              */
             @Override
             public float getLateralWheelDistance()
-            { return Constants.LATERAL_WHEEL_DISTANCE_FT; }
+            { return Constants.PurePursuit.LATERAL_WHEEL_DISTANCE_FT; }
         };
 
 //        rotLocEstimator = new NavXLocationEstimator();

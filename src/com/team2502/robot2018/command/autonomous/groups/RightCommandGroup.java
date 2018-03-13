@@ -5,7 +5,6 @@ import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.command.autonomous.ingredients.*;
 import com.team2502.robot2018.command.teleop.ToggleIntakeCommand;
 import edu.wpi.first.wpilibj.command.CommandGroup;
-import edu.wpi.first.wpilibj.command.WaitCommand;
 
 public class RightCommandGroup extends CommandGroup
 {
@@ -80,7 +79,7 @@ public class RightCommandGroup extends CommandGroup
     private void goSwitch()
     {
         addSequential(new PurePursuitCommand(Paths.Right.rightSwitch));
-        addSequential(new ElevatorAutonCommand(.8F, Constants.SWITCH_ELEV_HEIGHT_FT));
+        addSequential(new ElevatorAutonCommand(.8F, Constants.Physical.Elevator.SWITCH_ELEV_HEIGHT_FT));
         addSequential(new ActiveIntakeRotate(0.35, 1));
 
         emitCube();

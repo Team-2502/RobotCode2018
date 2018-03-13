@@ -25,7 +25,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import logger.Log;
 
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -217,7 +216,7 @@ public final class Robot extends IterativeRobot
                 .put(0D, 14D)
                 .build();
 
-        Constants.ACCELERATION_FOR_ELEVATOR_HEIGHT = new InterpolationMap(map);
+        Constants.Physical.ACCELERATION_FOR_ELEVATOR_HEIGHT = new InterpolationMap(map);
         AutoStartLocationSwitcher.putToSmartDashboard();
 
         // Initialize our sendables
