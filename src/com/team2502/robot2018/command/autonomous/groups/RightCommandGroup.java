@@ -1,6 +1,6 @@
 package com.team2502.robot2018.command.autonomous.groups;
 
-import com.team2502.robot2018.Constants;
+import static com.team2502.robot2018.Constants.Physical.*;
 import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.command.autonomous.ingredients.*;
 import com.team2502.robot2018.command.teleop.ToggleIntakeCommand;
@@ -79,7 +79,7 @@ public class RightCommandGroup extends CommandGroup
     private void goSwitch()
     {
         addSequential(new PurePursuitCommand(Paths.Right.rightSwitch));
-        addSequential(new ElevatorAutonCommand(.8F, Constants.Physical.Elevator.SWITCH_ELEV_HEIGHT_FT));
+        addSequential(new ElevatorAutonCommand(.8F, Elevator.SWITCH_ELEV_HEIGHT_FT));
         addSequential(new ActiveIntakeRotate(0.35, 1));
 
         emitCube();

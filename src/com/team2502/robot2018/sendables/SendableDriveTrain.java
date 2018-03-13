@@ -1,6 +1,6 @@
 package com.team2502.robot2018.sendables;
 
-import com.team2502.robot2018.Constants;
+import static com.team2502.robot2018.Constants.Physical.DriveTrain;
 import com.team2502.robot2018.DashboardData;
 import com.team2502.robot2018.Robot;
 import edu.wpi.first.wpilibj.Sendable;
@@ -55,8 +55,8 @@ public class SendableDriveTrain implements Sendable, DashboardData.DashboardUpda
     public void initSendable(SendableBuilder builder)
     {
         builder.setSmartDashboardType("DifferentialDrive");
-        builder.addDoubleProperty("Left Motor Speed", () -> Robot.DRIVE_TRAIN.getLeftVel() / Constants.Physical.DriveTrain.MAX_FPS_SPEED, doNothing);
-        builder.addDoubleProperty("Right Motor Speed", () -> Robot.DRIVE_TRAIN.getRightVel() / Constants.Physical.DriveTrain.MAX_FPS_SPEED, doNothing);
+        builder.addDoubleProperty("Left Motor Speed", () -> Robot.DRIVE_TRAIN.getLeftVel() / DriveTrain.MAX_FPS_SPEED, doNothing);
+        builder.addDoubleProperty("Right Motor Speed", () -> Robot.DRIVE_TRAIN.getRightVel() / DriveTrain.MAX_FPS_SPEED, doNothing);
     }
 
     @Override

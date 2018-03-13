@@ -1,6 +1,6 @@
 package com.team2502.robot2018.command.autonomous.groups;
 
-import com.team2502.robot2018.Constants;
+import static com.team2502.robot2018.Constants.Physical.*;
 import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.command.autonomous.ingredients.*;
 import com.team2502.robot2018.command.teleop.QuickCommand;
@@ -101,7 +101,7 @@ public class LeftCommandGroup extends CommandGroup
 
         addParallel(new PurePursuitCommand(Paths.Left.leftScaleToSwitch));
 
-        addSequential(new ElevatorAutonCommand(3F, -Constants.Physical.Elevator.SCALE_ELEV_HEIGHT_FT));
+        addSequential(new ElevatorAutonCommand(3F, -Elevator.SCALE_ELEV_HEIGHT_FT));
         addSequential(new QuickCommand(Robot.ELEVATOR::calibrateEncoder));
 
         addSequential(new ToggleIntakeCommand());
@@ -111,7 +111,7 @@ public class LeftCommandGroup extends CommandGroup
         addSequential(new ToggleIntakeCommand());
 
         addParallel(new ActiveIntakeRotate(1F, -0.7));
-        addSequential(new ElevatorAutonCommand(3F, Constants.Physical.Elevator.SWITCH_ELEV_HEIGHT_FT + 1));
+        addSequential(new ElevatorAutonCommand(3F, Elevator.SWITCH_ELEV_HEIGHT_FT + 1));
 
         emitCube();
     }

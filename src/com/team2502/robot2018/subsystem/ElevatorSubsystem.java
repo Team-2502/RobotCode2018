@@ -3,6 +3,7 @@ package com.team2502.robot2018.subsystem;
 import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.team2502.robot2018.Constants;
+import static com.team2502.robot2018.Constants.Physical.Elevator;
 import com.team2502.robot2018.DashboardData;
 import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.RobotMap;
@@ -101,7 +102,7 @@ public class ElevatorSubsystem extends Subsystem implements PIDTunable, Dashboar
 
     public void setElevatorPos(float feet)
     {
-        double epos = feet * Constants.Physical.Elevator.FEET_TO_EPOS_ELEV;
+        double epos = feet * Elevator.FEET_TO_EPOS_ELEV;
         System.out.println("epos target: "+epos);
         moveElevator(ControlMode.Position, epos);
     }
@@ -233,8 +234,8 @@ public class ElevatorSubsystem extends Subsystem implements PIDTunable, Dashboar
     @Override
     public void updateDashboard()
     {
-        SmartDashboard.putNumber("Elevator: Velocity (fps)", getVel() * Constants.Physical.Elevator.EVEL_TO_FPS_ELEV);
-        SmartDashboard.putNumber("Elevator: Position (ft)", getPos() * Constants.Physical.Elevator.EPOS_TO_FEET_ELEV);
+        SmartDashboard.putNumber("Elevator: Velocity (fps)", getVel() * Elevator.EVEL_TO_FPS_ELEV);
+        SmartDashboard.putNumber("Elevator: Position (ft)", getPos() * Elevator.EPOS_TO_FEET_ELEV);
 
         pidTuner.updateDashboard();
     }
