@@ -17,6 +17,10 @@ public class EncoderDifferentialDriveLocationEstimator implements ITranslational
     private IRotationalLocationEstimator rotEstimator;
     private Stopwatch stopwatch;
 
+    /**
+     * Make a new position estimator
+     * @param rotEstimator a rotation estimator
+     */
     public EncoderDifferentialDriveLocationEstimator(IRotationalLocationEstimator rotEstimator)
     {
         location = new ImmutableVector2f(0, 0);
@@ -24,17 +28,25 @@ public class EncoderDifferentialDriveLocationEstimator implements ITranslational
         this.rotEstimator = rotEstimator;
     }
 
+    /**
+     * Estimate our location
+     * @return our location
+     */
     @Override
     public ImmutableVector2f estimateLocation()
     {
+        // figure out time since last estimated
         float dTime = stopwatch.poll();
         float leftVel = Robot.DRIVE_TRAIN.getLeftVel();
         float rightVel = Robot.DRIVE_TRAIN.getRightVel();
 
+        // figure out how much our position has changed
         ImmutableVector2f dPos = MathUtils.Kinematics.getAbsoluteDPosLine(leftVel, rightVel, dTime, rotEstimator.estimateHeading());
 
+        // add to our running total
         location = location.add(dPos);
 
+        // log data on shuffleboard
         SmartDashboard.putNumber("posX", location.x);
         SmartDashboard.putNumber("posY", location.y);
 
