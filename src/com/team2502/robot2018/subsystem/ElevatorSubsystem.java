@@ -9,10 +9,11 @@ import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.RobotMap;
 import com.team2502.robot2018.sendables.PIDTunable;
 import com.team2502.robot2018.sendables.SendablePIDTuner;
+import com.team2502.robot2018.utils.NonDefaultSubsystem;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class ElevatorSubsystem extends Subsystem implements PIDTunable, DashboardData.DashboardUpdater
+public class ElevatorSubsystem extends NonDefaultSubsystem implements PIDTunable, DashboardData.DashboardUpdater
 {
     private final WPI_TalonSRX elevatorTop;
     private final WPI_TalonSRX elevatorBottom;
@@ -95,11 +96,19 @@ public class ElevatorSubsystem extends Subsystem implements PIDTunable, Dashboar
         }
     }
 
+    /**
+     * Move the elevator
+     * @param speed Percent voltage
+     */
     public void moveElevator(double speed)
     {
         moveElevator(ControlMode.PercentOutput, speed);
     }
 
+    /**
+     * Move the elevator to a certain position
+     * @param feet Height of elevator in feet
+     */
     public void setElevatorPos(float feet)
     {
         double epos = feet * Elevator.FEET_TO_EPOS_ELEV;
@@ -149,9 +158,6 @@ public class ElevatorSubsystem extends Subsystem implements PIDTunable, Dashboar
         stopElevator();
         stopClimber();
     }
-
-    @Override
-    protected void initDefaultCommand() { }
 
     @Override
     public double getkP()
@@ -214,11 +220,21 @@ public class ElevatorSubsystem extends Subsystem implements PIDTunable, Dashboar
         elevatorBottom.config_kF(0, kF, Constants.INIT_TIMEOUT);
     }
 
+    /**
+     * @return Velocity of elevator in enc units / 100 ms
+     *
+     * TODO: Change to real units
+     */
     public double getVel()
     {
         return elevatorBottom.getSelectedSensorVelocity(0);
     }
 
+    /**
+     * @return Position of elevator in enc units
+     *
+     * TODO: Change to real units
+     */
     public double getPos()
     {
         int selectedSensorPosition = elevatorBottom.getSelectedSensorPosition(0);
@@ -226,10 +242,14 @@ public class ElevatorSubsystem extends Subsystem implements PIDTunable, Dashboar
         return selectedSensorPosition;
     }
 
+    /**
+     * Reset the encoder reading to 0
+     */
     public void calibrateEncoder()
     {
         elevatorBottom.setSelectedSensorPosition(0, 0, Constants.INIT_TIMEOUT);
     }
+
 
     @Override
     public void updateDashboard()

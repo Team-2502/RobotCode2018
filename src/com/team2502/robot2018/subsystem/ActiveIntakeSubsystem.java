@@ -9,11 +9,24 @@ import com.team2502.robot2018.RobotMap;
 import com.team2502.robot2018.command.teleop.ActiveRotationCommand;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
-
+/**
+ * Subsystem so we can eat cubes
+ */
 public class ActiveIntakeSubsystem extends Subsystem
 {
+    /**
+     * Left motor on intake
+     */
     private final WPI_TalonSRX leftIntake;
+
+    /**
+     * Right motor on intake
+     */
     private final WPI_TalonSRX rightIntake;
+
+    /**
+     * Motor that rotates intake
+     */
     private final WPI_TalonSRX rotateIntake;
 
     public ActiveIntakeSubsystem()
@@ -26,29 +39,45 @@ public class ActiveIntakeSubsystem extends Subsystem
         rotateIntake.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen, Constants.INIT_TIMEOUT);
     }
 
+    /**
+     * Run the intake at a speed
+     * @param speed Percent voltage
+     */
     public void runIntake(double speed)
     {
         leftIntake.set(ControlMode.PercentOutput, speed);
         rightIntake.set(ControlMode.PercentOutput, speed);
     }
 
+    /**
+     * Stop rotation and running of intake
+     */
     public void stopIntake()
     {
-        rotateIntake(0.0D);
         runIntake(0.0D);
     }
 
+    /**
+     * Stop rotating the intake
+     */
     public void stopRotate()
     {
         rotateIntake(0.0D);
     }
 
+    /**
+     * Stop all intake motors
+     */
     public void stopAll()
     {
         rotateIntake(0.0D);
         runIntake(0.0D);
     }
 
+    /**
+     * Rotate the intake
+     * @param x percent voltage to motor
+     */
     public void rotateIntake(double x)
     { rotateIntake.set(ControlMode.PercentOutput, -x); }
 
