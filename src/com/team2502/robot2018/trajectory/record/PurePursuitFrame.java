@@ -27,7 +27,7 @@ public class PurePursuitFrame
     String serialize()
     {
         StringBuilder sb = new StringBuilder();
-        sb.append("FRAME (").append(time).append(")");
+        sb.append("FRAME (").append(time).append(")\n");
         sb.append("WAYPOINTS\n");
         sb.append("x,y\n");
         for(Waypoint waypoint : waypoints)
@@ -37,8 +37,9 @@ public class PurePursuitFrame
         }
 
         sb.append("ROBOT\n");
-        sb.append("x,y,dx,dy,lookahead,curvature");
+        sb.append("x,y,dx,dy,lookahead,curvature\n");
         sb.append(robotX).append(",").append(robotY).append(",").append(robotDX).append(",").append(robotDY).append(",").append(lookahead).append(",").append(curvature);
+        sb.append("\n\n");
         return sb.toString();
     }
 }
