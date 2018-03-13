@@ -28,6 +28,11 @@ public class Lookahead
         dSpeed = maxSpeed - minSpeed;
     }
 
+    /**
+     * Given our speed, calculate a new lookahead for the purposes of being dynamic
+     * @param speed The speed of our robot
+     * @return How far our robot should look ahead
+     */
     float getLookaheadForSpeed(float speed)
     {
         float lookahead = dDistance * (speed - minSpeed) / dSpeed + minDistance;
