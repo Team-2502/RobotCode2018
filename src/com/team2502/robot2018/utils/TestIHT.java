@@ -2,6 +2,10 @@ package com.team2502.robot2018.utils;
 
 /**
  * Not meant to be used in robot code, just on our computrons.
+ *
+ * Tests the InterpolationMap
+ *
+ * @see InterpolationMap
  */
 class TestIHT
 {
