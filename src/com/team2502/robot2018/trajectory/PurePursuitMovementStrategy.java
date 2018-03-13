@@ -6,11 +6,8 @@ import com.team2502.robot2018.trajectory.localization.ITranslationalLocationEsti
 import com.team2502.robot2018.trajectory.localization.ITranslationalVelocityEstimator;
 import com.team2502.robot2018.utils.Files;
 import com.team2502.robot2018.utils.MathUtils;
-import logger.Log;
 import org.joml.ImmutableVector2f;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -49,7 +46,6 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
     private float rightWheelTanVel;
     private ImmutableVector2f absoluteGoalPoint;
     private float dThetaToRotate;
-    private boolean withinTolerences;
     private float usedLookahead;
     private float speedUsed;
     private double lastUpdatedS = -1;
@@ -87,7 +83,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
      * We want to drive at it.
      * @see <a href="https://www.chiefdelphi.com/forums/showthread.php?threadid=162713">Velocity and End Behavior (Chief Delphi)</a>
      */
-    public ImmutableVector2f calculateAbsoluteGoalPoint(float distanceCurrentSegmentLeft, float lookAheadDistance)
+    private ImmutableVector2f calculateAbsoluteGoalPoint(float distanceCurrentSegmentLeft, float lookAheadDistance)
     {
         // The path is finished — there are no more goal points to compute
         if(brakeStage || finishedPath) { return null; }
@@ -96,51 +92,19 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         // radius lookAheadDistance. These intersections will determine the "goal point" we
         // will generate an arc to go to.
 
-        ImmutableVector2f goalPoint = path.getGoalPoint(distanceCurrentSegmentLeft, lookAheadDistance);
-
-        return goalPoint;
+        return path.getGoalPoint(distanceCurrentSegmentLeft, lookAheadDistance);
     }
 
-    private List<ImmutableVector2f> getIntersections(PathSegment pathSegment, ImmutableVector2f origin, float radius)
-    {
-        if(pathSegment == null)
-        {
-            return new ArrayList<>();
-        }
-
-        ImmutableVector2f lineP1 = pathSegment.getFirst().getLocation();
-        ImmutableVector2f lineP2 = pathSegment.getLast().getLocation();
-
-        // Since goal points are within radius LOOK_AHEAD_DISTANCE from us, the robot would normally stopElevator
-        // when the distance from the last waypoint < LOOK_AHEAD_DISTANCE. However, we prevent this
-        // by setting the last waypoint as a goal point when this happens.
-
-        // Get intersections of r=lookAheadDistance circle and segments between waypoints
-        List<ImmutableVector2f> vectorList = new ArrayList<>(Arrays.asList(MathUtils.Geometry.getCircleLineIntersectionPoint(lineP1, lineP2, origin, radius)));
-        // above statement assumes lineP1 lineP2 defines a (non-segment) line.
-        // If we are not on the last waypoint, we will treat it as a segment.
-        // If we _are_ on our last waypoint, we will NOT treat it as a segment.
-        // This essentially performs a linear extrapolation on the last waypoint.
-
-        if(!pathSegment.isEnd() || path.getCurrent() != pathSegment)
-        {
-            // above statement assumes lineP1 lineP2 defines a (non-segment) line. This is to define it as a segment
-            // (we are removing points that are not between lineP1 and lineP2)
-            vectorList.removeIf(vector -> !MathUtils.between(lineP1, vector, lineP2)); // remove if vectors not between next 2 waypoints
-        }
-        return vectorList;
-    }
-
-    private void moveNextSegment()
+    private void updateForNewSegment()
     {
         PathSegment current = path.getCurrent();
-        Waypoint nextWaypoint = current.getLast();
+        Waypoint currentWaypoint = current.getFirst();
 
-        if(nextWaypoint != null)
+        if(currentWaypoint != null)
         {
-            ImmutableVector2f locationB = nextWaypoint.getLocation();
+            ImmutableVector2f locationB = currentWaypoint.getLocation();
             Robot.writeLog("next waypoint (%.2f,%.2f) ... lookahead: %.2f ... pos: (%.2f,%.2f)", 10, locationB.x, locationB.y, usedLookahead, usedEstimatedLocation.x, usedEstimatedLocation.y);
-            nextWaypoint.executeCommands(this);
+            currentWaypoint.executeCommands(this);
         }
 
         lastWaypointSpeed = speedUsed;
@@ -148,15 +112,6 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         lastUpdatedS = currentS;
 
         Robot.writeLog("LAST WAYPOINT SPEED: " + lastWaypointSpeed, 1);
-    }
-
-    /**
-     * @return true If the robot is close (within lookahead distance) of the last waypoint.
-     */
-    public boolean isClose()
-    {
-        boolean isClose = false;
-        return isClose;
     }
 
     private float generateLookahead()
@@ -181,6 +136,8 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         distanceLeft = pathSegmentLength - distanceAlongPath;
 
         Robot.writeLog("distanceLeft: %.2f, pathSegmentLength: %.2f, distanceAlongPath: %.2f", 1, distanceLeft, pathSegmentLength, distanceAlongPath);
+
+        // This occurs if we are at the end of the path
         if(distanceLeft <= 0 && current.isEnd())
         {
             if(driftAtEnd)
@@ -196,15 +153,14 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
             return Float.NaN;
         }
 
-        // p1 = p0 + vt + 1/2at^2 ...
-        // pathSegmentLength = distanceAlongPath + usedTangentialVelocity*t + 1/2 * maxAcceleration
-
         float finalSpeed = waypointEnd.isForward() ? waypointEnd.getMaxSpeed() : -waypointEnd.getMaxSpeed();
 
         Robot.writeLog("distance left: " + distanceLeft, 1);
         Robot.writeLog("speedUsed: " + speedUsed, 1);
 
         float speed = Float.MAX_VALUE;
+
+        // Looks within the next 15 segments to see if we need to slow down more than we already need to.
         for(PathSegment pathSegment : path.nextSegmentsInclusive(15))
         {
             Waypoint last = pathSegment.getLast();
@@ -249,7 +205,10 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         float usedLookahead = lookaheadForSpeed + dCP;
 
         Robot.writeLog("usedVel: %.2f, usedLookahead %.2f", 30, usedTangentialVelocity, usedLookahead);
-        path.progressIfNeeded(closestPoint);
+        if(path.progressIfNeeded(closestPoint))
+        {
+            updateForNewSegment();
+        }
         return usedLookahead;
     }
 
@@ -277,16 +236,9 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
     public void update()
     {
         Robot.writeLog("update", 80);
-        //TODO: fix crap code here
 
-        if(finishedPath)
+        if(shouldEnd())
         {
-            return;
-        }
-
-        if(isBrakeStage())
-        {
-            commenceBreak();
             return;
         }
 
@@ -295,6 +247,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         {
             lastUpdatedS = currentS;
         }
+
         usedEstimatedLocation = translationalLocationEstimator.estimateLocation();
         usedHeading = rotEstimator.estimateHeading();
 
@@ -302,19 +255,14 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         Robot.writeLog("generated Lookahead, %.2f", 1, usedLookahead);
         if(usedLookahead == Float.NaN)
         {
+            Robot.writeLog("generated Lookahead, %.2f", 100, "Lookahead is NaN");
             commenceBreak();
             return;
         }
         absoluteGoalPoint = calculateAbsoluteGoalPoint(distanceLeft,usedLookahead);
 
-        if(finishedPath)
+        if(shouldEnd())
         {
-            return;
-        }
-
-        if(isBrakeStage())
-        {
-            commenceBreak();
             return;
         }
 
@@ -335,6 +283,21 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
 
         Files.setNameAndValue("Est Loc x", usedEstimatedLocation.x);
         Files.setNameAndValue("Abs Goal Point y", usedEstimatedLocation.y);
+    }
+
+    private boolean shouldEnd()
+    {
+        if(finishedPath)
+        {
+            return true;
+        }
+
+        if(isBrakeStage())
+        {
+            commenceBreak();
+            return true;
+        }
+        return false;
     }
 
     private void commenceBreak()
@@ -482,15 +445,6 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         }
     }
 
-    private float getSpeed(float wheelL, float wheelR, float minWheelSpeed, float maxWheelSpeed)
-    {
-        if(!MathUtils.Algebra.bounded(minWheelSpeed, wheelL, maxWheelSpeed))
-        { return Float.NaN; }
-        if(MathUtils.Algebra.bounded(minWheelSpeed, wheelR, maxWheelSpeed))
-        { return Float.NaN; }
-        return MathUtils.Kinematics.getTangentialSpeed(wheelL, wheelR);
-    }
-
     /**
      * @return The radius of the circle that the robot is traveling across. Positive if the robot is turning left, negative if right.
      */
@@ -536,9 +490,6 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
      */
     public float getRotVelocity()
     { return rotVelocity; }
-
-    public boolean isWithinTolerences()
-    { return withinTolerences; }
 
     /**
      * @return If the robot is finished traveling the path
