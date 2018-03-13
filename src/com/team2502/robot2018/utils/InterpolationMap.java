@@ -13,6 +13,9 @@ import java.util.*;
 public class InterpolationMap implements Map<Double, Double>
 {
 
+    /**
+     * The underlying mechanism through which we store values
+     */
     private Map<Double, Double> table;
 
     /**
@@ -43,8 +46,6 @@ public class InterpolationMap implements Map<Double, Double>
     }
 
     /**
-     * If you need this you're doing it wrong
-     *
      * @return How many defined values there are (i.e how many values we aren't guessing with linear regression)
      */
     @Override
@@ -53,24 +54,41 @@ public class InterpolationMap implements Map<Double, Double>
         return table.size();
     }
 
+    /**
+     * @return If there are any defined values for this Interpolation Map
+     */
     @Override
     public boolean isEmpty()
     {
         return table.isEmpty();
     }
 
+    /**
+     * @param key Some key
+     * @return If it is a key for which there is a defined value in our map
+     */
     @Override
     public boolean containsKey(Object key)
     {
         return table.containsKey(key);
     }
 
+    /**
+     * @param value Some value
+     * @return If it is a value where it is fully defined for some key in the map
+     */
     @Override
     public boolean containsValue(Object value)
     {
         return table.containsValue(value);
     }
 
+    /**
+     *
+     * @param key The key to get a value for
+     * @return The value associated with the key. May be obtained through interpolation
+     * @throws IllegalArgumentException If the key does not extend Double
+     */
     @Override
     public Double get(Object key) throws IllegalArgumentException
     {
@@ -92,36 +110,57 @@ public class InterpolationMap implements Map<Double, Double>
         return table.put(key, value);
     }
 
+    /**
+     * Given a key, make it no longer defined, hence impacting the "graph" of the interpolation map
+     * @param key A key
+     * @return The value formerly associated with that key.
+     */
     @Override
     public Double remove(Object key)
     {
         return table.remove(key);
     }
 
+    /**
+     * Given a map, make all the values in the map defined in our InterpolationMap
+     * @param m that map
+     */
     @Override
     public void putAll(Map<? extends Double, ? extends Double> m)
     {
         table.putAll(m);
     }
 
+    /**
+     * Reset the table such that there are 0 defined values
+     */
     @Override
     public void clear()
     {
         table.clear();
     }
 
+    /**
+     * @return All the keys for which we have a defined value
+     */
     @Override
     public Set<Double> keySet()
     {
         return table.keySet();
     }
 
+    /**
+     * @return All the values that are defined in the table.
+     */
     @Override
     public Collection<Double> values()
     {
         return table.values();
     }
 
+    /**
+     * @return Every defined key-value pair
+     */
     @Override
     public Set<Entry<Double, Double>> entrySet()
     {
