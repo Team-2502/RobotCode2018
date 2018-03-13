@@ -22,39 +22,145 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
     /**
      * This represents the threshold curvature beyond which it's basically a straight line.
      */
-
-    // The curvature at which we should use lines as approximation instead of arcs
     private static final float THRESHOLD_CURVATURE = 0.001F;
+
+    /**
+     * The path that we're driving on
+     */
     private final Path path;
+
+    /**
+     * Something that knows where we're pointing
+     */
     private final IRotationalLocationEstimator rotEstimator;
+
+    /**
+     * How far away we must be from the waypoint before we can stop (but squared)
+     */
     private final float distanceStopSq;
+
+    /**
+     * Something that can automatically generate a lookahead for us
+     */
     private final Lookahead lookahead;
+
+    /**
+     * Someone who knows how fast we're going
+     */
     private final ITranslationalVelocityEstimator velocityEstimator;
+
+    /**
+     * Someone who knows where we are
+     */
     private ITranslationalLocationEstimator translationalLocationEstimator;
+
+    /**
+     * Someone who knows max/min vel+accel of the robot, and how fat it is
+     */
     private ITankRobotBounds tankRobot;
+
+    /**
+     * Are we driving forward?
+     */
     private boolean forward;
+
+    /**
+     * The goal point relative to us
+     */
     private ImmutableVector2f relativeGoalPoint;
+
+    /**
+     * The radius of our motion, assuming that our current path if we didn't change motor velocity would follow a circle
+     */
     private float motionRadius;
+
+    /**
+     * How fast we're rotating
+     */
     private float rotVelocity;
+
+    /**
+     * If we're done
+     */
     private boolean finishedPath = false;
+
+    /**
+     * Where we think we are
+     */
     private ImmutableVector2f usedEstimatedLocation = new ImmutableVector2f();
+
+    /**
+     * Where we think we're pointing
+     */
     private float usedHeading = 0.0F;
     private float lastWaypointSpeed = 0;
 
+    /**
+     * Velocities of left and right wheel
+     */
     private ImmutableVector2f wheelVelocities;
+
+    /**
+     * Speed tangential to our current path
+     */
     private float tangentialSpeed;
+
     private float leftWheelTanVel;
     private float rightWheelTanVel;
+
+    /**
+     * Goal point in absolute coordinates, where (0, 0) is our starting point.
+     */
     private ImmutableVector2f absoluteGoalPoint;
+
+    /**
+     * How much we need to rotate
+     */
     private float dThetaToRotate;
+
+    /**
+     * If we're close to our next waypoint
+     */
     private boolean isClose = false;
+
+    /**
+     * If we are within tolerances for finishing
+     */
     private boolean withinTolerences;
+
+    /**
+     * The lookahead we used
+     */
     private float usedLookahead;
+
+    /**
+     * The speed we used
+     */
     private float speedUsed;
+
+    /**
+     * When we last updated where we're going
+     */
     private double lastUpdatedS = -1;
+
+    /**
+     * The current time
+     */
     private double currentS;
+
+    /**
+     * Distance remaining
+     */
     private float distanceLeft;
+
+    /**
+     * If we should start braking
+     */
     private boolean brakeStage;
+
+    /**
+     * The tangential velocity we used in our calculations
+     */
     private float usedTangentialVelocity;
 
     /**
@@ -86,6 +192,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
      * @return The absolute location of the selected goal point.
      * The goal point is a point on the path 1 lookahead distance away from us.
      * We want to drive at it.
+     *
      * @see <a href="https://www.chiefdelphi.com/forums/showthread.php?threadid=162713">Velocity and End Behavior (Chief Delphi)</a>
      */
     public ImmutableVector2f calculateAbsoluteGoalPoint(float lookAheadDistance)
