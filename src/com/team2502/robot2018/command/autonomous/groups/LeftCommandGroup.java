@@ -62,11 +62,15 @@ public class LeftCommandGroup extends CommandGroup
 
     }
 
+
     private void crossLine()
     {
-        addSequential(new DriveTime(7, 0.4F));
+        addSequential(new DriveTime(5, 0.4F));
     }
 
+    /**
+     * Left side not confident in alliance partners
+     */
     private void goSwitch()
     {
         addParallel(new RaiseElevatorSwitch());
@@ -78,6 +82,9 @@ public class LeftCommandGroup extends CommandGroup
         emitCube();
     }
 
+    /**
+     * Left side normal
+     */
     private void goScaleLeft()
     {
         addSequential(new GoScaleSameSide(Paths.Left.leftScale));
@@ -105,16 +112,12 @@ public class LeftCommandGroup extends CommandGroup
         emitCube();
     }
 
+    /**
+     * Left side cross country
+     */
     private void goScaleRight()
     {
-        addSequential(new PurePursuitCommand(Paths.Left.rightScale));
-
-        addParallel(new ActiveIntakeRotate(1F, -0.5));
-
-        emitCube();
-
-        addSequential(new BackOffScale());
-
+        addSequential(new GoScaleCrossCountry(Paths.Left.rightScale));
     }
 
     private void emitCube()

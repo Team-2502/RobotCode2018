@@ -66,14 +66,7 @@ public class RightCommandGroup extends CommandGroup
 
     private void goScaleLeft()
     {
-        addSequential(new PurePursuitCommand(Paths.Right.leftScale));
-
-        addParallel(new ActiveIntakeRotate(1F, -0.5));
-
-        emitCube();
-
-        addSequential(new DeadreckoningDrive(0.7F, -4F));
-        addSequential(new ElevatorAutonCommand(2.5, 0));
+        addSequential(new GoScaleCrossCountry(Paths.Right.leftScale));
     }
 
     private void goSwitch()
