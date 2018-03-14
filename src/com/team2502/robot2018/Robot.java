@@ -228,8 +228,8 @@ public final class Robot extends IterativeRobot
         SendableVersioning.INSTANCE.init();
         SmartDashboard.putData(SendableVersioning.INSTANCE);
 
-        SendableNavX.init();
-        DashboardData.addUpdater(SendableNavX.INSTANCE);
+        // If this doesn't work update shuffleboard
+        DashboardData.addUpdater(() -> SmartDashboard.putData(NAVX));
 
         DashboardData.addUpdater(() -> {
             Robot.CAL_VELOCITY = SmartDashboard.getNumber("calibration_velocity", 0);

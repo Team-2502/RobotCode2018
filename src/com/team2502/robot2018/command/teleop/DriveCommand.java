@@ -42,7 +42,6 @@ public class DriveCommand extends Command
     {
         locationEstimator.estimateLocation();
 
-        SmartDashboard.putBoolean("DT: AutoShifting Enabled?", !Robot.TRANSMISSION_SOLENOID.disabledAutoShifting);
         Robot.DRIVE_TRAIN.drive();
 
     }

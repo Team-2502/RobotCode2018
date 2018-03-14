@@ -10,21 +10,37 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import java.util.function.DoubleConsumer;
 
 /**
- * Created by 64009334 on 1/16/18.
+ * Like the DifferentialDrive widget, but instead sends speed in FPS.
  */
 public class SendableDriveTrain implements Sendable, DashboardData.DashboardUpdater
 {
     public static final SendableDriveTrain INSTANCE = new SendableDriveTrain();
 
+    /**
+     * Does nothing
+     */
     private DoubleConsumer doNothing;
+
+    /**
+     * Name of drivetrain
+     */
     private String name;
 
+    /**
+     * Make a new instance of our drive train
+     * <br>
+     * This is a singleton because you should have only 1 drivetrain on your robot
+     * If there are more, call 911.
+     */
     private SendableDriveTrain()
     {
         this.doNothing = value -> {};
         this.name = "EncoderDriveTrain";
     }
 
+    /**
+     * Initializes {@link SendableDriveTrain#INSTANCE} because of how Java loads static classes
+     */
     public static void init() { }
 
     @Override

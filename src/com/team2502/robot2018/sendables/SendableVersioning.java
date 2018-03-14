@@ -7,9 +7,15 @@ import java.net.URL;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 
+/**
+ * Send branch name, commit hash, deployer to Shuffleboard
+ */
 public class SendableVersioning implements Sendable
 {
 
+    /**
+     * Singleton because there is only 1 code version
+     */
     public static final SendableVersioning INSTANCE = new SendableVersioning();
 
     private String name;
@@ -19,6 +25,11 @@ public class SendableVersioning implements Sendable
     private String time;
     private String blame;
 
+    /**
+     * Singleton.
+     *
+     * @see SendableVersioning#INSTANCE
+     */
     private SendableVersioning()
     {
         this.name = "Versioning";
@@ -29,11 +40,14 @@ public class SendableVersioning implements Sendable
         this.blame = "unknown";
     }
 
+    /**
+     * Stick versioning in the Jar manifest file
+     */
     public void init()
     {
-        Class clazz = SendableVersioning.class;
-        String className = clazz.getSimpleName() + ".class";
-        String classPath = clazz.getResource(className).toString();
+        Class thisClass = SendableVersioning.class;
+        String className = thisClass.getSimpleName() + ".class";
+        String classPath = thisClass.getResource(className).toString();
         if(!classPath.startsWith("jar")) { return; }
         String manifestPath = classPath.substring(0, classPath.lastIndexOf("!") + 1) + "/META-INF/MANIFEST.MF";
         Manifest manifest;
@@ -50,6 +64,10 @@ public class SendableVersioning implements Sendable
         catch(Exception ignored) { }
     }
 
+    /**
+     * Put it on the shuffleboard
+     * @param builder Something WPILib provides
+     */
     @Override
     public void initSendable(SendableBuilder builder)
     {
