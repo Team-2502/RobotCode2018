@@ -7,6 +7,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * Used for tuning the PID on the drivetrain
+ */
 public class CalibrateRobotCommand extends Command
 {
 
