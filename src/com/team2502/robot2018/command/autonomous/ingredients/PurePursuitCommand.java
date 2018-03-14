@@ -1,6 +1,6 @@
 package com.team2502.robot2018.command.autonomous.ingredients;
 
-import com.team2502.robot2018.Constants;
+import static com.team2502.robot2018.Constants.*;
 import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.trajectory.ITankRobotBounds;
 import com.team2502.robot2018.trajectory.Lookahead;
@@ -21,11 +21,21 @@ public class PurePursuitCommand extends Command
     private Lookahead lookahead;
     private float stopDistance;
 
+    /**
+     * Given some waypoints, drive through them
+     * @param waypoints the waypoints
+     */
     public PurePursuitCommand(List<Waypoint> waypoints)
     {
-        this(waypoints, Constants.LOOKAHEAD, Constants.STOP_DIST_TOLERANCE_FT);
+        this(waypoints, PurePursuit.LOOKAHEAD, PurePursuit.STOP_DIST_TOLERANCE_FT);
     }
 
+    /**
+     * Drive through some waypoints with extra options
+     * @param waypoints Waypoints to drive through
+     * @param lookahead Bean for max + min vel and accel
+     * @param stopDistance How far away to be from the last waypoint before braking
+     */
     public PurePursuitCommand(List<Waypoint> waypoints, Lookahead lookahead, float stopDistance)
     {
         this.waypoints = waypoints;
@@ -92,7 +102,7 @@ public class PurePursuitCommand extends Command
              */
             @Override
             public float getLateralWheelDistance()
-            { return Constants.LATERAL_WHEEL_DISTANCE_FT; }
+            { return PurePursuit.LATERAL_WHEEL_DISTANCE_FT; }
         };
 
 //        rotLocEstimator = new NavXLocationEstimator();

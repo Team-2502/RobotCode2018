@@ -4,10 +4,23 @@ import com.team2502.robot2018.RobotMap;
 import com.team2502.robot2018.utils.NonDefaultSubsystem;
 import edu.wpi.first.wpilibj.Solenoid;
 
+/**
+ * The solenoid that controls the transmission
+ */
 public class TransmissionSolenoid extends NonDefaultSubsystem
 {
     private final Solenoid transmission;
+
+    /**
+     * Autoshifting does not exist on Daedalus
+     * <br>
+     * For an autoshifting example, see {@link com.team2502.robot2017.command.teleop.DriveCommand#execute} found in UpdatedRobotCode2017 (which is a repo)
+     */
     public boolean disabledAutoShifting = true;
+
+    /**
+     * If we have shifted into low gear
+     */
     private boolean lowGear;
 
     public TransmissionSolenoid()

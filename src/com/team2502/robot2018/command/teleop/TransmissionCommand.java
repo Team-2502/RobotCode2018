@@ -4,7 +4,7 @@ import com.team2502.robot2018.Robot;
 import edu.wpi.first.wpilibj.command.InstantCommand;
 
 /**
- * Created by 64009334 on 2/18/18.
+ * Manually toggle whether in first or second gear on the drivetrain
  */
 public class TransmissionCommand extends InstantCommand
 {

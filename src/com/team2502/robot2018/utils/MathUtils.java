@@ -7,6 +7,14 @@ import org.joml.ImmutableVector2f;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * A class containing very many useful mathematical constants and operations
+ *
+ * @see MathUtils.Algebra
+ * @see MathUtils.Geometry
+ * @see MathUtils.LinearAlgebra
+ * @see MathUtils.Kinematics
+ */
 @SuppressWarnings("unused")
 public final class MathUtils
 {
@@ -43,6 +51,11 @@ public final class MathUtils
 
     private MathUtils() { }
 
+    /**
+     * @param x A number
+     * @param y Another number
+     * @return Returns true if numbers are same sin
+     */
     public static boolean signSame(float x, float y)
     { return ((Float.floatToIntBits(x) & 0x80000000) == (Float.floatToIntBits(y) & 0x80000000)); }
 
@@ -52,11 +65,21 @@ public final class MathUtils
     public static float sin(final float value)
     { return SIN_TABLE[(int) (value * 10430.378F) & 65535]; }
 
+    /**
+     * @param a a number
+     * @param b another number
+     * @return the number closer to 0
+     */
     public static float minAbs(final float a, final float b)
     {
         return Math.abs(a) > Math.abs(b) ? b : a;
     }
 
+    /**
+     * @param a a number
+     * @param b another number
+     * @return the number farther from 0
+     */
     public static float maxAbs(final float a, final float b)
     {
         return Math.abs(a) < Math.abs(b) ? b : a;
@@ -68,6 +91,13 @@ public final class MathUtils
     public static float cos(final float value)
     { return SIN_TABLE[(int) (value * 10430.378F + 16384.0F) & 65535]; }
 
+    /**
+     * @param a Lower/Upper bound
+     * @param x Vector to check
+     * @param c Upper/Lower bound
+     * @return Returns true if x's x-component is in between that of a and c AND if x's y component is in between that of a and c.
+     * @see MathUtils.Algebra#between(float, float, float)
+     */
     public static boolean between(final ImmutableVector2f a, final ImmutableVector2f x, final ImmutableVector2f c)
     {
         return Algebra.between(a.get(0), x.get(0), c.get(0)) && Algebra.between(a.get(1), x.get(1), c.get(1));
@@ -188,9 +218,15 @@ public final class MathUtils
     public static float minF(final float a, final float b)
     { return a < b ? a : b; }
 
+    /**
+     * @return the smaller number between a and b
+     */
     public static float minF(final int a, final float b)
     { return a < b ? a : b; }
 
+    /**
+     * @return the smaller number between a and b
+     */
     public static float minF(final float a, final int b)
     { return a < b ? a : b; }
 
@@ -200,9 +236,15 @@ public final class MathUtils
     public static float maxF(final float a, final float b)
     { return a > b ? a : b; }
 
+    /**
+     * @return the larger number between a and b
+     */
     public static float maxF(final int a, final float b)
     { return a > b ? a : b; }
 
+    /**
+     * @return the larger number between a and b
+     */
     public static float maxF(final float a, final int b)
     { return a > b ? a : b; }
 
@@ -337,64 +379,129 @@ public final class MathUtils
     { return StrictMath.log(in); }
 
     //region Exponentiation Functions
+
+    /**
+     * @return x ^ 2
+     */
     public static double pow2(final double x)
     { return x * x; }
 
+    /**
+     * @return x ^ 3
+     */
     public static double pow3(final double x)
     { return x * x * x; }
 
+    /**
+     * @return x ^ 4
+     */
     public static double pow4(final double x)
     { return x * x * x * x; }
 
+    /**
+     * @return x ^ 5
+     */
     public static double pow5(final double x)
     { return x * x * x * x * x; }
 
+    /**
+     * @return x ^ 6
+     */
     public static double pow6(final double x)
     { return x * x * x * x * x * x; }
 
+    /**
+     * @return x ^ 7
+     */
     public static double pow7(final double x)
     { return x * x * x * x * x * x * x; }
 
+    /**
+     * @return x ^ 8
+     */
     public static double pow8(final double x)
     { return x * x * x * x * x * x * x * x; }
 
+    /**
+     * @return x ^ 9
+     */
     public static double pow9(final double x)
     { return x * x * x * x * x * x * x * x * x; }
 
+    /**
+     * @return x ^ 10
+     */
     public static double pow10(final double x)
     { return x * x * x * x * x * x * x * x * x * x; }
     //endregion
 
+    /**
+     * @return x ^ 2
+     */
     public static float pow2f(final float x)
     { return x * x; }
 
+    /**
+     * @return x ^ 3
+     */
     public static float pow3f(final float x)
     { return x * x * x; }
 
+    /**
+     * @return x ^ 4
+     */
     public static float pow4f(final float x)
     { return x * x * x * x; }
 
+    /**
+     * @return x ^ 5
+     */
     public static float pow5f(final float x)
     { return x * x * x * x * x; }
 
+    /**
+     * @return x ^ 6
+     */
     public static float pow6f(final float x)
     { return x * x * x * x * x * x; }
 
+    /**
+     * @return x ^ 7
+     */
     public static float pow7f(final float x)
     { return x * x * x * x * x * x * x; }
 
+    /**
+     * @return x ^ 8
+     */
     public static float pow8f(final float x)
     { return x * x * x * x * x * x * x * x; }
 
+    /**
+     * @return x ^ 9
+     */
     public static float pow9f(final float x)
     { return x * x * x * x * x * x * x * x * x; }
 
+    /**
+     * @return x ^ 10
+     */
     public static float pow10f(final float x)
     { return x * x * x * x * x * x * x * x * x * x; }
     //endregion
 
+    /**
+     * A class containing methods pertaining to vector manipulation
+     */
     public static class LinearAlgebra
     {
+        /**
+         * Rotate the input vector theta radians counterclockwise
+         *
+         * @param vector The input vector
+         * @param theta  How much to rotate it by
+         * @return The rotated vector
+         */
         public static ImmutableVector2f rotate2D(ImmutableVector2f vector, float theta)
         {
             float sin = sin(theta);
@@ -407,9 +514,19 @@ public final class MathUtils
         { return rotate2D(relativeCoord.sub(absoluteLocation), -robotHeading); }
     }
 
+    /**
+     * A class containing methods pertaining to manipulation of real numbers
+     */
     public static class Algebra
     {
 
+        /**
+         * Solve for the roots of a quadratic of the form ax^2 + bx + c
+         * @param a x^2 coefficient
+         * @param b x coefficient
+         * @param c added thing
+         * @return roots of the quadratic
+         */
         public static Set<Float> quadratic(float a, float b, float c)
         {
             Set<Float> toReturn = new HashSet<>();
@@ -432,6 +549,15 @@ public final class MathUtils
             return toReturn;
         }
 
+        /**
+         * Solve for the discriminant of a quadratic of the form ax^2 + bx + c
+         * @param a x^2 coefficient
+         * @param b x coefficient
+         * @param c added thing
+         * @return roots of the quadratic
+         *
+         * @see MathUtils.Algebra#quadratic
+         */
         public static float discriminate(float a, float b, float c)
         {
             return b * b - 4F * a * c;
@@ -445,16 +571,21 @@ public final class MathUtils
             return bounded(a, x, b) || bounded(b, x, a);
         }
 
-        // TODO: between and bounded are probably not the best names
+        /**
+         * @param a lower bound
+         * @param x some number
+         * @param b upper bound
+         * @return if x is between lower and upper bound
+         */
         public static boolean bounded(final float a, final float x, final float b)
         {
             return a <= x && x <= b;
         }
 
         /**
-         * @param a
-         * @param b
-         * @return
+         * @param a A number
+         * @param b Another number
+         * @return If they have the same sign
          * @deprecated Use {@link Math#signum(float)}
          */
         public static boolean positiveMultiplication(final float a, final float b)
@@ -463,6 +594,9 @@ public final class MathUtils
         }
     }
 
+    /**
+     * A class containing methods pertaining to determining our robot's movement information
+     */
     public static class Kinematics
     {
 
@@ -559,6 +693,13 @@ public final class MathUtils
             return (float) radBounded;
         }
 
+        /**
+         * Given a line defined by two points, find the point on the line closest to our robot's position
+         * @param linePointA One point on the line
+         * @param linePointB Another point on the line
+         * @param robotPos The point at which our robot is
+         * @return The point on the line closest to the robot
+         */
         public static ImmutableVector2f getClosestPoint(ImmutableVector2f linePointA, ImmutableVector2f linePointB, ImmutableVector2f robotPos)
         {
             // Let s:[0,1]
@@ -621,11 +762,26 @@ public final class MathUtils
             return dist2A < dist2B ? linePointA : linePointB;
         }
 
+        /**
+         * @param speed Vector's magnitude
+         * @param angle Angle at which it is at
+         * @return A vector in <x, y> form
+         *
+         * @see ImmutableVector2f
+         */
         public static ImmutableVector2f getVector(float speed, float angle)
         {
             return MathUtils.LinearAlgebra.rotate2D(VECTOR_STRAIGHT, angle);
         }
 
+        /**
+         * Given a circle and a line, find where the circle intersects the line
+         * @param pointA One point on the line
+         * @param pointB Another point on the line
+         * @param center The center of the circle
+         * @param radius The radius of the circle
+         * @return All points on both the line and circle, should they exist.
+         */
         public static ImmutableVector2f[] getCircleLineIntersectionPoint(ImmutableVector2f pointA, ImmutableVector2f pointB, ImmutableVector2f center, double radius)
         {
             float baX = pointB.get(0) - pointA.get(0);
@@ -655,6 +811,7 @@ public final class MathUtils
             return new ImmutableVector2f[] { p1, p2 };
         }
 
+        @Deprecated
         public static ImmutableVector2f[] circleLineIntersect(ImmutableVector2f lineP1, ImmutableVector2f lineP2, ImmutableVector2f circleCenter, float circleRadius)
         {
             // Circle-line intersection

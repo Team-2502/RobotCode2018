@@ -1,11 +1,9 @@
 package com.team2502.robot2018.command.autonomous.groups;
 
-import com.team2502.robot2018.Constants;
+import static com.team2502.robot2018.Constants.Physical.*;
 import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.command.autonomous.ingredients.*;
-import com.team2502.robot2018.command.teleop.ToggleIntakeCommand;
 import edu.wpi.first.wpilibj.command.CommandGroup;
-import edu.wpi.first.wpilibj.command.WaitCommand;
 
 public class RightCommandGroup extends CommandGroup
 {
@@ -46,7 +44,7 @@ public class RightCommandGroup extends CommandGroup
                         case SWITCH:
                             goSwitch();
                             break;
-                        case SWITCH_SCALE:
+                        case SCALE_SWITCH:
                             goScaleRight();
                             secondCubeRight();
                             break;
@@ -67,20 +65,13 @@ public class RightCommandGroup extends CommandGroup
 
     private void goScaleLeft()
     {
-        addSequential(new PurePursuitCommand(Paths.Right.leftScale));
-
-        addParallel(new ActiveIntakeRotate(1F, -0.5));
-
-        emitCube();
-
-        addSequential(new DeadreckoningDrive(0.7F, -4F));
-        addSequential(new ElevatorAutonCommand(2.5, 0));
+        addSequential(new GoScaleCrossCountry(Paths.Right.leftScale));
     }
 
     private void goSwitch()
     {
         addSequential(new PurePursuitCommand(Paths.Right.rightSwitch));
-        addSequential(new ElevatorAutonCommand(.8F, Constants.SWITCH_ELEV_HEIGHT_FT));
+        addSequential(new ElevatorAutonCommand(.8F, Elevator.SWITCH_ELEV_HEIGHT_FT));
         addSequential(new ActiveIntakeRotate(0.35, 1));
 
         emitCube();
@@ -88,19 +79,7 @@ public class RightCommandGroup extends CommandGroup
 
     private void goScaleRight()
     {
-        // TODO: Move things into constants
-        addParallel(new ActiveIntakeRotate(1, 0.5));
-        addSequential(new PurePursuitCommand(Paths.Right.rightScale));
-
-        addSequential(new ToggleIntakeCommand());
-        addSequential(new ActiveIntakeRotate(.25F, -0.5));
-
-        emitCube();
-
-        addSequential(new DeadreckoningDrive(0.7F, -4F));
-        addSequential(new ElevatorAutonCommand(2.5, 0));
-
-
+        addSequential(new GoScaleSameSide(Paths.Right.rightScale));
     }
 
     private void crossLine()

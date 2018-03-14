@@ -18,8 +18,8 @@ public class ElevatorAutonCommand extends TimedCommand
     /**
      * Positive voltage is up by default is up
      *
-     * @param timeout
-     * @param feet
+     * @param timeout How long to try to get the elvator to the right height
+     * @param feet    How high the elevator should be
      */
     public ElevatorAutonCommand(double timeout, float feet)
     {
