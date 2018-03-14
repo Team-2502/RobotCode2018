@@ -12,6 +12,7 @@ import com.team2502.robot2018.sendables.SendablePIDTuner;
 import com.team2502.robot2018.utils.NonDefaultSubsystem;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import org.checkerframework.checker.units.qual.C;
 
 public class ElevatorSubsystem extends NonDefaultSubsystem implements PIDTunable, DashboardData.DashboardUpdater
 {
@@ -41,12 +42,17 @@ public class ElevatorSubsystem extends NonDefaultSubsystem implements PIDTunable
         elevatorTop.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen, Constants.INIT_TIMEOUT);
         elevatorBottom.configForwardLimitSwitchSource(RemoteLimitSwitchSource.RemoteTalonSRX, LimitSwitchNormal.NormallyOpen, RobotMap.Motor.ELEVATOR_TOP, Constants.INIT_TIMEOUT);
 
-        elevatorTop.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen, Constants.INIT_TIMEOUT);
-        elevatorBottom.configReverseLimitSwitchSource(RemoteLimitSwitchSource.RemoteTalonSRX, LimitSwitchNormal.NormallyOpen, RobotMap.Motor.ELEVATOR_TOP, Constants.INIT_TIMEOUT);
+//        TODO: uncomment for motion magic
+//        elevatorTop.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen, Constants.INIT_TIMEOUT);
+//        elevatorBottom.configReverseLimitSwitchSource(RemoteLimitSwitchSource.RemoteTalonSRX, LimitSwitchNormal.NormallyOpen, RobotMap.Motor.ELEVATOR_TOP, Constants.INIT_TIMEOUT);
 
         elevatorTop.follow(elevatorBottom);
         elevatorBottom.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute, 0, Constants.INIT_TIMEOUT);
         elevatorBottom.setSensorPhase(true);
+
+        // Set trapezoid details for motion profiling
+        elevatorBottom.configMotionCruiseVelocity(Elevator.CRUISE_VELOCITY_EVEL, Constants.INIT_TIMEOUT);
+        elevatorBottom.configMotionAcceleration(Elevator.MAX_ACCEL_EACCEL, Constants.INIT_TIMEOUT);
 
         pidTuner = new SendablePIDTuner(this, this);
 
@@ -113,6 +119,7 @@ public class ElevatorSubsystem extends NonDefaultSubsystem implements PIDTunable
     {
         double epos = feet * Elevator.FEET_TO_EPOS_ELEV;
         System.out.println("epos target: "+epos);
+//        TODO: Change control mode to motion magic
         moveElevator(ControlMode.Position, epos);
     }
 
