@@ -80,18 +80,7 @@ public class LeftCommandGroup extends CommandGroup
 
     private void goScaleLeft()
     {
-
-        addParallel(new ActiveIntakeRotate(1, 0.5));
-        addSequential(new PurePursuitCommand(Paths.Left.leftScale));
-
-        addSequential(new ToggleIntakeCommand());
-        addSequential(new ActiveIntakeRotate(.25F, -0.5));
-
-        emitCube();
-
-        addSequential(new DeadreckoningDrive(0.7F, -4F));
-        addSequential(new ElevatorAutonCommand(2.5, 0));
-
+        addSequential(new GoScaleSameSide(Paths.Left.leftScale));
     }
 
     private void secondCubeLeft()
@@ -124,8 +113,7 @@ public class LeftCommandGroup extends CommandGroup
 
         emitCube();
 
-        addSequential(new DeadreckoningDrive(0.7F, -4F));
-        addSequential(new ElevatorAutonCommand(2.5, 0));
+        addSequential(new BackOffScale());
 
     }
 
