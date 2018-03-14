@@ -3,7 +3,6 @@ package com.team2502.robot2018.command.autonomous.groups;
 import static com.team2502.robot2018.Constants.Physical.*;
 import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.command.autonomous.ingredients.*;
-import com.team2502.robot2018.command.teleop.ToggleIntakeCommand;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 public class RightCommandGroup extends CommandGroup
@@ -45,7 +44,7 @@ public class RightCommandGroup extends CommandGroup
                         case SWITCH:
                             goSwitch();
                             break;
-                        case SWITCH_SCALE:
+                        case SCALE_SWITCH:
                             goScaleRight();
                             secondCubeRight();
                             break;

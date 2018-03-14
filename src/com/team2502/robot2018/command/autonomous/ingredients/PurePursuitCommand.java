@@ -21,11 +21,21 @@ public class PurePursuitCommand extends Command
     private Lookahead lookahead;
     private float stopDistance;
 
+    /**
+     * Given some waypoints, drive through them
+     * @param waypoints the waypoints
+     */
     public PurePursuitCommand(List<Waypoint> waypoints)
     {
         this(waypoints, PurePursuit.LOOKAHEAD, PurePursuit.STOP_DIST_TOLERANCE_FT);
     }
 
+    /**
+     * Drive through some waypoints with extra options
+     * @param waypoints Waypoints to drive through
+     * @param lookahead Bean for max + min vel and accel
+     * @param stopDistance How far away to be from the last waypoint before braking
+     */
     public PurePursuitCommand(List<Waypoint> waypoints, Lookahead lookahead, float stopDistance)
     {
         this.waypoints = waypoints;

@@ -13,6 +13,7 @@ import java.util.List;
 public class GoScaleSameSide extends CommandGroup
 {
     /**
+     * Go to the side of the scale that is on the same side of the field
      * @param path The correct path
      */
     public GoScaleSameSide(List<Waypoint> path)

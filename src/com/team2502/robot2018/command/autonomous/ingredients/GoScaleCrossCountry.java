@@ -9,6 +9,7 @@ import java.util.List;
 public class GoScaleCrossCountry extends CommandGroup
 {
     /**
+     * Go to the side of the scale that is across the field
      * @param path The correct path
      */
     public GoScaleCrossCountry(List<Waypoint> path)

@@ -6,6 +6,9 @@ import edu.wpi.first.wpilibj.command.WaitCommand;
 
 public class RaiseElevatorSwitch extends CommandGroup
 {
+    /**
+     * Raise the elevator to the right height for the switch
+     */
     public RaiseElevatorSwitch()
     {
         addSequential(new WaitCommand(0.5));
