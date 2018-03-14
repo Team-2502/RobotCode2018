@@ -84,7 +84,6 @@ public class InterpolationMap implements Map<Double, Double>
     }
 
     /**
-     *
      * @param key The key to get a value for
      * @return The value associated with the key. May be obtained through interpolation
      * @throws IllegalArgumentException If the key does not extend Double
@@ -112,6 +111,7 @@ public class InterpolationMap implements Map<Double, Double>
 
     /**
      * Given a key, make it no longer defined, hence impacting the "graph" of the interpolation map
+     *
      * @param key A key
      * @return The value formerly associated with that key.
      */
@@ -123,6 +123,7 @@ public class InterpolationMap implements Map<Double, Double>
 
     /**
      * Given a map, make all the values in the map defined in our InterpolationMap
+     *
      * @param m that map
      */
     @Override

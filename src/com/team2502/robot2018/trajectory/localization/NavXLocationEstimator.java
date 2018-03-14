@@ -27,6 +27,7 @@ public class NavXLocationEstimator implements IRotationalLocationEstimator, ITra
 
     /**
      * Read the value from the NavX and convert the angle to radians
+     *
      * @return Theta of our robot in radians
      */
     @Override
@@ -39,6 +40,7 @@ public class NavXLocationEstimator implements IRotationalLocationEstimator, ITra
 
     /**
      * Turn NavX angle into radians
+     *
      * @param yawDegTot What the NavX is reading
      * @return The angle in radians, between 0 and 2pi.
      */

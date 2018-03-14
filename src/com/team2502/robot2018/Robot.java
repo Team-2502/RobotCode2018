@@ -5,7 +5,6 @@ import com.kauailabs.navx.frc.AHRS;
 import com.team2502.robot2018.command.autonomous.ingredients.AutonStrategy;
 import com.team2502.robot2018.sendables.SendableDriveStrategyType;
 import com.team2502.robot2018.sendables.SendableDriveTrain;
-import com.team2502.robot2018.sendables.SendableNavX;
 import com.team2502.robot2018.sendables.SendableVersioning;
 import com.team2502.robot2018.subsystem.ActiveIntakeSubsystem;
 import com.team2502.robot2018.subsystem.DriveTrainSubsystem;
@@ -105,9 +104,9 @@ public final class Robot extends IterativeRobot
      * The NavX on the robot. To fully recalibrate,
      *
      * <ul>
-     *     <li>Press and hold the CAL button on the NavX for 5(?) seconds</li>
-     *     <li>Press the reset button</li>
-     *     <li>Wait until the orange light on the NavX stops flashing</li>
+     * <li>Press and hold the CAL button on the NavX for 5(?) seconds</li>
+     * <li>Press the reset button</li>
+     * <li>Wait until the orange light on the NavX stops flashing</li>
      * </ul>
      *
      * @see AHRS
@@ -120,26 +119,23 @@ public final class Robot extends IterativeRobot
      * @see AutonStrategy
      */
     public static SendableChooser<AutonStrategy> autonStrategySelector;
-
+    /**
+     * A continuously running command that localizes the robot
+     *
+     * @see Robot#autonomousInit()
+     * @see RobotLocalizationCommand
+     */
+    public static RobotLocalizationCommand ROBOT_LOCALIZATION_COMMAND;
     /**
      * A list of log messages that will get printed out once the robot is disabled
      *
      * @see Robot#writeLog(String, int, Object...)
      */
     private static List<String> logLines = new ArrayList<>();
-
-    /**
-     * A continuously running command that localizes the robot
-     * 
-     * @see Robot#autonomousInit() 
-     * @see RobotLocalizationCommand
-     */
-    public static RobotLocalizationCommand ROBOT_LOCALIZATION_COMMAND;
-
     /**
      * Specifies the minimum level of log message to print out
-     * 
-     * @see Robot#writeLog(String, int, Object...) 
+     *
+     * @see Robot#writeLog(String, int, Object...)
      */
 
     private static int LEVEL = 40;
@@ -147,13 +143,13 @@ public final class Robot extends IterativeRobot
 
     /**
      * Save a log message for later so that it can be printed out once disabled
+     *
      * @param message A string that can be used with String.format
-     * @param level The level of the log message (how important it is)
+     * @param level   The level of the log message (how important it is)
      * @param objects The objects to format the string with
-     * 
-     * @see Robot#disabledInit() 
+     * @see Robot#disabledInit()
      * @see Robot#logLines
-     * @see String#format(String, Object...) 
+     * @see String#format(String, Object...)
      */
     public static void writeLog(String message, int level, Object... objects)
     {
@@ -172,10 +168,10 @@ public final class Robot extends IterativeRobot
     {
         // Initialize NavX
         NAVX = new AHRS(SPI.Port.kMXP);
-        
+
         // Start pushing video from the camera to the DS
         CameraServer.getInstance().startAutomaticCapture();
-        
+
         // Create the autonomous strategy selector
         autonStrategySelector = new SendableChooser<>();
         AutonStrategy[] values = AutonStrategy.values();
@@ -191,7 +187,7 @@ public final class Robot extends IterativeRobot
                 autonStrategySelector.addObject(autonStrategy.getName(), autonStrategy);
             }
         }
-        
+
         SmartDashboard.putData("auto_strategy", autonStrategySelector);
 
         // Make Donovan's logger
@@ -207,10 +203,10 @@ public final class Robot extends IterativeRobot
         ACTIVE_INTAKE_SOLENOID = new ActiveIntakeSolenoid();
         CLIMBER_SOLENOID = new ClimberSolenoid();
         BUTTERFLY_SOLENOID = new ButterflySolenoid();
-        
+
         // Initialize OI 
         OI.init();
-        
+
         // Initialize the ACCELERATION_FOR_ELEVATOR_HEIGHT interpolation map. 
         Map<Double, Double> map = ImmutableMap.<Double, Double>builder()
                 .put(0D, 14D)
@@ -305,7 +301,7 @@ public final class Robot extends IterativeRobot
         // Initialize Estimators
         NavXLocationEstimator rotEstimator = new NavXLocationEstimator();
         EncoderDifferentialDriveLocationEstimator encoderDifferentialDriveLocationEstimator = new EncoderDifferentialDriveLocationEstimator(rotEstimator);
-        
+
         // Begin running the localization routine
         ROBOT_LOCALIZATION_COMMAND = new RobotLocalizationCommand(rotEstimator, encoderDifferentialDriveLocationEstimator, encoderDifferentialDriveLocationEstimator);
 

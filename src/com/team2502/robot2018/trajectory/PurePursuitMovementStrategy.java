@@ -9,7 +9,6 @@ import com.team2502.robot2018.utils.MathUtils;
 import logger.Log;
 import org.joml.ImmutableVector2f;
 
-import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -192,7 +191,6 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
      * @return The absolute location of the selected goal point.
      * The goal point is a point on the path 1 lookahead distance away from us.
      * We want to drive at it.
-     *
      * @see <a href="https://www.chiefdelphi.com/forums/showthread.php?threadid=162713">Velocity and End Behavior (Chief Delphi)</a>
      */
     public ImmutableVector2f calculateAbsoluteGoalPoint(float lookAheadDistance)

@@ -30,6 +30,7 @@ public final class DashboardData
 
     /**
      * Add an updater
+     *
      * @param subsystem An updater (which is usually a subsystem) that will continually put stuff on the smartdashboard
      */
     public static void addUpdater(DashboardUpdater subsystem) { updaters.add(subsystem); }

@@ -9,6 +9,7 @@ public interface ITranslationalLocationEstimator
 {
     /**
      * In (x, y) coordinates where the y axis is parallel to the long side of the field, return our position
+     *
      * @return Our position
      */
     ImmutableVector2f estimateLocation();

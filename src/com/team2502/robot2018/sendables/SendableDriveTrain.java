@@ -1,6 +1,5 @@
 package com.team2502.robot2018.sendables;
 
-import static com.team2502.robot2018.Constants.Physical.DriveTrain;
 import com.team2502.robot2018.DashboardData;
 import com.team2502.robot2018.Robot;
 import edu.wpi.first.wpilibj.Sendable;
@@ -8,6 +7,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import java.util.function.DoubleConsumer;
+
+import static com.team2502.robot2018.Constants.Physical.DriveTrain;
 
 /**
  * Like the DifferentialDrive widget, but instead sends speed in FPS.

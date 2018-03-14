@@ -1,8 +1,9 @@
 package com.team2502.robot2018.command.autonomous.ingredients;
 
-import static com.team2502.robot2018.Constants.Physical.Elevator;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.command.WaitCommand;
+
+import static com.team2502.robot2018.Constants.Physical.Elevator;
 
 public class RaiseElevatorSwitch extends CommandGroup
 {

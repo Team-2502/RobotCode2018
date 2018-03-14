@@ -1,7 +1,6 @@
 package com.team2502.robot2018.command.autonomous.ingredients;
 
 import com.team2502.robot2018.command.teleop.ToggleIntakeCommand;
-import com.team2502.robot2018.trajectory.Path;
 import com.team2502.robot2018.trajectory.Waypoint;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
@@ -14,6 +13,7 @@ public class GoScaleSameSide extends CommandGroup
 {
     /**
      * Go to the side of the scale that is on the same side of the field
+     *
      * @param path The correct path
      */
     public GoScaleSameSide(List<Waypoint> path)

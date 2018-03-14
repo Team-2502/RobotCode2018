@@ -38,6 +38,7 @@ public abstract class ToggleSendable implements Sendable
 
     /**
      * Put all the modes onto the smartdashboard
+     *
      * @param builder
      */
     @Override

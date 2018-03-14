@@ -15,6 +15,12 @@ import com.team2502.robot2018.utils.InterpolationMap;
  */
 public class Constants
 {
+    /* Tweak */
+    public static final float INTAKE_SPEED_PERCENT_LIMIT = 0.1F;
+    public static final float MAX_ROT_DEG_PER_SEC = 30;
+    public static final int INIT_TIMEOUT = 10; // When initializing a sensor/whatever, the timeout will be 10 ms
+    public static final int LOOP_TIMEOUT = 0; // When doing things in a loop, there won't be a timeout
+
     /**
      * Variables that pertain to Pure Pursuit, such as lookahead and max speed for PP
      */
@@ -38,13 +44,14 @@ public class Constants
         private PurePursuit() { }
     }
 
-
     /**
      * Conversion constants for Encoders and FPS/RPM as well as robot details
      */
     public static class Physical
     {
         public static InterpolationMap ACCELERATION_FOR_ELEVATOR_HEIGHT;
+
+        private Physical() { }
 
         /**
          * Contains encoder conversion constants and details about the drivetrain gitwheels
@@ -77,7 +84,6 @@ public class Constants
 
             private DriveTrain() { }
         }
-
 
         /**
          * Contains encoder conversion constants and details about the elevator
@@ -132,7 +138,6 @@ public class Constants
             public static final int MAX_ACCEL_EACCEL = (int) (MAX_ACCEL_FPS2 * EVEL_TO_FPS_ELEV);
 
 
-
             private Elevator() { }
         }
 
@@ -147,15 +152,5 @@ public class Constants
 
             private Encoder() { }
         }
-
-        private Physical() { }
     }
-
-    /* Tweak */
-    public static final float INTAKE_SPEED_PERCENT_LIMIT = 0.1F;
-    public static final float MAX_ROT_DEG_PER_SEC = 30;
-
-
-    public static final int INIT_TIMEOUT = 10; // When initializing a sensor/whatever, the timeout will be 10 ms
-    public static final int LOOP_TIMEOUT = 0; // When doing things in a loop, there won't be a timeout
 }

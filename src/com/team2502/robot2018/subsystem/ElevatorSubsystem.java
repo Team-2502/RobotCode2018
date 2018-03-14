@@ -3,16 +3,15 @@ package com.team2502.robot2018.subsystem;
 import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.team2502.robot2018.Constants;
-import static com.team2502.robot2018.Constants.Physical.Elevator;
 import com.team2502.robot2018.DashboardData;
 import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.RobotMap;
 import com.team2502.robot2018.sendables.PIDTunable;
 import com.team2502.robot2018.sendables.SendablePIDTuner;
 import com.team2502.robot2018.utils.NonDefaultSubsystem;
-import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import org.checkerframework.checker.units.qual.C;
+
+import static com.team2502.robot2018.Constants.Physical.Elevator;
 
 public class ElevatorSubsystem extends NonDefaultSubsystem implements PIDTunable, DashboardData.DashboardUpdater
 {
@@ -104,6 +103,7 @@ public class ElevatorSubsystem extends NonDefaultSubsystem implements PIDTunable
 
     /**
      * Move the elevator
+     *
      * @param speed Percent voltage
      */
     public void moveElevator(double speed)
@@ -113,12 +113,13 @@ public class ElevatorSubsystem extends NonDefaultSubsystem implements PIDTunable
 
     /**
      * Move the elevator to a certain position
+     *
      * @param feet Height of elevator in feet
      */
     public void setElevatorPos(float feet)
     {
         double epos = feet * Elevator.FEET_TO_EPOS_ELEV;
-        System.out.println("epos target: "+epos);
+        System.out.println("epos target: " + epos);
 //        TODO: Change control mode to motion magic
         moveElevator(ControlMode.Position, epos);
     }
@@ -229,7 +230,7 @@ public class ElevatorSubsystem extends NonDefaultSubsystem implements PIDTunable
 
     /**
      * @return Velocity of elevator in enc units / 100 ms
-     *
+     * <p>
      * TODO: Change to real units
      */
     public double getVel()
@@ -239,13 +240,13 @@ public class ElevatorSubsystem extends NonDefaultSubsystem implements PIDTunable
 
     /**
      * @return Position of elevator in enc units
-     *
+     * <p>
      * TODO: Change to real units
      */
     public double getPos()
     {
         int selectedSensorPosition = elevatorBottom.getSelectedSensorPosition(0);
-        System.out.println("epos real: "+selectedSensorPosition);
+        System.out.println("epos real: " + selectedSensorPosition);
         return selectedSensorPosition;
     }
 

@@ -2,6 +2,7 @@ package com.team2502.robot2018.trajectory;
 
 /**
  * An attempt at Trapezoidal Motion Profiling that might work but has never been tested.
+ *
  * @deprecated
  */
 public class TrapezoidalMotionProfiling

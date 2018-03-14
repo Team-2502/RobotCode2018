@@ -1,12 +1,13 @@
 package com.team2502.robot2018.command.autonomous.groups;
 
-import static com.team2502.robot2018.Constants.Physical.*;
 import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.command.autonomous.ingredients.*;
 import com.team2502.robot2018.command.teleop.QuickCommand;
 import com.team2502.robot2018.command.teleop.ToggleIntakeCommand;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.command.WaitCommand;
+
+import static com.team2502.robot2018.Constants.Physical.Elevator;
 
 public class LeftCommandGroup extends CommandGroup
 {

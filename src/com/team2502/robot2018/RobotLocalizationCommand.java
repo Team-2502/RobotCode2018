@@ -9,6 +9,7 @@ import org.joml.ImmutableVector2f;
 
 /**
  * An uninterruptable command that runs 24/7 (even when disabled) to calculate and cache the state of the robot (x,y,heading,dx,dv...).
+ *
  * @deprecated Should be made into a Thread running at a period of <i>x</i> ms. However, this needs to be tested.
  */
 public class RobotLocalizationCommand extends Command implements ITranslationalLocationEstimator, ITranslationalVelocityEstimator, IRotationalLocationEstimator
@@ -40,7 +41,8 @@ public class RobotLocalizationCommand extends Command implements ITranslationalL
 
     /**
      * Begin Localization
-     * @param rotEstimator Heading estimator - Grabs the heading from the NavX
+     *
+     * @param rotEstimator      Heading estimator - Grabs the heading from the NavX
      * @param velocityEstimator Velocity estimator - Grabs the velocity from the encoders
      * @param locationEstimator Location estimator - Grabs the estimated location from some kinematics equations
      */
@@ -105,6 +107,7 @@ public class RobotLocalizationCommand extends Command implements ITranslationalL
 
     /**
      * Never finished - runs continuously
+     *
      * @return false
      */
     @Override
@@ -163,6 +166,7 @@ public class RobotLocalizationCommand extends Command implements ITranslationalL
      * At any given time, the robot's velocity is tangent to the curve on which it is driving.<br>
      * (Imagine a dot moving in a circular path - if you freed it from the circle, it would continue in a path tangent to the circle)<br>
      * The robot's tangential speed is the robot's speed tangent to the curve.<br>
+     *
      * @return tangential speed
      */
     @Override

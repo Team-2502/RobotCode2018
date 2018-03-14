@@ -22,6 +22,7 @@ public class RotateAutonStationary extends Command
 
     /**
      * Rotate
+     *
      * @param degrees how far to rotate
      */
     public RotateAutonStationary(float degrees)
@@ -31,6 +32,7 @@ public class RotateAutonStationary extends Command
 
     /**
      * rotate
+     *
      * @param degrees how far to rotate
      * @param fps     how fast to rotate
      */

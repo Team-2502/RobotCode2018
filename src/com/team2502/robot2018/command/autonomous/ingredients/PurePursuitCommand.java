@@ -1,6 +1,5 @@
 package com.team2502.robot2018.command.autonomous.ingredients;
 
-import static com.team2502.robot2018.Constants.*;
 import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.trajectory.ITankRobotBounds;
 import com.team2502.robot2018.trajectory.Lookahead;
@@ -11,6 +10,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.joml.ImmutableVector2f;
 
 import java.util.List;
+
+import static com.team2502.robot2018.Constants.PurePursuit;
 
 public class PurePursuitCommand extends Command
 {
@@ -23,6 +24,7 @@ public class PurePursuitCommand extends Command
 
     /**
      * Given some waypoints, drive through them
+     *
      * @param waypoints the waypoints
      */
     public PurePursuitCommand(List<Waypoint> waypoints)
@@ -32,8 +34,9 @@ public class PurePursuitCommand extends Command
 
     /**
      * Drive through some waypoints with extra options
-     * @param waypoints Waypoints to drive through
-     * @param lookahead Bean for max + min vel and accel
+     *
+     * @param waypoints    Waypoints to drive through
+     * @param lookahead    Bean for max + min vel and accel
      * @param stopDistance How far away to be from the last waypoint before braking
      */
     public PurePursuitCommand(List<Waypoint> waypoints, Lookahead lookahead, float stopDistance)

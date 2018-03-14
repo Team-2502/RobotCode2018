@@ -3,7 +3,6 @@ package com.team2502.robot2018.subsystem.solenoid;
 import com.team2502.robot2018.RobotMap;
 import com.team2502.robot2018.utils.NonDefaultSubsystem;
 import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.command.Subsystem;
 import logger.Log;
 
 public class ClimberSolenoid extends NonDefaultSubsystem

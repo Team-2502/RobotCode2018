@@ -40,6 +40,7 @@ class AutoStartLocationSwitcher
 
     /**
      * Get an instance of the autonomous selected
+     *
      * @return A new instance of the selected autonomous
      */
     static Command getAutoInstance() { return autoChooser.getSelected().getInstance(); }
@@ -69,7 +70,7 @@ class AutoStartLocationSwitcher
         /**
          * Make a new auto mode that can be selected from
          *
-         * @param name The name of the command
+         * @param name           The name of the command
          * @param commandFactory A lambda that can create a new command (usually method reference to constructor)
          */
         AutoMode(String name, CommandFactory commandFactory)

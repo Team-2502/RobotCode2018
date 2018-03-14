@@ -2,7 +2,7 @@ package com.team2502.robot2018.command.autonomous.ingredients;
 
 /**
  * Let drive team choose what they want to achieve in auto
- *
+ * <p>
  * TODO: Implement multi-cube autos
  */
 public enum AutonStrategy

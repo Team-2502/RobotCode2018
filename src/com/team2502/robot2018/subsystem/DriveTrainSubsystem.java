@@ -104,6 +104,7 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
 
     /**
      * Prepare the talon for driving in teleop
+     *
      * @param talon the talon in question
      */
     private void setTeleopSettings(WPI_TalonSRX talon)
@@ -227,9 +228,9 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
 
     /**
      * Run the drivetrain at a percent voltage
-     * @param leftWheel Percent voltage to left side
-     * @param rightWheel Percent voltage to right side
      *
+     * @param leftWheel  Percent voltage to left side
+     * @param rightWheel Percent voltage to right side
      * @see DriveTrainSubsystem#runMotors(ControlMode, float, float)
      */
     public void runMotorsVoltage(float leftWheel, float rightWheel)
@@ -239,9 +240,9 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
 
     /**
      * Run the drivetrain at a particular speed
-     * @param leftWheel Speed of the left side (ft/s)
-     * @param rightWheel Speed of the right side (ft/s)
      *
+     * @param leftWheel  Speed of the left side (ft/s)
+     * @param rightWheel Speed of the right side (ft/s)
      * @see DriveTrainSubsystem#runMotors(ControlMode, float, float)
      */
     public void runMotorsVelocity(float leftWheel, float rightWheel)
@@ -254,9 +255,9 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
 
     /**
      * Run the drivetrain at a particular speed in raw enc units
-     * @param leftWheel Speed of the left side (enc units/ 100 ms)
-     * @param rightWheel Speed of the right side (enc units/ 100 ms)
      *
+     * @param leftWheel  Speed of the left side (enc units/ 100 ms)
+     * @param rightWheel Speed of the right side (enc units/ 100 ms)
      * @see DriveTrainSubsystem#runMotors(ControlMode, float, float)
      * @see DriveTrainSubsystem#runMotorsVelocity(float, float)
      */
@@ -269,7 +270,6 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
      * Drive the robot using ControlMode.PercentOutput. The equation leftWheel=-rightWheel must be true for the robot to setElevatorPV straight.
      * <br>
      * Do not use for auton as this will use percent voltage.
-     *
      *
      * @param leftWheel  Units for the left side of drivetrain
      * @param rightWheel Units for the right side of drivetrain
@@ -290,8 +290,8 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     /**
      * Disable talons, stopping them.
      *
-     * @deprecated
      * @see DriveTrainSubsystem#stop()
+     * @deprecated
      */
     public void disableTalons()
     {
@@ -340,6 +340,7 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
 
     /**
      * Used to gradually increase the speed of the robot in teleop
+     *
      * @return
      */
     private FloatPair getSpeedTank()
@@ -375,7 +376,6 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
 
     /**
      * @return Tangent speed
-     *
      * @see DriveTrainSubsystem#getTanVel()
      */
     public float getTanSpeed()
@@ -552,7 +552,8 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     {
         /**
          * Given left and right joystick y levels, run the motors
-         * @param joystickLeft Left joy y level
+         *
+         * @param joystickLeft  Left joy y level
          * @param joystickRight Right joy y level
          */
         void drive(float joystickLeft, float joystickRight);

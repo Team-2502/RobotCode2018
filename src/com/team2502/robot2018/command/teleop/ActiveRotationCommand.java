@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.command.Command;
 
 /**
  * During teleop, rotate intake based on function joystick y-axis
+ *
  * @see ActiveIntakeSubsystem#initDefaultCommand()
  */
 public class ActiveRotationCommand extends Command

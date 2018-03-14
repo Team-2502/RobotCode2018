@@ -10,6 +10,7 @@ public class ShootCubeCommand extends TimedCommand
 
     /**
      * Given a cube, shoot it
+     *
      * @param timeout How long to wait before stopping the intake
      */
     public ShootCubeCommand(double timeout)
@@ -20,9 +21,9 @@ public class ShootCubeCommand extends TimedCommand
 
     /**
      * Given a cube, shoot it
-     * @param timeout How long to wait before stopping the intake
-     * @param speed How fast to run the intake (percent voltage)
      *
+     * @param timeout How long to wait before stopping the intake
+     * @param speed   How fast to run the intake (percent voltage)
      * @see com.team2502.robot2018.subsystem.ActiveIntakeSubsystem#runIntake(double)
      */
     public ShootCubeCommand(double timeout, double speed)

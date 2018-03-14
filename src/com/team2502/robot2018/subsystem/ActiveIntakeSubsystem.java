@@ -41,6 +41,7 @@ public class ActiveIntakeSubsystem extends Subsystem
 
     /**
      * Run the intake at a speed
+     *
      * @param speed Percent voltage
      */
     public void runIntake(double speed)
@@ -76,6 +77,7 @@ public class ActiveIntakeSubsystem extends Subsystem
 
     /**
      * Rotate the intake
+     *
      * @param x percent voltage to motor
      */
     public void rotateIntake(double x)

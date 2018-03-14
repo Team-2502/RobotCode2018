@@ -1,7 +1,7 @@
 package com.team2502.robot2018.trajectory;
 
 /**
- *  Makes segments created by two {@link Waypoint}s easier to work with in {@link Path}
+ * Makes segments created by two {@link Waypoint}s easier to work with in {@link Path}
  */
 public class PathSegment
 {

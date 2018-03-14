@@ -1,9 +1,10 @@
 package com.team2502.robot2018.command.autonomous.groups;
 
-import static com.team2502.robot2018.Constants.Physical.*;
 import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.command.autonomous.ingredients.*;
 import edu.wpi.first.wpilibj.command.CommandGroup;
+
+import static com.team2502.robot2018.Constants.Physical.Elevator;
 
 public class RightCommandGroup extends CommandGroup
 {
@@ -90,7 +91,7 @@ public class RightCommandGroup extends CommandGroup
 
     private void emitCube()
     {
-        addSequential(new ShootCubeCommand(1,.5));
+        addSequential(new ShootCubeCommand(1, .5));
 
     }
 }

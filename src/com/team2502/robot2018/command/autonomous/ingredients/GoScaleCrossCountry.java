@@ -1,6 +1,5 @@
 package com.team2502.robot2018.command.autonomous.ingredients;
 
-import com.team2502.robot2018.command.teleop.ToggleIntakeCommand;
 import com.team2502.robot2018.trajectory.Waypoint;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
@@ -10,6 +9,7 @@ public class GoScaleCrossCountry extends CommandGroup
 {
     /**
      * Go to the side of the scale that is across the field
+     *
      * @param path The correct path
      */
     public GoScaleCrossCountry(List<Waypoint> path)

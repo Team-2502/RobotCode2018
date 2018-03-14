@@ -47,6 +47,7 @@ public class Files
 
     /**
      * Set the time (ms)
+     *
      * @param time Time in milliseconds to start timestamping from
      */
     public static void setTime(long time)
@@ -56,9 +57,9 @@ public class Files
 
     /**
      * Throw something into RobotMap.Files#FILEMAP
-     * @param Name The "class" of the thing (in an HTML/CSS sense). See {@link RobotMap.Files#NAMES}
-     * @param object the thing
      *
+     * @param Name   The "class" of the thing (in an HTML/CSS sense). See {@link RobotMap.Files#NAMES}
+     * @param object the thing
      * @see com.team2502.robot2018.RobotMap.Files#FILEMAP
      */
     public static void setNameAndValue(String Name, Object object)
@@ -73,6 +74,7 @@ public class Files
 
     /**
      * Change file we are writing to
+     *
      * @param fileName New path to file
      */
     public static void setFileName(String fileName)
@@ -129,6 +131,7 @@ class WriteToFile
 
     /**
      * Append to a file
+     *
      * @param file_path the file to append to
      */
     public WriteToFile(String file_path)
@@ -138,7 +141,8 @@ class WriteToFile
 
     /**
      * Write to a file
-     * @param file_path Path to file
+     *
+     * @param file_path    Path to file
      * @param append_value Whether or not to append to it
      */
     public WriteToFile(String file_path, boolean append_value)
@@ -149,6 +153,7 @@ class WriteToFile
 
     /**
      * Put things in the file
+     *
      * @param text The stuff to put in the file
      * @throws IOException If stuff goes wrong
      */

@@ -522,6 +522,7 @@ public final class MathUtils
 
         /**
          * Solve for the roots of a quadratic of the form ax^2 + bx + c
+         *
          * @param a x^2 coefficient
          * @param b x coefficient
          * @param c added thing
@@ -551,11 +552,11 @@ public final class MathUtils
 
         /**
          * Solve for the discriminant of a quadratic of the form ax^2 + bx + c
+         *
          * @param a x^2 coefficient
          * @param b x coefficient
          * @param c added thing
          * @return roots of the quadratic
-         *
          * @see MathUtils.Algebra#quadratic
          */
         public static float discriminate(float a, float b, float c)
@@ -695,9 +696,10 @@ public final class MathUtils
 
         /**
          * Given a line defined by two points, find the point on the line closest to our robot's position
+         *
          * @param linePointA One point on the line
          * @param linePointB Another point on the line
-         * @param robotPos The point at which our robot is
+         * @param robotPos   The point at which our robot is
          * @return The point on the line closest to the robot
          */
         public static ImmutableVector2f getClosestPoint(ImmutableVector2f linePointA, ImmutableVector2f linePointB, ImmutableVector2f robotPos)
@@ -766,7 +768,6 @@ public final class MathUtils
          * @param speed Vector's magnitude
          * @param angle Angle at which it is at
          * @return A vector in <x, y> form
-         *
          * @see ImmutableVector2f
          */
         public static ImmutableVector2f getVector(float speed, float angle)
@@ -776,6 +777,7 @@ public final class MathUtils
 
         /**
          * Given a circle and a line, find where the circle intersects the line
+         *
          * @param pointA One point on the line
          * @param pointB Another point on the line
          * @param center The center of the circle
