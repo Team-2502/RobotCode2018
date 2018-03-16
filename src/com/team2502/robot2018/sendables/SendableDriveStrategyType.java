@@ -6,13 +6,19 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import java.util.Arrays;
 
+/**
+ * Allow the driver to toggle between Voltage drive and PID (Velocity) drive
+ */
 public class SendableDriveStrategyType extends ToggleSendable implements DashboardData.DashboardUpdater
 {
     public static final SendableDriveStrategyType INSTANCE = new SendableDriveStrategyType();
     private String name;
     private String subsystem;
 
-    public SendableDriveStrategyType()
+    /**
+     * Singleton because of 1 drivetrain and 1 driver control set
+     */
+    private SendableDriveStrategyType()
     {
         super(Arrays.asList(DriveTrainSubsystem.DriveStrategyType.values()), DriveTrainSubsystem.DriveStrategyType.values()[0]);
         this.name = "DriveStrategyType";

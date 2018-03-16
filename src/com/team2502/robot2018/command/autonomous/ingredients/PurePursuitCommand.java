@@ -12,6 +12,8 @@ import org.joml.ImmutableVector2f;
 
 import java.util.List;
 
+import static com.team2502.robot2018.Constants.PurePursuit;
+
 public class PurePursuitCommand extends Command
 {
     private ITankRobotBounds tankRobot;
@@ -21,11 +23,23 @@ public class PurePursuitCommand extends Command
     private Lookahead lookahead;
     private boolean drift;
 
+    /**
+     * Given some waypoints, drive through them
+     *
+     * @param waypoints the waypoints
+     */
     public PurePursuitCommand(List<Waypoint> waypoints, boolean drift)
     {
-        this(waypoints, Constants.LOOKAHEAD,drift);
+        this(waypoints, Constants.PurePursuit.LOOKAHEAD,drift);
     }
 
+    /**
+     * Drive through some waypoints with extra options
+     *
+     * @param waypoints    Waypoints to drive through
+     * @param lookahead    Bean for max + min vel and accel
+     * @param drift If the robot should brake at the end or drift
+     */
     public PurePursuitCommand(List<Waypoint> waypoints, Lookahead lookahead, boolean drift)
     {
         this.drift = drift;
@@ -92,7 +106,7 @@ public class PurePursuitCommand extends Command
              */
             @Override
             public float getLateralWheelDistance()
-            { return Constants.LATERAL_WHEEL_DISTANCE_FT; }
+            { return PurePursuit.LATERAL_WHEEL_DISTANCE_FT; }
         };
 
 //        rotLocEstimator = new NavXLocationEstimator();
@@ -106,8 +120,6 @@ public class PurePursuitCommand extends Command
     {
         Robot.writeLog("init PP", 80);
         purePursuitMovementStrategy = new PurePursuitMovementStrategy(tankRobot, Robot.ROBOT_LOCALIZATION_COMMAND, Robot.ROBOT_LOCALIZATION_COMMAND, Robot.ROBOT_LOCALIZATION_COMMAND, waypoints, lookahead,true);
-        SmartDashboard.putBoolean("PPisClose", purePursuitMovementStrategy.isClose());
-        SmartDashboard.putBoolean("PPisSuccess", purePursuitMovementStrategy.isWithinTolerences());
     }
 
     @Override
@@ -137,11 +149,11 @@ public class PurePursuitCommand extends Command
         boolean finishedPath = purePursuitMovementStrategy.isFinishedPath();
         if(finishedPath)
         {
-            SmartDashboard.putBoolean("PPisSuccess", purePursuitMovementStrategy.isWithinTolerences());
-            if(purePursuitMovementStrategy.isWithinTolerences())
-            {
-                System.out.println("\n\nSUCCESS!\n\n");
-            }
+//            SmartDashboard.putBoolean("PPisSuccess", purePursuitMovementStrategy.isWithinTolerences());
+//            if(purePursuitMovementStrategy.isWithinTolerences())
+//            {
+//                System.out.println("\n\nSUCCESS!\n\n");
+//            }
             Robot.DRIVE_TRAIN.stop();
         }
         return finishedPath;

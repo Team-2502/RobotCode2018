@@ -11,11 +11,15 @@ public class DriveTime extends Command
      * @param timeout How long we should put you in the timeout corner for using this class
      * @param voltage How much voltage we should give the robot to restart the robot's heart, as it got a heart attack because you used this class.
      * @deprecated Veer off to the side inconsistently
+<<<<<<< HEAD
      * <p>
+=======
+     *
+>>>>>>> develop
      * <br>
      * <p>
      * Play Russian Roulette with the robot
-     * <p>
+     *
      * <br>
      * <p>
      * Invest all of your money into the Lehman Brothers

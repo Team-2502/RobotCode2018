@@ -9,6 +9,8 @@ import edu.wpi.first.wpilibj.command.Command;
 
 /**
  * Turn to a certain angle with the NavX. Is also a good example of using custom PID control
+ *
+ * @author Ritik Mishr, 2017
  */
 public class NavXRotateCommand extends Command implements PIDOutput
 {

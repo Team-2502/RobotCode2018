@@ -1,12 +1,13 @@
 package com.team2502.robot2018.command.autonomous.groups;
 
-import com.team2502.robot2018.Constants;
 import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.command.autonomous.ingredients.*;
 import com.team2502.robot2018.command.teleop.QuickCommand;
 import com.team2502.robot2018.command.teleop.ToggleIntakeCommand;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.command.WaitCommand;
+
+import static com.team2502.robot2018.Constants.Physical.Elevator;
 
 public class LeftCommandGroup extends CommandGroup
 {
@@ -62,11 +63,15 @@ public class LeftCommandGroup extends CommandGroup
 
     }
 
+
     private void crossLine()
     {
-        addSequential(new DriveTime(7, 0.4F));
+        addSequential(new DriveTime(5, 0.4F));
     }
 
+    /**
+     * Left side not confident in alliance partners
+     */
     private void goSwitch()
     {
         addParallel(new RaiseElevatorSwitch());
@@ -78,20 +83,12 @@ public class LeftCommandGroup extends CommandGroup
         emitCube();
     }
 
+    /**
+     * Left side normal
+     */
     private void goScaleLeft()
     {
-
-        addParallel(new ActiveIntakeRotate(1, 0.5));
-        addSequential(new PurePursuitCommand(PathConfig.Left.leftScale, false));
-
-        addSequential(new ToggleIntakeCommand());
-        addSequential(new ActiveIntakeRotate(.25F, -0.5));
-
-        emitCube();
-
-        addSequential(new DeadreckoningDrive(0.7F, -4F));
-        addSequential(new ElevatorAutonCommand(2.5, 0));
-
+        addSequential(new GoScaleSameSide(PathConfig.Left.leftScale));
     }
 
     private void secondCubeLeft()
@@ -101,7 +98,7 @@ public class LeftCommandGroup extends CommandGroup
 
         addParallel(new PurePursuitCommand(PathConfig.Left.leftScaleToSwitch, true));
 
-        addSequential(new ElevatorAutonCommand(3F, -Constants.SCALE_ELEV_HEIGHT_FT));
+        addSequential(new ElevatorAutonCommand(3F, -Elevator.SCALE_ELEV_HEIGHT_FT));
         addSequential(new QuickCommand(Robot.ELEVATOR::calibrateEncoder));
 
         addSequential(new ToggleIntakeCommand());
@@ -111,22 +108,17 @@ public class LeftCommandGroup extends CommandGroup
         addSequential(new ToggleIntakeCommand());
 
         addParallel(new ActiveIntakeRotate(1F, -0.7));
-        addSequential(new ElevatorAutonCommand(3F, Constants.SWITCH_ELEV_HEIGHT_FT + 1));
+        addSequential(new ElevatorAutonCommand(3F, Elevator.SWITCH_ELEV_HEIGHT_FT + 1));
 
         emitCube();
     }
 
+    /**
+     * Left side cross country
+     */
     private void goScaleRight()
     {
-        addSequential(new PurePursuitCommand(PathConfig.Left.rightScale, false));
-
-        addParallel(new ActiveIntakeRotate(1F, -0.5));
-
-        emitCube();
-
-        addSequential(new DeadreckoningDrive(0.7F, -4F));
-        addSequential(new ElevatorAutonCommand(2.5, 0));
-
+        addSequential(new GoScaleCrossCountry(PathConfig.Left.rightScale));
     }
 
     private void emitCube()

@@ -5,6 +5,8 @@ import logger.ShuffleboardLog;
 
 /**
  * Prints a message on Shuffleboard (usually used during a systems test)
+ * <p>
+ * See the systems test tab to view it.
  */
 public class PrintCommand extends InstantCommand
 {

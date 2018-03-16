@@ -6,12 +6,21 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+/**
+ * Fast PID tuning for subsystems with encoders
+ */
 public class SendablePIDTuner implements Sendable, DashboardData.DashboardUpdater
 {
     private String name;
     private String subsystem;
     private PIDTunable pidValues;
 
+    /**
+     * Public because each subsystem will need their own tuner
+     *
+     * @param subsystem The subsystem that needs to be tuned
+     * @param pidValues Should be the same as subsystem, as it should have getters and setters for PID values
+     */
     public SendablePIDTuner(Subsystem subsystem, PIDTunable pidValues)
     {
         this.name = "PIDTuner";
@@ -43,6 +52,11 @@ public class SendablePIDTuner implements Sendable, DashboardData.DashboardUpdate
         this.subsystem = subsystem;
     }
 
+    /**
+     * Put the PID info on shuffleboard
+     *
+     * @param builder Something WPILib will provide when calling this method
+     */
     @Override
     public void initSendable(SendableBuilder builder)
     {

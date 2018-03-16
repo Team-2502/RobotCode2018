@@ -16,12 +16,20 @@ public class NavXLocationEstimator implements IRotationalLocationEstimator, ITra
     double initHeading;
     ImmutableVector2f initPosition;
 
+    /**
+     * Make a new estimator for our angle
+     */
     public NavXLocationEstimator()
     {
         initHeading = -Robot.NAVX.getAngle();
         initPosition = estimateLocation();
     }
 
+    /**
+     * Read the value from the NavX and convert the angle to radians
+     *
+     * @return Theta of our robot in radians
+     */
     @Override
     public float estimateHeading()
     {
@@ -30,7 +38,13 @@ public class NavXLocationEstimator implements IRotationalLocationEstimator, ITra
         return (float) navXToRad(yawDegTotal - initHeading);
     }
 
-    double navXToRad(double yawDegTot)
+    /**
+     * Turn NavX angle into radians
+     *
+     * @param yawDegTot What the NavX is reading
+     * @return The angle in radians, between 0 and 2pi.
+     */
+    private double navXToRad(double yawDegTot)
     {
         double yawDeg = yawDegTot % 360;
         if(yawDeg < 0) { yawDeg = 360 + yawDeg; }
@@ -39,7 +53,7 @@ public class NavXLocationEstimator implements IRotationalLocationEstimator, ITra
 
     /**
      * @return
-     * @deprecated bad! Accurate to 1m
+     * @deprecated bad! Accurate to 1m after 15 s because of accelerometer noise
      */
     @Override
     public ImmutableVector2f estimateLocation()

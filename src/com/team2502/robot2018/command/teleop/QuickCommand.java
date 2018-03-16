@@ -7,8 +7,10 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
  * This class has been deprecated in order to discourage use of it.
+ * <br>
+ * It is rather unreadable
  * <p>
- * Only use this class when doing quick fixes at tournaments.
+ * Only use this class when doing quick fixes under time constraints
  */
 @Deprecated
 public class QuickCommand extends InstantCommand

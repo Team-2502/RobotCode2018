@@ -100,7 +100,7 @@ public class Path
     boolean progressIfNeeded(ImmutableVector2f closestPoint)
     {
         PathSegment pathSegment = pathSegments.get(segmentOnI);
-        if(pathSegment.getDistanceLeftEff(closestPoint) < Constants.DISTANCE_COMPLETE_SEGMENT_TOLERANCE)
+        if(pathSegment.getDistanceLeftEff(closestPoint) < Constants.PurePursuit.DISTANCE_COMPLETE_SEGMENT_TOLERANCE)
         {
             return moveNextSegment();
         }

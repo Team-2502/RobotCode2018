@@ -3,7 +3,6 @@ package com.team2502.robot2018.utils;
 /**
  * A handy stopwatch for recording time in seconds every time it is polled
  */
-
 public class Stopwatch
 {
     private long lastTime = -1;
@@ -14,7 +13,7 @@ public class Stopwatch
     public float poll()
     {
         long nanoTime = System.nanoTime();
-        long dTime = lastTime == -1 ? 0 : nanoTime - lastTime;
+        long dTime = (lastTime == -1) ? 0 : nanoTime - lastTime;
         lastTime = nanoTime;
         return dTime / 1E9F;
     }

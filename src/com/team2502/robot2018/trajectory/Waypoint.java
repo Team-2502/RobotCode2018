@@ -19,11 +19,29 @@ public class Waypoint
     private float maxAccel;
     private float maxDeccel;
 
+    /**
+     * Make a new waypoint
+     *
+     * @param location  Location of the waypoint
+     * @param maxSpeed  Max speed at the waypoint (in ft/s)
+     * @param maxAccel  Max accel at the waypoint (in ft/s^2)
+     * @param maxDeccel Max decel at the waypoint (in ft/s^2)
+     */
     public Waypoint(ImmutableVector2f location, float maxSpeed, float maxAccel, float maxDeccel)
     {
         this(location, maxSpeed, maxAccel, maxDeccel, true);
     }
 
+    /**
+     * Make a new waypoint
+     *
+     * @param location  Location of the waypoint
+     * @param maxSpeed  Max speed at the waypoint (in ft/s)
+     * @param maxAccel  Max accel at the waypoint (in ft/s^2)
+     * @param maxDeccel Max decel at the waypoint (in ft/s^2)
+     * @param forward   Whether or not we are driving forward at this waypoint
+     * @param commands  Some commands to execute once we reach this waypoint
+     */
     public Waypoint(ImmutableVector2f location, float maxSpeed, float maxAccel, float maxDeccel, boolean forward, Command... commands)
     {
         this.location = location;
@@ -65,6 +83,11 @@ public class Waypoint
         return commands;
     }
 
+    /**
+     * Execute all the commands we're supposed to execute
+     *
+     * @param purePursuitMovementStrategy In case one of the commands wants the strategy for something
+     */
     public void executeCommands(PurePursuitMovementStrategy purePursuitMovementStrategy)
     {
         for(Command command : commands)
@@ -90,6 +113,9 @@ public class Waypoint
                '}';
     }
 
+    /**
+     * Something commands can extend if they want a copy of the PurePursuitMovementStrategy instance
+     */
     interface PurePursuitReciever
     {
         void recieveStrategy(PurePursuitMovementStrategy purePursuitMovementStrategy);

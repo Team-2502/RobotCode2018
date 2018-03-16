@@ -2,6 +2,9 @@ package com.team2502.robot2018.trajectory.localization;
 
 import org.joml.ImmutableVector2f;
 
+/**
+ * Interface for any class that will estimate position details of our robot
+ */
 public interface ITranslationalVelocityEstimator
 {
     /**
