@@ -400,7 +400,8 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     /**
      * @return Velocity as read by left encoder in Feet per Second
      */
-    public float getLeftVel() { return fakeToRealWheelRev(getLeftRawVel() * Constants.Physical.DriveTrain.FAKE_EVEL_TO_FPS_DT); }
+    public float getLeftVel()
+    { return fakeToRealWheelRev(getLeftRawVel() * Constants.Physical.DriveTrain.FAKE_EVEL_TO_FPS_DT); }
 
     /**
      * @return Turns "fake" units into real wheel revolutions

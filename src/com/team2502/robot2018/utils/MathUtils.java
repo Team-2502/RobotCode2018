@@ -2,10 +2,12 @@ package com.team2502.robot2018.utils;
 
 
 import com.team2502.robot2018.Robot;
+import org.joml.ImmutableVector2d;
 import org.joml.ImmutableVector2f;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.DoubleSupplier;
 
 /**
  * A class containing very many useful mathematical constants and operations
@@ -854,5 +856,69 @@ public final class MathUtils
             else if(between(lineP1, intersect2, lineP2)) { return new ImmutableVector2f[] { intersect2 }; }
             return new ImmutableVector2f[0];
         }
+
+        public static class Line implements Integrable
+        {
+            final double slope;
+            final double y_intercept;
+            final double x_intercept;
+
+            final double x1;
+            final double x2;
+            final double y1;
+            final double y2;
+
+            final ImmutableVector2d a;
+            final ImmutableVector2d b;
+
+            public Line(ImmutableVector2d a, ImmutableVector2d b)
+            {
+                x1 = a.x;
+                x2 = b.x;
+                y1 = a.y;
+                y2 = b.y;
+
+                this.a = a;
+                this.b = b;
+
+                slope = (a.y - b.y) / (a.x - b.x);
+                y_intercept = a.y - slope * a.x;
+                x_intercept =  -y_intercept / slope;
+            }
+
+            public double get(double x)
+            {
+                return slope * x + y_intercept;
+            }
+
+            public double integrate(double a, double b)
+            {
+                // integral of y = mx + b is
+                // mx^2/2 + bx + c
+                // at start of integration bound it should be 0
+                double c = -(a * a / 2 + b * a);
+
+                Function indefiniteIntegral = (x) -> slope * x * x / 2 + y_intercept * x + c;
+
+                return indefiniteIntegral.get(b) - indefiniteIntegral.get(a);
+            }
+
+            public double integrate()
+            {
+                return integrate(x1, x2);
+            }
+        }
+    }
+
+    public interface Integrable
+    {
+        double integrate(double a, double b);
+
+    }
+
+    @FunctionalInterface
+    public interface Function
+    {
+        double get(double x);
     }
 }

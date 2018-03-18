@@ -15,12 +15,12 @@ public class ClimberSolenoid extends NonDefaultSubsystem
     /**
      * When true, it means the elevator is locked and can only go down
      */
-    private boolean climbeEnabled;
+    private boolean climberEnabled;
 
     public ClimberSolenoid()
     {
         climberSolenoid = new Solenoid(RobotMap.Solenoid.CLIMBER_SOLENOID);
-        climbeEnabled = true;
+        climberEnabled = true;
     }
 
 
@@ -30,7 +30,7 @@ public class ClimberSolenoid extends NonDefaultSubsystem
     public void lockElevator()
     {
         Log.info("Locking elevator");
-        climberSolenoid.set(climbeEnabled = false);
+        climberSolenoid.set(climberEnabled = false);
     }
 
     /**
@@ -39,20 +39,20 @@ public class ClimberSolenoid extends NonDefaultSubsystem
     public void unlockElevator()
     {
         Log.info("Unlocking elevator");
-        climberSolenoid.set(climbeEnabled = true);
+        climberSolenoid.set(climberEnabled = true);
     }
 
     /**
      * Toggle whether the climber is engaged
      */
     public void toggleLock()
-    { climberSolenoid.set(climbeEnabled = !climbeEnabled); }
+    { climberSolenoid.set(climberEnabled = !climberEnabled); }
 
     /**
      * @return Whether or not the climber is enabled
      */
     public boolean isLocked()
-    { return !climbeEnabled; }
+    { return !climberEnabled; }
 
     /**
      * Engage the climber

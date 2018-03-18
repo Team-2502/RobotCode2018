@@ -9,14 +9,12 @@ import com.team2502.robot2018.sendables.SendableVersioning;
 import com.team2502.robot2018.subsystem.ActiveIntakeSubsystem;
 import com.team2502.robot2018.subsystem.DriveTrainSubsystem;
 import com.team2502.robot2018.subsystem.ElevatorSubsystem;
-import com.team2502.robot2018.subsystem.solenoid.ActiveIntakeSolenoid;
-import com.team2502.robot2018.subsystem.solenoid.ButterflySolenoid;
-import com.team2502.robot2018.subsystem.solenoid.ClimberSolenoid;
-import com.team2502.robot2018.subsystem.solenoid.TransmissionSolenoid;
+import com.team2502.robot2018.subsystem.solenoid.*;
 import com.team2502.robot2018.trajectory.localization.EncoderDifferentialDriveLocationEstimator;
 import com.team2502.robot2018.trajectory.localization.NavXLocationEstimator;
 import com.team2502.robot2018.utils.Files;
 import com.team2502.robot2018.utils.InterpolationMap;
+
 import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -100,6 +98,8 @@ public final class Robot extends IterativeRobot
      */
     public static TransmissionSolenoid TRANSMISSION_SOLENOID;
 
+    public static ClimberCarriageBreakSubsystem CLIMBER_CARRIAGE_BREAK;
+
     /**
      * The NavX on the robot. To fully recalibrate,
      *
@@ -119,6 +119,7 @@ public final class Robot extends IterativeRobot
      * @see AutonStrategy
      */
     public static SendableChooser<AutonStrategy> autonStrategySelector;
+
     /**
      * A continuously running command that localizes the robot
      *
@@ -126,6 +127,7 @@ public final class Robot extends IterativeRobot
      * @see RobotLocalizationCommand
      */
     public static RobotLocalizationCommand ROBOT_LOCALIZATION_COMMAND;
+
     /**
      * A list of log messages that will get printed out once the robot is disabled
      *
@@ -139,7 +141,6 @@ public final class Robot extends IterativeRobot
      */
 
     private static int LEVEL = 40;
-
 
     /**
      * Save a log message for later so that it can be printed out once disabled
@@ -203,6 +204,7 @@ public final class Robot extends IterativeRobot
         ACTIVE_INTAKE_SOLENOID = new ActiveIntakeSolenoid();
         CLIMBER_SOLENOID = new ClimberSolenoid();
         BUTTERFLY_SOLENOID = new ButterflySolenoid();
+        CLIMBER_CARRIAGE_BREAK = new ClimberCarriageBreakSubsystem();
 
         // Initialize OI 
         OI.init();

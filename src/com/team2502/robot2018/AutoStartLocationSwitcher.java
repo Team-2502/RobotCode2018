@@ -60,12 +60,12 @@ class AutoStartLocationSwitcher
         /**
          * A lambda that creates a new instance of the command
          */
-        private CommandFactory commandFactory;
+        public final CommandFactory commandFactory;
 
         /**
          * The name of the command to display on the driver station
          */
-        private String name;
+        public final String name;
 
         /**
          * Make a new auto mode that can be selected from
