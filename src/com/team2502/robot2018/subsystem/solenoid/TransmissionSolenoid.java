@@ -45,8 +45,8 @@ public class TransmissionSolenoid extends NonDefaultSubsystem
     /**
      * Set the transmission to a specific high gear or low gear
      *
-     * @param highGear Boolean saying "do you want to be in high gear?"
+     * @param lowGear Boolean saying "do you want to be in high gear?"
      */
-    public void setLowGear(boolean highGear)
-    { transmission.set(this.highGear = !highGear); }
+    public void setLowGear(boolean lowGear)
+    { transmission.set(this.highGear = !lowGear); }
 }
