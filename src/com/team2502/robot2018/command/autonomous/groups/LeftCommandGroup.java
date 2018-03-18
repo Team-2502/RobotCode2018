@@ -15,7 +15,6 @@ public class LeftCommandGroup extends CommandGroup
 
     public LeftCommandGroup()
     {
-        Robot.TRANSMISSION_SOLENOID.setLowGear(true);
         String AUTO_GAME_DATA = Robot.GAME_DATA.substring(0, 2);
 
         Robot.NAVX.reset();
