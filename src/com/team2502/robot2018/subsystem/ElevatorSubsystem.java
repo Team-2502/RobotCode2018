@@ -53,6 +53,7 @@ public class ElevatorSubsystem extends NonDefaultSubsystem implements PIDTunable
         elevatorBottom.configMotionCruiseVelocity(Elevator.CRUISE_VELOCITY_EVEL, Constants.INIT_TIMEOUT);
         elevatorBottom.configMotionAcceleration(Elevator.MAX_ACCEL_EACCEL, Constants.INIT_TIMEOUT);
 
+
         pidTuner = new SendablePIDTuner(this, this);
 
         DashboardData.addUpdater(this);
@@ -111,6 +112,7 @@ public class ElevatorSubsystem extends NonDefaultSubsystem implements PIDTunable
         moveElevator(ControlMode.PercentOutput, speed);
     }
 
+
     /**
      * Move the elevator to a certain position
      *
@@ -120,9 +122,9 @@ public class ElevatorSubsystem extends NonDefaultSubsystem implements PIDTunable
     {
         double epos = feet * Elevator.FEET_TO_EPOS_ELEV;
         System.out.println("epos target: " + epos);
-//        TODO: Change control mode to motion magic
-        moveElevator(ControlMode.Position, epos);
+        moveElevator(ControlMode.MotionMagic, epos);
     }
+
 
     /**
      * Stop the elevator by setting voltage output to 0
