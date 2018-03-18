@@ -4,6 +4,7 @@ import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.trajectory.localization.IRotationalLocationEstimator;
 import com.team2502.robot2018.trajectory.localization.ITranslationalLocationEstimator;
 import com.team2502.robot2018.trajectory.localization.ITranslationalVelocityEstimator;
+import com.team2502.robot2018.utils.Files;
 import com.team2502.robot2018.utils.MathUtils;
 import logger.Log;
 import org.joml.ImmutableVector2f;
@@ -12,44 +13,153 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * The main logic behind Pure Pursuit
+ */
 public class PurePursuitMovementStrategy implements ITankMovementStrategy
 {
     /**
      * This represents the threshold curvature beyond which it's basically a straight line.
      */
-
-    // The curvature at which we should use lines as approximation instead of arcs
     private static final float THRESHOLD_CURVATURE = 0.001F;
-    public final Path path;
+
+    /**
+     * The path that we're driving on
+     */
+    private final Path path;
+
+    /**
+     * Something that knows where we're pointing
+     */
     private final IRotationalLocationEstimator rotEstimator;
+
+    /**
+     * How far away we must be from the waypoint before we can stop (but squared)
+     */
     private final float distanceStopSq;
+
+    /**
+     * Something that can automatically generate a lookahead for us
+     */
     private final Lookahead lookahead;
+
+    /**
+     * Someone who knows how fast we're going
+     */
     private final ITranslationalVelocityEstimator velocityEstimator;
+
+    /**
+     * Someone who knows where we are
+     */
     private ITranslationalLocationEstimator translationalLocationEstimator;
+
+    /**
+     * Someone who knows max/min vel+accel of the robot, and how fat it is
+     */
     private ITankRobotBounds tankRobot;
+
+    /**
+     * Are we driving forward?
+     */
     private boolean forward;
+
+    /**
+     * The goal point relative to us
+     */
     private ImmutableVector2f relativeGoalPoint;
+
+    /**
+     * The radius of our motion, assuming that our current path if we didn't change motor velocity would follow a circle
+     */
     private float motionRadius;
+
+    /**
+     * How fast we're rotating
+     */
     private float rotVelocity;
+
+    /**
+     * If we're done
+     */
     private boolean finishedPath = false;
+
+    /**
+     * Where we think we are
+     */
     private ImmutableVector2f usedEstimatedLocation = new ImmutableVector2f();
+
+    /**
+     * Where we think we're pointing
+     */
     private float usedHeading = 0.0F;
     private float lastWaypointSpeed = 0;
 
+    /**
+     * Velocities of left and right wheel
+     */
     private ImmutableVector2f wheelVelocities;
+
+    /**
+     * Speed tangential to our current path
+     */
     private float tangentialSpeed;
+
     private float leftWheelTanVel;
     private float rightWheelTanVel;
+
+    /**
+     * Goal point in absolute coordinates, where (0, 0) is our starting point.
+     */
     private ImmutableVector2f absoluteGoalPoint;
+
+    /**
+     * How much we need to rotate
+     */
     private float dThetaToRotate;
+
+    /**
+     * If we're close to our next waypoint
+     */
     private boolean isClose = false;
+
+    /**
+     * If we are within tolerances for finishing
+     */
     private boolean withinTolerences;
+
+    /**
+     * The lookahead we used
+     */
     private float usedLookahead;
+
+    /**
+     * The speed we used
+     */
     private float speedUsed;
+
+    /**
+     * When we last updated where we're going
+     */
     private double lastUpdatedS = -1;
+
+    /**
+     * The current time
+     */
     private double currentS;
+
+    /**
+     * Distance remaining
+     */
     private float distanceLeft;
+
+    /**
+     * If we should start braking
+     */
     private boolean brakeStage;
+
+    /**
+     * The tangential velocity we used in our calculations
+     */
     private float usedTangentialVelocity;
 
     /**
@@ -259,7 +369,6 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         // p1 = p0 + vt + 1/2at^2 ...
         // pathSegmentLength = distanceAlongPath + usedTangentialVelocity*t + 1/2 * maxAcceleration
 
-//        float startSpeed = lastWaypointSpeed;
         float finalSpeed = waypointEnd.isForward() ? waypointEnd.getMaxSpeed() : -waypointEnd.getMaxSpeed();
 
         Robot.writeLog("distance left: " + distanceLeft, 1);
@@ -300,7 +409,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
                 Robot.writeLog("not forward", 1);
                 speedUsed = MathUtils.maxF(finalSpeed, lastWaypointSpeed + dTime * waypointEnd.getMaxDeccel());
             }
-            Robot.writeLog("accel ... speedUsed: %.2f, dTime: %.2f, lastSpeed: %.2f, aMax %.2f", 1, speedUsed, dTime, lastWaypointSpeed, waypointEnd.getMaxAccel());
+            Robot.writeLog("accel ... speedUsed: %.2f, poll: %.2f, lastSpeed: %.2f, aMax %.2f", 1, speedUsed, dTime, lastWaypointSpeed, waypointEnd.getMaxAccel());
         }
 
         Robot.writeLog("speed %.2f, speedUsed: %.2f", 2, speed, speedUsed);
@@ -309,7 +418,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
 
         float usedLookahead = lookaheadForSpeed + dCP;
 
-        Robot.writeLog("usedVel: %.2f, usedLookahead %.2f",30,usedTangentialVelocity,usedLookahead);
+        Robot.writeLog("usedVel: %.2f, usedLookahead %.2f", 30, usedTangentialVelocity, usedLookahead);
         return usedLookahead;
     }
 
@@ -383,6 +492,18 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         Robot.writeLog("relativeGP: (%.2f,%.2f)", 30, relativeGoalPoint.x, relativeGoalPoint.y);
 
         wheelVelocities = calculateWheelVelocities();
+
+        Files.setNameAndValue("Wheel Velocity (planned) L", wheelVelocities.x);
+        Files.setNameAndValue("Wheel Velocity (planned) R", wheelVelocities.y);
+
+        Files.setNameAndValue("Relative Goal Point x", relativeGoalPoint.x);
+        Files.setNameAndValue("Relative Goal Point y", relativeGoalPoint.y);
+
+        Files.setNameAndValue("Abs Goal Point x", absoluteGoalPoint.x);
+        Files.setNameAndValue("Abs Goal Point y", absoluteGoalPoint.y);
+
+        Files.setNameAndValue("Est Loc x", usedEstimatedLocation.x);
+        Files.setNameAndValue("Abs Goal Point y", usedEstimatedLocation.y);
     }
 
     private void commenceBreak()

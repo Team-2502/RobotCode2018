@@ -6,6 +6,9 @@ import logger.ShuffleboardLog;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * Prints the results of a system test in shuffleboard
+ */
 public class PrintResultsCommand extends InstantCommand
 {
     private final Map<String, Boolean> resultsMap;

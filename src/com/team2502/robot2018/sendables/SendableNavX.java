@@ -14,7 +14,10 @@ import java.util.function.DoubleSupplier;
  * One may only use it if you send a Sendable to the SmartDashboard.
  * While AHRS implements Sendable, the getAngle goes from -180 degrees to 180 degrees. The gyro widget only supports 0 to 360 degrees.
  * This class rectifies that issue.
+ *
+ * @deprecated Shuffleboard fixed the bug described above in a new update
  */
+@Deprecated
 public class SendableNavX implements Sendable, DashboardData.DashboardUpdater
 {
     public static final SendableNavX INSTANCE = new SendableNavX();

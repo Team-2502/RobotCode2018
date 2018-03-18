@@ -9,7 +9,7 @@ import java.util.List;
 
 /**
  * Like constants, but for autonomous paths.
- * <p>
+ *
  * <br>
  * <p>
  * If you want, you can graph these on Desmos to see where they go.
@@ -40,8 +40,8 @@ public class Paths
         public static final List<Waypoint> rightSwitch = Arrays.asList(
                 new Waypoint(new ImmutableVector2f(0, 0), 0, 10, -10),
                 new Waypoint(new ImmutableVector2f(2F, 2.45F), 16, 10, -10),
-                new Waypoint(new ImmutableVector2f(5F, 4F), 16, 10, -10),
-                new Waypoint(new ImmutableVector2f(5F, 8.5F), 1F, 10, -10)
+                new Waypoint(new ImmutableVector2f(4F, 4F), 16, 10, -10),
+                new Waypoint(new ImmutableVector2f(4F, 9.5F), 1F, 10, -10)
                                                                       );
 
         /**
@@ -49,9 +49,9 @@ public class Paths
          */
         public static final List<Waypoint> leftSwitch = Arrays.asList(
                 new Waypoint(new ImmutableVector2f(0, 0), 0, 5, -5),
-                new Waypoint(new ImmutableVector2f(-1.75F, 2.45F), 16, 5, -5),
-                new Waypoint(new ImmutableVector2f(-5.25F, 4), 16, 5, -5),
-                new Waypoint(new ImmutableVector2f(-5.25F, 9), 3F, 5, -5)
+                new Waypoint(new ImmutableVector2f(0, 2F), 16, 5, -5),
+                new Waypoint(new ImmutableVector2f(-4.5F, 4), 16, 5, -5),
+                new Waypoint(new ImmutableVector2f(-4.5F, 10), 1F, 5, -5)
                                                                      );
     }
 
@@ -62,8 +62,8 @@ public class Paths
     {
         public static final List<Waypoint> leftScale = Arrays.asList(
                 new Waypoint(new ImmutableVector2f(0, 0), 0, 20, -9),
-                new Waypoint(new ImmutableVector2f(-0.5F, 8.589F), 16F, 20, -7,true),
-                new Waypoint(new ImmutableVector2f(-0.5F, 12.405F), 5F, 20, -7,true,new RaiseElevatorScale()),
+                new Waypoint(new ImmutableVector2f(-0.5F, 8.589F), 16F, 20, -7, true),
+                new Waypoint(new ImmutableVector2f(-0.5F, 12.405F), 5F, 20, -7, true, new RaiseElevatorScale()),
                 new Waypoint(new ImmutableVector2f(-0.5F, 20.5F), 3F, 20, -7, true),
                 new Waypoint(new ImmutableVector2f(2.3F, 23.5F), 0F, 20, -7) // max deceleration appears to be -7 ft / s^2
                                                                     );
@@ -72,13 +72,13 @@ public class Paths
                 new Waypoint(new ImmutableVector2f(1.5F, 22.0F), 0F, 20, -7),
                 new Waypoint(new ImmutableVector2f(4F, 21.2F), 0F, 20, -9), // max deceleration appears to be -7 ft / s^2
                 new Waypoint(new ImmutableVector2f(10F, 15F), 3F, 10, -9)
-                                                                    );
-
-        public static final List<Waypoint> leftSwitch = Arrays.asList(
-                new Waypoint(new ImmutableVector2f(0, 0), 0, 5, -5),
-                new Waypoint(new ImmutableVector2f(1.636F, 2.454F), 9F, 5, -5),
-                new Waypoint(new ImmutableVector2f(3.82006F, 5.726F), 6F, 5, -5),
-                new Waypoint(new ImmutableVector2f(3.82006F, 9.816F), 2F, 5, -5)
+                                                                            );
+        //TODO: try navX calibration when auto begins ... generally 
+        public static final List<Waypoint> leftSwitch = Arrays.asList( //TODO need to fix as was changed because I (Andrew) thought this was the path we were tweaking
+                                                                       new Waypoint(new ImmutableVector2f(0, 0), 0, 5, -5),
+                                                                       new Waypoint(new ImmutableVector2f(1.636F, 2.454F), 9F, 5, -5),
+                                                                       new Waypoint(new ImmutableVector2f(3.82006F, 5.726F), 6F, 5, -5),
+                                                                       new Waypoint(new ImmutableVector2f(3.82006F, 10.5F), 2F, 5, -5) // TODO: add ability to coast at end
                                                                      );
 
         public static final List<Waypoint> rightScale = Arrays.asList(
@@ -87,8 +87,8 @@ public class Paths
                 new Waypoint(new ImmutableVector2f(0F, 17.0F), 25F, 20, -10),
                 new Waypoint(new ImmutableVector2f(2.454F, 17.5F), 25F, 20, -10),
                 new Waypoint(new ImmutableVector2f(15.0F, 17.5F), 3F, 20, -5, true, new RaiseElevatorScale(), new ActiveIntakeRotate(0.3, 0.5)),
-                new Waypoint(new ImmutableVector2f(21F-0.1666666667F, 17.5F), 3F, 20, -5),
-                new Waypoint(new ImmutableVector2f(17F-0.1666666667F, 22F), 0F, 10, -5)
+                new Waypoint(new ImmutableVector2f(21F - 0.1666666667F, 17.5F), 3F, 20, -5),
+                new Waypoint(new ImmutableVector2f(17F - 0.1666666667F, 22F), 0F, 10, -5)
                                                                      );
 
     }

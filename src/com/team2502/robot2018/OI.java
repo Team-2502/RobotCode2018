@@ -11,10 +11,33 @@ import edu.wpi.first.wpilibj.buttons.JoystickButton;
  */
 public final class OI
 {
+    /**
+     * Represents the left drive joystick
+     *
+     * @see OI
+     * @see DriveCommand
+     */
     public static final Joystick JOYSTICK_DRIVE_LEFT = new Joystick(RobotMap.Joystick.JOYSTICK_DRIVE_LEFT);
+
+    /**
+     * Represents the right drive joystick
+     *
+     * @see OI
+     * @see DriveCommand
+     */
     public static final Joystick JOYSTICK_DRIVE_RIGHT = new Joystick(RobotMap.Joystick.JOYSTICK_DRIVE_RIGHT);
+
+    /**
+     * Represents the function joystick
+     *
+     * @see OI
+     */
     public static final Joystick JOYSTICK_FUNCTION = new Joystick(RobotMap.Joystick.JOYSTICK_FUNCTION);
 
+
+    // Start defining buttons to be using
+    // Names are self explanatory
+    // Convention: Button variable names here should be the same as ID names in RobotMap
     private static final Button INTAKE_IN = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.INTAKE_IN);
     private static final Button INTAKE_OUT_SLOW = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.INTAKE_OUT_SLOW);
     private static final Button INTAKE_OUT_FAST = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.INTAKE_OUT_FAST);
@@ -35,6 +58,10 @@ public final class OI
 
     private static final Button CALIBRATE_ELEV_ENCODER = new JoystickButton(JOYSTICK_DRIVE_RIGHT, RobotMap.Joystick.Button.CALIBRATE_ELEV_ENCODER);
 
+    /*
+     * Runs when the first static method (usually OI#init()) is called
+     * Called the "static initialization constructor"
+     */
     static
     {
         // Elevator buttons
@@ -62,11 +89,27 @@ public final class OI
         CALIBRATE_ELEV_ENCODER.whenPressed(new QuickCommand(Robot.ELEVATOR::calibrateEncoder));
     }
 
+    /**
+     * Workaround for Java's lazy-loading of static classes
+     * <p>
+     * When this is called, Java loads the static bits of this class and runs the static init constructor above.
+     */
     public static void init() {}
 
+    /**
+     * Useful for seeing what the driver is trying to do in autoshifing
+     *
+     * @param threshold The threshold to compare to
+     * @param above     Should we return true if the sticks are above the threshold?
+     * @return If the sticks are (above/below) the threshold.
+     */
     public static boolean joysThreshold(double threshold, boolean above)
     {
-        if(above) { return Math.abs(OI.JOYSTICK_DRIVE_RIGHT.getY()) > threshold && Math.abs(OI.JOYSTICK_DRIVE_LEFT.getY()) > threshold; }
-        else { return Math.abs(OI.JOYSTICK_DRIVE_RIGHT.getY()) < threshold && Math.abs(OI.JOYSTICK_DRIVE_LEFT.getY()) < threshold; }
+        boolean leftStickAbove = Math.abs(OI.JOYSTICK_DRIVE_RIGHT.getY()) > threshold;
+        boolean rightStickAbove = Math.abs(OI.JOYSTICK_DRIVE_LEFT.getY()) > threshold;
+
+        boolean bothSticksAbove = leftStickAbove && rightStickAbove;
+        if(above) { return bothSticksAbove; }
+        else { return !bothSticksAbove; }
     }
 }

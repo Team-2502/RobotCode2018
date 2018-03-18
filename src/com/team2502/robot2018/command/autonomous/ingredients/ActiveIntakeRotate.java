@@ -3,16 +3,17 @@ package com.team2502.robot2018.command.autonomous.ingredients;
 import com.team2502.robot2018.Robot;
 import edu.wpi.first.wpilibj.command.TimedCommand;
 
+
 public class ActiveIntakeRotate extends TimedCommand
 {
 
     private final double speed;
 
     /**
-     * Positi
+     * Rotate the active intake
      *
-     * @param timeout
-     * @param speed
+     * @param timeout How long to do it for (seconds)
+     * @param speed   Speed of rotation motor in percent voltage
      */
     public ActiveIntakeRotate(double timeout, double speed)
     {

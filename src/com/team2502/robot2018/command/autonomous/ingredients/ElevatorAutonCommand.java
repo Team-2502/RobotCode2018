@@ -17,8 +17,8 @@ public class ElevatorAutonCommand extends TimedCommand
     /**
      * Positive voltage is up by default is up
      *
-     * @param timeout
-     * @param feet
+     * @param timeout How long to try to get the elvator to the right height
+     * @param feet    How high the elevator should be
      */
     public ElevatorAutonCommand(double timeout, float feet)
     {
@@ -29,13 +29,14 @@ public class ElevatorAutonCommand extends TimedCommand
     @Override
     protected void initialize()
     {
+        Robot.ELEVATOR.calibrateEncoder();
         Robot.writeLog("ElevatorAutonCommand init", 10);
     }
 
     @Override
     protected void execute()
     {
-        Robot.ELEVATOR.setElevatorPosSmooth(feet);
+        Robot.ELEVATOR.setElevatorPos(feet);
     }
 
     @Override

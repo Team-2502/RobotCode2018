@@ -1,21 +1,22 @@
 package com.team2502.robot2018.command.autonomous.ingredients;
 
-import com.team2502.robot2018.Constants;
 import com.team2502.robot2018.Robot;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
+import static com.team2502.robot2018.Constants.Physical.Elevator;
+
+
 public class RaiseElevatorScale extends CommandGroup
 {
+    /**
+     * Raise the elevator to the right height for the scale
+     */
     public RaiseElevatorScale()
     {
-        this(0);
-    }
-
-    public RaiseElevatorScale(double timeout)
-    {
         Robot.writeLog("raising elevator scale", 10);
-//        addSequential(new WaitCommand(timeout));
+
+        // wiggle active so the cube doesn't get stuck on the climbing hooks
         addParallel(new WiggleActiveRotate());
-        addSequential(new ElevatorAutonCommand(3F, Constants.SCALE_ELEV_HEIGHT_FT));
+        addSequential(new ElevatorAutonCommand(3F, Elevator.SCALE_ELEV_HEIGHT_FT));
     }
 }

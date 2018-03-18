@@ -4,9 +4,13 @@ import org.joml.ImmutableVector2d;
 import org.joml.ImmutableVector2f;
 
 /**
+ * Tests the InterpolationMap
+ * <p>
  * Not meant to be used in robot code, just on our computrons.
  * <p>
  * Run with the `-ea` option in the JVM
+ *
+ * @see InterpolationMap
  */
 class TestIHT
 {

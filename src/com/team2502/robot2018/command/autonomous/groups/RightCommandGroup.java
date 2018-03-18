@@ -1,10 +1,10 @@
 package com.team2502.robot2018.command.autonomous.groups;
 
-import com.team2502.robot2018.Constants;
 import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.command.autonomous.ingredients.*;
 import edu.wpi.first.wpilibj.command.CommandGroup;
-import edu.wpi.first.wpilibj.command.WaitCommand;
+
+import static com.team2502.robot2018.Constants.Physical.Elevator;
 
 public class RightCommandGroup extends CommandGroup
 {
@@ -14,42 +14,65 @@ public class RightCommandGroup extends CommandGroup
 
         String AUTO_GAME_DATA = Robot.GAME_DATA.substring(0, 2);
 
-        switch(AUTO_GAME_DATA)
+        if(Robot.autonStrategySelector.getSelected() == AutonStrategy.STRAIGHT)
         {
-            case "LL":
-                crossLine();
-                break;
-
-            case "LR":
-                goScaleRight();
-                break;
-
-            case "RL":
-                goSwitch();
-                break;
-
-            case "RR":
-                switch(Robot.autonStrategySelector.getSelected())
-                {
-                    case SCALE:
-                        goScaleRight();
-                        break;
-                    case SWITCH:
-                        goSwitch();
-                        break;
-                    case SWITCH_SCALE:
-                        break;
-                }
-                break;
-
+            crossLine();
         }
+        else
+        {
+            switch(AUTO_GAME_DATA)
+            {
+                case "LL":
+                    System.out.println("Going cross country!");
+                    goScaleLeft();
+                    break;
 
+                case "LR":
+                    goScaleRight();
+                    break;
+
+                case "RL":
+                    System.out.println("Going cross country!");
+                    goScaleLeft();
+                    break;
+
+                case "RR":
+                    switch(Robot.autonStrategySelector.getSelected())
+                    {
+                        case SCALE:
+                            goScaleRight();
+                            break;
+                        case SWITCH:
+                            goSwitch();
+                            break;
+                        case SCALE_SWITCH:
+                            goScaleRight();
+                            secondCubeRight();
+                            break;
+                    }
+                    break;
+
+            }
+        }
+    }
+
+    /**
+     * @deprecated should be tested on left side before mirroring on right side... tis a bit of a mess rn and might not
+     * mirror perfectly... we aren't doing this at Duluth anyway.
+     */
+    private void secondCubeRight()
+    {
+    }
+
+    private void goScaleLeft()
+    {
+        addSequential(new GoScaleCrossCountry(Paths.Right.leftScale));
     }
 
     private void goSwitch()
     {
         addSequential(new PurePursuitCommand(Paths.Right.rightSwitch));
-        addSequential(new ElevatorAutonCommand(.8F, Constants.SWITCH_ELEV_HEIGHT_FT));
+        addSequential(new ElevatorAutonCommand(.8F, Elevator.SWITCH_ELEV_HEIGHT_FT));
         addSequential(new ActiveIntakeRotate(0.35, 1));
 
         emitCube();
@@ -57,14 +80,7 @@ public class RightCommandGroup extends CommandGroup
 
     private void goScaleRight()
     {
-        // TODO: Move things into constants
-        addParallel(new ActiveIntakeRotate(0.7, 0.5));
-        addSequential(new PurePursuitCommand(Paths.Right.rightScale));
-        addSequential(new WaitCommand(0.8F));
-        addSequential(new RotateAutonStationary(-55));
-        addSequential(new ElevatorAutonCommand(2.7F, Constants.SCALE_ELEV_HEIGHT_FT));
-        addSequential(new DeadreckoningDrive(0.5F, 2));
-        emitCube();
+        addSequential(new GoScaleSameSide(Paths.Right.rightScale));
     }
 
     private void crossLine()
@@ -75,7 +91,7 @@ public class RightCommandGroup extends CommandGroup
 
     private void emitCube()
     {
-        addSequential(new ShootCubeCommand(1));
+        addSequential(new ShootCubeCommand(1, .5));
 
     }
 }

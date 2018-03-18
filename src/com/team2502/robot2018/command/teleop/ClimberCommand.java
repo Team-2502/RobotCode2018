@@ -3,10 +3,16 @@ package com.team2502.robot2018.command.teleop;
 import com.team2502.robot2018.Robot;
 import edu.wpi.first.wpilibj.command.Command;
 
+/**
+ * Run the climber to climb
+ */
 public class ClimberCommand extends Command
 {
     private double _speed;
 
+    /**
+     * @param speed Percent voltage to run the climber at
+     */
     public ClimberCommand(double speed)
     {
         requires(Robot.ELEVATOR);

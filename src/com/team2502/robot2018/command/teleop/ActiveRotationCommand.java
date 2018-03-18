@@ -2,8 +2,14 @@ package com.team2502.robot2018.command.teleop;
 
 import com.team2502.robot2018.OI;
 import com.team2502.robot2018.Robot;
+import com.team2502.robot2018.subsystem.ActiveIntakeSubsystem;
 import edu.wpi.first.wpilibj.command.Command;
 
+/**
+ * During teleop, rotate intake based on function joystick y-axis
+ *
+ * @see ActiveIntakeSubsystem#initDefaultCommand()
+ */
 public class ActiveRotationCommand extends Command
 {
     public ActiveRotationCommand()

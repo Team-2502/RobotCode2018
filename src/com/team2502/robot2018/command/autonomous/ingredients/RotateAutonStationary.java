@@ -6,6 +6,10 @@ import com.team2502.robot2018.subsystem.DriveTrainSubsystem;
 import com.team2502.robot2018.utils.MathUtils;
 import edu.wpi.first.wpilibj.command.Command;
 
+/**
+ * Less accurate but faster than {@link NavXRotateCommand}
+ */
+@Deprecated
 public class RotateAutonStationary extends Command
 {
 
@@ -16,11 +20,22 @@ public class RotateAutonStationary extends Command
     private final DriveTrainSubsystem driveTrain;
     private final boolean cw;
 
+    /**
+     * Rotate
+     *
+     * @param degrees how far to rotate
+     */
     public RotateAutonStationary(float degrees)
     {
         this(degrees, 2);
     }
 
+    /**
+     * rotate
+     *
+     * @param degrees how far to rotate
+     * @param fps     how fast to rotate
+     */
     public RotateAutonStationary(float degrees, float fps)
     {
         driveTrain = Robot.DRIVE_TRAIN;
@@ -84,6 +99,6 @@ public class RotateAutonStationary extends Command
 
     private void rotateCW()
     {
-        driveTrain.runMotors(wheelSpeed, -wheelSpeed);
+        driveTrain.runMotorsVelocity(wheelSpeed, -wheelSpeed);
     }
 }

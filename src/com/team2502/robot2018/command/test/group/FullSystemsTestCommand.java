@@ -19,6 +19,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Tests all robot systems
+ */
 public class FullSystemsTestCommand extends CommandGroup
 {
 
@@ -97,7 +100,7 @@ public class FullSystemsTestCommand extends CommandGroup
     {
         print("");
         print(message);
-        waitSome();
+        waitThree();
     }
 
     private void promptYesNo(String message, String name)
@@ -109,7 +112,7 @@ public class FullSystemsTestCommand extends CommandGroup
     /**
      * gr8 name ... totally best conventions and totally not trying to get around {@link Object#wait()}...
      */
-    private void waitSome()
+    private void waitThree()
     {
         addSequential(new WaitCommand(3));
     }
