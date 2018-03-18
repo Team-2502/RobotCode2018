@@ -74,6 +74,8 @@ public class RobotMap
             public static final int RUN_DEBUG_TESTS = 9;
             public static final int CALIBRATE_ELEV_ENCODER = 11;
 
+            public static final int BREAK_CLIMBER_CARRIAGE = 9;
+
             private Button() { }
         }
     }
@@ -125,7 +127,7 @@ public class RobotMap
     /**
      * Define Solenoid ID's
      */
-    public class Solenoid
+    public static final class Solenoid
     {
         /*
          * Transmission ------ 0
@@ -138,6 +140,7 @@ public class RobotMap
         public static final int CLIMBER_SOLENOID = 1;
         public static final int ACTIVE_GRABBER = 2;
         public static final int BUTTERFLY_SOLENOID = 3;
+        public static final int CLIMBER_BREAK_SOLENOID = 4;
 
         private Solenoid() { }
     }

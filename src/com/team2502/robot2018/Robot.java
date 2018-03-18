@@ -9,10 +9,7 @@ import com.team2502.robot2018.sendables.SendableVersioning;
 import com.team2502.robot2018.subsystem.ActiveIntakeSubsystem;
 import com.team2502.robot2018.subsystem.DriveTrainSubsystem;
 import com.team2502.robot2018.subsystem.ElevatorSubsystem;
-import com.team2502.robot2018.subsystem.solenoid.ActiveIntakeSolenoid;
-import com.team2502.robot2018.subsystem.solenoid.ButterflySolenoid;
-import com.team2502.robot2018.subsystem.solenoid.ClimberSolenoid;
-import com.team2502.robot2018.subsystem.solenoid.TransmissionSolenoid;
+import com.team2502.robot2018.subsystem.solenoid.*;
 import com.team2502.robot2018.trajectory.localization.EncoderDifferentialDriveLocationEstimator;
 import com.team2502.robot2018.trajectory.localization.NavXLocationEstimator;
 import com.team2502.robot2018.utils.Files;
@@ -99,6 +96,8 @@ public final class Robot extends IterativeRobot
      * @see TransmissionSolenoid
      */
     public static TransmissionSolenoid TRANSMISSION_SOLENOID;
+
+    public static ClimberCarriageBreakSubsystem CLIMBER_CARRIAGE_BREAK;
 
     /**
      * The NavX on the robot. To fully recalibrate,
@@ -203,6 +202,7 @@ public final class Robot extends IterativeRobot
         ACTIVE_INTAKE_SOLENOID = new ActiveIntakeSolenoid();
         CLIMBER_SOLENOID = new ClimberSolenoid();
         BUTTERFLY_SOLENOID = new ButterflySolenoid();
+        CLIMBER_CARRIAGE_BREAK = new ClimberCarriageBreakSubsystem();
 
         // Initialize OI 
         OI.init();

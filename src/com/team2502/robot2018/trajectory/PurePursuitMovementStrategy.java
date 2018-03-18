@@ -535,7 +535,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
     {
         float minMagSquared = Float.MAX_VALUE;
         int minVectorI = -1;
-        for(int i = 0; i < possibleGoalPoints.size(); i++)
+        for(int i = 0; i < possibleGoalPoints.size(); ++i)
         {
             ImmutableVector2f vector = possibleGoalPoints.get(i);
 

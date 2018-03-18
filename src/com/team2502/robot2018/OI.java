@@ -58,6 +58,8 @@ public final class OI
 
     private static final Button CALIBRATE_ELEV_ENCODER = new JoystickButton(JOYSTICK_DRIVE_RIGHT, RobotMap.Joystick.Button.CALIBRATE_ELEV_ENCODER);
 
+    private static final Button BREAK_CLIMBER_CARRAIGE = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BREAK_CLIMBER_CARRIAGE);
+
     /*
      * Runs when the first static method (usually OI#init()) is called
      * Called the "static initialization constructor"
@@ -87,6 +89,8 @@ public final class OI
         RUN_TESTS.whenPressed(new FullSystemsTestCommand());
 
         CALIBRATE_ELEV_ENCODER.whenPressed(new QuickCommand(Robot.ELEVATOR::calibrateEncoder));
+
+        BREAK_CLIMBER_CARRAIGE.whenPressed(new BreakClimberCommand());
     }
 
     /**
