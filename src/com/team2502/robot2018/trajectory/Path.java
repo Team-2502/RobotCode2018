@@ -1,6 +1,7 @@
 package com.team2502.robot2018.trajectory;
 
 import com.team2502.robot2018.Constants;
+import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.utils.MathUtils;
 import org.joml.ImmutableVector2f;
 
@@ -74,13 +75,16 @@ public class Path
         if(lookahead < distanceLeftCurrentSegment)
         {
             PathSegment current = getCurrent();
-            return current.getPoint(current.getLength() - distanceLeftCurrentSegment + lookahead);
+            float relativeDistance = current.getLength() - distanceLeftCurrentSegment + lookahead;
+            Robot.writeLog("look current segment ... relativeDist: %.2f",80,relativeDistance);
+            return current.getPoint(relativeDistance);
         }
         else
         {
+            Robot.writeLog("look non-current segment",80);
             lookahead-=distanceLeftCurrentSegment;
 
-            for(int i = segmentOnI; i < pathSegments.size(); i++)
+            for(int i = segmentOnI+1; i < pathSegments.size(); i++)
             {
                 PathSegment pathSegment = pathSegments.get(i);
                 float length = pathSegment.getLength();
@@ -99,10 +103,15 @@ public class Path
 
     boolean progressIfNeeded(ImmutableVector2f closestPoint)
     {
-        PathSegment pathSegment = pathSegments.get(segmentOnI);
-        if(pathSegment.getDistanceLeftEff(closestPoint) < Constants.PurePursuit.DISTANCE_COMPLETE_SEGMENT_TOLERANCE)
+        PathSegment pathSegment = getCurrent();
+        float distanceLeftEff = pathSegment.getDistanceLeftEff(closestPoint);
+        ImmutableVector2f location = pathSegment.getLast().getLocation();
+        Robot.writeLog("distanceLeftEff: %.2f, segmentOnI: %d, point: (%.2f,%.2f)", 80, distanceLeftEff, segmentOnI, location.x, location.y);
+        if(distanceLeftEff < Constants.PurePursuit.DISTANCE_COMPLETE_SEGMENT_TOLERANCE)
         {
-            return moveNextSegment();
+            boolean moved = moveNextSegment();
+            Robot.writeLog("progressing: %b", 80,moved);
+            return moved;
         }
         return false;
     }
@@ -118,8 +127,9 @@ public class Path
     {
         List<PathSegment> segments = new ArrayList<>();
         PathSegment startSegment = pathSegments.get(segmentOnI);
+        segments.add(startSegment);
         float distanceStart = startSegment.getAbsoluteDistanceEnd();
-        for(int i = segmentOnI; i < pathSegments.size(); i++)
+        for(int i = segmentOnI+1; i < pathSegments.size() ; i++)
         {
             PathSegment pathSegment = pathSegments.get(i);
             if(pathSegment.getAbsoluteDistanceStart() - distanceStart < maxAheadDistance)

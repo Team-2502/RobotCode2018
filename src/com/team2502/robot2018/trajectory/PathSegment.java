@@ -15,6 +15,7 @@ public class PathSegment
     private final float distanceStart;
     private final float distanceEnd;
     private final ImmutableVector2f dPos;
+    private final ImmutableVector2f startLocation;
 
     protected PathSegment(Waypoint first, Waypoint last, boolean start, boolean end, float distanceStart, float distanceEnd, float length)
     {
@@ -25,12 +26,13 @@ public class PathSegment
         this.start = start;
         this.distanceStart = distanceStart;
         this.distanceEnd = distanceEnd;
+        startLocation = first.getLocation();
         dPos = last.getLocation().sub(first.getLocation());
     }
 
     public ImmutableVector2f getPoint(float relativeDistance)
     {
-        return dPos.mul(relativeDistance/length);
+        return dPos.mul(relativeDistance/length).add(startLocation);
     }
 
     /**

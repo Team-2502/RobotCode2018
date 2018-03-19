@@ -171,7 +171,7 @@ public final class Robot extends IterativeRobot
         NAVX = new AHRS(SPI.Port.kMXP);
 
         // Start pushing video from the camera to the DS
-        CameraServer.getInstance().startAutomaticCapture();
+//        CameraServer.getInstance().startAutomaticCapture();
 
         // Create the autonomous strategy selector
         autonStrategySelector = new SendableChooser<>();
@@ -277,8 +277,10 @@ public final class Robot extends IterativeRobot
      */
     public void disabledPeriodic()
     {
-        Scheduler.getInstance().run();
-        DashboardData.update();
+        // TODO: why did we have this uncommented before?
+//        Scheduler.getInstance().run();
+//        DashboardData.update();
+
         GAME_DATA = DriverStation.getInstance().getGameSpecificMessage();
         if(GAME_DATA == null) { GAME_DATA = "___"; }
     }

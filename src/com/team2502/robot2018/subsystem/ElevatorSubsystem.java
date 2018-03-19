@@ -9,6 +9,7 @@ import com.team2502.robot2018.RobotMap;
 import com.team2502.robot2018.sendables.PIDTunable;
 import com.team2502.robot2018.sendables.SendablePIDTuner;
 import com.team2502.robot2018.utils.NonDefaultSubsystem;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import static com.team2502.robot2018.Constants.Physical.Elevator;
@@ -264,6 +265,7 @@ public class ElevatorSubsystem extends NonDefaultSubsystem implements PIDTunable
     @Override
     public void updateDashboard()
     {
+        if(DriverStation.getInstance().isDisabled()) { return; }
         SmartDashboard.putNumber("Elevator: Velocity (fps)", getVel() * Elevator.EVEL_TO_FPS_ELEV);
         SmartDashboard.putNumber("Elevator: Position (ft)", getPos() * Elevator.EPOS_TO_FEET_ELEV);
 

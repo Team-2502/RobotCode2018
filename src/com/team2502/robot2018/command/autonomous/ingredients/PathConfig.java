@@ -63,7 +63,7 @@ public class PathConfig
         public static final List<Waypoint> leftScale = Arrays.asList(
                 new Waypoint(new ImmutableVector2f(0, 0), 0, 20, -9),
                 new Waypoint(new ImmutableVector2f(-0.5F, 8.589F), 16F, 20, -7, true),
-                new Waypoint(new ImmutableVector2f(-0.5F, 12.405F), 5F, 20, -7, true, new RaiseElevatorScale()),
+                new Waypoint(new ImmutableVector2f(-0.5F, 12.405F), 16F, 20, -7, true, new RaiseElevatorScale()),
                 new Waypoint(new ImmutableVector2f(-0.5F, 20.5F), 3F, 20, -7, true),
                 new Waypoint(new ImmutableVector2f(2.3F, 23.5F), 0F, 20, -7) // max deceleration appears to be -7 ft / s^2
                                                                     );

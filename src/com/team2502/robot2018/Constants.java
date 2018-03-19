@@ -32,7 +32,7 @@ public class Constants
          * How many ft you need to be away from the end of a segment to complete it
          * @deprecated can be unreliable as if you do not get within that tolerance, you are screwed.
          */
-        public static final float DISTANCE_COMPLETE_SEGMENT_TOLERANCE = 0.1F;
+        public static final float DISTANCE_COMPLETE_SEGMENT_TOLERANCE = 0.16F; // .32ft is max distance robot should cover in 20ms interval at 16fps ==> .16F
 
         // The lookahead distance (feet) for Pure Pursuit
         public static final float LOOKAHEAD_MIN_DISTANCE_FT = 2F;
@@ -46,7 +46,7 @@ public class Constants
         public static final float WHEEL_ROLLING_RADIUS_INCH = 1.5F;
         public static final float WHEEL_ROLLING_RADIUS_FT = WHEEL_ROLLING_RADIUS_INCH * 1.5F / 12F;
         // The distance between wheels (laterally) in feet. Measure from the centerpoints of the wheels.
-        public static final float LATERAL_WHEEL_DISTANCE_FT = 23.25F / 12F * 5F; //* 10F;
+        public static final float LATERAL_WHEEL_DISTANCE_FT = 23.25F / 12F *5F; //* 10F;
 
         private PurePursuit() { }
     }

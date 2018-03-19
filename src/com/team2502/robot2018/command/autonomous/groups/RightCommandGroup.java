@@ -10,6 +10,10 @@ public class RightCommandGroup extends CommandGroup
 {
     public RightCommandGroup()
     {
+
+        // TODO: figure out why we might need this??
+        Robot.TRANSMISSION_SOLENOID.setLowGear(true);
+
         Robot.NAVX.reset();
 
         String AUTO_GAME_DATA = Robot.GAME_DATA.substring(0, 2);

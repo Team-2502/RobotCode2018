@@ -140,6 +140,8 @@ public class PurePursuitCommand extends Command
         SmartDashboard.putNumber("PPwheelL", wheelVelocities.get(0));
         SmartDashboard.putNumber("PPwheelR", wheelVelocities.get(1));
 
+        Robot.writeLog("wheelL %.2f",80,wheelL);
+        Robot.writeLog("wheelR %.2f",80,wheelR);
         Robot.DRIVE_TRAIN.runMotorsVelocity(wheelL, wheelR);
     }
 

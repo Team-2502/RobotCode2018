@@ -3,16 +3,13 @@ package com.team2502.robot2018;
 import com.team2502.robot2018.trajectory.localization.IRotationalLocationEstimator;
 import com.team2502.robot2018.trajectory.localization.ITranslationalLocationEstimator;
 import com.team2502.robot2018.trajectory.localization.ITranslationalVelocityEstimator;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.Command;
 import org.joml.ImmutableVector2f;
 
 
 /**
-<<<<<<< HEAD
- * A command that runs 24/7 to calculate and cache the state of the robot (x,y,heading,dx,dv...).
-=======
  * An uninterruptable command that runs 24/7 (even when disabled) to calculate and cache the state of the robot (x,y,heading,dx,dv...).
->>>>>>> develop
  *
  * @deprecated Should be made into a Thread running at a period of <i>x</i> ms. However, this needs to be tested.
  */
