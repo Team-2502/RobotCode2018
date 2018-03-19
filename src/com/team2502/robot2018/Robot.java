@@ -129,13 +129,13 @@ public final class Robot extends IterativeRobot
     public static RobotLocalizationCommand ROBOT_LOCALIZATION_COMMAND;
 
     /**
-     * A list of log messages that will get printed out once the robot is disabled
+     * A list of logPop messages that will get printed out once the robot is disabled
      *
      * @see Robot#writeLog(String, int, Object...)
      */
     private static List<String> logLines = new ArrayList<>();
     /**
-     * Specifies the minimum level of log message to print out
+     * Specifies the minimum level of logPop message to print out
      *
      * @see Robot#writeLog(String, int, Object...)
      */
@@ -143,10 +143,10 @@ public final class Robot extends IterativeRobot
     private static int LEVEL = 40;
 
     /**
-     * Save a log message for later so that it can be printed out once disabled
+     * Save a logPop message for later so that it can be printed out once disabled
      *
      * @param message A string that can be used with String.format
-     * @param level   The level of the log message (how important it is)
+     * @param level   The level of the logPop message (how important it is)
      * @param objects The objects to format the string with
      * @see Robot#disabledInit()
      * @see Robot#logLines
@@ -257,7 +257,13 @@ public final class Robot extends IterativeRobot
 
         Robot.CLIMBER_SOLENOID.lockElevator();
 
+        Robot.logPop();
         // Print out the logs we saved up
+
+    }
+
+    public static void logPop()
+    {
         StringBuilder stringBuilder = new StringBuilder();
         Iterator<String> iterator = logLines.iterator();
 

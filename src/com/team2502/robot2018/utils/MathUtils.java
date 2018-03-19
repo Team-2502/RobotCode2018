@@ -255,8 +255,8 @@ public final class MathUtils
     /**
      * Allows for the calculate of logX(in), may have minor performance boost from using direct call to StrictMath lowering stack overhead.
      *
-     * @param base The base of the log.
-     * @param in   The value to find the log of.
+     * @param base The base of the logPop.
+     * @param in   The value to find the logPop of.
      * @return The logX(in)
      */
     public static double log(final double base, final double in)
@@ -265,26 +265,26 @@ public final class MathUtils
     /**
      * Allows for the calculate of logX(in), may have minor performance boost from using direct call to StrictMath lowering stack overhead.
      *
-     * @param base The base of the log.
-     * @param in   The value to find the log of.
+     * @param base The base of the logPop.
+     * @param in   The value to find the logPop of.
      * @return The logX(in)
      */
     public static double logX(final double base, final double in)
     { return StrictMath.log(in) / StrictMath.log(base); }
 
     /**
-     * Use the predefined square log instead of a custom implementation.
+     * Use the predefined square logPop instead of a custom implementation.
      *
-     * @param in The value to find the log of.
+     * @param in The value to find the logPop of.
      * @return The log2(in)
      */
     public static double log2(final double in)
     { return StrictMath.log(in) / 0.6931471806D; }
 
     /**
-     * Use the predefined cube log instead of a custom implementation.
+     * Use the predefined cube logPop instead of a custom implementation.
      *
-     * @param in The value to find the log of.
+     * @param in The value to find the logPop of.
      * @return The log3(in)
      */
     public static double log3(final double in)
@@ -293,7 +293,7 @@ public final class MathUtils
     /**
      * Use pre calculated math for optimization.
      *
-     * @param in The value to find the log of.
+     * @param in The value to find the logPop of.
      * @return The log4(in)
      */
     public static double log4(final double in)
@@ -302,7 +302,7 @@ public final class MathUtils
     /**
      * Use pre calculated math for optimization.
      *
-     * @param in The value to find the log of.
+     * @param in The value to find the logPop of.
      * @return The log5(in)
      */
     public static double log5(final double in)
@@ -311,7 +311,7 @@ public final class MathUtils
     /**
      * Use pre calculated math for optimization.
      *
-     * @param in The value to find the log of.
+     * @param in The value to find the logPop of.
      * @return The log6(in)
      */
     public static double log6(final double in)
@@ -320,7 +320,7 @@ public final class MathUtils
     /**
      * Use pre calculated math for optimization.
      *
-     * @param in The value to find the log of.
+     * @param in The value to find the logPop of.
      * @return The log7(in)
      */
     public static double log7(final double in)
@@ -329,7 +329,7 @@ public final class MathUtils
     /**
      * Use pre calculated math for optimization.
      *
-     * @param in The value to find the log of.
+     * @param in The value to find the logPop of.
      * @return The log8(in)
      */
     public static double log8(final double in)
@@ -338,7 +338,7 @@ public final class MathUtils
     /**
      * Use pre calculated math for optimization.
      *
-     * @param in The value to find the log of.
+     * @param in The value to find the logPop of.
      * @return The log9(in)
      */
     public static double log9(final double in)
@@ -347,7 +347,7 @@ public final class MathUtils
     /**
      * Use pre calculated math for optimization.
      *
-     * @param in The value to find the log of.
+     * @param in The value to find the logPop of.
      * @return The log10(in)
      */
     public static double log10(final double in)
@@ -356,7 +356,7 @@ public final class MathUtils
     /**
      * Because why not.
      *
-     * @param in The value to find the log of.
+     * @param in The value to find the logPop of.
      * @return The logPi(in)
      */
     public static double logPi(final double in)
@@ -365,7 +365,7 @@ public final class MathUtils
     /**
      * Calculates the natural logarithm (base e).
      *
-     * @param in The value to find the log of.
+     * @param in The value to find the logPop of.
      * @return The ln(in)
      */
     public static double loge(final double in)
@@ -374,7 +374,7 @@ public final class MathUtils
     /**
      * Calculates the natural logarithm (base e).
      *
-     * @param in The value to find the log of.
+     * @param in The value to find the logPop of.
      * @return The ln(in)
      */
     public static double ln(final double in)

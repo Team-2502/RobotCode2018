@@ -48,7 +48,7 @@ public class EncoderDifferentialDriveLocationEstimator implements ITranslational
         // add to our running total
         location = location.add(dPos);
 
-        // log data on shuffleboard
+        // logPop data on shuffleboard
         SmartDashboard.putNumber("posX", location.x);
         SmartDashboard.putNumber("posY", location.y);
 
