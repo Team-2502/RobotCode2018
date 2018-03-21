@@ -134,12 +134,12 @@ public final class Robot extends IterativeRobot
      * @see Robot#writeLog(String, int, Object...)
      */
     private static List<String> logLines = new ArrayList<>();
+
     /**
      * Specifies the minimum level of log message to print out
      *
      * @see Robot#writeLog(String, int, Object...)
      */
-
     private static int LEVEL = 40;
 
     /**
