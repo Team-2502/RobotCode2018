@@ -24,10 +24,10 @@ public class ElevatorSubsystem extends NonDefaultSubsystem implements PIDTunable
     private final WPI_TalonSRX climberBottom;
     private final SendablePIDTuner pidTuner;
 
+    private double kF = 0.2D;
     private double kP = 0.2D;
     private double kI = 0D;
     private double kD = 0D;
-    private double kF = 0D;
     private int timer;
 
     public ElevatorSubsystem()
@@ -41,9 +41,8 @@ public class ElevatorSubsystem extends NonDefaultSubsystem implements PIDTunable
         elevatorTop.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen, Constants.INIT_TIMEOUT);
         elevatorBottom.configForwardLimitSwitchSource(RemoteLimitSwitchSource.RemoteTalonSRX, LimitSwitchNormal.NormallyOpen, RobotMap.Motor.ELEVATOR_TOP, Constants.INIT_TIMEOUT);
 
-//        TODO: uncomment for motion magic
-//        elevatorTop.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen, Constants.INIT_TIMEOUT);
-//        elevatorBottom.configReverseLimitSwitchSource(RemoteLimitSwitchSource.RemoteTalonSRX, LimitSwitchNormal.NormallyOpen, RobotMap.Motor.ELEVATOR_TOP, Constants.INIT_TIMEOUT);
+        elevatorTop.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen, Constants.INIT_TIMEOUT);
+        elevatorBottom.configReverseLimitSwitchSource(RemoteLimitSwitchSource.RemoteTalonSRX, LimitSwitchNormal.NormallyOpen, RobotMap.Motor.ELEVATOR_TOP, Constants.INIT_TIMEOUT);
 
         elevatorTop.follow(elevatorBottom);
         elevatorBottom.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute, 0, Constants.INIT_TIMEOUT);
