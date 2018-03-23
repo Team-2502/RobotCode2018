@@ -119,23 +119,14 @@ public class Constants
              * <br>
              * In feet per second
              */
-            public static final double CRUISE_VELOCITY_FPS = 6D;
-
-            public static final int CRUISE_VELOCITY_EVEL = (int) (CRUISE_VELOCITY_FPS * FPS_TO_EVEL_ELEV);
+            public static final double CRUISE_VELOCITY_FPS = 600D;
 
             /**
              * When using motion magic, how fast can the elevator accelerate / decelerate?
              * <br>
              * In feet per second per second
              */
-            public static final double MAX_ACCEL_FPS2 = 12;
-
-            /**
-             * In (enc units / 100ms) / sec
-             *
-             * @see Elevator#MAX_ACCEL_FPS2
-             */
-            public static final int MAX_ACCEL_EACCEL = (int) (MAX_ACCEL_FPS2 * EVEL_TO_FPS_ELEV);
+            public static final double MAX_ACCEL_FPS2 = 1200;
 
 
             private Elevator() { }

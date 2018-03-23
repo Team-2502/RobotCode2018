@@ -29,6 +29,7 @@ public class ElevatorAutonCommand extends TimedCommand
     @Override
     protected void initialize()
     {
+        Robot.CLIMBER_SOLENOID.unlockElevator();
         Robot.ELEVATOR.calibrateEncoder();
         Robot.writeLog("ElevatorAutonCommand init", 10);
     }
@@ -42,6 +43,7 @@ public class ElevatorAutonCommand extends TimedCommand
     @Override
     protected void end()
     {
+        Robot.CLIMBER_SOLENOID.lockElevator();
         Robot.ELEVATOR.stopElevator();
     }
 }

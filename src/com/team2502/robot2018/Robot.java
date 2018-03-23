@@ -331,7 +331,7 @@ public final class Robot extends IterativeRobot
     {
         Scheduler.getInstance().run();
         DashboardData.update();
-        Files.writeToFile();
+//        Files.writeToFile();
     }
 
     /**
