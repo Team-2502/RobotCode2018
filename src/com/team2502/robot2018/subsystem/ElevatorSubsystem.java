@@ -16,6 +16,15 @@ import static com.team2502.robot2018.Constants.Physical.Elevator;
 
 public class ElevatorSubsystem extends NonDefaultSubsystem implements PIDTunable, DashboardData.DashboardUpdater
 {
+    /**
+     * In (enc units / 100ms) / sec
+     *
+     * @see Elevator#MAX_ACCEL_FPS2
+     */
+    private static int MAX_ACCEL_EACCEL = 1500;
+
+    private static int CRUISE_VELOCITY_EVEL = 600;
+
     private final WPI_TalonSRX elevatorTop;
     private final WPI_TalonSRX elevatorBottom;
 
@@ -25,16 +34,22 @@ public class ElevatorSubsystem extends NonDefaultSubsystem implements PIDTunable
     private final WPI_TalonSRX climberBottom;
     private final SendablePIDTuner pidTuner;
 
+    private double kF = 0.2D;
     private double kP = 0.2D;
     private double kI = 0D;
     private double kD = 0D;
-    private double kF = 0D;
+
     private int timer;
 
     public ElevatorSubsystem()
     {
+        SmartDashboard.putNumber("Elevator: Max Accel (enc units)", MAX_ACCEL_EACCEL);
+        SmartDashboard.putNumber("Elevator: Cruise vel (enc units)", CRUISE_VELOCITY_EVEL);
+
+
         elevatorTop = new WPI_TalonSRX(RobotMap.Motor.ELEVATOR_TOP);
         elevatorBottom = new WPI_TalonSRX(RobotMap.Motor.ELEVATOR_BOTTOM);
+
 
         climberTop = new WPI_TalonSRX(RobotMap.Motor.CLIMBER_TOP);
         climberBottom = new WPI_TalonSRX(RobotMap.Motor.CLIMBER_BOTTOM);
@@ -42,18 +57,20 @@ public class ElevatorSubsystem extends NonDefaultSubsystem implements PIDTunable
         elevatorTop.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen, Constants.INIT_TIMEOUT);
         elevatorBottom.configForwardLimitSwitchSource(RemoteLimitSwitchSource.RemoteTalonSRX, LimitSwitchNormal.NormallyOpen, RobotMap.Motor.ELEVATOR_TOP, Constants.INIT_TIMEOUT);
 
-//        TODO: uncomment for motion magic
-//        elevatorTop.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen, Constants.INIT_TIMEOUT);
-//        elevatorBottom.configReverseLimitSwitchSource(RemoteLimitSwitchSource.RemoteTalonSRX, LimitSwitchNormal.NormallyOpen, RobotMap.Motor.ELEVATOR_TOP, Constants.INIT_TIMEOUT);
+        elevatorTop.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen, Constants.INIT_TIMEOUT);
+        elevatorBottom.configReverseLimitSwitchSource(RemoteLimitSwitchSource.RemoteTalonSRX, LimitSwitchNormal.NormallyOpen, RobotMap.Motor.ELEVATOR_TOP, Constants.INIT_TIMEOUT);
 
         elevatorTop.follow(elevatorBottom);
-        elevatorBottom.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute, 0, Constants.INIT_TIMEOUT);
+        elevatorBottom.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, Constants.INIT_TIMEOUT);
         elevatorBottom.setSensorPhase(true);
 
         // Set trapezoid details for motion profiling
-        elevatorBottom.configMotionCruiseVelocity(Elevator.CRUISE_VELOCITY_EVEL, Constants.INIT_TIMEOUT);
-        elevatorBottom.configMotionAcceleration(Elevator.MAX_ACCEL_EACCEL, Constants.INIT_TIMEOUT);
+        elevatorBottom.configMotionCruiseVelocity(CRUISE_VELOCITY_EVEL, Constants.INIT_TIMEOUT);
+        elevatorBottom.configMotionAcceleration(MAX_ACCEL_EACCEL, Constants.INIT_TIMEOUT);
 
+
+        elevatorBottom.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, 5, Constants.INIT_TIMEOUT);
+        elevatorBottom.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 5, Constants.INIT_TIMEOUT);
 
         pidTuner = new SendablePIDTuner(this, this);
 
@@ -122,8 +139,11 @@ public class ElevatorSubsystem extends NonDefaultSubsystem implements PIDTunable
     public void setElevatorPos(float feet)
     {
         double epos = feet * Elevator.FEET_TO_EPOS_ELEV;
-        System.out.println("epos target: " + epos);
+
         moveElevator(ControlMode.MotionMagic, epos);
+
+        System.out.println("Closed Loop Error (evelator): " + elevatorBottom.getClosedLoopError(0));
+
     }
 
 
@@ -225,6 +245,7 @@ public class ElevatorSubsystem extends NonDefaultSubsystem implements PIDTunable
     @Override
     public void setPID()
     {
+        elevatorBottom.selectProfileSlot(0, 0);
         elevatorBottom.config_kP(0, kP, Constants.INIT_TIMEOUT);
         elevatorBottom.config_kI(0, kI, Constants.INIT_TIMEOUT);
         elevatorBottom.config_kD(0, kD, Constants.INIT_TIMEOUT);
@@ -249,7 +270,6 @@ public class ElevatorSubsystem extends NonDefaultSubsystem implements PIDTunable
     public double getPos()
     {
         int selectedSensorPosition = elevatorBottom.getSelectedSensorPosition(0);
-        System.out.println("epos real: " + selectedSensorPosition);
         return selectedSensorPosition;
     }
 
@@ -268,6 +288,12 @@ public class ElevatorSubsystem extends NonDefaultSubsystem implements PIDTunable
         if(DriverStation.getInstance().isDisabled()) { return; }
         SmartDashboard.putNumber("Elevator: Velocity (fps)", getVel() * Elevator.EVEL_TO_FPS_ELEV);
         SmartDashboard.putNumber("Elevator: Position (ft)", getPos() * Elevator.EPOS_TO_FEET_ELEV);
+        SmartDashboard.putNumber("Elevator: Max Accel (enc units) (read)", MAX_ACCEL_EACCEL);
+        SmartDashboard.putNumber("Elevator: Cruise vel (enc units) (read)", CRUISE_VELOCITY_EVEL);
+
+        MAX_ACCEL_EACCEL = (int) SmartDashboard.getNumber("Elevator: Max Accel (enc units)", MAX_ACCEL_EACCEL);
+        CRUISE_VELOCITY_EVEL = (int) SmartDashboard.getNumber("Elevator: Cruise vel (enc units)", CRUISE_VELOCITY_EVEL);
+
 
         pidTuner.updateDashboard();
     }

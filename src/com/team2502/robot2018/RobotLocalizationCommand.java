@@ -50,8 +50,8 @@ public class RobotLocalizationCommand extends Command implements ITranslationalL
     public RobotLocalizationCommand(IRotationalLocationEstimator rotEstimator,
                                     ITranslationalVelocityEstimator velocityEstimator, ITranslationalLocationEstimator locationEstimator)
     {
-        setRunWhenDisabled(true);
-        setInterruptible(false);
+//        setRunWhenDisabled(true);
+//        setInterruptible(false);
         this.rotEstimator = rotEstimator;
         this.velocityEstimator = velocityEstimator;
         this.locationEstimator = locationEstimator;
@@ -72,7 +72,7 @@ public class RobotLocalizationCommand extends Command implements ITranslationalL
 
         // Estimate location
         location = locationEstimator.estimateLocation();
-        System.out.printf("locationX %.2f, locationY %.2f\n", location.x, location.y);
+//        System.out.printf("locationX %.2f, locationY %.2f\n", location.x, location.y);
 
         // Find our heading in vector form
         velocity = velocityEstimator.estimateAbsoluteVelocity();

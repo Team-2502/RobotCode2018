@@ -134,12 +134,12 @@ public final class Robot extends IterativeRobot
      * @see Robot#writeLog(String, int, Object...)
      */
     private static List<String> logLines = new ArrayList<>();
+
     /**
      * Specifies the minimum level of logPop message to print out
      *
      * @see Robot#writeLog(String, int, Object...)
      */
-
     private static int LEVEL = 40;
 
     /**
@@ -339,7 +339,7 @@ public final class Robot extends IterativeRobot
     {
         Scheduler.getInstance().run();
         DashboardData.update();
-        Files.writeToFile();
+//        Files.writeToFile();
     }
 
     /**
