@@ -31,6 +31,8 @@ dependencies {
     compile "org.joml:joml:1.9.9:beta0"
     compile group: 'com.google.guava', name: 'guava', version: '23.5-jre'
     compile group: 'org.apache.commons', name: 'commons-math3', version: '3.6.1'
+
+    testCompile 'junit:junit:4.12'
 }
 
 def branch() {
@@ -81,7 +83,7 @@ task wrapper(type: Wrapper) {
 
 sourceSets {
     main {
-        java { srcDirs = ['src/'] }
-        resources { srcDirs = ['res/'] }
+        java { srcDirs = ['src/main/java'] }
+        resources { srcDirs = ['src/main/resources'] }
     }
 }
