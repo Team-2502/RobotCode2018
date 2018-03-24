@@ -140,7 +140,7 @@ public class RobotMap
         public static final int CLIMBER_SOLENOID = 1;
         public static final int ACTIVE_GRABBER = 2;
         public static final int BUTTERFLY_SOLENOID = 3;
-        public static final int CLIMBER_BREAK_SOLENOID = 4;
+        public static final int CLIMBER_BRAKE_SOLENOID = 4;
 
         private Solenoid() { }
     }

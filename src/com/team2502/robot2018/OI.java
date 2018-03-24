@@ -90,7 +90,7 @@ public final class OI
 
         CALIBRATE_ELEV_ENCODER.whenPressed(new QuickCommand(Robot.ELEVATOR::calibrateEncoder));
 
-        BREAK_CLIMBER_CARRAIGE.whenPressed(new BreakClimberCommand());
+        BREAK_CLIMBER_CARRAIGE.whenPressed(new BrakeClimberCommand());
     }
 
     /**
