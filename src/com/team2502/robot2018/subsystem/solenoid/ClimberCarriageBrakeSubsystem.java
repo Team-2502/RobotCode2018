@@ -4,15 +4,18 @@ import com.team2502.robot2018.RobotMap;
 import com.team2502.robot2018.utils.NonDefaultSubsystem;
 import edu.wpi.first.wpilibj.Solenoid;
 
-public class ClimberCarriageBreakSubsystem extends NonDefaultSubsystem
+/**
+ * @deprecated Not a mechanical feature yet
+ */
+public class ClimberCarriageBrakeSubsystem extends NonDefaultSubsystem
 {
     public final Solenoid climberBreak;
 
     private boolean breakEnabled;
 
-    public ClimberCarriageBreakSubsystem()
+    public ClimberCarriageBrakeSubsystem()
     {
-        climberBreak = new Solenoid(RobotMap.Solenoid.CLIMBER_BREAK_SOLENOID);
+        climberBreak = new Solenoid(RobotMap.Solenoid.CLIMBER_BRAKE_SOLENOID);
         breakEnabled = false;
     }
 

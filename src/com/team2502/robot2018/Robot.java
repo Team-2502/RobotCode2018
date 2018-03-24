@@ -99,7 +99,7 @@ public final class Robot extends IterativeRobot
      */
     public static TransmissionSolenoid TRANSMISSION_SOLENOID;
 
-    public static ClimberCarriageBreakSubsystem CLIMBER_CARRIAGE_BREAK;
+    public static ClimberCarriageBrakeSubsystem CLIMBER_CARRIAGE_BRAKE;
 
     /**
      * The NavX on the robot. To fully recalibrate,
@@ -205,7 +205,7 @@ public final class Robot extends IterativeRobot
         ACTIVE_INTAKE_SOLENOID = new ActiveIntakeSolenoid();
         CLIMBER_SOLENOID = new ClimberSolenoid();
         BUTTERFLY_SOLENOID = new ButterflySolenoid();
-        CLIMBER_CARRIAGE_BREAK = new ClimberCarriageBreakSubsystem();
+        CLIMBER_CARRIAGE_BRAKE = new ClimberCarriageBrakeSubsystem();
 
         // Initialize OI 
         OI.init();
