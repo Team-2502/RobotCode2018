@@ -86,7 +86,7 @@ public class Path
 
             for(int i = segmentOnI + 1; i < pathSegments.size(); i++)
             {
-                Robot.writeLog("checking segment {segmentOn %d}",100,segmentOnI);
+                Robot.writeLog("checking segment {segmentOn %d}", 100, segmentOnI);
                 PathSegment pathSegment = pathSegments.get(i);
                 float length = pathSegment.getLength();
                 if(lookahead > length && !pathSegment.isEnd())
@@ -99,7 +99,7 @@ public class Path
                 }
             }
         }
-        Robot.writeLog("RETURNING NULL",80);
+        Robot.writeLog("RETURNING NULL", 80);
         return null;
     }
 
