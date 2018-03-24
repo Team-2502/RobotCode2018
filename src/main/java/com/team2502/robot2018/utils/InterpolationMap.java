@@ -2,6 +2,7 @@ package com.team2502.robot2018.utils;
 
 import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
 import org.joml.ImmutableVector2d;
+import org.joml.ImmutableVector2f;
 
 import java.util.*;
 
@@ -85,7 +86,7 @@ public class InterpolationMap implements Map<Double, Double>, MathUtils.Integrab
     }
 
     /**
-     * @param key The key to get a value for
+     * @param key The key to evaluateY a value for
      * @return The value associated with the key. May be obtained through interpolation
      * @throws IllegalArgumentException If the key does not extend Double
      */
@@ -206,11 +207,11 @@ public class InterpolationMap implements Map<Double, Double>, MathUtils.Integrab
 
         if(upperBound == null) // i.e all the keys are smaller than the value we want to grab
         {
-            return table.get(keys.get(keys.size() - 1)); // get the f(x) for the biggest x. we can't do real interpolation
+            return table.get(keys.get(keys.size() - 1)); // evaluateY the f(x) for the biggest x. we can't do real interpolation
         }
         else if(lowerBound == null) // i.e all the keys are bigger than the value we want to grab
         {
-            return table.get(keys.get(0)); // get the f(x) for the smallest x. we can't do real interpolation.
+            return table.get(keys.get(0)); // evaluateY the f(x) for the smallest x. we can't do real interpolation.
         }
         else // we can do real interpolation
         {
@@ -223,7 +224,7 @@ public class InterpolationMap implements Map<Double, Double>, MathUtils.Integrab
             // reminder: it's y - y1 = m (x - x1)
             // here, m is slope
             // upperBound is x1
-            // table.get(upperBound) is y1
+            // table.evaluateY(upperBound) is y1
             return ((slope * key) - (slope * upperBound)) + table.get(upperBound);
         }
     }
@@ -249,8 +250,8 @@ public class InterpolationMap implements Map<Double, Double>, MathUtils.Integrab
 
         if(significantPoints.size() == 1)
         {
-            lines.add(new MathUtils.Geometry.Line(new ImmutableVector2d(a, get(a)),
-                                                  new ImmutableVector2d(b, get(b))));
+            lines.add(new MathUtils.Geometry.Line(new ImmutableVector2f((float) a, get(a).floatValue()),
+                                                  new ImmutableVector2f((float) b, get(b).floatValue())));
         }
         else
         {
@@ -268,8 +269,8 @@ public class InterpolationMap implements Map<Double, Double>, MathUtils.Integrab
                     x2 = Math.min(b, x2);
 
                     // use "entire" line
-                    lines.add(new MathUtils.Geometry.Line(new ImmutableVector2d(x1, get(x1)),
-                                                          new ImmutableVector2d(x2, get(x2))));
+                    lines.add(new MathUtils.Geometry.Line(new ImmutableVector2f((float) x1, get(x1).floatValue()),
+                                                          new ImmutableVector2f((float) x2, get(x2).floatValue())));
                 }
             }
 

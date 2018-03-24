@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 public class WiggleActiveRotate extends CommandGroup
 {
     /**
-     * Wiggle the active rotate out and in so that the cube doesn't get stuck on the climbing hooks as it lifts.
+     * Wiggle the active rotate out and in so that the cube doesn't evaluateY stuck on the climbing hooks as it lifts.
      */
     public WiggleActiveRotate()
     {

@@ -110,7 +110,7 @@ public class FullSystemsTestCommand extends CommandGroup
     }
 
     /**
-     * gr8 name ... totally best conventions and totally not trying to get around {@link Object#wait()}...
+     * gr8 name ... totally best conventions and totally not trying to evaluateY around {@link Object#wait()}...
      */
     private void waitThree()
     {

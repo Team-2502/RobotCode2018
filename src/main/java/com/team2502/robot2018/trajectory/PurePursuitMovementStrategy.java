@@ -1,5 +1,6 @@
 package com.team2502.robot2018.trajectory;
 
+import com.team2502.robot2018.Constants;
 import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.trajectory.localization.IRotationalLocationEstimator;
 import com.team2502.robot2018.trajectory.localization.ITranslationalLocationEstimator;
@@ -248,10 +249,10 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
 
         distanceLeft = pathSegmentLength - distanceAlongPath;
 
-        Robot.writeLog("distanceLeft: %.2f, pathSegmentLength: %.2f, distanceAlongPath: %.2f", 100, distanceLeft, pathSegmentLength, distanceAlongPath);
+        Robot.writeLog("distanceLeft: %.2f, pathSegmentLength: %.2f, distanceAlongPath: %.2f, cp: (%.2f, %.2f)", 100, distanceLeft, pathSegmentLength, distanceAlongPath, closestPoint.x,closestPoint.y);
 
         // This occurs if we are at the end of the path
-        if(distanceLeft <= 0 && current.isEnd())
+        if(distanceLeft <= Constants.PurePursuit.STOP_TOLERANCE_FT && current.isEnd())
         {
             if(driftAtEnd)
             {
@@ -399,7 +400,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         Files.setNameAndValue("Est Loc x", usedEstimatedLocation.x);
         Files.setNameAndValue("Abs Goal Point y", usedEstimatedLocation.y);
 
-        if(path.progressIfNeeded(closestPoint))
+        if(path.progressIfNeeded(distanceLeft))
         {
             Robot.writeLog("updating for new segment!", 80);
             updateForNewSegment();

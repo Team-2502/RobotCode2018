@@ -15,7 +15,7 @@ public class DebouncedJoystickButton extends JoystickButton
 
     boolean activeCache = false;
 
-    // If we are calling get() for the first time we cannot debounce
+    // If we are calling evaluateY() for the first time we cannot debounce
     boolean debounced = false;
 
     /**

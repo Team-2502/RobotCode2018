@@ -2,7 +2,6 @@ package com.team2502.robot2018.utils;
 
 
 import com.team2502.robot2018.Robot;
-import org.joml.ImmutableVector2d;
 import org.joml.ImmutableVector2f;
 
 import java.util.HashSet;
@@ -718,64 +717,91 @@ public final class MathUtils
          */
         public static ImmutableVector2f getClosestPoint(ImmutableVector2f linePointA, ImmutableVector2f linePointB, ImmutableVector2f robotPos)
         {
-            // Let s:[0,1]
-            // Our line is
-            // Dx = (linePointB.x - linePointA.x)s
-            // Dy = (linePointB.y - linePointA.y)s
-            // This is a transformation from R1 -> R2 we have [ x y ]
-            // [ Dx ]   [ linePointB.x - linePointA.x ]
-            // [ Dy ] = [ linePointB.y - linePointA.y ][ s ]
 
-            float dx = linePointB.x - linePointA.x;
-            float dy = linePointB.y - linePointA.y;
+            double d1 = Math.hypot(linePointA.x - robotPos.x, linePointA.y - robotPos.y);
+            double d2 = Math.hypot(linePointB.x - robotPos.x, linePointB.y - robotPos.y);
 
-            // Let us assume the shortest distance to a line will be perpendicular to the line. Applying a pi/2 rotation yields
-            // [ DxPerp ]   [ cos(pi/2) -sin(pi/2) ] [ linePointB.x - linePointA.x ]
-            // [ DyPerp ] = [ sin(pi/2) cos(pi/2)  ] [ linePointB.y - linePointA.y ][ s ]
-            //   [ linePointA.y - linePointB.y ]
-            // = [ linePointB.x - linePointA.x ][ s ]
+            double dPerp;
 
-            float dxPerp = -dy;
-            float dyPerp = dx;
+            Line lineSegment = new Line(linePointA, linePointB);
 
-            // We need the point where lines
-            // robotPos.x + dxPerp * j
-            // robotPos.y + dyPerp*j
-            // and
-            // linePointB.x + dX * s
-            // linePointB.y + dX * s
-            // collide
+            Line linePerp = lineSegment.getPerp(robotPos);
 
-            // robotPos.x + dxPerp * j = linePointB.x + dX * s ==> robotPos.x - linePointB.x
-            // robotPos.y + dyPerp * j = linePointB.y + dY * s
+            ImmutableVector2f intersect = linePerp.intersection(lineSegment);
 
-            float j, s;
-            if(dx == 0)
+            double d3 = Math.hypot(intersect.x - robotPos.x, intersect.y - robotPos.y);
+
+            if(d1 < d2 && d1 < d3)
             {
-                j = -(robotPos.x - linePointA.x) / dxPerp;
-                s = ((robotPos.y - linePointA.y) + dyPerp * j) / dy;
+                return linePointA;
             }
-            else if(dy == 0)
+            else if(d2 < d1 && d2 < d3)
             {
-                j = -(robotPos.y - linePointB.y) / dyPerp;
-                s = ((robotPos.x - linePointA.x) + dxPerp * j) / dx;
+                return linePointB;
             }
             else
             {
-                float slope = dy / dx;
-                j = (robotPos.x - linePointA.x - (robotPos.y - linePointA.y)) / (-slope * dxPerp + dyPerp);
-                s = (robotPos.x + dxPerp) * j / (robotPos.x + dx);
+                return intersect;
             }
 
-            // if on line
-            if(s >= 0 && s <= 1)
-            {
-                return linePointA.add(new ImmutableVector2f(dx * s, dy * s));
-            }
-            // else ... we cannot use a perpendicular line and will need to look on endpoints
-            float dist2A = linePointA.distanceSquared(robotPos);
-            float dist2B = linePointB.distanceSquared(robotPos);
-            return dist2A < dist2B ? linePointA : linePointB;
+//            // Let s:[0,1]
+//            // Our line is
+//            // Dx = (linePointB.x - linePointA.x)s
+//            // Dy = (linePointB.y - linePointA.y)s
+//            // This is a transformation from R1 -> R2 we have [ x y ]
+//            // [ Dx ]   [ linePointB.x - linePointA.x ]
+//            // [ Dy ] = [ linePointB.y - linePointA.y ][ s ]
+//
+//            float dx = linePointB.x - linePointA.x;
+//            float dy = linePointB.y - linePointA.y;
+//
+//            // Let us assume the shortest distance to a line will be perpendicular to the line. Applying a pi/2 rotation yields
+//            // [ DxPerp ]   [ cos(pi/2) -sin(pi/2) ] [ linePointB.x - linePointA.x ]
+//            // [ DyPerp ] = [ sin(pi/2) cos(pi/2)  ] [ linePointB.y - linePointA.y ][ s ]
+//            //   [ linePointA.y - linePointB.y ]
+//            // = [ linePointB.x - linePointA.x ][ s ]
+//
+//            float dxPerp = -dy;
+//            float dyPerp = dx;
+//
+//            // We need the point where lines
+//            // robotPos.x + dxPerp * j
+//            // robotPos.y + dyPerp*j
+//            // and
+//            // linePointB.x + dX * s
+//            // linePointB.y + dX * s
+//            // collide
+//
+//            // robotPos.x + dxPerp * j = linePointB.x + dX * s ==> robotPos.x - linePointB.x
+//            // robotPos.y + dyPerp * j = linePointB.y + dY * s
+//
+//            float j, s;
+//            if(dx == 0)
+//            {
+//                j = -(robotPos.x - linePointA.x) / dxPerp;
+//                s = ((robotPos.y - linePointA.y) + dyPerp * j) / dy;
+//            }
+//            else if(dy == 0)
+//            {
+//                j = -(robotPos.y - linePointB.y) / dyPerp;
+//                s = ((robotPos.x - linePointA.x) + dxPerp * j) / dx;
+//            }
+//            else
+//            {
+//                float slope = dy / dx;
+//                j = (robotPos.x - linePointA.x - (robotPos.y - linePointA.y)) / (-slope * dxPerp + dyPerp);
+//                s = (robotPos.x + dxPerp) * j / (robotPos.x + dx);
+//            }
+//
+//            // if on line
+//            if(s >= 0 && s <= 1)
+//            {
+//                return linePointA.add(new ImmutableVector2f(dx * s, dy * s));
+//            }
+//            // else ... we cannot use a perpendicular line and will need to look on endpoints
+//            float dist2A = linePointA.distanceSquared(robotPos);
+//            float dist2B = linePointB.distanceSquared(robotPos);
+//            return dist2A < dist2B ? linePointA : linePointB;
         }
 
         /**
@@ -879,10 +905,10 @@ public final class MathUtils
             final double y1;
             final double y2;
 
-            final ImmutableVector2d a;
-            final ImmutableVector2d b;
+            final ImmutableVector2f a;
+            final ImmutableVector2f b;
 
-            public Line(ImmutableVector2d a, ImmutableVector2d b)
+            public Line(ImmutableVector2f a, ImmutableVector2f b)
             {
                 x1 = a.x;
                 x2 = b.x;
@@ -892,12 +918,22 @@ public final class MathUtils
                 this.a = a;
                 this.b = b;
 
-                slope = (a.y - b.y) / (a.x - b.x);
+                if (a.x - b.x != 0)
+                {
+                    slope = (a.y - b.y) / (a.x - b.x);
+
+                }
+                else
+                {
+                    slope = Double.MAX_VALUE;
+                }
                 y_intercept = a.y - slope * a.x;
                 x_intercept = -y_intercept / slope;
             }
 
-            public double get(double x)
+
+
+            public double evaluateY(double x)
             {
                 return slope * x + y_intercept;
             }
@@ -917,6 +953,31 @@ public final class MathUtils
             public double integrate()
             {
                 return integrate(x1, x2);
+            }
+
+            public Line getPerp(ImmutableVector2f point)
+            {
+                double perpSlope;
+                if(slope == Double.MAX_VALUE)
+                {
+                    perpSlope = 0;
+                }
+                else
+                {
+                    perpSlope = -1/slope;
+                }
+                return new Line(point, new ImmutableVector2f(point.x + 1, (float) (point.y + perpSlope)));
+            }
+
+            public ImmutableVector2f intersection(Line other)
+            {
+                // mx + b = cx + d
+                // (m-c) x = d - b
+                double x = (other.y_intercept - this.y_intercept) / (this.slope - other.slope);
+                double y = evaluateY(x);
+                return new ImmutableVector2f((float) x, (float) y);
+
+
             }
         }
     }

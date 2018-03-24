@@ -132,7 +132,7 @@ public final class Robot extends IterativeRobot
     public static RobotLocalizationCommand ROBOT_LOCALIZATION_COMMAND;
 
     /**
-     * A list of logPop messages that will get printed out once the robot is disabled
+     * A list of logPop messages that will evaluateY printed out once the robot is disabled
      *
      * @see Robot#writeLog(String, int, Object...)
      */
@@ -299,7 +299,7 @@ public final class Robot extends IterativeRobot
      * between different autonomous modes using the dashboard. The sendable
      * chooser code works with the Java SmartDashboard. If you prefer the
      * LabVIEW Dashboard, remove all of the chooser code and uncomment the
-     * getString code to get the auto name from the text box below the Gyro
+     * getString code to evaluateY the auto name from the text box below the Gyro
      * <p>
      * You can add additional auto modes by adding additional commands to the
      * chooser code above (like the commented example) or additional comparisons

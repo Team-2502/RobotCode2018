@@ -35,8 +35,10 @@ public class ElevatorSubsystem extends NonDefaultSubsystem implements PIDTunable
     private final WPI_TalonSRX climberBottom;
     private final SendablePIDTuner pidTuner;
 
-    private double kF = 1D;
-    private double kP = 1D;
+//    private double kF = 1D;
+//    private double kP = 1D;
+    private double kF = 0D;
+    private double kP = 0.2D;
     private double kI = 0D;
     private double kD = 0D;
 
@@ -143,7 +145,7 @@ public class ElevatorSubsystem extends NonDefaultSubsystem implements PIDTunable
     {
         double epos = feet * Elevator.FEET_TO_EPOS_ELEV;
 
-        moveElevator(ControlMode.MotionMagic, epos);
+        moveElevator(ControlMode.Position, epos);
 
         System.out.println("Closed Loop Error (evelator): " + elevatorBottom.getClosedLoopError(0));
 

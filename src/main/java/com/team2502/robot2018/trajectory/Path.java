@@ -66,8 +66,13 @@ public class Path
 
         this.robotLocationClosestPoint = origin;
         PathSegment current = getCurrent();
-        closestPoint = MathUtils.Geometry.getClosestPoint(current.getFirst().getLocation(), current.getLast().getLocation(), origin);
-        return MathUtils.Geometry.getClosestPoint(current.getFirst().getLocation(), current.getLast().getLocation(), origin);
+        ImmutableVector2f start = current.getFirst().getLocation();
+        ImmutableVector2f end = current.getLast().getLocation();
+//        Robot.writeLog("finding closest point: {start (" + start.x + ", " + start.y + "), last (" + end.x + ", " + end.y + "), origin (" + origin.x + ", " + origin.y + ")}",100);
+//        Robot.writeLog("origin:");
+        Robot.writeLog("origin: %.2f %.2f",100,origin.x,origin.y);
+        closestPoint = MathUtils.Geometry.getClosestPoint(start, end, origin);
+        return closestPoint;
     }
 
     ImmutableVector2f getGoalPoint(float distanceLeftCurrentSegment, float lookahead)
@@ -86,7 +91,7 @@ public class Path
 
             for(int i = segmentOnI + 1; i < pathSegments.size(); i++)
             {
-                Robot.writeLog("checking segment {segmentOn %d}", 100, segmentOnI);
+//                Robot.writeLog("checking segment {segmentOn %d}", 100, segmentOnI);
                 PathSegment pathSegment = pathSegments.get(i);
                 float length = pathSegment.getLength();
                 if(lookahead > length && !pathSegment.isEnd())
@@ -103,13 +108,12 @@ public class Path
         return null;
     }
 
-    boolean progressIfNeeded(ImmutableVector2f closestPoint)
+    boolean progressIfNeeded(float distanceLeft)
     {
         PathSegment pathSegment = getCurrent();
-        float distanceLeftEff = pathSegment.getDistanceLeftEff(closestPoint);
         ImmutableVector2f location = pathSegment.getLast().getLocation();
-        Robot.writeLog("distanceLeftEff: %.2f, segmentOnI: %d, point: (%.2f,%.2f)", 80, distanceLeftEff, segmentOnI, location.x, location.y);
-        if(distanceLeftEff < Constants.PurePursuit.DISTANCE_COMPLETE_SEGMENT_TOLERANCE)
+        Robot.writeLog("distanceLeft: %.2f, segmentOnI: %d, point: (%.2f,%.2f)", 80, distanceLeft, segmentOnI, location.x, location.y);
+        if(distanceLeft < Constants.PurePursuit.DISTANCE_COMPLETE_SEGMENT_TOLERANCE)
         {
             boolean moved = moveNextSegment();
             Robot.writeLog("progressing: %b", 80, moved);

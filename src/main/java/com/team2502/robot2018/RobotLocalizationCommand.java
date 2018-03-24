@@ -49,8 +49,8 @@ public class RobotLocalizationCommand extends Command implements ITranslationalL
     public RobotLocalizationCommand(IRotationalLocationEstimator rotEstimator,
                                     ITranslationalVelocityEstimator velocityEstimator, ITranslationalLocationEstimator locationEstimator)
     {
-//        setRunWhenDisabled(true);
-//        setInterruptible(false);
+        setRunWhenDisabled(false);
+        setInterruptible(true);
         this.rotEstimator = rotEstimator;
         this.velocityEstimator = velocityEstimator;
         this.locationEstimator = locationEstimator;
