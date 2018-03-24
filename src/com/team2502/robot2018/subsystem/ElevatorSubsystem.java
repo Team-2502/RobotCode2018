@@ -6,6 +6,7 @@ import com.team2502.robot2018.Constants;
 import com.team2502.robot2018.DashboardData;
 import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.RobotMap;
+import com.team2502.robot2018.command.teleop.QuickCommand;
 import com.team2502.robot2018.sendables.PIDTunable;
 import com.team2502.robot2018.sendables.SendablePIDTuner;
 import com.team2502.robot2018.utils.NonDefaultSubsystem;
@@ -20,9 +21,9 @@ public class ElevatorSubsystem extends NonDefaultSubsystem implements PIDTunable
      *
      * @see Elevator#MAX_ACCEL_FPS2
      */
-    private static int MAX_ACCEL_EACCEL = 1500;
+    private static int MAX_ACCEL_EACCEL = 15000;
 
-    private static int CRUISE_VELOCITY_EVEL = 600;
+    private static int CRUISE_VELOCITY_EVEL = 6000;
 
     private final WPI_TalonSRX elevatorTop;
     private final WPI_TalonSRX elevatorBottom;
@@ -33,8 +34,8 @@ public class ElevatorSubsystem extends NonDefaultSubsystem implements PIDTunable
     private final WPI_TalonSRX climberBottom;
     private final SendablePIDTuner pidTuner;
 
-    private double kF = 0.2D;
-    private double kP = 0.2D;
+    private double kF = 1D;
+    private double kP = 1D;
     private double kI = 0D;
     private double kD = 0D;
 
@@ -60,7 +61,7 @@ public class ElevatorSubsystem extends NonDefaultSubsystem implements PIDTunable
         elevatorBottom.configReverseLimitSwitchSource(RemoteLimitSwitchSource.RemoteTalonSRX, LimitSwitchNormal.NormallyOpen, RobotMap.Motor.ELEVATOR_TOP, Constants.INIT_TIMEOUT);
 
         elevatorTop.follow(elevatorBottom);
-        elevatorBottom.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, Constants.INIT_TIMEOUT);
+        elevatorBottom.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute, 0, Constants.INIT_TIMEOUT);
         elevatorBottom.setSensorPhase(true);
 
         // Set trapezoid details for motion profiling
@@ -75,6 +76,8 @@ public class ElevatorSubsystem extends NonDefaultSubsystem implements PIDTunable
 
         DashboardData.addUpdater(this);
         calibrateEncoder();
+
+
 
     }
 
@@ -284,8 +287,8 @@ public class ElevatorSubsystem extends NonDefaultSubsystem implements PIDTunable
     @Override
     public void updateDashboard()
     {
-        SmartDashboard.putNumber("Elevator: Velocity (fps)", getVel() * Elevator.EVEL_TO_FPS_ELEV);
-        SmartDashboard.putNumber("Elevator: Position (ft)", getPos() * Elevator.EPOS_TO_FEET_ELEV);
+        SmartDashboard.putNumber("Elevator: Velocity (fps)", getVel());
+        SmartDashboard.putNumber("Elevator: Position (ft)", getPos());
         SmartDashboard.putNumber("Elevator: Max Accel (enc units) (read)", MAX_ACCEL_EACCEL);
         SmartDashboard.putNumber("Elevator: Cruise vel (enc units) (read)", CRUISE_VELOCITY_EVEL);
 
@@ -293,6 +296,16 @@ public class ElevatorSubsystem extends NonDefaultSubsystem implements PIDTunable
         CRUISE_VELOCITY_EVEL = (int) SmartDashboard.getNumber("Elevator: Cruise vel (enc units)", CRUISE_VELOCITY_EVEL);
 
 
+
+        // Set trapezoid details for motion profiling
+        elevatorBottom.configMotionCruiseVelocity(CRUISE_VELOCITY_EVEL, Constants.INIT_TIMEOUT);
+        elevatorBottom.configMotionAcceleration(MAX_ACCEL_EACCEL, Constants.INIT_TIMEOUT);
+
         pidTuner.updateDashboard();
+    }
+
+    public int getClosedLoopError()
+    {
+        return elevatorBottom.getClosedLoopError(0);
     }
 }
