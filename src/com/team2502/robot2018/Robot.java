@@ -283,10 +283,8 @@ public final class Robot extends IterativeRobot
      */
     public void disabledPeriodic()
     {
-        // TODO: why did we have this uncommented before?
-//        Scheduler.getInstance().run();
-//        DashboardData.update();
-
+        Scheduler.getInstance().run();
+        DashboardData.update();
         GAME_DATA = DriverStation.getInstance().getGameSpecificMessage();
         if(GAME_DATA == null) { GAME_DATA = "___"; }
     }
