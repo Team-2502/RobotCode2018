@@ -379,7 +379,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
 
         if(absoluteGoalPoint == null)
         {
-//            Robot.logPop();
+            Robot.logPop();
         }
         relativeGoalPoint = MathUtils.LinearAlgebra.absoluteToRelativeCoord(absoluteGoalPoint, usedEstimatedLocation, usedHeading);
 

@@ -72,11 +72,11 @@ public class Path
 
     ImmutableVector2f getGoalPoint(float distanceLeftCurrentSegment, float lookahead)
     {
-        if(lookahead < distanceLeftCurrentSegment)
+        PathSegment current = getCurrent();
+        if(lookahead < distanceLeftCurrentSegment || current.isEnd())
         {
-            PathSegment current = getCurrent();
             float relativeDistance = current.getLength() - distanceLeftCurrentSegment + lookahead;
-            Robot.writeLog("look current segment ... relativeDist: %.2f", 80, relativeDistance);
+            Robot.writeLog("look current segment ... relativeDist: %.2f", 100, relativeDistance);
             return current.getPoint(relativeDistance);
         }
         else
@@ -86,6 +86,7 @@ public class Path
 
             for(int i = segmentOnI + 1; i < pathSegments.size(); i++)
             {
+                Robot.writeLog("checking segment {segmentOn %d}",100,segmentOnI);
                 PathSegment pathSegment = pathSegments.get(i);
                 float length = pathSegment.getLength();
                 if(lookahead > length && !pathSegment.isEnd())
@@ -98,7 +99,8 @@ public class Path
                 }
             }
         }
-        return null; // Should never occur
+        Robot.writeLog("RETURNING NULL",80);
+        return null;
     }
 
     boolean progressIfNeeded(ImmutableVector2f closestPoint)
