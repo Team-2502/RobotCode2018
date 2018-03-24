@@ -136,6 +136,11 @@ public class Constants
              */
             public static final double MAX_ACCEL_FPS2 = 1200;
 
+            /**
+             * How much error (in enc units) we will allow when setting elevator pos
+             */
+            public static final int ALLOWABLE_ERROR = 20;
+
 
             private Elevator() { }
         }

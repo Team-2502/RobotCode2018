@@ -1,6 +1,8 @@
 package com.team2502.robot2018.command.autonomous.ingredients;
 
+import com.team2502.robot2018.Constants;
 import com.team2502.robot2018.Robot;
+import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.TimedCommand;
 
 //TODO: Replace with encoder
@@ -30,7 +32,7 @@ public class ElevatorAutonCommand extends TimedCommand
     protected void initialize()
     {
         Robot.CLIMBER_SOLENOID.unlockElevator();
-        Robot.ELEVATOR.calibrateEncoder();
+//        Robot.ELEVATOR.calibrateEncoder();
         Robot.writeLog("ElevatorAutonCommand init", 10);
     }
 
