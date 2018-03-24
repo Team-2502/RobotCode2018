@@ -7,7 +7,6 @@ import org.joml.ImmutableVector2f;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.function.DoubleSupplier;
 
 /**
  * A class containing very many useful mathematical constants and operations
@@ -492,6 +491,18 @@ public final class MathUtils
     { return x * x * x * x * x * x * x * x * x * x; }
     //endregion
 
+    public interface Integrable
+    {
+        double integrate(double a, double b);
+
+    }
+
+    @FunctionalInterface
+    public interface Function
+    {
+        double get(double x);
+    }
+
     /**
      * A class containing methods pertaining to vector manipulation
      */
@@ -883,7 +894,7 @@ public final class MathUtils
 
                 slope = (a.y - b.y) / (a.x - b.x);
                 y_intercept = a.y - slope * a.x;
-                x_intercept =  -y_intercept / slope;
+                x_intercept = -y_intercept / slope;
             }
 
             public double get(double x)
@@ -908,17 +919,5 @@ public final class MathUtils
                 return integrate(x1, x2);
             }
         }
-    }
-
-    public interface Integrable
-    {
-        double integrate(double a, double b);
-
-    }
-
-    @FunctionalInterface
-    public interface Function
-    {
-        double get(double x);
     }
 }

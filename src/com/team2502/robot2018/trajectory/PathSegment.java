@@ -32,12 +32,13 @@ public class PathSegment
 
     public ImmutableVector2f getPoint(float relativeDistance)
     {
-        return dPos.mul(relativeDistance/length).add(startLocation);
+        return dPos.mul(relativeDistance / length).add(startLocation);
     }
 
     /**
      * Get the "distance" left in an efficient manner
      * Instead of calculating sqrt(dx^2 + dy^2) we simply calculate dx + dy
+     *
      * @param point a close point
      * @return
      */
@@ -49,6 +50,7 @@ public class PathSegment
 
     /**
      * Get the distance left squared
+     *
      * @param point a close point
      * @return
      */
@@ -60,6 +62,7 @@ public class PathSegment
 
     /**
      * Get the distance left
+     *
      * @param point a close point
      * @return
      */

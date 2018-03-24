@@ -20,7 +20,7 @@ public class GoScaleSameSide extends CommandGroup
     {
         //TODO: uncomment
 //        addParallel(new ActiveIntakeRotate(1, 0.5));
-        addSequential(new PurePursuitCommand(path,false));
+        addSequential(new PurePursuitCommand(path, false));
 
         addSequential(new ToggleIntakeCommand());
         //TODO: uncomment

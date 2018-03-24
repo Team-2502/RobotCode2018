@@ -7,6 +7,7 @@ import com.team2502.robot2018.trajectory.localization.ITranslationalVelocityEsti
 import com.team2502.robot2018.utils.Files;
 import com.team2502.robot2018.utils.MathUtils;
 import org.joml.ImmutableVector2f;
+
 import java.util.List;
 
 /**
@@ -194,7 +195,11 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
     private ImmutableVector2f calculateAbsoluteGoalPoint(float distanceCurrentSegmentLeft, float lookAheadDistance)
     {
         // The path is finished — there are no more goal points to compute
-        if(brakeStage || finishedPath) { return null; }
+        if(brakeStage || finishedPath)
+        {
+            Robot.writeLog("RETURN NULL brakeStage %b finishedPath %b", 80, brakeStage, finishedPath);
+            return null;
+        }
 
         // The intersections with the path we are following and the circle around the robot of
         // radius lookAheadDistance. These intersections will determine the "goal point" we
@@ -243,7 +248,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
 
         distanceLeft = pathSegmentLength - distanceAlongPath;
 
-        Robot.writeLog("distanceLeft: %.2f, pathSegmentLength: %.2f, distanceAlongPath: %.2f", 1, distanceLeft, pathSegmentLength, distanceAlongPath);
+        Robot.writeLog("distanceLeft: %.2f, pathSegmentLength: %.2f, distanceAlongPath: %.2f", 100, distanceLeft, pathSegmentLength, distanceAlongPath);
 
         // This occurs if we are at the end of the path
         if(distanceLeft <= 0 && current.isEnd())
@@ -251,11 +256,11 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
             if(driftAtEnd)
             {
                 finishedPath = true;
-                Robot.writeLog("Commencing drift",100);
+                Robot.writeLog("Commencing drift", 100);
             }
             else
             {
-                Robot.writeLog("Commencing brake (getLookahead())",100);
+                Robot.writeLog("Commencing brake (getLookahead())", 100);
                 brakeStage = true;
             }
             return Float.NaN;
@@ -272,20 +277,13 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         for(PathSegment pathSegment : path.nextSegmentsInclusive(15))
         {
             Waypoint last = pathSegment.getLast();
-//            ImmutableVector2f location = last.getLocation();
-//            Robot.writeLog("path segment last waypoint: (%.2f,%.2f)", 80, location.x,location.y);
-//            Robot.writeLog("last max speed , waypoint speed (%.2f,%.2f)", 80,lastWaypointSpeed, last.getMaxSpeed());
-//            if(last.getMaxSpeed() < lastWaypointSpeed)
-//            {
-                float distanceTo = pathSegment.getAbsoluteDistanceEnd() - closestPointPathDistance;
-                float maxSpeed = getMaxSpeed(last.getMaxSpeed(), distanceTo, last.isForward(), waypointEnd.getMaxAccel(), waypointEnd.getMaxDeccel());
-//                Robot.writeLog("maxSpeed: %.2f, distanceTo: %.2f", 80, maxSpeed, distanceTo);
+            float distanceTo = pathSegment.getAbsoluteDistanceEnd() - closestPointPathDistance;
+            float maxSpeed = getMaxSpeed(last.getMaxSpeed(), distanceTo, last.isForward(), waypointEnd.getMaxAccel(), waypointEnd.getMaxDeccel());
 
-                if(maxSpeed < speed)
-                {
-                    speed = maxSpeed;
-                }
-//            }
+            if(maxSpeed < speed)
+            {
+                speed = maxSpeed;
+            }
         }
 
         if(speed < lastWaypointSpeed)
@@ -311,7 +309,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
             Robot.writeLog("accel ... speedUsed: %.2f, poll: %.2f, lastSpeed: %.2f, aMax %.2f", 1, speedUsed, dTime, lastWaypointSpeed, waypointEnd.getMaxAccel());
         }
 
-        Robot.writeLog("speed: %.2f, speedUsed: %.2f, finalSpeed %.2f", 80, speed, speedUsed,finalSpeed);
+        Robot.writeLog("speed: %.2f, speedUsed: %.2f, finalSpeed %.2f", 80, speed, speedUsed, finalSpeed);
 
         float dCP = distanceClosestPoint.length();
 
@@ -359,7 +357,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         }
 
         usedEstimatedLocation = translationalLocationEstimator.estimateLocation();
-        Robot.writeLog("estimated Loc (%.2f,%.2f)", 80,usedEstimatedLocation.x,usedEstimatedLocation.y);
+        Robot.writeLog("estimated Loc (%.2f,%.2f)", 80, usedEstimatedLocation.x, usedEstimatedLocation.y);
         usedHeading = rotEstimator.estimateHeading();
 
         usedLookahead = generateLookahead();
@@ -370,8 +368,8 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
             commenceBreak();
             return;
         }
-        Robot.writeLog("lookAhead: %.2f", 80,usedLookahead);
-        absoluteGoalPoint = calculateAbsoluteGoalPoint(distanceLeft,usedLookahead);
+        Robot.writeLog("lookAhead: %.2f", 80, usedLookahead);
+        absoluteGoalPoint = calculateAbsoluteGoalPoint(distanceLeft, usedLookahead);
 //        Robot.writeLog("abs GP: (%.2f, %.2f)", 80,absoluteGoalPoint.x,absoluteGoalPoint.y);
 
         if(shouldEnd())
@@ -381,7 +379,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
 
         if(absoluteGoalPoint == null)
         {
-            Robot.logPop();
+//            Robot.logPop();
         }
         relativeGoalPoint = MathUtils.LinearAlgebra.absoluteToRelativeCoord(absoluteGoalPoint, usedEstimatedLocation, usedHeading);
 
@@ -403,7 +401,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
 
         if(path.progressIfNeeded(closestPoint))
         {
-            Robot.writeLog("updating for new segment!",80);
+            Robot.writeLog("updating for new segment!", 80);
             updateForNewSegment();
         }
     }
@@ -468,7 +466,8 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
     }
 
     /**
->>>>>>> develop
+     * >>>>>>> develop
+     *
      * @return The curvature (1/radius) to the goal point
      */
     private float calcCurvatureToGoal()

@@ -1,7 +1,6 @@
 package com.team2502.robot2018.utils;
 
 import org.joml.ImmutableVector2d;
-import org.joml.ImmutableVector2f;
 
 /**
  * Tests the InterpolationMap

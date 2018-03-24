@@ -14,8 +14,10 @@ import com.team2502.robot2018.trajectory.localization.EncoderDifferentialDriveLo
 import com.team2502.robot2018.trajectory.localization.NavXLocationEstimator;
 import com.team2502.robot2018.utils.Files;
 import com.team2502.robot2018.utils.InterpolationMap;
-
-import edu.wpi.first.wpilibj.*;
+import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -160,6 +162,22 @@ public final class Robot extends IterativeRobot
         }
     }
 
+    public static void logPop()
+    {
+        StringBuilder stringBuilder = new StringBuilder();
+        Iterator<String> iterator = logLines.iterator();
+
+        stringBuilder.append("::: LOG ::: \n");
+        while(iterator.hasNext())
+        {
+            String message = iterator.next();
+            stringBuilder.append(message);
+            stringBuilder.append('\n');
+            iterator.remove();
+        }
+        System.out.println(stringBuilder.toString());
+    }
+
     /**
      * This method is run when the robot is first started up and should be
      * used for any initialization code.
@@ -206,10 +224,10 @@ public final class Robot extends IterativeRobot
         BUTTERFLY_SOLENOID = new ButterflySolenoid();
         CLIMBER_CARRIAGE_BRAKE = new ClimberCarriageBrakeSubsystem();
 
-        // Initialize OI 
+        // Initialize OI
         OI.init();
 
-        // Initialize the ACCELERATION_FOR_ELEVATOR_HEIGHT interpolation map. 
+        // Initialize the ACCELERATION_FOR_ELEVATOR_HEIGHT interpolation map.
         Map<Double, Double> map = ImmutableMap.<Double, Double>builder()
                 .put(0D, 14D)
                 .build();
@@ -260,22 +278,6 @@ public final class Robot extends IterativeRobot
         Robot.logPop();
         // Print out the logs we saved up
 
-    }
-
-    public static void logPop()
-    {
-        StringBuilder stringBuilder = new StringBuilder();
-        Iterator<String> iterator = logLines.iterator();
-
-        stringBuilder.append("::: LOG ::: \n");
-        while(iterator.hasNext())
-        {
-            String message = iterator.next();
-            stringBuilder.append(message);
-            stringBuilder.append('\n');
-            iterator.remove();
-        }
-        System.out.println(stringBuilder.toString());
     }
 
     /**

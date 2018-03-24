@@ -76,21 +76,21 @@ public class Path
         {
             PathSegment current = getCurrent();
             float relativeDistance = current.getLength() - distanceLeftCurrentSegment + lookahead;
-            Robot.writeLog("look current segment ... relativeDist: %.2f",80,relativeDistance);
+            Robot.writeLog("look current segment ... relativeDist: %.2f", 80, relativeDistance);
             return current.getPoint(relativeDistance);
         }
         else
         {
-            Robot.writeLog("look non-current segment",80);
-            lookahead-=distanceLeftCurrentSegment;
+            Robot.writeLog("look non-current segment", 80);
+            lookahead -= distanceLeftCurrentSegment;
 
-            for(int i = segmentOnI+1; i < pathSegments.size(); i++)
+            for(int i = segmentOnI + 1; i < pathSegments.size(); i++)
             {
                 PathSegment pathSegment = pathSegments.get(i);
                 float length = pathSegment.getLength();
                 if(lookahead > length && !pathSegment.isEnd())
                 {
-                    lookahead-= length;
+                    lookahead -= length;
                 }
                 else
                 {
@@ -110,7 +110,7 @@ public class Path
         if(distanceLeftEff < Constants.PurePursuit.DISTANCE_COMPLETE_SEGMENT_TOLERANCE)
         {
             boolean moved = moveNextSegment();
-            Robot.writeLog("progressing: %b", 80,moved);
+            Robot.writeLog("progressing: %b", 80, moved);
             return moved;
         }
         return false;
@@ -129,7 +129,7 @@ public class Path
         PathSegment startSegment = pathSegments.get(segmentOnI);
         segments.add(startSegment);
         float distanceStart = startSegment.getAbsoluteDistanceEnd();
-        for(int i = segmentOnI+1; i < pathSegments.size() ; i++)
+        for(int i = segmentOnI + 1; i < pathSegments.size(); i++)
         {
             PathSegment pathSegment = pathSegments.get(i);
             if(pathSegment.getAbsoluteDistanceStart() - distanceStart < maxAheadDistance)

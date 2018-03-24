@@ -269,11 +269,11 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     /**
      * Drive the robot using ControlMode.PercentOutput. The equation leftWheel=-rightWheel must be true for the robot to setElevatorPV straight.
      * <br>
-<<<<<<< HEAD
+     * <<<<<<< HEAD
      * Make sure to set the motors according to the control mode. In auton, it's position. In teleop, it's percent voltage.
-=======
+     * =======
      * Do not use for auton as this will use percent voltage.
->>>>>>> develop
+     * >>>>>>> develop
      *
      * @param leftWheel  Units for the left side of drivetrain
      * @param rightWheel Units for the right side of drivetrain

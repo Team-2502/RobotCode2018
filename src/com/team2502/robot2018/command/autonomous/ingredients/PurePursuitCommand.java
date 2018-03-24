@@ -30,15 +30,15 @@ public class PurePursuitCommand extends Command
      */
     public PurePursuitCommand(List<Waypoint> waypoints, boolean drift)
     {
-        this(waypoints, Constants.PurePursuit.LOOKAHEAD,drift);
+        this(waypoints, Constants.PurePursuit.LOOKAHEAD, drift);
     }
 
     /**
      * Drive through some waypoints with extra options
      *
-     * @param waypoints    Waypoints to drive through
-     * @param lookahead    Bean for max + min vel and accel
-     * @param drift If the robot should brake at the end or drift
+     * @param waypoints Waypoints to drive through
+     * @param lookahead Bean for max + min vel and accel
+     * @param drift     If the robot should brake at the end or drift
      */
     public PurePursuitCommand(List<Waypoint> waypoints, Lookahead lookahead, boolean drift)
     {
@@ -119,7 +119,7 @@ public class PurePursuitCommand extends Command
     protected void initialize()
     {
         Robot.writeLog("init PP", 80);
-        purePursuitMovementStrategy = new PurePursuitMovementStrategy(tankRobot, Robot.ROBOT_LOCALIZATION_COMMAND, Robot.ROBOT_LOCALIZATION_COMMAND, Robot.ROBOT_LOCALIZATION_COMMAND, waypoints, lookahead,true);
+        purePursuitMovementStrategy = new PurePursuitMovementStrategy(tankRobot, Robot.ROBOT_LOCALIZATION_COMMAND, Robot.ROBOT_LOCALIZATION_COMMAND, Robot.ROBOT_LOCALIZATION_COMMAND, waypoints, lookahead, true);
     }
 
     @Override
@@ -140,8 +140,8 @@ public class PurePursuitCommand extends Command
         SmartDashboard.putNumber("PPwheelL", wheelVelocities.get(0));
         SmartDashboard.putNumber("PPwheelR", wheelVelocities.get(1));
 
-        Robot.writeLog("wheelL %.2f",80,wheelL);
-        Robot.writeLog("wheelR %.2f",80,wheelR);
+        Robot.writeLog("wheelL %.2f", 80, wheelL);
+        Robot.writeLog("wheelR %.2f", 80, wheelR);
         Robot.DRIVE_TRAIN.runMotorsVelocity(wheelL, wheelR);
     }
 

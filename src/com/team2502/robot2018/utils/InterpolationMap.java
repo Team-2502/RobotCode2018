@@ -2,7 +2,6 @@ package com.team2502.robot2018.utils;
 
 import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
 import org.joml.ImmutableVector2d;
-import org.joml.ImmutableVector2f;
 
 import java.util.*;
 
@@ -231,8 +230,9 @@ public class InterpolationMap implements Map<Double, Double>, MathUtils.Integrab
 
     /**
      * Use if you know what you're doing. Does useful stuff like turn pos into vel or accel into vel
-     *
+     * <p>
      * Ensure a < b.
+     *
      * @param a Beginning of integration range
      * @param b End of integration range
      * @return Area under the "curve"
