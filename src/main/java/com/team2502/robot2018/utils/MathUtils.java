@@ -830,7 +830,7 @@ public final class MathUtils
                 this.a = a;
                 this.b = b;
 
-                if (a.x - b.x != 0)
+                if(a.x - b.x != 0)
                 {
                     slope = (a.y - b.y) / (a.x - b.x);
 
@@ -842,7 +842,6 @@ public final class MathUtils
                 y_intercept = a.y - slope * a.x;
                 x_intercept = -y_intercept / slope;
             }
-
 
 
             public double evaluateY(double x)
@@ -876,7 +875,7 @@ public final class MathUtils
                 }
                 else
                 {
-                    perpSlope = -1/slope;
+                    perpSlope = -1 / slope;
                 }
                 return new Line(point, new ImmutableVector2f(point.x + 1, (float) (point.y + perpSlope)));
             }
@@ -892,7 +891,7 @@ public final class MathUtils
                     else
                     {
                         // TODO: is this a good idea to return?
-                        return new ImmutableVector2f((float)other.x1,(float)other.y2);
+                        return new ImmutableVector2f((float) other.x1, (float) other.y2);
                     }
                 }
                 // mx + b = cx + d

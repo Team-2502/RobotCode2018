@@ -1,5 +1,6 @@
 package com.team2502.robot2018.command.autonomous.ingredients;
 
+import com.team2502.robot2018.command.teleop.ToggleIntakeCommand;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 /**
@@ -12,8 +13,8 @@ public class BackOffScale extends CommandGroup
      */
     public BackOffScale()
     {
-
         addSequential(new DeadreckoningDrive(0.5F, -2F));
         addSequential(new ElevatorAutonCommand(2.5, 0));
+        addSequential(new ToggleIntakeCommand());
     }
 }

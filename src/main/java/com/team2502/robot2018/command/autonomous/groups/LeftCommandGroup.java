@@ -2,11 +2,8 @@ package com.team2502.robot2018.command.autonomous.groups;
 
 import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.command.autonomous.ingredients.*;
-import com.team2502.robot2018.command.teleop.QuickCommand;
 import com.team2502.robot2018.command.teleop.ToggleIntakeCommand;
 import edu.wpi.first.wpilibj.command.CommandGroup;
-
-import static com.team2502.robot2018.Constants.Physical.Elevator;
 
 public class LeftCommandGroup extends CommandGroup
 {
@@ -92,18 +89,12 @@ public class LeftCommandGroup extends CommandGroup
 
     private void secondCubeLeft()
     {
-        //TODO: Uncomment for realism
-//        addSequential(new ToggleIntakeCommand());
+        secondCubeLeftPP();
+    }
 
-//        addSequential(new QuickCommand(() -> Robot.TRANSMISSION_SOLENOID.setLowGear(true)));
-//        addSequential(new PurePursuitCommand(PathConfig.Left.leftScaleToSwitch, false));
-//
-//        addParallel(new ElevatorAutonCommand(3F, 0));
-
-        // begin dead reckoning experiment
-
+    private void secondCubeLeftDeadReckoning()
+    {
         addSequential(new NavXRotateCommand(150, 3));
-
 
         addParallel(new RunIntakeCommand(3, -1));
         addSequential(new DeadreckoningDrive(1.5, 4));
@@ -115,18 +106,23 @@ public class LeftCommandGroup extends CommandGroup
         addSequential(new DeadreckoningDrive(.5, 4));
 
         addSequential(new RaiseElevatorScale());
+    }
 
-        // end dead reckoning experiment
+    private void secondCubeLeftPP()
+    {
+        addSequential(new PurePursuitCommand(PathConfig.Left.leftScaleToSwitch, false));
+
+        addParallel(new ElevatorAutonCommand(3F, 0));
 
 
+        addSequential(new PurePursuitCommand(PathConfig.Left.leftSwitchToScale, true));
 
-//        addSequential(new PurePursuitCommand(PathConfig.Left.leftSwitchToScale, true));
+        addSequential(new RaiseElevatorScale());
 
-//        addParallel(new RaiseElevatorScale());
-//
-//        addSequential(new ToggleIntakeCommand());
-//        emitCube();
-//        addSequential(new BackOffScale());
+        addSequential(new ToggleIntakeCommand());
+        emitCube();
+
+        addSequential(new BackOffScale());
     }
 
     /**

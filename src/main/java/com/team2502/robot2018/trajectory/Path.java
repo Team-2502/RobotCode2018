@@ -122,7 +122,7 @@ public class Path
         float nextClosestPointDistance = closestPointNext.distance(robotPos);
         if((distanceLeft < Constants.PurePursuit.DISTANCE_COMPLETE_SEGMENT_TOLERANCE) || closestPointDist > nextClosestPointDistance)
         {
-            Robot.writeLog("closestPointDist: %.2f, nCPD: %.2f, segmentI: %d",200,closestPointDist,nextClosestPointDistance,segmentOnI);
+            Robot.writeLog("closestPointDist: %.2f, nCPD: %.2f, segmentI: %d", 200, closestPointDist, nextClosestPointDistance, segmentOnI);
             boolean moved = moveNextSegment();
             Robot.writeLog("progressing: %b", 80, moved);
             return moved;
