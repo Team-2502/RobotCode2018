@@ -1,5 +1,6 @@
 package com.team2502.robot2018.command.autonomous.ingredients;
 
+import com.team2502.robot2018.Constants;
 import com.team2502.robot2018.Robot;
 import edu.wpi.first.wpilibj.command.TimedCommand;
 
@@ -10,6 +11,10 @@ public class ElevatorAutonCommand extends TimedCommand
 {
 
     private float feet;
+    private double eposFinal;
+    private double eposInit;
+    private boolean down;
+    private static final int TOLERANCE = 25;
 
     public ElevatorAutonCommand(double timeout)
     {
@@ -17,7 +22,7 @@ public class ElevatorAutonCommand extends TimedCommand
     }
 
     /**
-     * Positive voltage is up by default is up
+     * Positive voltage is up by default is down
      *
      * @param timeout How long to try to evaluateY the elvator to the right height
      * @param feet    How high the elevator should be
@@ -26,12 +31,31 @@ public class ElevatorAutonCommand extends TimedCommand
     {
         super(timeout);
         this.feet = feet;
+        eposInit = Robot.ELEVATOR.getPos() * Constants.Physical.Elevator.FEET_TO_EPOS_ELEV;
+        eposFinal = feet * Constants.Physical.Elevator.FEET_TO_EPOS_ELEV;
+        if(eposFinal < eposInit)
+        {
+            down = true;
+        }
     }
 
     @Override
     protected void initialize()
     {
         Robot.writeLog("ElevatorAutonCommand init", 10);
+    }
+
+    @Override
+    protected boolean isFinished()
+    {
+        if(down)
+        {
+            return Robot.ELEVATOR.getPos() < eposFinal + TOLERANCE;
+        }
+        else
+        {
+            return Robot.ELEVATOR.getPos() > eposFinal - TOLERANCE;
+        }
     }
 
     @Override
@@ -43,7 +67,6 @@ public class ElevatorAutonCommand extends TimedCommand
     @Override
     protected void end()
     {
-//        Robot.CLIMBER_SOLENOID.lockElevator();
         Robot.ELEVATOR.stopElevator();
     }
 }
