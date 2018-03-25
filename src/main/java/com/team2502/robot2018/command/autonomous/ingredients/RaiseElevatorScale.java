@@ -15,8 +15,6 @@ public class RaiseElevatorScale extends CommandGroup
     {
         Robot.writeLog("raising elevator scale", 10);
 
-        // wiggle active so the cube doesn't evaluateY stuck on the climbing hooks
-        addParallel(new WiggleActiveRotate());
         addSequential(new ElevatorAutonCommand(3F, Elevator.SCALE_ELEV_HEIGHT_FT));
     }
 }

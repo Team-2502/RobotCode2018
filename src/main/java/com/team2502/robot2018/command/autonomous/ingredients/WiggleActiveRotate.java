@@ -6,6 +6,8 @@ public class WiggleActiveRotate extends CommandGroup
 {
     /**
      * Wiggle the active rotate out and in so that the cube doesn't evaluateY stuck on the climbing hooks as it lifts.
+     *
+     * @deprecated Active intake has changed, no longer needed.
      */
     public WiggleActiveRotate()
     {

@@ -4,6 +4,7 @@ import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.command.autonomous.ingredients.*;
 import com.team2502.robot2018.command.teleop.ToggleIntakeCommand;
 import edu.wpi.first.wpilibj.command.CommandGroup;
+import edu.wpi.first.wpilibj.command.WaitCommand;
 
 public class LeftCommandGroup extends CommandGroup
 {
@@ -34,8 +35,9 @@ public class LeftCommandGroup extends CommandGroup
                         }
                         case SCALE_TWICE:
                         {
-//                            goScaleLeft();
+                            goScaleLeft();
                             secondCubeLeft();
+                            break;
                         }
                     }
                     break;
@@ -112,9 +114,10 @@ public class LeftCommandGroup extends CommandGroup
     {
         addSequential(new PurePursuitCommand(PathConfig.Left.leftScaleToSwitch, false));
 
-        addSequential(new ToggleIntakeCommand());
+        addParallel(new ToggleIntakeCommand());
         emitCube();
 
+        addSequential(new WaitCommand(2));
         addSequential(new BackOffScale());
     }
 
