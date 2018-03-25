@@ -14,7 +14,7 @@ public class ElevatorAutonCommand extends TimedCommand
     private double eposFinal;
     private double eposInit;
     private boolean down;
-    private static final int TOLERANCE = 25;
+    private static final int TOLERANCE = 50;
 
     public ElevatorAutonCommand(double timeout)
     {
@@ -31,7 +31,7 @@ public class ElevatorAutonCommand extends TimedCommand
     {
         super(timeout);
         this.feet = feet;
-        eposInit = Robot.ELEVATOR.getPos() * Constants.Physical.Elevator.FEET_TO_EPOS_ELEV;
+        eposInit = Robot.ELEVATOR.getPos();
         eposFinal = feet * Constants.Physical.Elevator.FEET_TO_EPOS_ELEV;
         if(eposFinal < eposInit)
         {
@@ -43,11 +43,17 @@ public class ElevatorAutonCommand extends TimedCommand
     protected void initialize()
     {
         Robot.writeLog("ElevatorAutonCommand init", 10);
+        Robot.writeLog("eposInit %.2f eposFinal %.2f",200,(float) eposInit, (float) eposFinal);
     }
 
     @Override
     protected boolean isFinished()
     {
+        if(super.isFinished())
+        {
+            return true;
+        }
+
         if(down)
         {
             return Robot.ELEVATOR.getPos() < eposFinal + TOLERANCE;
@@ -61,6 +67,7 @@ public class ElevatorAutonCommand extends TimedCommand
     @Override
     protected void execute()
     {
+//        Robot.writeLog("pos: %d",200,Robot.ELEVATOR.getPos());
         Robot.ELEVATOR.setElevatorPos(feet);
     }
 
