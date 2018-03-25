@@ -10,13 +10,9 @@ import static com.team2502.robot2018.Constants.Physical.Elevator;
 
 public class LeftCommandGroup extends CommandGroup
 {
-
-
     public LeftCommandGroup()
     {
         String AUTO_GAME_DATA = Robot.GAME_DATA.substring(0, 2);
-
-        Robot.NAVX.reset();
 
         if(Robot.autonStrategySelector.getSelected() == AutonStrategy.STRAIGHT)
         {
