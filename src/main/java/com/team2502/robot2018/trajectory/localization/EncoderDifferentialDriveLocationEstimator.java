@@ -24,7 +24,8 @@ public class EncoderDifferentialDriveLocationEstimator implements ITranslational
      */
     public EncoderDifferentialDriveLocationEstimator(IRotationalLocationEstimator rotEstimator)
     {
-        location = new ImmutableVector2f(0, 0);
+        //TODO: change!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        location = new ImmutableVector2f(2.99F, 20.91F);
         stopwatch = new Stopwatch();
         this.rotEstimator = rotEstimator;
     }

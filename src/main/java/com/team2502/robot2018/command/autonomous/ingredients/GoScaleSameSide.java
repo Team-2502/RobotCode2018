@@ -18,13 +18,9 @@ public class GoScaleSameSide extends CommandGroup
      */
     public GoScaleSameSide(List<Waypoint> path)
     {
-        //TODO: uncomment
-//        addParallel(new ActiveIntakeRotate(1, 0.5));
         addSequential(new PurePursuitCommand(path, false));
 
         addSequential(new ToggleIntakeCommand());
-        //TODO: uncomment
-//        addSequential(new ActiveIntakeRotate(.25F, -0.5));
 
         emitCube();
 
@@ -33,6 +29,6 @@ public class GoScaleSameSide extends CommandGroup
 
     private void emitCube()
     {
-        addSequential(new ShootCubeCommand(1, .5F));
+        addSequential(new RunIntakeCommand(1, .5F));
     }
 }

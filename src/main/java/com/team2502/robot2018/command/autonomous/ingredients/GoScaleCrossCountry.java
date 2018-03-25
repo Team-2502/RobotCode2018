@@ -25,6 +25,6 @@ public class GoScaleCrossCountry extends CommandGroup
 
     private void emitCube()
     {
-        addSequential(new ShootCubeCommand(1, .5F));
+        addSequential(new RunIntakeCommand(1, .5F));
     }
 }

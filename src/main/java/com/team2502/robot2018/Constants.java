@@ -71,6 +71,7 @@ public class Constants
 
             public static final float WHEEL_DIAMETER_INCH = 6F; // 3.6944444443F;
 
+
             public static final float WHEEL_DIAMETER_FT = WHEEL_DIAMETER_INCH / 12F;
             public static final float WHEEL_REV_TO_ENC_REV_LOW = 4.285F;
             public static final float WHEEL_REV_TO_ENC_REV_HIGH = 2.083F;
@@ -142,6 +143,13 @@ public class Constants
              * How much error (in enc units) we will allow when setting elevator pos
              */
             public static final int ALLOWABLE_ERROR = 20;
+
+            /**
+             * Before moving the motor, we must wait a certain amount of loops (each of which is approx. 20 ms) before running
+             * Otherwise the CIMS will slow down the elevator and this makes everyone sad
+             */
+            public static final int LOOPS_TO_WAIT = 6;
+
 
 
             private Elevator() { }

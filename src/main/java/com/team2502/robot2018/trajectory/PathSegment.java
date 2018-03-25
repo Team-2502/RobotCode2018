@@ -1,5 +1,6 @@
 package com.team2502.robot2018.trajectory;
 
+import com.team2502.robot2018.utils.MathUtils;
 import org.joml.ImmutableVector2f;
 
 /**
@@ -28,6 +29,11 @@ public class PathSegment
         this.distanceEnd = distanceEnd;
         startLocation = first.getLocation();
         dPos = last.getLocation().sub(first.getLocation());
+    }
+
+    public ImmutableVector2f getClosestPoint(ImmutableVector2f robotPos)
+    {
+        return MathUtils.Geometry.getClosestPoint(first.getLocation(), last.getLocation(), robotPos);
     }
 
     public ImmutableVector2f getPoint(float relativeDistance)

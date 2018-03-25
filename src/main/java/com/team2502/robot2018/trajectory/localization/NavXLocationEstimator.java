@@ -34,7 +34,8 @@ public class NavXLocationEstimator implements IRotationalLocationEstimator, ITra
     public float estimateHeading()
     {
         // switch direction of increase
-        double yawDegTotal = -Robot.NAVX.getAngle();
+        //TODO: change!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        double yawDegTotal = -Robot.NAVX.getAngle()-21F;
         return (float) navXToRad(yawDegTotal - initHeading);
     }
 

@@ -400,7 +400,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         Files.setNameAndValue("Est Loc x", usedEstimatedLocation.x);
         Files.setNameAndValue("Abs Goal Point y", usedEstimatedLocation.y);
 
-        if(path.progressIfNeeded(distanceLeft))
+        if(path.progressIfNeeded(distanceLeft,usedEstimatedLocation))
         {
             Robot.writeLog("updating for new segment!", 80);
             updateForNewSegment();

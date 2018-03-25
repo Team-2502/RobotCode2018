@@ -48,7 +48,7 @@ public class CenterCommandGroup extends CommandGroup
     private void emitCubeSwitch()
     {
         addSequential(new ActiveIntakeRotate(0.35, 1));
-        addSequential(new ShootCubeCommand(1));
+        addSequential(new RunIntakeCommand(1));
     }
 
 }

@@ -3,7 +3,7 @@ package com.team2502.robot2018.command.autonomous.ingredients;
 import com.team2502.robot2018.Robot;
 import edu.wpi.first.wpilibj.command.TimedCommand;
 
-public class ShootCubeCommand extends TimedCommand
+public class RunIntakeCommand extends TimedCommand
 {
 
     private double speed;
@@ -13,7 +13,7 @@ public class ShootCubeCommand extends TimedCommand
      *
      * @param timeout How long to wait before stopping the intake
      */
-    public ShootCubeCommand(double timeout)
+    public RunIntakeCommand(double timeout)
     {
         super(timeout);
         this.speed = 0.5;
@@ -26,7 +26,7 @@ public class ShootCubeCommand extends TimedCommand
      * @param speed   How fast to run the intake (percent voltage)
      * @see com.team2502.robot2018.subsystem.ActiveIntakeSubsystem#runIntake(double)
      */
-    public ShootCubeCommand(double timeout, double speed)
+    public RunIntakeCommand(double timeout, double speed)
     {
         super(timeout);
         this.speed = speed;

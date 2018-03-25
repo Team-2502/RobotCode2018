@@ -66,12 +66,10 @@ public class Path
 
         this.robotLocationClosestPoint = origin;
         PathSegment current = getCurrent();
-        ImmutableVector2f start = current.getFirst().getLocation();
-        ImmutableVector2f end = current.getLast().getLocation();
 //        Robot.writeLog("finding closest point: {start (" + start.x + ", " + start.y + "), last (" + end.x + ", " + end.y + "), origin (" + origin.x + ", " + origin.y + ")}",100);
 //        Robot.writeLog("origin:");
-        Robot.writeLog("origin: %.2f %.2f",100,origin.x,origin.y);
-        closestPoint = MathUtils.Geometry.getClosestPoint(start, end, origin);
+        Robot.writeLog("origin: %.2f %.2f", 100, origin.x, origin.y);
+        closestPoint = current.getClosestPoint(origin);
         return closestPoint;
     }
 
@@ -108,19 +106,29 @@ public class Path
         return null;
     }
 
-    boolean progressIfNeeded(float distanceLeft)
+    boolean progressIfNeeded(float distanceLeft, ImmutableVector2f robotPos)
     {
         PathSegment pathSegment = getCurrent();
+        PathSegment nextSegment = getNext();
+        if(nextSegment == null) // we are on the last segment... we cannot progress
+        {
+            return false;
+        }
+
         ImmutableVector2f location = pathSegment.getLast().getLocation();
         Robot.writeLog("distanceLeft: %.2f, segmentOnI: %d, point: (%.2f,%.2f)", 80, distanceLeft, segmentOnI, location.x, location.y);
-        if(distanceLeft < Constants.PurePursuit.DISTANCE_COMPLETE_SEGMENT_TOLERANCE)
+        ImmutableVector2f closestPointNext = nextSegment.getClosestPoint(robotPos);
+        float distanceLeftNext = nextSegment.getDistanceLeft(closestPointNext);
+        if((distanceLeft < Constants.PurePursuit.DISTANCE_COMPLETE_SEGMENT_TOLERANCE) || distanceLeft > distanceLeftNext)
         {
+            Robot.writeLog("distanceLeftCurrent: %.2f, distanceLeftNext: %.2f, segmentI: %d",200,distanceLeft,distanceLeftNext,segmentOnI);
             boolean moved = moveNextSegment();
             Robot.writeLog("progressing: %b", 80, moved);
             return moved;
         }
         return false;
     }
+
 
     float getClosestPointPathDistance(ImmutableVector2f closestPoint)
     {
@@ -157,7 +165,13 @@ public class Path
 
     PathSegment getNext()
     {
-        return pathSegments.get(segmentOnI + 1);
+        int nextSegmentI = segmentOnI + 1;
+        if(nextSegmentI >= pathSegments.size())
+        {
+            return null;
+        }
+        PathSegment nextSegment = pathSegments.get(nextSegmentI);
+        return nextSegment;
     }
 
     Waypoint getStart()

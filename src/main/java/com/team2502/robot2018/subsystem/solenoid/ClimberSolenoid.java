@@ -5,6 +5,9 @@ import com.team2502.robot2018.utils.NonDefaultSubsystem;
 import edu.wpi.first.wpilibj.Solenoid;
 import logger.Log;
 
+/*
+TODO make sure that climber solenoid cannot be accessed by classes it should not be accessed by due to the fact that elevator warmup can be bypassed
+ */
 public class ClimberSolenoid extends NonDefaultSubsystem
 {
     /**

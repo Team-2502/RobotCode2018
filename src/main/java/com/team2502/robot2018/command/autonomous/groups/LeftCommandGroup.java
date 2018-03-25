@@ -2,10 +2,8 @@ package com.team2502.robot2018.command.autonomous.groups;
 
 import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.command.autonomous.ingredients.*;
-import com.team2502.robot2018.command.teleop.QuickCommand;
 import com.team2502.robot2018.command.teleop.ToggleIntakeCommand;
 import edu.wpi.first.wpilibj.command.CommandGroup;
-import edu.wpi.first.wpilibj.command.WaitCommand;
 
 import static com.team2502.robot2018.Constants.Physical.Elevator;
 
@@ -39,6 +37,11 @@ public class LeftCommandGroup extends CommandGroup
                         {
                             goSwitch();
                             break;
+                        }
+                        case SCALE_TWICE:
+                        {
+//                            goScaleLeft();
+                            secondCubeLeft();
                         }
                     }
                     break;
@@ -92,24 +95,25 @@ public class LeftCommandGroup extends CommandGroup
 
     private void secondCubeLeft()
     {
-        addSequential(new WaitCommand(2));
-        addParallel(new ActiveIntakeRotate(0.5F, 0.5));
+        //TODO: Uncomment for realism
+//        addSequential(new ToggleIntakeCommand());
 
-        addParallel(new PurePursuitCommand(PathConfig.Left.leftScaleToSwitch, true));
+        addParallel(new RunIntakeCommand(5, -1));
 
-        addSequential(new ElevatorAutonCommand(3F, -Elevator.SCALE_ELEV_HEIGHT_FT));
-        addSequential(new QuickCommand(Robot.ELEVATOR::calibrateEncoder));
+        addSequential(new PurePursuitCommand(PathConfig.Left.leftScaleToSwitch, false));
 
-        addSequential(new ToggleIntakeCommand());
-        addParallel(new ShootCubeCommand(2, -1));
-        addSequential(new DeadreckoningDrive(1.5, 5));
+        addParallel(new ElevatorAutonCommand(3F, 0));
 
-        addSequential(new ToggleIntakeCommand());
 
-        addParallel(new ActiveIntakeRotate(1F, -0.7));
-        addSequential(new ElevatorAutonCommand(3F, Elevator.SWITCH_ELEV_HEIGHT_FT + 1));
 
-        emitCube();
+
+//        addSequential(new PurePursuitCommand(PathConfig.Left.leftSwitchToScale, true));
+
+//        addParallel(new RaiseElevatorScale());
+//
+//        addSequential(new ToggleIntakeCommand());
+//        emitCube();
+//        addSequential(new BackOffScale());
     }
 
     /**
@@ -122,7 +126,7 @@ public class LeftCommandGroup extends CommandGroup
 
     private void emitCube()
     {
-        addSequential(new ShootCubeCommand(1, .5F));
+        addSequential(new RunIntakeCommand(1, .5F));
 
     }
 

@@ -30,7 +30,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-
 /**
  * Software manifestation of Daedalus. If you delete this class you're doing something wrong.
  */
@@ -143,7 +142,7 @@ public final class Robot extends IterativeRobot
      *
      * @see Robot#writeLog(String, int, Object...)
      */
-    private static int LEVEL = 40;
+    private static int LEVEL = 200;
 
     /**
      * Save a logPop message for later so that it can be printed out once disabled

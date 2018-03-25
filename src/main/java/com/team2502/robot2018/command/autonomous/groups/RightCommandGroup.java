@@ -49,7 +49,7 @@ public class RightCommandGroup extends CommandGroup
                         case SWITCH:
                             goSwitch();
                             break;
-                        case SCALE_SWITCH:
+                        case SCALE_TWICE:
                             goScaleRight();
                             secondCubeRight();
                             break;
@@ -94,7 +94,7 @@ public class RightCommandGroup extends CommandGroup
 
     private void emitCube()
     {
-        addSequential(new ShootCubeCommand(1, .5));
+        addSequential(new RunIntakeCommand(1, .5));
 
     }
 }

@@ -105,16 +105,17 @@ public class ElevatorSubsystem extends NonDefaultSubsystem implements PIDTunable
            CIM motors (climber motors) is enough to prevent the elevator
            from falling back into the ground.
 
-           This method gets called once per 20ms while the elevator
+           This method gets called once per ~20ms while the elevator
            buttons are held.
          */
         if(Robot.CLIMBER_SOLENOID.isLocked())
         {
+            System.out.println("Elevator is locked!");
             timer = 0;
             Robot.CLIMBER_SOLENOID.unlockElevator();
         }
-        // 20ms per 1 loop
-        if(timer <= 6)
+        // ~20ms per 1 loop
+        if(timer <= Elevator.LOOPS_TO_WAIT)
         {
             timer++;
         }
@@ -148,7 +149,6 @@ public class ElevatorSubsystem extends NonDefaultSubsystem implements PIDTunable
         moveElevator(ControlMode.Position, epos);
 
         System.out.println("Closed Loop Error (evelator): " + elevatorBottom.getClosedLoopError(0));
-
     }
 
 

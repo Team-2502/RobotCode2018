@@ -9,7 +9,7 @@ public enum AutonStrategy
 {
     SWITCH("Switch"),
     SCALE("Scale"),
-    SCALE_SWITCH("Scale then switch"),
+    SCALE_TWICE("Scale and then Scale again"),
     STRAIGHT("Straight");
 
     private final String name;
