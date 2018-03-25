@@ -10,14 +10,9 @@ public class ActiveIntakeRotate extends TimedCommand
     private final double speed;
 
     /**
-     * <<<<<<< HEAD
-     *
-     * @param timeout
-     * @param speed   =======
-     *                Rotate the active intake
      * @param timeout How long to do it for (seconds)
      * @param speed   Speed of rotation motor in percent voltage
-     *                >>>>>>> develop
+     *
      */
     public ActiveIntakeRotate(double timeout, double speed)
     {

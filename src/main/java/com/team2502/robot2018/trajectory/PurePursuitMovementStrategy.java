@@ -162,6 +162,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
      */
     private float usedTangentialVelocity;
     private ImmutableVector2f closestPoint;
+    private float dCP;
 
     /**
      * Strategize your movement!
@@ -312,7 +313,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
 
         Robot.writeLog("speed: %.2f, speedUsed: %.2f, finalSpeed %.2f", 80, speed, speedUsed, finalSpeed);
 
-        float dCP = distanceClosestPoint.length();
+        dCP = distanceClosestPoint.length();
 
         float usedLookahead = lookaheadForSpeed + dCP;
 
@@ -400,7 +401,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         Files.setNameAndValue("Est Loc x", usedEstimatedLocation.x);
         Files.setNameAndValue("Abs Goal Point y", usedEstimatedLocation.y);
 
-        if(path.progressIfNeeded(distanceLeft,usedEstimatedLocation))
+        if(path.progressIfNeeded(distanceLeft, dCP, usedEstimatedLocation))
         {
             Robot.writeLog("updating for new segment!", 80);
             updateForNewSegment();

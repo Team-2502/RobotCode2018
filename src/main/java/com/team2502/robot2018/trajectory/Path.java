@@ -106,7 +106,7 @@ public class Path
         return null;
     }
 
-    boolean progressIfNeeded(float distanceLeft, ImmutableVector2f robotPos)
+    boolean progressIfNeeded(float distanceLeft, float closestPointDist, ImmutableVector2f robotPos)
     {
         PathSegment pathSegment = getCurrent();
         PathSegment nextSegment = getNext();
@@ -119,9 +119,10 @@ public class Path
         Robot.writeLog("distanceLeft: %.2f, segmentOnI: %d, point: (%.2f,%.2f)", 80, distanceLeft, segmentOnI, location.x, location.y);
         ImmutableVector2f closestPointNext = nextSegment.getClosestPoint(robotPos);
         float distanceLeftNext = nextSegment.getDistanceLeft(closestPointNext);
-        if((distanceLeft < Constants.PurePursuit.DISTANCE_COMPLETE_SEGMENT_TOLERANCE) || distanceLeft > distanceLeftNext)
+        float nextClosestPointDistance = closestPointNext.distance(robotPos);
+        if((distanceLeft < Constants.PurePursuit.DISTANCE_COMPLETE_SEGMENT_TOLERANCE) || closestPointDist > nextClosestPointDistance)
         {
-            Robot.writeLog("distanceLeftCurrent: %.2f, distanceLeftNext: %.2f, segmentI: %d",200,distanceLeft,distanceLeftNext,segmentOnI);
+            Robot.writeLog("closestPointDist: %.2f, nCPD: %.2f, segmentI: %d",200,closestPointDist,nextClosestPointDistance,segmentOnI);
             boolean moved = moveNextSegment();
             Robot.writeLog("progressing: %b", 80, moved);
             return moved;

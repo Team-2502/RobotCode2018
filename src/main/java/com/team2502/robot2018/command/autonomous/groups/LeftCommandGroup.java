@@ -2,6 +2,7 @@ package com.team2502.robot2018.command.autonomous.groups;
 
 import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.command.autonomous.ingredients.*;
+import com.team2502.robot2018.command.teleop.QuickCommand;
 import com.team2502.robot2018.command.teleop.ToggleIntakeCommand;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
@@ -98,12 +99,28 @@ public class LeftCommandGroup extends CommandGroup
         //TODO: Uncomment for realism
 //        addSequential(new ToggleIntakeCommand());
 
-        addParallel(new RunIntakeCommand(5, -1));
+//        addSequential(new QuickCommand(() -> Robot.TRANSMISSION_SOLENOID.setLowGear(true)));
+//        addSequential(new PurePursuitCommand(PathConfig.Left.leftScaleToSwitch, false));
+//
+//        addParallel(new ElevatorAutonCommand(3F, 0));
 
-        addSequential(new PurePursuitCommand(PathConfig.Left.leftScaleToSwitch, false));
+        // begin dead reckoning experiment
 
-        addParallel(new ElevatorAutonCommand(3F, 0));
+        addSequential(new NavXRotateCommand(150, 3));
 
+
+        addParallel(new RunIntakeCommand(3, -1));
+        addSequential(new DeadreckoningDrive(1.5, 4));
+
+        addSequential(new DeadreckoningDrive(1.5, -4));
+
+        addSequential(new NavXRotateCommand(0, 3));
+
+        addSequential(new DeadreckoningDrive(.5, 4));
+
+        addSequential(new RaiseElevatorScale());
+
+        // end dead reckoning experiment
 
 
 

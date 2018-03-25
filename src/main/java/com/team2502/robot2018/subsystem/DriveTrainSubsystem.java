@@ -408,7 +408,8 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
      */
     public float fakeToRealWheelRev(float wheelRev)
     {
-        return Robot.TRANSMISSION_SOLENOID.isHigh() ? wheelRev / Constants.Physical.DriveTrain.WHEEL_REV_TO_ENC_REV_HIGH : wheelRev / Constants.Physical.DriveTrain.WHEEL_REV_TO_ENC_REV_LOW;
+        if(Robot.TRANSMISSION_SOLENOID.isHigh()) { return wheelRev / Constants.Physical.DriveTrain.WHEEL_REV_TO_ENC_REV_HIGH; }
+        else { return wheelRev / Constants.Physical.DriveTrain.WHEEL_REV_TO_ENC_REV_LOW; }
     }
 
     /**

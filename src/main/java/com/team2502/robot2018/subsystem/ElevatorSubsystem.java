@@ -146,9 +146,10 @@ public class ElevatorSubsystem extends NonDefaultSubsystem implements PIDTunable
     {
         double epos = feet * Elevator.FEET_TO_EPOS_ELEV;
 
+        // TODO: Make motion profiling work
+
         moveElevator(ControlMode.Position, epos);
 
-        System.out.println("Closed Loop Error (evelator): " + elevatorBottom.getClosedLoopError(0));
     }
 
 
