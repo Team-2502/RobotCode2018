@@ -250,7 +250,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
 
         distanceLeft = pathSegmentLength - distanceAlongPath;
 
-        Robot.writeLog("distanceLeft: %.2f, pathSegmentLength: %.2f, distanceAlongPath: %.2f, cp: (%.2f, %.2f)", 100, distanceLeft, pathSegmentLength, distanceAlongPath, closestPoint.x,closestPoint.y);
+        Robot.writeLog("distanceLeft: %.2f, pathSegmentLength: %.2f, distanceAlongPath: %.2f, cp: (%.2f, %.2f)", 100, distanceLeft, pathSegmentLength, distanceAlongPath, closestPoint.x, closestPoint.y);
 
         // This occurs if we are at the end of the path
         if(distanceLeft <= Constants.PurePursuit.STOP_TOLERANCE_FT && current.isEnd())

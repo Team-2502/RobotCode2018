@@ -151,7 +151,6 @@ public class Constants
             public static final int LOOPS_TO_WAIT = 6;
 
 
-
             private Elevator() { }
         }
 

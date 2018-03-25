@@ -72,7 +72,7 @@ public class PathConfig
     {
         public static final List<Waypoint> leftScale = Arrays.asList(
                 new Waypoint(new ImmutableVector2f(0, 0), 16, 20, -3, true),
-                new Waypoint(new ImmutableVector2f(0, 4), 16, 20, -3, true , new RaiseElevatorScale()),
+                new Waypoint(new ImmutableVector2f(0, 4), 16, 20, -3, true, new RaiseElevatorScale()),
                 new Waypoint(new ImmutableVector2f(-0.5F, 8.589F), 16F, 20, -3, true),
                 new Waypoint(new ImmutableVector2f(-0.5F, 12.405F), 16F, 20, -3, true),
                 new Waypoint(new ImmutableVector2f(-0.5F, 15.5F), 16F, 20, -3, true),
@@ -90,24 +90,13 @@ public class PathConfig
                 new Waypoint(new ImmutableVector2f(2.42F, 18.65F), 4F, 10, -9, true, new RaiseElevatorScale(), new ActiveIntakeRotate(0.4, -0.3)), // we should have the cube
                 new Waypoint(new ImmutableVector2f(3.5F, 20F), 0F, 10, -9)
                                                                             );
-
-        public static List<Waypoint> leftSwitchToScale = Arrays.asList(
-                new Waypoint(new ImmutableVector2f(5, 19), 8, 20, -7),
-                new Waypoint(new ImmutableVector2f(2, 20.0F), 8, 20, -7),
-                new Waypoint(new ImmutableVector2f(5, 21F), 0, 20, -7)
-                                                                      );
-
-
-
-        //TODO: try navX calibration when auto begins ... generally 
+        //TODO: try navX calibration when auto begins ... generally
         public static final List<Waypoint> leftSwitch = Arrays.asList( //TODO need to fix as was changed because I (Andrew) thought this was the path we were tweaking
                                                                        new Waypoint(new ImmutableVector2f(0, 0), 0, 5, -5),
                                                                        new Waypoint(new ImmutableVector2f(1.636F, 2.454F), 9F, 5, -5),
                                                                        new Waypoint(new ImmutableVector2f(3.82006F, 5.726F), 6F, 5, -5),
                                                                        new Waypoint(new ImmutableVector2f(3.82006F, 10.5F), 2F, 5, -5) // TODO: add ability to coast at end
                                                                      );
-
-
         public static final List<Waypoint> rightScale = Arrays.asList(
                 new Waypoint(new ImmutableVector2f(0, 0), 0, 20, -10),
                 new Waypoint(new ImmutableVector2f(0F, 8.589F), 25F, 20, -10),
@@ -117,6 +106,11 @@ public class PathConfig
                 new Waypoint(new ImmutableVector2f(21F - 0.1666666667F, 17.5F), 3F, 20, -5),
                 new Waypoint(new ImmutableVector2f(17F - 0.1666666667F, 22F), 0F, 10, -5)
                                                                      );
+        public static List<Waypoint> leftSwitchToScale = Arrays.asList(
+                new Waypoint(new ImmutableVector2f(5, 19), 8, 20, -7),
+                new Waypoint(new ImmutableVector2f(2, 20.0F), 8, 20, -7),
+                new Waypoint(new ImmutableVector2f(5, 21F), 0, 20, -7)
+                                                                      );
 
 
     }

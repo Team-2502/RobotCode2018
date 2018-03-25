@@ -6,11 +6,9 @@ import com.team2502.robot2018.Constants;
 import com.team2502.robot2018.DashboardData;
 import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.RobotMap;
-import com.team2502.robot2018.command.teleop.QuickCommand;
 import com.team2502.robot2018.sendables.PIDTunable;
 import com.team2502.robot2018.sendables.SendablePIDTuner;
 import com.team2502.robot2018.utils.NonDefaultSubsystem;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import static com.team2502.robot2018.Constants.Physical.Elevator;
@@ -35,7 +33,7 @@ public class ElevatorSubsystem extends NonDefaultSubsystem implements PIDTunable
     private final WPI_TalonSRX climberBottom;
     private final SendablePIDTuner pidTuner;
 
-//    private double kF = 1D;
+    //    private double kF = 1D;
 //    private double kP = 1D;
     private double kF = 0D;
     private double kP = 0.2D;
@@ -79,7 +77,6 @@ public class ElevatorSubsystem extends NonDefaultSubsystem implements PIDTunable
 
         DashboardData.addUpdater(this);
         calibrateEncoder();
-
 
 
     }
@@ -298,7 +295,6 @@ public class ElevatorSubsystem extends NonDefaultSubsystem implements PIDTunable
 
         MAX_ACCEL_EACCEL = (int) SmartDashboard.getNumber("Elevator: Max Accel (enc units)", MAX_ACCEL_EACCEL);
         CRUISE_VELOCITY_EVEL = (int) SmartDashboard.getNumber("Elevator: Cruise vel (enc units)", CRUISE_VELOCITY_EVEL);
-
 
 
         // Set trapezoid details for motion profiling
