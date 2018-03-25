@@ -63,6 +63,7 @@ public class RobotMap
 
             // On lower platform
             public static final int CLIMBER = 10;
+            public static final int LOCK_CARRIAGE = 12;
 
             public static final int SHIFT_GEARBOX_ELEV = 11;
 
@@ -73,8 +74,6 @@ public class RobotMap
              */
             public static final int RUN_DEBUG_TESTS = 9;
             public static final int CALIBRATE_ELEV_ENCODER = 11;
-
-            public static final int BREAK_CLIMBER_CARRIAGE = 9;
 
             private Button() { }
         }
