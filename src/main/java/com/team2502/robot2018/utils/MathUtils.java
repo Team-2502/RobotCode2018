@@ -669,8 +669,7 @@ public final class MathUtils
         public static float getHeadingAbsolute()
         {
             float navx = (float) Robot.NAVX.getAngle();
-            float heading = Geometry.getDTheta(0, navx);
-            return heading;
+            return Geometry.getDTheta(0, navx);
         }
 
         public static ImmutableVector2f getAbsoluteDPosLine(float vL, float vR, float dt, float robotHeading)
@@ -687,7 +686,22 @@ public final class MathUtils
             ImmutableVector2f rotated = MathUtils.LinearAlgebra.rotate2D(relativeDPos, robotHeading);
             return rotated;
         }
+
+        /**
+         * Turn NavX angle into radians
+         *
+         * @param yawDegTot What the NavX is reading
+         * @return The angle in radians, between 0 and 2pi.
+         */
+
+        public static double navXToRad(double yawDegTot)
+        {
+            double yawDeg = yawDegTot % 360;
+            if(yawDeg < 0) { yawDeg = 360 + yawDeg; }
+            return MathUtils.deg2Rad(yawDeg);
+        }
     }
+
 
     public static class Geometry
     {
@@ -698,11 +712,9 @@ public final class MathUtils
          */
         public static float getDTheta(float initDegrees, float finalDegrees)
         {
-//            System.out.println("Init degrees "+ initDegrees);
             float degDif = -(finalDegrees - initDegrees);
             double radians = MathUtils.deg2Rad(degDif);
             double radBounded = (radians % TAU);
-//            System.out.println("\nNAVX: " + finalDegrees + "\nNAVXD: " + degDif + "\nRadians: " + radians + "\nRadBounded: " + radBounded + "\n");
             if(radBounded < 0) { return (float) (TAU + radBounded); }
             return (float) radBounded;
         }
@@ -743,65 +755,6 @@ public final class MathUtils
             {
                 return intersect;
             }
-
-//            // Let s:[0,1]
-//            // Our line is
-//            // Dx = (linePointB.x - linePointA.x)s
-//            // Dy = (linePointB.y - linePointA.y)s
-//            // This is a transformation from R1 -> R2 we have [ x y ]
-//            // [ Dx ]   [ linePointB.x - linePointA.x ]
-//            // [ Dy ] = [ linePointB.y - linePointA.y ][ s ]
-//
-//            float dx = linePointB.x - linePointA.x;
-//            float dy = linePointB.y - linePointA.y;
-//
-//            // Let us assume the shortest distance to a line will be perpendicular to the line. Applying a pi/2 rotation yields
-//            // [ DxPerp ]   [ cos(pi/2) -sin(pi/2) ] [ linePointB.x - linePointA.x ]
-//            // [ DyPerp ] = [ sin(pi/2) cos(pi/2)  ] [ linePointB.y - linePointA.y ][ s ]
-//            //   [ linePointA.y - linePointB.y ]
-//            // = [ linePointB.x - linePointA.x ][ s ]
-//
-//            float dxPerp = -dy;
-//            float dyPerp = dx;
-//
-//            // We need the point where lines
-//            // robotPos.x + dxPerp * j
-//            // robotPos.y + dyPerp*j
-//            // and
-//            // linePointB.x + dX * s
-//            // linePointB.y + dX * s
-//            // collide
-//
-//            // robotPos.x + dxPerp * j = linePointB.x + dX * s ==> robotPos.x - linePointB.x
-//            // robotPos.y + dyPerp * j = linePointB.y + dY * s
-//
-//            float j, s;
-//            if(dx == 0)
-//            {
-//                j = -(robotPos.x - linePointA.x) / dxPerp;
-//                s = ((robotPos.y - linePointA.y) + dyPerp * j) / dy;
-//            }
-//            else if(dy == 0)
-//            {
-//                j = -(robotPos.y - linePointB.y) / dyPerp;
-//                s = ((robotPos.x - linePointA.x) + dxPerp * j) / dx;
-//            }
-//            else
-//            {
-//                float slope = dy / dx;
-//                j = (robotPos.x - linePointA.x - (robotPos.y - linePointA.y)) / (-slope * dxPerp + dyPerp);
-//                s = (robotPos.x + dxPerp) * j / (robotPos.x + dx);
-//            }
-//
-//            // if on line
-//            if(s >= 0 && s <= 1)
-//            {
-//                return linePointA.add(new ImmutableVector2f(dx * s, dy * s));
-//            }
-//            // else ... we cannot use a perpendicular line and will need to look on endpoints
-//            float dist2A = linePointA.distanceSquared(robotPos);
-//            float dist2B = linePointB.distanceSquared(robotPos);
-//            return dist2A < dist2B ? linePointA : linePointB;
         }
 
         /**
@@ -851,47 +804,6 @@ public final class MathUtils
             float abScalingFactor2 = -pBy2 - tmpSqrt;
             ImmutableVector2f p2 = new ImmutableVector2f(pointA.get(0) - baX * abScalingFactor2, pointA.get(1) - baY * abScalingFactor2);
             return new ImmutableVector2f[] { p1, p2 };
-        }
-
-        @Deprecated
-        public static ImmutableVector2f[] circleLineIntersect(ImmutableVector2f lineP1, ImmutableVector2f lineP2, ImmutableVector2f circleCenter, float circleRadius)
-        {
-            // Circle-line intersection
-            float x_0 = lineP1.get(0), y_0 = lineP1.get(1);
-            float x_1 = lineP2.get(0), y_1 = lineP2.get(1);
-            float x_c = circleCenter.get(0), y_c = circleCenter.get(1);
-
-            float f = x_1 - x_0;
-            float g = y_1 - y_0;
-
-            float xc0 = x_c - x_0;
-            float yc0 = y_c - y_0;
-
-            float t = f * xc0 + g * yc0;
-
-            float fg2 = f * f + g * g;
-
-            float inRoot = (circleRadius * circleRadius + fg2 - pow2f(f * yc0 - g * xc0));
-            if(inRoot < 0) { return new ImmutableVector2f[0]; }
-            if(inRoot == 0)
-            {
-                float intersectT = t / fg2;
-                ImmutableVector2f intersection = new ImmutableVector2f(intersectT * f, intersectT * g);
-                if(between(lineP1, intersection, lineP2)) { return new ImmutableVector2f[] { intersection }; }
-                else { return new ImmutableVector2f[0]; }
-            }
-            float pm = (float) Math.sqrt(inRoot);
-            float intersectT1 = (t + pm) / fg2;
-            float intersectT2 = (t - pm) / fg2;
-            ImmutableVector2f intersect1 = new ImmutableVector2f(intersectT1 * f + x_0, intersectT1 * g + y_0);
-            ImmutableVector2f intersect2 = new ImmutableVector2f(intersectT2 * f + x_0, intersectT2 * g + y_0);
-            if(between(lineP1, intersect1, lineP2))
-            {
-                if(between(lineP1, intersect2, lineP2)) { return new ImmutableVector2f[] { intersect1, intersect2 }; }
-                else { return new ImmutableVector2f[] { intersect1 }; }
-            }
-            else if(between(lineP1, intersect2, lineP2)) { return new ImmutableVector2f[] { intersect2 }; }
-            return new ImmutableVector2f[0];
         }
 
         public static class Line implements Integrable
@@ -971,6 +883,18 @@ public final class MathUtils
 
             public ImmutableVector2f intersection(Line other)
             {
+                if(other.slope == slope)
+                {
+                    if(other.x_intercept != other.x_intercept)
+                    {
+                        return null;
+                    }
+                    else
+                    {
+                        // TODO: is this a good idea to return?
+                        return new ImmutableVector2f((float)other.x1,(float)other.y2);
+                    }
+                }
                 // mx + b = cx + d
                 // (m-c) x = d - b
                 double x = (other.y_intercept - this.y_intercept) / (this.slope - other.slope);

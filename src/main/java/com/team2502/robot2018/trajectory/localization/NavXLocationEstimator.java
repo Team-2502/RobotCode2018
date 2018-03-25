@@ -36,20 +36,7 @@ public class NavXLocationEstimator implements IRotationalLocationEstimator, ITra
         // switch direction of increase
         //TODO: change!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         double yawDegTotal = -Robot.NAVX.getAngle()-21F;
-        return (float) navXToRad(yawDegTotal - initHeading);
-    }
-
-    /**
-     * Turn NavX angle into radians
-     *
-     * @param yawDegTot What the NavX is reading
-     * @return The angle in radians, between 0 and 2pi.
-     */
-    private double navXToRad(double yawDegTot)
-    {
-        double yawDeg = yawDegTot % 360;
-        if(yawDeg < 0) { yawDeg = 360 + yawDeg; }
-        return MathUtils.deg2Rad(yawDeg);
+        return (float) MathUtils.Kinematics.navXToRad(yawDegTotal - initHeading);
     }
 
     /**
