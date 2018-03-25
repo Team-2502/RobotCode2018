@@ -31,7 +31,6 @@ public class ElevatorAutonCommand extends TimedCommand
     {
         super(timeout);
         this.feet = feet;
-        eposInit = Robot.ELEVATOR.getPos();
         eposFinal = feet * Constants.Physical.Elevator.FEET_TO_EPOS_ELEV;
         if(eposFinal < eposInit)
         {
@@ -42,6 +41,7 @@ public class ElevatorAutonCommand extends TimedCommand
     @Override
     protected void initialize()
     {
+        eposInit = Robot.ELEVATOR.getPos();
         Robot.writeLog("ElevatorAutonCommand init", 10);
         Robot.writeLog("eposInit %.2f eposFinal %.2f",200,(float) eposInit, (float) eposFinal);
     }
