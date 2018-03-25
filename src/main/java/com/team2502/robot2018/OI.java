@@ -58,7 +58,7 @@ public final class OI
 
     private static final Button CALIBRATE_ELEV_ENCODER = new JoystickButton(JOYSTICK_DRIVE_RIGHT, RobotMap.Joystick.Button.CALIBRATE_ELEV_ENCODER);
 
-    private static final Button BREAK_CLIMBER_CARRAIGE = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BREAK_CLIMBER_CARRIAGE);
+    private static final Button LOCK_CARRIAGE = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.LOCK_CARRIAGE);
 
     /*
      * Runs when the first static method (usually OI#init()) is called
@@ -82,6 +82,7 @@ public final class OI
 
         // Pneumatics
         SHIFT_GEARBOX_ELEV.whenPressed(new ShiftElevatorCommand());
+
         DEPLOY_BUTTERFLY.whenPressed(new ButterflySetCommand(true));
         DEPLOY_BUTTERFLY.whenReleased(new ButterflySetCommand(false));
         TOGGLE_TRANSMISSION.whenPressed(new TransmissionCommand());
@@ -90,7 +91,7 @@ public final class OI
 
         CALIBRATE_ELEV_ENCODER.whenPressed(new QuickCommand(Robot.ELEVATOR::calibrateEncoder));
 
-        BREAK_CLIMBER_CARRAIGE.whenPressed(new BrakeClimberCommand());
+        LOCK_CARRIAGE.whenPressed(new ToggleClimberCarriageBrake());
     }
 
     /**
