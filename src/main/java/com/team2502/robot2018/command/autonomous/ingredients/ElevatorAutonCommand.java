@@ -14,7 +14,7 @@ public class ElevatorAutonCommand extends TimedCommand
     private double eposFinal;
     private double eposInit;
     private boolean down;
-    private static final int TOLERANCE = 50;
+    private static final int TOLERANCE = 7000;
 
     public ElevatorAutonCommand(double timeout)
     {
