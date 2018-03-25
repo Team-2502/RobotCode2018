@@ -3,7 +3,9 @@ package com.team2502.robot2018.command.autonomous.ingredients;
 import com.team2502.robot2018.Robot;
 import edu.wpi.first.wpilibj.command.TimedCommand;
 
-//TODO: Replace with encoder
+/**
+ * @deprecated Not reliable since the encoder is unreliable (often turns red)
+ */
 public class ElevatorAutonCommand extends TimedCommand
 {
 

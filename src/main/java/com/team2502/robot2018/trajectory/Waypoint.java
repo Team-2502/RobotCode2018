@@ -13,7 +13,7 @@ public class Waypoint
 {
 
     private final float maxSpeed;
-    private final ImmutableVector2f location;
+    private ImmutableVector2f location;
     private boolean forward = true;
     private Command[] commands;
     private float maxAccel;
@@ -56,6 +56,11 @@ public class Waypoint
     public float getMaxDeccel()
     {
         return maxDeccel;
+    }
+
+    public void setLocation(ImmutableVector2f location)
+    {
+        this.location = location;
     }
 
     public float getMaxAccel()

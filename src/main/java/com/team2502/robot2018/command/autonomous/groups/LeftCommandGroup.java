@@ -86,6 +86,7 @@ public class LeftCommandGroup extends CommandGroup
      */
     private void goScaleLeft()
     {
+        addParallel(new ActiveIntakeRotate(2.0, 0.6));
         addSequential(new GoScaleSameSide(PathConfig.Left.leftScale));
     }
 
@@ -117,7 +118,7 @@ public class LeftCommandGroup extends CommandGroup
         addParallel(new ToggleIntakeCommand());
         emitCube();
 
-        addSequential(new WaitCommand(2));
+//        addSequential(new WaitCommand(2));
         addSequential(new BackOffScale());
     }
 

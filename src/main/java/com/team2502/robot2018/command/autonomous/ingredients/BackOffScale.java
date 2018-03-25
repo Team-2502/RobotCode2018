@@ -13,7 +13,7 @@ public class BackOffScale extends CommandGroup
      */
     public BackOffScale()
     {
-        addSequential(new DeadreckoningDrive(0.5F, -2F));
+        addSequential(new DeadreckoningDrive(0.4F, -4F));
         addSequential(new ElevatorAutonCommand(2.5, 0));
         addSequential(new ToggleIntakeCommand());
     }

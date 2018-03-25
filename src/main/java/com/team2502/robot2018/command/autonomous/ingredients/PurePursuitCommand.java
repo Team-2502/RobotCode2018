@@ -22,6 +22,7 @@ public class PurePursuitCommand extends Command
     private List<Waypoint> waypoints;
     private Lookahead lookahead;
     private boolean drift;
+    private boolean autoFirstPoint;
 
     /**
      * Given some waypoints, drive through them
@@ -42,6 +43,7 @@ public class PurePursuitCommand extends Command
      */
     public PurePursuitCommand(List<Waypoint> waypoints, Lookahead lookahead, boolean drift)
     {
+        this.autoFirstPoint = autoFirstPoint;
         this.drift = drift;
         this.waypoints = waypoints;
         this.lookahead = lookahead;
@@ -118,6 +120,8 @@ public class PurePursuitCommand extends Command
     @Override
     protected void initialize()
     {
+        // set location to first robot point TODO: make better... this way of doing it is crap
+        waypoints.get(0).setLocation(Robot.ROBOT_LOCALIZATION_COMMAND.estimateLocation());
         Robot.writeLog("init PP", 80);
         purePursuitMovementStrategy = new PurePursuitMovementStrategy(tankRobot, Robot.ROBOT_LOCALIZATION_COMMAND, Robot.ROBOT_LOCALIZATION_COMMAND, Robot.ROBOT_LOCALIZATION_COMMAND, waypoints, lookahead, true);
     }
@@ -140,8 +144,8 @@ public class PurePursuitCommand extends Command
         SmartDashboard.putNumber("PPwheelL", wheelVelocities.get(0));
         SmartDashboard.putNumber("PPwheelR", wheelVelocities.get(1));
 
-        Robot.writeLog("wheelL %.2f", 200, wheelL);
-        Robot.writeLog("wheelR %.2f", 200, wheelR);
+//        Robot.writeLog("wheelL %.2f", 200, wheelL);
+//        Robot.writeLog("wheelR %.2f", 200, wheelR);
         Robot.DRIVE_TRAIN.runMotorsVelocity(wheelL, wheelR);
     }
 
