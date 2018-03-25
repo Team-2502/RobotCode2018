@@ -67,7 +67,6 @@ public class ElevatorAutonCommand extends TimedCommand
     @Override
     protected void execute()
     {
-        Robot.writeLog("pos: %.2f",200,(float)Robot.ELEVATOR.getPos());
         Robot.ELEVATOR.setElevatorPos(feet);
     }
 

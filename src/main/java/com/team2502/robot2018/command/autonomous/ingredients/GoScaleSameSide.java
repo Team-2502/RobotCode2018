@@ -29,6 +29,6 @@ public class GoScaleSameSide extends CommandGroup
 
     private void emitCube()
     {
-        addSequential(new RunIntakeCommand(1, .5F));
+        addParallel(new RunIntakeCommand(0.3F, .5F));
     }
 }

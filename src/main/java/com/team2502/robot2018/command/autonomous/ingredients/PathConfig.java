@@ -71,24 +71,25 @@ public class PathConfig
     public static class Left
     {
         public static final List<Waypoint> leftScale = Arrays.asList(
-                new Waypoint(new ImmutableVector2f(0, 0), 16, 20, -3, true),
-                new Waypoint(new ImmutableVector2f(0, 4), 16, 20, -3, true, new RaiseElevatorScale()),
-                new Waypoint(new ImmutableVector2f(-0.5F, 8.589F), 16F, 20, -3, true),
-                new Waypoint(new ImmutableVector2f(-0.5F, 12.405F), 16F, 20, -3, true),
-                new Waypoint(new ImmutableVector2f(-0.5F, 17F), 16F, 20, -3, true),
-                new Waypoint(new ImmutableVector2f(3.0F, 21.0F), 0F, 20, -3) // max deceleration appears to be -7 ft / s^2
+                new Waypoint(new ImmutableVector2f(0, 0), 16, 20, -5, true),
+                new Waypoint(new ImmutableVector2f(0, 4), 16, 20, -5, true, new RaiseElevatorScale()),
+                new Waypoint(new ImmutableVector2f(-0.5F, 8.589F), 16F, 20, -5, true),
+                new Waypoint(new ImmutableVector2f(-0.5F, 12.405F), 16F, 20, -5, true),
+                new Waypoint(new ImmutableVector2f(-0.5F, 17F), 16F, 20, -5, true),
+                new Waypoint(new ImmutableVector2f(3.0F, 21.0F), 0F, 20, -5) // max deceleration appears to be -7 ft / s^2
                                                                     );
 
         @Change(reason = "help")
         public static final List<Waypoint> leftScaleToSwitch = Arrays.asList(
                 new Waypoint(new ImmutableVector2f(0F, 20.0F), 8F, 20, -7),
 //                new Waypoint(new ImmutableVector2f(1F, 21.5F), 4F, 20, -9), // max deceleration appears to be -7 ft / s^2
-                new Waypoint(new ImmutableVector2f(5.0F, 17.0F), 8F, 10, -9),
-                new Waypoint(new ImmutableVector2f(6.5F, 16F), 8F, 10, -9, true, new RunIntakeCommand(2, -1)), // 3rd cube 7 19
-                new Waypoint(new ImmutableVector2f(6F, 15.0F), 8F, 10, -9, true, new RaiseElevatorScale()),
-                new Waypoint(new ImmutableVector2f(2.42F, 18.65F), 8F, 10, -9, true), // we should have the cube
-                new Waypoint(new ImmutableVector2f(3.5F, 21.5F), 0F, 10, -9)
+                new Waypoint(new ImmutableVector2f(4F, 20.0F), 8F, 10, -9,true, new IntakeAndRaise()),
+                new Waypoint(new ImmutableVector2f(6F, 16F), 8F, 10, -9, true), // 3rd cube 7 19
+                new Waypoint(new ImmutableVector2f(4.5F, 14.9F), 8F, 10, -9, true),
+                new Waypoint(new ImmutableVector2f(2.42F, 15F), 8F, 10, -9, true), // we should have the cube
+                new Waypoint(new ImmutableVector2f(3.5F, 19F), 0F, 10, -9)
                                                                             );
+
         //TODO: try navX calibration when auto begins ... generally
         public static final List<Waypoint> leftSwitch = Arrays.asList( //TODO need to fix as was changed because I (Andrew) thought this was the path we were tweaking
                                                                        new Waypoint(new ImmutableVector2f(0, 0), 0, 5, -5),
