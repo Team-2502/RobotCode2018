@@ -102,8 +102,8 @@ public class PathConfig
                 new Waypoint(new ImmutableVector2f(0F, 17.0F), 25F, 20, -10),
                 new Waypoint(new ImmutableVector2f(2.454F, 17.5F), 25F, 20, -10),
                 new Waypoint(new ImmutableVector2f(15.0F, 17.5F), 3F, 20, -5, true, new RaiseElevatorScale(), new ActiveIntakeRotate(0.3, 0.5)),
-                new Waypoint(new ImmutableVector2f(21F - 0.1666666667F, 17.5F), 3F, 20, -5),
-                new Waypoint(new ImmutableVector2f(17F - 0.1666666667F, 22F), 0F, 10, -5)
+                new Waypoint(new ImmutableVector2f(20.83F, 17.5F), 3F, 20, -5),
+                new Waypoint(new ImmutableVector2f(16.833F, 22F), 0F, 10, -5)
                                                                      );
         public static List<Waypoint> leftSwitchToScale = Arrays.asList(
                 new Waypoint(new ImmutableVector2f(5, 19), 8, 20, -7),
