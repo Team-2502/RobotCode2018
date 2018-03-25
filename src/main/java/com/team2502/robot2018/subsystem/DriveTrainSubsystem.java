@@ -132,7 +132,7 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
 
         setupTalons();
 
-        Robot.TRANSMISSION_SOLENOID.setLowGear(false);
+        Robot.TRANSMISSION_SOLENOID.setHighGear(false);
     }
 
     /**
@@ -154,7 +154,7 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     public void setAutonSettings()
     {
         setupTalons();
-        Robot.TRANSMISSION_SOLENOID.setLowGear(true);
+        Robot.TRANSMISSION_SOLENOID.setHighGear(true);
         // Set high gear
     }
 

@@ -112,13 +112,13 @@ public class LeftCommandGroup extends CommandGroup
     {
         addSequential(new PurePursuitCommand(PathConfig.Left.leftScaleToSwitch, false));
 
-        addParallel(new ElevatorAutonCommand(3F, 0));
+//        addParallel(new ElevatorAutonCommand(3F, 0));
 
 
-        addSequential(new PurePursuitCommand(PathConfig.Left.leftSwitchToScale, true));
-
-        addSequential(new RaiseElevatorScale());
-
+//        addSequential(new PurePursuitCommand(PathConfig.Left.leftSwitchToScale, true));
+//
+//        addSequential(new RaiseElevatorScale());
+//
         addSequential(new ToggleIntakeCommand());
         emitCube();
 
