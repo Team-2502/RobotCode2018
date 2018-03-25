@@ -522,8 +522,8 @@ public final class MathUtils
                                          (vector.get(0) * sin + vector.get(1) * cos));
         }
 
-        public static ImmutableVector2f absoluteToRelativeCoord(ImmutableVector2f relativeCoord, ImmutableVector2f absoluteLocation, float robotHeading)
-        { return rotate2D(relativeCoord.sub(absoluteLocation), -robotHeading); }
+        public static ImmutableVector2f absoluteToRelativeCoord(ImmutableVector2f coordinateAbsolute, ImmutableVector2f robotCoordAbs, float robotHeading)
+        { return rotate2D(coordinateAbsolute.sub(robotCoordAbs), -robotHeading); }
     }
 
     /**
