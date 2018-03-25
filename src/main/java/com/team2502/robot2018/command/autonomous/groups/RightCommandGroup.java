@@ -10,12 +10,6 @@ public class RightCommandGroup extends CommandGroup
 {
     public RightCommandGroup()
     {
-
-        // TODO: figure out why we might need this??
-        Robot.TRANSMISSION_SOLENOID.setLowGear(true);
-
-        Robot.NAVX.reset();
-
         String AUTO_GAME_DATA = Robot.GAME_DATA.substring(0, 2);
 
         if(Robot.autonStrategySelector.getSelected() == AutonStrategy.STRAIGHT)
@@ -55,14 +49,13 @@ public class RightCommandGroup extends CommandGroup
                             break;
                     }
                     break;
-
             }
         }
     }
 
     /**
      * @deprecated should be tested on left side before mirroring on right side... tis a bit of a mess rn and might not
-     * mirror perfectly... we aren't doing this at Duluth anyway.
+     * mirror perfectly.
      */
     private void secondCubeRight()
     {

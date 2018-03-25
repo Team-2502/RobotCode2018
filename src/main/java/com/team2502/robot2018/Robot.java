@@ -310,6 +310,9 @@ public final class Robot extends IterativeRobot
         Files.setFileName(fileName);
         Files.newFile(fileName);
 
+        NAVX.reset();
+        TRANSMISSION_SOLENOID.setLowGear(true);
+
         // Initialize Estimators
         NavXLocationEstimator rotEstimator = new NavXLocationEstimator();
         EncoderDifferentialDriveLocationEstimator encoderDifferentialDriveLocationEstimator = new EncoderDifferentialDriveLocationEstimator(rotEstimator);
