@@ -83,7 +83,7 @@ public class PathConfig
         public static final List<Waypoint> leftScaleToSwitch = Arrays.asList(
                 new Waypoint(new ImmutableVector2f(0F, 20.0F), 8F, 20, -7),
 //                new Waypoint(new ImmutableVector2f(1F, 21.5F), 4F, 20, -9), // max deceleration appears to be -7 ft / s^2
-                new Waypoint(new ImmutableVector2f(4F, 20.0F), 8F, 10, -9,true, new IntakeAndRaise()),
+                new Waypoint(new ImmutableVector2f(4F, 20.0F), 8F, 10, -9, true, new IntakeAndRaise()),
                 new Waypoint(new ImmutableVector2f(6F, 16F), 8F, 10, -9, true), // 3rd cube 7 19
                 new Waypoint(new ImmutableVector2f(4.5F, 14.9F), 8F, 10, -9, true),
                 new Waypoint(new ImmutableVector2f(2.42F, 15F), 8F, 10, -9, true), // we should have the cube

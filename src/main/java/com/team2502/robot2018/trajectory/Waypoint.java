@@ -58,11 +58,6 @@ public class Waypoint
         return maxDeccel;
     }
 
-    public void setLocation(ImmutableVector2f location)
-    {
-        this.location = location;
-    }
-
     public float getMaxAccel()
     {
         return maxAccel;
@@ -76,6 +71,11 @@ public class Waypoint
     public ImmutableVector2f getLocation()
     {
         return location;
+    }
+
+    public void setLocation(ImmutableVector2f location)
+    {
+        this.location = location;
     }
 
     public boolean isForward()

@@ -10,11 +10,11 @@ import edu.wpi.first.wpilibj.command.TimedCommand;
 public class ElevatorAutonCommand extends TimedCommand
 {
 
+    private static final int TOLERANCE = 7000;
     private float feet;
     private double eposFinal;
     private double eposInit;
     private boolean down;
-    private static final int TOLERANCE = 7000;
 
     public ElevatorAutonCommand(double timeout)
     {
@@ -43,7 +43,7 @@ public class ElevatorAutonCommand extends TimedCommand
             down = true;
         }
         Robot.writeLog("ElevatorAutonCommand init", 10);
-        Robot.writeLog("eposInit %.2f eposFinal %.2f",200,(float) eposInit, (float) eposFinal);
+        Robot.writeLog("eposInit %.2f eposFinal %.2f", 200, (float) eposInit, (float) eposFinal);
     }
 
     @Override

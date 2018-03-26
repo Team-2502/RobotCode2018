@@ -120,7 +120,7 @@ public class Path
         ImmutableVector2f closestPointNext = nextSegment.getClosestPoint(robotPos);
         float nextClosestPointDistance = closestPointNext.distance(robotPos);
         // TODO: add 0.5 as constant
-        if((distanceLeft < Constants.PurePursuit.DISTANCE_COMPLETE_SEGMENT_TOLERANCE) || closestPointDist > nextClosestPointDistance+0.5F)
+        if((distanceLeft < Constants.PurePursuit.DISTANCE_COMPLETE_SEGMENT_TOLERANCE) || closestPointDist > nextClosestPointDistance + 0.5F)
         {
             Robot.writeLog("closestPointDist: %.2f, nCPD: %.2f, segmentI: %d, distanceLeft: %.2f", 200, closestPointDist, nextClosestPointDistance, segmentOnI, distanceLeft);
             Robot.writeLog("pos: (%.2f, %.2f)", 200, robotPos.x, robotPos.y);
