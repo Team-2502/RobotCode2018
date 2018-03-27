@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.command.TimedCommand;
 public class ElevatorAutonCommand extends TimedCommand
 {
 
-    private static final int TOLERANCE = 7000;
+    private static final int TOLERANCE = 1000;
     private float feet;
     private double eposFinal;
     private double eposInit;

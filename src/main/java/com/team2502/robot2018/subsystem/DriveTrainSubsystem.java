@@ -437,7 +437,7 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
      */
     public double getAvgEncLoopError()
     {
-        return (leftFrontTalonEnc.getClosedLoopError(0) + rightFrontTalonEnc.getClosedLoopError(0)) / 2
+        return (leftFrontTalonEnc.getClosedLoopError(0) + rightFrontTalonEnc.getClosedLoopError(0)) / 2;
     }
     /**
      * @return Turns "fake" units into real wheel revolutions
@@ -491,11 +491,17 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
      */
     public float getRightPosRaw() { return rightFrontTalonEnc.getSelectedSensorPosition(0);}
 
+    /**
+     * @deprecated think this is wrong
+     * @param inches
+     * @return
+     */
     public float inchesToEncUnits(float inches)
     {
         float wheelRevs = inches / Constants.Physical.DriveTrain.WHEEL_DIAMETER_INCH;
 
-        return fakeToRealEncUnits(wheelRevs * fakeToRealEncUnits());
+        // TODO: is this right???
+        return fakeToRealEncUnits(wheelRevs * fakeToRealEncUnits(inches));
     }
 
 

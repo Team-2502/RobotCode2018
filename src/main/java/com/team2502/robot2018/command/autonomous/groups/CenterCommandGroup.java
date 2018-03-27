@@ -31,6 +31,7 @@ public class CenterCommandGroup extends CommandGroup
         moveElevator();
         addSequential(new PurePursuitCommand(PathConfig.Center.leftSwitch, true));
         emitCubeSwitch();
+        addSequential(new BackOffScale());
     }
 
     private void goSwitchRight()
@@ -38,16 +39,17 @@ public class CenterCommandGroup extends CommandGroup
         moveElevator();
         addSequential(new PurePursuitCommand(PathConfig.Center.rightSwitch, true));
         emitCubeSwitch();
+        addSequential(new BackOffScale());
     }
 
     private void moveElevator()
     {
         addParallel(new RaiseElevatorSwitch());
+        addParallel(new ActiveIntakeRotate(0.35, 1));
     }
 
     private void emitCubeSwitch()
     {
-        addSequential(new ActiveIntakeRotate(0.35, 1));
         addSequential(new RunIntakeCommand(1));
     }
 
