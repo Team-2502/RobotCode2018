@@ -48,10 +48,10 @@ public class PathConfig
          * Move from the center of the starting wall to the right side of the switch
          */
         public static final List<Waypoint> rightSwitch = Arrays.asList(
-                new Waypoint(new ImmutableVector2f(0, 0), 0, 10, -10),
-                new Waypoint(new ImmutableVector2f(2F, 2.45F), 16, 10, -10),
-                new Waypoint(new ImmutableVector2f(4F, 4F), 16, 10, -10),
-                new Waypoint(new ImmutableVector2f(4F, 9.5F), 1F, 10, -10)
+                new Waypoint(new ImmutableVector2f(0, 0), 0, 10, -5),
+                new Waypoint(new ImmutableVector2f(2F, 2.45F), 16, 10, -5),
+                new Waypoint(new ImmutableVector2f(4F, 4F), 16, 10, -5),
+                new Waypoint(new ImmutableVector2f(4F, 9.5F), 0F, 10, -5)
                                                                       );
 
         /**
@@ -61,7 +61,7 @@ public class PathConfig
                 new Waypoint(new ImmutableVector2f(0, 0), 0, 5, -5),
                 new Waypoint(new ImmutableVector2f(0, 2F), 16, 5, -5),
                 new Waypoint(new ImmutableVector2f(-4.5F, 4), 16, 5, -5),
-                new Waypoint(new ImmutableVector2f(-4.5F, 10), 1F, 5, -5)
+                new Waypoint(new ImmutableVector2f(-4.5F, 10), 0F, 5, -5)
                                                                      );
     }
 
