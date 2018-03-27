@@ -1,10 +1,12 @@
 import org.joml.ImmutableVector2f;
 
+//TODO: WIP
 public class SimulatedRobot
 {
 
     public static final float MAX_VEL = 16F;
     public static final float VOLTAGE_CHANGE_MAX = .1F;
+    public static final float LATERAL_WHEEL_DIST = 2F;
 
     ImmutableVector2f position;
     float heading;
@@ -12,6 +14,15 @@ public class SimulatedRobot
     private float leftMotorPercentVoltage = 0;
     private float rightMotorPercentVoltage = 0;
 
+    public SimulatedRobot()
+    {
+
+    }
+
+    public void update()
+    {
+
+    }
     /**
      * Run motors at a certain velocity
      * @param leftVel
@@ -27,9 +38,18 @@ public class SimulatedRobot
      *
      * @return Get velocity given current status
      */
-    public ImmutableVector2f getVelocity()
+    public float getLeftVel()
     {
-        return new ImmutableVector2f(leftMotorPercentVoltage*MAX_VEL,rightMotorPercentVoltage*MAX_VEL);
+        return 0; //TODO
+    }
+
+    /**
+     *
+     * @return Get velocity given current status
+     */
+    public float getRightVel()
+    {
+        return 0; //TODO
     }
 
     private float runMotorVel(float velocity, float currentVoltage)
