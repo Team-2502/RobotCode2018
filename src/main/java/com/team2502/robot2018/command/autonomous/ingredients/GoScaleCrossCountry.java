@@ -20,7 +20,7 @@ public class GoScaleCrossCountry extends CommandGroup
 
         emitCube();
 
-        addSequential(new BackOffScale());
+        addSequential(new BackOffCommand());
     }
 
     private void emitCube()

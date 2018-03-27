@@ -118,7 +118,7 @@ public class LeftCommandGroup extends CommandGroup
         emitCube();
 
 //        addSequential(new WaitCommand(2));
-        addSequential(new BackOffScale());
+        addSequential(new BackOffCommand());
     }
 
     /**
