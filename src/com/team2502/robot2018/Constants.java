@@ -82,6 +82,12 @@ public class Constants
             public static final float RPM_TO_EVEL_DT = Encoder.ENC_RES / 600F;
             public static final float FPS_TO_EVEL_DT = FPS_TO_RPM_DT * RPM_TO_EVEL_DT;
 
+            /**
+             * When running {@link com.team2502.robot2018.command.autonomous.ingredients.EncoderDrive}, this is the tolerance for position.
+             * After getting within this many enc units, the command terminates and moves onto the next command.
+             */
+            public static final double ALLOWABLE_POS_ERROR_EPOS = 300;
+
             private DriveTrain() { }
         }
 

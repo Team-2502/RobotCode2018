@@ -267,6 +267,34 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     }
 
     /**
+     * Run the drivetrain to a particular distance
+     *
+     * @param leftWheel  Distance of the left side (ft)
+     * @param rightWheel Distance of the right side (ft)
+     * @see DriveTrainSubsystem#runMotors(ControlMode, float, float)
+     */
+    public void runMotorsPosition(float leftWheel, float rightWheel)
+    {
+        float left = fakeToRealEncUnits(leftWheel * Constants.Physical.DriveTrain.FEET_TO_EPOS_DT);
+        float right = fakeToRealEncUnits(rightWheel * Constants.Physical.DriveTrain.FEET_TO_EPOS_DT);
+        runMotors(ControlMode.Position, left, right);
+    }
+
+    /**
+     * Run the drivetrain to a particular distance in raw enc units
+     *
+     * @param leftWheel  Distance of the left side (enc units)
+     * @param rightWheel Distance of the right side (enc units)
+     * @see DriveTrainSubsystem#runMotors(ControlMode, float, float)
+     * @see DriveTrainSubsystem#runMotorsPosition(float, float) (float, float)
+     */
+    public void runMotorsRawPosition(float leftWheel, float rightWheel)
+    {
+        runMotors(ControlMode.Position, leftWheel, rightWheel);
+    }
+
+
+    /**
      * Drive the robot using ControlMode.PercentOutput. The equation leftWheel=-rightWheel must be true for the robot to setElevatorPV straight.
      * <br>
      * Do not use for auton as this will use percent voltage.
@@ -400,6 +428,14 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     { return fakeToRealWheelRev(getLeftRawVel() * Constants.Physical.DriveTrain.FAKE_EVEL_TO_FPS_DT); }
 
     /**
+     * Assuming we are in a PID loop, return the average error for the 2 sides of the drivetrain
+     * @return the average error
+     */
+    public double getAvgEncLoopError()
+    {
+        return (leftFrontTalonEnc.getClosedLoopError(0) + rightFrontTalonEnc.getClosedLoopError(0)) / 2
+    }
+    /**
      * @return Turns "fake" units into real wheel revolutions
      */
     public float fakeToRealWheelRev(float wheelRev)
@@ -449,6 +485,13 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
      * @return Right side position in enc units
      */
     public float getRightPosRaw() { return rightFrontTalonEnc.getSelectedSensorPosition(0);}
+
+    public float inchesToEncUnits(float inches)
+    {
+        float wheelRevs = inches / Constants.Physical.DriveTrain.WHEEL_DIAMETER_INCH;
+
+        return fakeToRealEncUnits(wheelRevs * fakeToRealEncUnits());
+    }
 
 
     @Override
