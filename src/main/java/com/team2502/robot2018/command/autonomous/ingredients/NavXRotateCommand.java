@@ -3,9 +3,11 @@ package com.team2502.robot2018.command.autonomous.ingredients;
 import com.kauailabs.navx.frc.AHRS;
 import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.subsystem.DriveTrainSubsystem;
+import com.team2502.robot2018.utils.MathUtils;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.command.Command;
+import org.joml.ImmutableVector2f;
 
 /**
  * Turn to a certain angle with the NavX. Is also a good example of using custom PID control
@@ -63,6 +65,14 @@ public class NavXRotateCommand extends Command implements PIDOutput
         this(maxtime);
         targetYaw = angle;
         this.reset = reset;
+    }
+
+    public static NavXRotateCommand fromLocation(ImmutableVector2f now, ImmutableVector2f later, float maxTime)
+    {
+        // TODO: test if this is the right direction
+        float theta = MathUtils.Geometry.getThetaFromPoints(now, later);
+        float degrees = (float) Math.toDegrees(theta);
+        return new NavXRotateCommand(degrees, maxTime);
     }
 
 

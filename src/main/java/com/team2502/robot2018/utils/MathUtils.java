@@ -720,6 +720,19 @@ public final class MathUtils
         }
 
         /**
+         *
+         * @param start
+         * @param end
+         * @return The theta of the angle created ccw between \vec{i} and the line from start->end
+         */
+        public static float getThetaFromPoints(ImmutableVector2f start, ImmutableVector2f end)
+        {
+            float dx = end.x - start.x;
+            float dy = end.y - start.y;
+            return (float) Math.atan2(dy , dx);
+        }
+
+        /**
          * Given a line defined by two points, find the point on the line closest to our robot's position
          *
          * @param linePointA One point on the line
