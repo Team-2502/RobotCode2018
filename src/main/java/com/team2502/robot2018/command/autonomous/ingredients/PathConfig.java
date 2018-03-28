@@ -26,7 +26,7 @@ public class PathConfig
         {
             ImmutableVector2f oldLoc = waypoint.getLocation();
             ImmutableVector2f newLoc = new ImmutableVector2f(-oldLoc.x, oldLoc.y);
-            toReturn.add(new Waypoint(newLoc, waypoint.getMaxSpeed(), waypoint.getMaxAccel(), waypoint.getMaxDeccel(), waypoint.isForward(), waypoint.getCommands()));
+            toReturn.add(new Waypoint(newLoc, waypoint.getMaxSpeed(), waypoint.getMaxAccel(), waypoint.getMaxDeccel(), waypoint.getCommands()));
         }
         return toReturn;
     }
@@ -71,11 +71,11 @@ public class PathConfig
     public static class Left
     {
         public static final List<Waypoint> leftScale = Arrays.asList(
-                new Waypoint(new ImmutableVector2f(0, 0), 16, 20, -5, true),
-                new Waypoint(new ImmutableVector2f(0, 4), 16, 20, -5, true, new RaiseElevatorScale()),
-                new Waypoint(new ImmutableVector2f(-0.5F, 8.589F), 16F, 20, -5, true),
-                new Waypoint(new ImmutableVector2f(-0.5F, 12.405F), 16F, 20, -5, true),
-                new Waypoint(new ImmutableVector2f(-0.5F, 17F), 16F, 20, -5, true),
+                new Waypoint(new ImmutableVector2f(0, 0), 16, 20, -5),
+                new Waypoint(new ImmutableVector2f(0, 4), 16, 20, -5, new RaiseElevatorScale()),
+                new Waypoint(new ImmutableVector2f(-0.5F, 8.589F), 16F, 20, -5),
+                new Waypoint(new ImmutableVector2f(-0.5F, 12.405F), 16F, 20, -5),
+                new Waypoint(new ImmutableVector2f(-0.5F, 17F), 16F, 20, -5),
                 new Waypoint(new ImmutableVector2f(3.0F, 21.0F), 0F, 20, -5) // max deceleration appears to be -7 ft / s^2
                                                                     );
 
@@ -83,10 +83,10 @@ public class PathConfig
         public static final List<Waypoint> leftScaleToSwitch = Arrays.asList(
                 new Waypoint(new ImmutableVector2f(0F, 20.0F), 8F, 20, -7),
 //                new Waypoint(new ImmutableVector2f(1F, 21.5F), 4F, 20, -9), // max deceleration appears to be -7 ft / s^2
-                new Waypoint(new ImmutableVector2f(4F, 20.0F), 8F, 10, -9, true, new IntakeAndRaise()),
-                new Waypoint(new ImmutableVector2f(6F, 16F), 8F, 10, -9, true), // 3rd cube 7 19
-                new Waypoint(new ImmutableVector2f(4.5F, 14.9F), 8F, 10, -9, true),
-                new Waypoint(new ImmutableVector2f(2.42F, 15F), 8F, 10, -9, true), // we should have the cube
+                new Waypoint(new ImmutableVector2f(4F, 20.0F), 8F, 10, -9, new IntakeAndRaise()),
+                new Waypoint(new ImmutableVector2f(6F, 16F), 8F, 10, -9), // 3rd cube 7 19
+                new Waypoint(new ImmutableVector2f(4.5F, 14.9F), 8F, 10, -9),
+                new Waypoint(new ImmutableVector2f(2.42F, 15F), 8F, 10, -9), // we should have the cube
                 new Waypoint(new ImmutableVector2f(3.5F, 19F), 0F, 10, -9)
                                                                             );
 
@@ -102,7 +102,7 @@ public class PathConfig
                 new Waypoint(new ImmutableVector2f(0F, 8.589F), 25F, 20, -10),
                 new Waypoint(new ImmutableVector2f(0F, 17.0F), 25F, 20, -10),
                 new Waypoint(new ImmutableVector2f(2.454F, 17.5F), 25F, 20, -10),
-                new Waypoint(new ImmutableVector2f(15.0F, 17.5F), 3F, 20, -5, true, new RaiseElevatorScale(), new ActiveIntakeRotate(0.3, 0.5)),
+                new Waypoint(new ImmutableVector2f(15.0F, 17.5F), 3F, 20, -5, new RaiseElevatorScale(), new ActiveIntakeRotate(0.3, 0.5)),
                 new Waypoint(new ImmutableVector2f(20.83F, 17.5F), 3F, 20, -5),
                 new Waypoint(new ImmutableVector2f(16.833F, 22F), 0F, 10, -5)
                                                                      );

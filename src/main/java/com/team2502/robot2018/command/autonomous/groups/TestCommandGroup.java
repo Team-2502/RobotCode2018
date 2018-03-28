@@ -1,9 +1,15 @@
 package com.team2502.robot2018.command.autonomous.groups;
 
 
+import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.command.autonomous.ingredients.ElevatorAutonCommand;
+import com.team2502.robot2018.command.autonomous.ingredients.PurePursuitCommand;
+import com.team2502.robot2018.trajectory.Waypoint;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.command.WaitCommand;
+import org.joml.ImmutableVector2f;
+
+import java.util.Arrays;
 
 import static com.team2502.robot2018.Constants.Physical.Elevator;
 
@@ -15,12 +21,12 @@ public class TestCommandGroup extends CommandGroup
 {
     public TestCommandGroup()
     {
-        addSequential(new ElevatorAutonCommand(3, Elevator.SWITCH_ELEV_HEIGHT_FT));
-        addSequential(new WaitCommand(1));
-        addSequential(new ElevatorAutonCommand(3, 0));
-        addSequential(new WaitCommand(1));
-        addSequential(new ElevatorAutonCommand(3, Elevator.SCALE_ELEV_HEIGHT_FT));
-        addSequential(new WaitCommand(1));
-        addSequential(new ElevatorAutonCommand(3, 0));
+        Robot.writeLog("TestCommand",200);
+        addSequential(new PurePursuitCommand(Arrays.asList(
+                new Waypoint(new ImmutableVector2f(0,0),0,5,-5),
+        new Waypoint(new ImmutableVector2f(-5,-5),5,5,-5),
+        new Waypoint(new ImmutableVector2f(-10,-10),0,5,-5)
+                                                          )
+        ,false,false));
     }
 }

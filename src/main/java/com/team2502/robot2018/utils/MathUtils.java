@@ -51,6 +51,11 @@ public final class MathUtils
 
     private MathUtils() { }
 
+    public static float shiftRadiansBounded(float initRadians, float shift)
+    {
+        return (initRadians + shift) % TAU;
+    }
+
     /**
      * @param x A number
      * @param y Another number

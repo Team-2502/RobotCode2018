@@ -23,6 +23,7 @@ public class PurePursuitCommand extends Command
     private Lookahead lookahead;
     private boolean drift;
     private boolean autoFirstPoint;
+    private boolean forward;
 
     /**
      * Given some waypoints, drive through them
@@ -31,7 +32,17 @@ public class PurePursuitCommand extends Command
      */
     public PurePursuitCommand(List<Waypoint> waypoints, boolean drift)
     {
-        this(waypoints, Constants.PurePursuit.LOOKAHEAD, drift);
+        this(waypoints, Constants.PurePursuit.LOOKAHEAD, drift, true);
+    }
+
+    /**
+     * Given some waypoints, drive through them
+     *
+     * @param waypoints the waypoints
+     */
+    public PurePursuitCommand(List<Waypoint> waypoints, boolean drift, boolean forward)
+    {
+        this(waypoints, Constants.PurePursuit.LOOKAHEAD, drift, forward);
     }
 
     /**
@@ -41,12 +52,13 @@ public class PurePursuitCommand extends Command
      * @param lookahead Bean for max + min vel and accel
      * @param drift     If the robot should brake at the end or drift
      */
-    public PurePursuitCommand(List<Waypoint> waypoints, Lookahead lookahead, boolean drift)
+    public PurePursuitCommand(List<Waypoint> waypoints, Lookahead lookahead, boolean drift, boolean forward)
     {
         this.autoFirstPoint = autoFirstPoint;
         this.drift = drift;
         this.waypoints = waypoints;
         this.lookahead = lookahead;
+        this.forward = forward;
         requires(Robot.DRIVE_TRAIN);
 
         tankRobot = new ITankRobotBounds()
@@ -111,10 +123,6 @@ public class PurePursuitCommand extends Command
             { return PurePursuit.LATERAL_WHEEL_DISTANCE_FT; }
         };
 
-//        rotLocEstimator = new NavXLocationEstimator();
-//        transLocEstimator = new EncoderDifferentialDriveLocationEstimator(rotLocEstimator);
-//
-//        sendableNavX = new SendableNavX(() -> MathUtils.rad2Deg(-rotLocEstimator.estimateHeading()), "purePursuitHeading");
     }
 
     @Override
@@ -123,7 +131,14 @@ public class PurePursuitCommand extends Command
         // set location to first robot point TODO: make better... this way of doing it is crap
         waypoints.get(0).setLocation(Robot.ROBOT_LOCALIZATION_COMMAND.estimateLocation());
         Robot.writeLog("init PP", 80);
-        purePursuitMovementStrategy = new PurePursuitMovementStrategy(tankRobot, Robot.ROBOT_LOCALIZATION_COMMAND, Robot.ROBOT_LOCALIZATION_COMMAND, Robot.ROBOT_LOCALIZATION_COMMAND, waypoints, lookahead, true);
+        if(forward)
+        {
+            purePursuitMovementStrategy = new PurePursuitMovementStrategy(tankRobot, Robot.ROBOT_LOCALIZATION_COMMAND, Robot.ROBOT_LOCALIZATION_COMMAND, Robot.ROBOT_LOCALIZATION_COMMAND, waypoints, lookahead, true);
+        }
+        else
+        {
+            purePursuitMovementStrategy = new PurePursuitMovementStrategy(tankRobot, Robot.ROBOT_LOCALIZATION_COMMAND.getInverse(), Robot.ROBOT_LOCALIZATION_COMMAND.getInverse(), Robot.ROBOT_LOCALIZATION_COMMAND.getInverse(), waypoints, lookahead, true);
+        }
     }
 
     @Override
@@ -144,9 +159,15 @@ public class PurePursuitCommand extends Command
         SmartDashboard.putNumber("PPwheelL", wheelVelocities.get(0));
         SmartDashboard.putNumber("PPwheelR", wheelVelocities.get(1));
 
-//        Robot.writeLog("wheelL %.2f", 200, wheelL);
-//        Robot.writeLog("wheelR %.2f", 200, wheelR);
-        Robot.DRIVE_TRAIN.runMotorsVelocity(wheelL, wheelR);
+        if(forward)
+        {
+            Robot.DRIVE_TRAIN.runMotorsVelocity(wheelL, wheelR);
+        }
+        else
+        {
+            Robot.writeLog("running wheels: %.2f, %.2f",200,wheelL,wheelR);
+            Robot.DRIVE_TRAIN.runMotorsVelocity(-wheelR, -wheelL);
+        }
     }
 
     @Override

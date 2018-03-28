@@ -14,23 +14,22 @@ public class Waypoint
 
     private final float maxSpeed;
     private ImmutableVector2f location;
-    private boolean forward = true;
     private Command[] commands;
     private float maxAccel;
     private float maxDeccel;
 
-    /**
-     * Make a new waypoint
-     *
-     * @param location  Location of the waypoint
-     * @param maxSpeed  Max speed at the waypoint (in ft/s)
-     * @param maxAccel  Max accel at the waypoint (in ft/s^2)
-     * @param maxDeccel Max decel at the waypoint (in ft/s^2)
-     */
-    public Waypoint(ImmutableVector2f location, float maxSpeed, float maxAccel, float maxDeccel)
-    {
-        this(location, maxSpeed, maxAccel, maxDeccel, true);
-    }
+//    /**
+//     * Make a new waypoint
+//     *
+//     * @param location  Location of the waypoint
+//     * @param maxSpeed  Max speed at the waypoint (in ft/s)
+//     * @param maxAccel  Max accel at the waypoint (in ft/s^2)
+//     * @param maxDeccel Max decel at the waypoint (in ft/s^2)
+//     */
+//    public Waypoint(ImmutableVector2f location, float maxSpeed, float maxAccel, float maxDeccel)
+//    {
+//        this(location, maxSpeed, maxAccel, maxDeccel);
+//    }
 
     /**
      * Make a new waypoint
@@ -39,15 +38,13 @@ public class Waypoint
      * @param maxSpeed  Max speed at the waypoint (in ft/s)
      * @param maxAccel  Max accel at the waypoint (in ft/s^2)
      * @param maxDeccel Max decel at the waypoint (in ft/s^2)
-     * @param forward   Whether or not we are driving forward at this waypoint
      * @param commands  Some commands to execute once we reach this waypoint
      */
-    public Waypoint(ImmutableVector2f location, float maxSpeed, float maxAccel, float maxDeccel, boolean forward, Command... commands)
+    public Waypoint(ImmutableVector2f location, float maxSpeed, float maxAccel, float maxDeccel, Command... commands)
     {
         this.location = location;
         this.maxSpeed = maxSpeed;
         this.maxAccel = maxAccel;
-        this.forward = forward;
         this.commands = commands;
         this.maxDeccel = maxDeccel;
         this.maxDeccel = maxDeccel;
@@ -76,11 +73,6 @@ public class Waypoint
     public void setLocation(ImmutableVector2f location)
     {
         this.location = location;
-    }
-
-    public boolean isForward()
-    {
-        return forward;
     }
 
     public Command[] getCommands()
@@ -114,7 +106,6 @@ public class Waypoint
         return "Waypoint{" +
                "maxSpeed=" + maxSpeed +
                ", location=" + location +
-               ", forward=" + forward +
                '}';
     }
 
