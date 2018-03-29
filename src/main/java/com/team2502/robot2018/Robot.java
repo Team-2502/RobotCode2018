@@ -185,6 +185,11 @@ public final class Robot extends IterativeRobot
     @Override
     public void robotInit()
     {
+
+        String fileName = "/home/lvuser/FILES";
+        Files.setFileName(fileName);
+        Files.newFile(fileName);
+
         // Initialize NavX
         NAVX = new AHRS(SPI.Port.kMXP);
 
@@ -259,7 +264,16 @@ public final class Robot extends IterativeRobot
 
         fileWriting();
 
-        SmartDashboard.putData("Calibrate Encoder", new QuickCommand(Robot.ELEVATOR::calibrateEncoder));
+        // Initialize Estimators
+        NavXLocationEstimator rotEstimator = new NavXLocationEstimator();
+        EncoderDifferentialDriveLocationEstimator encoderDifferentialDriveLocationEstimator = new EncoderDifferentialDriveLocationEstimator(rotEstimator);
+
+        // Begin running the localization routine
+        ROBOT_LOCALIZATION_COMMAND = new RobotLocalizationCommand(rotEstimator, encoderDifferentialDriveLocationEstimator, encoderDifferentialDriveLocationEstimator);
+
+//        ROBOT_LOCALIZATION_COMMAND.execute();
+        Scheduler.getInstance().add(ROBOT_LOCALIZATION_COMMAND);
+
     }
 
     /**
@@ -306,22 +320,8 @@ public final class Robot extends IterativeRobot
      */
     public void autonomousInit()
     {
-        String fileName = "/home/lvuser/FILES";
-        Files.setFileName(fileName);
-        Files.newFile(fileName);
-
         NAVX.reset();
         TRANSMISSION_SOLENOID.setHighGear(true);
-
-        // Initialize Estimators
-        NavXLocationEstimator rotEstimator = new NavXLocationEstimator();
-        EncoderDifferentialDriveLocationEstimator encoderDifferentialDriveLocationEstimator = new EncoderDifferentialDriveLocationEstimator(rotEstimator);
-
-        // Begin running the localization routine
-        ROBOT_LOCALIZATION_COMMAND = new RobotLocalizationCommand(rotEstimator, encoderDifferentialDriveLocationEstimator, encoderDifferentialDriveLocationEstimator);
-
-//        ROBOT_LOCALIZATION_COMMAND.execute();
-        Scheduler.getInstance().add(ROBOT_LOCALIZATION_COMMAND);
 
         // Ensure that the motors are in slave mode like they should be
         DRIVE_TRAIN.setAutonSettings();

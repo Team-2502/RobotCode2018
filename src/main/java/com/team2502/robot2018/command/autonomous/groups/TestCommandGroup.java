@@ -24,7 +24,15 @@ public class TestCommandGroup extends CommandGroup
     {
         Robot.writeLog("TestCommand",200);
 
-//        addSequential(new FastRotateCommand(0, , ));
+        addSequential(new FastRotateCommand(0, 8 ,-0.4F));
+        addSequential(new WaitCommand(3));
+        addSequential(new FastRotateCommand(180, 8, -0.4F));
+        addSequential(new WaitCommand(3));
+        addSequential(new FastRotateCommand(270, 8, -0.4F));
+        addSequential(new WaitCommand(3));
+        addSequential(new FastRotateCommand(0, 8, -0.4F));
+        addSequential(new WaitCommand(3));
+        addSequential(new FastRotateCommand(315, 8, -0.4F));
 //        addSequential(new PurePursuitCommand(Arrays.asList(
 //                new Waypoint(new ImmutableVector2f(0,0),0,5,-5),
 //        new Waypoint(new ImmutableVector2f(-5,-5),5,5,-5),
