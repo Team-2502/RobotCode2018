@@ -10,16 +10,14 @@ import com.team2502.robot2018.sendables.SendableVersioning;
 import com.team2502.robot2018.subsystem.ActiveIntakeSubsystem;
 import com.team2502.robot2018.subsystem.DriveTrainSubsystem;
 import com.team2502.robot2018.subsystem.ElevatorSubsystem;
-import com.team2502.robot2018.subsystem.solenoid.ActiveIntakeSolenoid;
-import com.team2502.robot2018.subsystem.solenoid.ButterflySolenoid;
-import com.team2502.robot2018.subsystem.solenoid.ClimberSolenoid;
-import com.team2502.robot2018.subsystem.solenoid.TransmissionSolenoid;
+import com.team2502.robot2018.subsystem.solenoid.*;
 import com.team2502.robot2018.trajectory.localization.EncoderDifferentialDriveLocationEstimator;
 import com.team2502.robot2018.trajectory.localization.NavXLocationEstimator;
 import com.team2502.robot2018.utils.Files;
 import com.team2502.robot2018.utils.InterpolationMap;
 import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.command.Scheduler;
+import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -33,6 +31,7 @@ import java.util.Map;
 
 public final class Robot extends IterativeRobot
 {
+    public static CarriageBrakeSolenoid CARRIAGE_BRAKE_SOLENOID;
     public static double CAL_VELOCITY = 0D;
     public static String GAME_DATA = "...";
 
@@ -99,6 +98,7 @@ public final class Robot extends IterativeRobot
         ACTIVE_INTAKE_SOLENOID = new ActiveIntakeSolenoid();
         CLIMBER_SOLENOID = new ClimberSolenoid();
         BUTTERFLY_SOLENOID = new ButterflySolenoid();
+        CARRIAGE_BRAKE_SOLENOID = new CarriageBrakeSolenoid();
         OI.init();
 
 
@@ -183,10 +183,10 @@ public final class Robot extends IterativeRobot
      */
     public void autonomousInit()
     {
-        
-        String fileName = "/home/lvuser/FILES";
-        Files.setFileName(fileName);
-        Files.newFile(fileName);
+//
+//        String fileName = "/home/lvuser/FILES";
+//        Files.setFileName(fileName);
+//        Files.newFile(fileName);
 
         NavXLocationEstimator rotEstimator = new NavXLocationEstimator();
         EncoderDifferentialDriveLocationEstimator encoderDifferentialDriveLocationEstimator = new EncoderDifferentialDriveLocationEstimator(rotEstimator);

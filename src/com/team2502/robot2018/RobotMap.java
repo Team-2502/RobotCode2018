@@ -56,6 +56,7 @@ public class RobotMap
 
             public static final int RUN_DEBUG_TESTS = 9;
             public static final int CALIBRATE_ELEV_ENCODER = 11;
+            public static final int TOGGLE_CARRIAGE_BRAKE = 12;
 
             private Button() { }
         }
@@ -117,6 +118,7 @@ public class RobotMap
         public static final int CLIMBER_SOLENOID = 1;
         public static final int ACTIVE_GRABBER = 2;
         public static final int BUTTERFLY_SOLENOID = 3;
+        public static final int CARRIAGE_BRAKE = 4;
 
         private Solenoid() { }
     }

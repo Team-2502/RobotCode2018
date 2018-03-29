@@ -35,6 +35,8 @@ public final class OI
 
     private static final Button CALIBRATE_ELEV_ENCODER = new JoystickButton(JOYSTICK_DRIVE_RIGHT, RobotMap.Joystick.Button.CALIBRATE_ELEV_ENCODER);
 
+    private static final Button TOGGLE_CARRIAGE_BRAKE = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.TOGGLE_CARRIAGE_BRAKE);
+
     static
     {
         // Elevator buttons
@@ -60,6 +62,7 @@ public final class OI
         RUN_TESTS.whenPressed(new FullSystemsTestCommand());
 
         CALIBRATE_ELEV_ENCODER.whenPressed(new QuickCommand(Robot.ELEVATOR::calibrateEncoder));
+        TOGGLE_CARRIAGE_BRAKE.whenPressed(new ToggleCarriageBrake());
     }
 
     public static void init() {}
