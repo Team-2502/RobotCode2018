@@ -10,7 +10,12 @@ def TEAM = 2502
 def ROBOT_CLASS = "com.team2502.robot2018.Robot"
 
 deploy {
-    targets { target("roborio", jaci.openrio.gradle.frc.RoboRIO) { team = TEAM } }
+    targets { 
+        target("roborio", jaci.openrio.gradle.frc.RoboRIO) { 
+            team = TEAM 
+            timeout = 15
+        } 
+    }
     artifacts { artifact('frcJava', jaci.openrio.gradle.frc.FRCJavaArtifact) { targets << "roborio" } }
 }
 
