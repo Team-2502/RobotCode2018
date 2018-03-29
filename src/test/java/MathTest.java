@@ -5,7 +5,6 @@ import org.junit.Test;
 
 public class MathTest
 {
-
     private ImmutableVector2f e1 = new ImmutableVector2f(1, 0);
 
     @Test
@@ -101,13 +100,43 @@ public class MathTest
      * Should be a complete rotation around a circle (dpos = 0)
      */
     @Test
-    public void arcDposFullCircle()
+    public void testDTheta90()
     {
-        // l * pi = 1 (circumference)
-        // 1/pi = l
-        ImmutableVector2f absoluteDPosCurve = MathUtils.Kinematics.getAbsoluteDPosCurve(1, 0, (float) (1 / Math.PI), 1, 0);
-        Assert.assertEquals(0,absoluteDPosCurve.x, 0.001);
-        Assert.assertEquals(0,absoluteDPosCurve.y, 0.001);
+        float dTheta = MathUtils.Geometry.getDThetaNavX(270, 0);
+        Assert.assertEquals(3F*Math.PI/2F, dTheta,0.001);
+    }
+
+    /**
+     * Should be a complete rotation around a circle (dpos = 0)
+     */
+    @Test
+    public void testCCWClosest90()
+    {
+        Assert.assertFalse(MathUtils.Geometry.isCCWQuickest(0, 90));
+    }
+
+    /**
+     * Should be a complete rotation around a circle (dpos = 0)
+     */
+    @Test
+    public void testCCWClosest90Opp()
+    {
+        Assert.assertTrue(MathUtils.Geometry.isCCWQuickest(90, 0));
+    }
+
+    /**
+     * Should be a complete rotation around a circle (dpos = 0)
+     */
+    @Test
+    public void testCCWClosestStrangeAngles()
+    {
+        Assert.assertTrue(MathUtils.Geometry.isCCWQuickest(127, 359));
+    }
+
+    @Test
+    public void testNavXBound()
+    {
+        Assert.assertEquals(355,MathUtils.Kinematics.navXBound(-5) , 0.001);
     }
 
 }

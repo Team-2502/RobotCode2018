@@ -3,6 +3,7 @@ package com.team2502.robot2018.command.autonomous.groups;
 
 import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.command.autonomous.ingredients.ElevatorAutonCommand;
+import com.team2502.robot2018.command.autonomous.ingredients.FastRotateCommand;
 import com.team2502.robot2018.command.autonomous.ingredients.PurePursuitCommand;
 import com.team2502.robot2018.trajectory.Waypoint;
 import edu.wpi.first.wpilibj.command.CommandGroup;
@@ -22,11 +23,13 @@ public class TestCommandGroup extends CommandGroup
     public TestCommandGroup()
     {
         Robot.writeLog("TestCommand",200);
-        addSequential(new PurePursuitCommand(Arrays.asList(
-                new Waypoint(new ImmutableVector2f(0,0),0,5,-5),
-        new Waypoint(new ImmutableVector2f(-5,-5),5,5,-5),
-        new Waypoint(new ImmutableVector2f(-10,-10),0,5,-5)
-                                                          )
-        ,false,false));
+
+//        addSequential(new FastRotateCommand(0, , ));
+//        addSequential(new PurePursuitCommand(Arrays.asList(
+//                new Waypoint(new ImmutableVector2f(0,0),0,5,-5),
+//        new Waypoint(new ImmutableVector2f(-5,-5),5,5,-5),
+//        new Waypoint(new ImmutableVector2f(-10,-10),0,5,-5)
+//                                                          )
+//        ,false,false));
     }
 }
