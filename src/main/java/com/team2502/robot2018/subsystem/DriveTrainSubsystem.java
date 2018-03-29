@@ -497,7 +497,8 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         float feet = inches / 12;
 
         // TODO: is this right???
-        return fakeToRealEncUnits(wheelRevs * fakeToRealEncUnits(inches));
+        return fakeToRealEncUnits(feet * Constants.Physical.DriveTrain.FEET_TO_EPOS_DT);
+//        return -99;
     }
 
 
