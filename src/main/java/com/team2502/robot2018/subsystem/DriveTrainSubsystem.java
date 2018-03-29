@@ -297,11 +297,7 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     /**
      * Drive the robot using ControlMode.PercentOutput. The equation leftWheel=-rightWheel must be true for the robot to setElevatorPV straight.
      * <br>
-     * <<<<<<< HEAD
-     * Make sure to set the motors according to the control mode. In auton, it's position. In teleop, it's percent voltage.
-     * =======
-     * Do not use for auton as this will use percent voltage.
-     * >>>>>>> develop
+     * Make sure to set the motors according to the control mode. In auton, it's {@link ControlMode#Position}. In teleop, it's {@link ControlMode#PercentOutput}.
      *
      * @param leftWheel  Units for the left side of drivetrain
      * @param rightWheel Units for the right side of drivetrain
@@ -437,7 +433,7 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
      */
     public double getAvgEncLoopError()
     {
-        return (leftFrontTalonEnc.getClosedLoopError(0) + rightFrontTalonEnc.getClosedLoopError(0)) / 2
+        return (leftFrontTalonEnc.getClosedLoopError(0) + rightFrontTalonEnc.getClosedLoopError(0)) / 2;
     }
     /**
      * @return Turns "fake" units into real wheel revolutions
@@ -491,11 +487,18 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
      */
     public float getRightPosRaw() { return rightFrontTalonEnc.getSelectedSensorPosition(0);}
 
+    /**
+     * Turns inches into encoder units
+     * @param inches A unit in inches
+     * @return The same quantity but in encoder units
+     */
     public float inchesToEncUnits(float inches)
     {
-        float wheelRevs = inches / Constants.Physical.DriveTrain.WHEEL_DIAMETER_INCH;
+        float feet = inches / 12;
 
-        return fakeToRealEncUnits(wheelRevs * fakeToRealEncUnits());
+        float fakeEncUnits = feet * Constants.Physical.DriveTrain.FEET_TO_EPOS_DT;
+
+        return fakeToRealEncUnits(fakeEncUnits);
     }
 
 

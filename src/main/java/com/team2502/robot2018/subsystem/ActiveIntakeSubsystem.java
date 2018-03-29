@@ -37,6 +37,7 @@ public class ActiveIntakeSubsystem extends Subsystem
 
         rotateIntake.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen, Constants.INIT_TIMEOUT);
         rotateIntake.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen, Constants.INIT_TIMEOUT);
+
     }
 
     /**
@@ -46,8 +47,8 @@ public class ActiveIntakeSubsystem extends Subsystem
      */
     public void runIntake(double speed)
     {
-        leftIntake.set(ControlMode.PercentOutput, speed);
-        rightIntake.set(ControlMode.PercentOutput, speed);
+        leftIntake.set(ControlMode.PercentOutput, -speed);
+        rightIntake.set(ControlMode.PercentOutput, -speed);
     }
 
     /**
