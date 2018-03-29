@@ -66,8 +66,6 @@ public class Path
 
         this.robotLocationClosestPoint = origin;
         PathSegment current = getCurrent();
-//        Robot.writeLog("finding closest point: {start (" + start.x + ", " + start.y + "), last (" + end.x + ", " + end.y + "), origin (" + origin.x + ", " + origin.y + ")}",100);
-//        Robot.writeLog("origin:");
         Robot.writeLog("origin: %.2f %.2f", 100, origin.x, origin.y);
         closestPoint = current.getClosestPoint(origin);
         return closestPoint;

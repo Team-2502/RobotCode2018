@@ -58,11 +58,6 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
     private ITankRobotBounds tankRobot;
 
     /**
-     * Are we driving forward?
-     */
-    private boolean forward;
-
-    /**
      * The goal point relative to us
      */
     private ImmutableVector2f relativeGoalPoint;
@@ -238,7 +233,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
 
         Waypoint waypointEnd = current.getLast();
 
-        forward = waypointEnd.isForward();
+//        forward = waypointEnd.isForward();
 
         float pathSegmentLength = current.getLength();
 
@@ -268,7 +263,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
             return Float.NaN;
         }
 
-        float finalSpeed = waypointEnd.isForward() ? waypointEnd.getMaxSpeed() : -waypointEnd.getMaxSpeed();
+        float finalSpeed = waypointEnd.getMaxSpeed();
 
         Robot.writeLog("distance left: " + distanceLeft, 1);
         Robot.writeLog("speedUsed: " + speedUsed, 1);
@@ -280,7 +275,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         {
             Waypoint last = pathSegment.getLast();
             float distanceTo = pathSegment.getAbsoluteDistanceEnd() - closestPointPathDistance;
-            float maxSpeed = getMaxSpeed(last.getMaxSpeed(), distanceTo, last.isForward(), waypointEnd.getMaxAccel(), waypointEnd.getMaxDeccel());
+            float maxSpeed = getMaxSpeed(last.getMaxSpeed(), distanceTo, true, waypointEnd.getMaxAccel(), waypointEnd.getMaxDeccel());
 
             if(maxSpeed < speed)
             {
@@ -297,17 +292,9 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         {
             // what the motors should be
             float dTime = (float) (currentS - lastUpdatedS);
-            if(forward)
-            {
-                Robot.writeLog("forward accel", 80);
-                Robot.writeLog("forward", 1);
-                speedUsed = MathUtils.minF(finalSpeed, lastWaypointSpeed + dTime * waypointEnd.getMaxAccel());
-            }
-            else
-            {
-                Robot.writeLog("not forward", 1);
-                speedUsed = MathUtils.maxF(finalSpeed, lastWaypointSpeed + dTime * waypointEnd.getMaxDeccel());
-            }
+            Robot.writeLog("forward accel", 80);
+            Robot.writeLog("forward", 1);
+            speedUsed = MathUtils.minF(finalSpeed, lastWaypointSpeed + dTime * waypointEnd.getMaxAccel());
             Robot.writeLog("accel ... speedUsed: %.2f, poll: %.2f, lastSpeed: %.2f, aMax %.2f", 1, speedUsed, dTime, lastWaypointSpeed, waypointEnd.getMaxAccel());
         }
 
@@ -515,7 +502,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
 
         if(Math.abs(curvature) < THRESHOLD_CURVATURE) // if we are a straight line ish (lines are not curvy -> low curvature)
         {
-            bestVector = forward ? new ImmutableVector2f(v_lMax, v_rMax) : new ImmutableVector2f(v_lMin, v_rMin);
+            bestVector = new ImmutableVector2f(v_lMax, v_rMax);
             rotVelocity = (bestVector.get(1) - bestVector.get(0)) / tankRobot.getLateralWheelDistance();
             motionRadius = Float.MAX_VALUE;
             leftWheelTanVel = bestVector.get(0);
@@ -585,14 +572,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
             dThetaToRotate = (float) (Math.signum(rotVelocity) * Math.atan(relativeGoalPoint.get(1) / (Math.abs(motionRadius) - relativeGoalPoint.get(0))));
         }
 
-        if(forward)
-        {
-            return bestVector;
-        }
-        else
-        {
-            return new ImmutableVector2f(-bestVector.y, -bestVector.x);
-        }
+        return bestVector;
     }
 
     /**

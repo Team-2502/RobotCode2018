@@ -3,6 +3,7 @@ package com.team2502.robot2018;
 import com.team2502.robot2018.trajectory.localization.IRotationalLocationEstimator;
 import com.team2502.robot2018.trajectory.localization.ITranslationalLocationEstimator;
 import com.team2502.robot2018.trajectory.localization.ITranslationalVelocityEstimator;
+import com.team2502.robot2018.utils.MathUtils;
 import edu.wpi.first.wpilibj.command.Command;
 import org.joml.ImmutableVector2f;
 
@@ -29,6 +30,8 @@ public class RobotLocalizationCommand extends Command implements ITranslationalL
      */
     private final ITranslationalLocationEstimator locationEstimator;
 
+    private InverseLocalization inverse;
+
 //    /**
 //     * How often to run (in ms)
 //     */
@@ -54,6 +57,7 @@ public class RobotLocalizationCommand extends Command implements ITranslationalL
         this.rotEstimator = rotEstimator;
         this.velocityEstimator = velocityEstimator;
         this.locationEstimator = locationEstimator;
+        this.inverse = new InverseLocalization();
     }
 
     /**
@@ -63,47 +67,67 @@ public class RobotLocalizationCommand extends Command implements ITranslationalL
     protected void execute()
     {
         // Update estimated heading
-        heading = rotEstimator.estimateHeading();
+        heading = rotEstimator.estimateHeading(); // reverse -> PI/2
 
         // Update wheel speeds
-        leftWheelSpeed = velocityEstimator.getLeftWheelSpeed();
-        rightWheelSpeed = velocityEstimator.getRightWheelSpeed();
+        leftWheelSpeed = velocityEstimator.getLeftWheelSpeed(); // reverse -> -rightWheelSpeed
+        rightWheelSpeed = velocityEstimator.getRightWheelSpeed(); // reverse -> -leftWheelSpeed
 
         // Estimate location
-        location = locationEstimator.estimateLocation();
+        location = locationEstimator.estimateLocation(); // always the same
 //        System.out.printf("locationX %.2f, locationY %.2f\n", location.x, location.y);
 
         // Find our heading in vector form
-        velocity = velocityEstimator.estimateAbsoluteVelocity();
+        velocity = velocityEstimator.estimateAbsoluteVelocity(); // negative
 
         // Find our speed
-        speed = velocityEstimator.estimateSpeed();
+        speed = velocityEstimator.estimateSpeed(); // always same
     }
 
-    //    @Override
-//    public void run()
-//    {
-//        System.out.println("running!!!! ");
-//        while(!Thread.currentThread().isInterrupted())
-//        {
-//            heading = rotEstimator.estimateHeading();
-//            leftWheelSpeed = velocityEstimator.getLeftWheelSpeed();
-//            rightWheelSpeed = velocityEstimator.getRightWheelSpeed();
-//            location = locationEstimator.estimateLocation();
-//            System.out.printf("locationX %.2f, locationY %.2f", location.x, location.y);
-//            velocity = velocityEstimator.estimateAbsoluteVelocity();
-//            speed = velocityEstimator.estimateSpeed();
-//            try
-//            {
-//                sleep(msPeriod);
-//            }
-//            catch(InterruptedException e)
-//            {
-//                e.printStackTrace();
-//            }
-//
-//        }
-//    }
+    public InverseLocalization getInverse()
+    {
+        return inverse;
+    }
+
+    public class InverseLocalization implements ITranslationalLocationEstimator, ITranslationalVelocityEstimator, IRotationalLocationEstimator
+    {
+
+        @Override
+        public float estimateHeading()
+        {
+            return MathUtils.shiftRadiansBounded(heading,MathUtils.PI_F);
+        }
+
+        @Override
+        public ImmutableVector2f estimateLocation()
+        {
+            return location;
+        }
+
+        @Override
+        public ImmutableVector2f estimateAbsoluteVelocity()
+        {
+            return velocity.mul(-1);
+        }
+
+        @Override
+        public float getLeftWheelSpeed()
+        {
+            return -rightWheelSpeed;
+        }
+
+        @Override
+        public float getRightWheelSpeed()
+        {
+            return -leftWheelSpeed;
+        }
+
+        @Override
+        public float estimateSpeed()
+        {
+            return speed;
+        }
+    }
 
     /**
      * Never finished - runs continuously

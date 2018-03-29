@@ -6,12 +6,12 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 /**
  * After putting a cube in the scale, back off
  */
-public class BackOffScale extends CommandGroup
+public class BackOffCommand extends CommandGroup
 {
     /**
      * After putting a cube in the scale, back off
      */
-    public BackOffScale()
+    public BackOffCommand()
     {
         addSequential(new DeadreckoningDrive(0.4F, -4F));
         addSequential(new ElevatorAutonCommand(2.5, 0));

@@ -488,17 +488,16 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     public float getRightPosRaw() { return rightFrontTalonEnc.getSelectedSensorPosition(0);}
 
     /**
-     * Turns inches into encoder units
-     * @param inches A unit in inches
-     * @return The same quantity but in encoder units
+     * @deprecated think this is wrong
+     * @param inches
+     * @return
      */
     public float inchesToEncUnits(float inches)
     {
         float feet = inches / 12;
 
-        float fakeEncUnits = feet * Constants.Physical.DriveTrain.FEET_TO_EPOS_DT;
-
-        return fakeToRealEncUnits(fakeEncUnits);
+        // TODO: is this right???
+        return fakeToRealEncUnits(wheelRevs * fakeToRealEncUnits(inches));
     }
 
 

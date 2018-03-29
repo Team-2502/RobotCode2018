@@ -24,7 +24,7 @@ public class GoScaleSameSide extends CommandGroup
 
         emitCube();
 
-        addParallel(new BackOffScale());
+        addParallel(new BackOffCommand());
     }
 
     private void emitCube()

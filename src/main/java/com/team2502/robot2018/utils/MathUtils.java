@@ -51,6 +51,11 @@ public final class MathUtils
 
     private MathUtils() { }
 
+    public static float shiftRadiansBounded(float initRadians, float shift)
+    {
+        return (initRadians + shift) % TAU;
+    }
+
     /**
      * @param x A number
      * @param y Another number
@@ -669,7 +674,7 @@ public final class MathUtils
         public static float getHeadingAbsolute()
         {
             float navx = (float) Robot.NAVX.getAngle();
-            return Geometry.getDTheta(0, navx);
+            return Geometry.getDThetaNavX(0, navx);
         }
 
         public static ImmutableVector2f getAbsoluteDPosLine(float vL, float vR, float dt, float robotHeading)
@@ -700,23 +705,92 @@ public final class MathUtils
             if(yawDeg < 0) { yawDeg = 360 + yawDeg; }
             return MathUtils.deg2Rad(yawDeg);
         }
+
+        /**
+         * turn an angle without bounds (-inf,inf) to [0,360)
+         * @param angle
+         * @return
+         */
+        public static float navXBound(float angle)
+        {
+            float bounded = angle % 360;
+            if(bounded < 0)
+            {
+                return 360+bounded;
+            }
+            return bounded;
+        }
     }
 
 
     public static class Geometry
     {
         /**
-         * @param initDegrees
-         * @param finalDegrees
+         * @param initDegrees init degrees navX (clockwise)
+         * @param finalDegrees final degrees navX (counterclockwise)
          * @return the difference in radians between the two degrees from [0,2pi). Increases counterclockwise.
          */
-        public static float getDTheta(float initDegrees, float finalDegrees)
+        public static float getDThetaNavX(float initDegrees, float finalDegrees)
         {
             float degDif = -(finalDegrees - initDegrees);
             double radians = MathUtils.deg2Rad(degDif);
             double radBounded = (radians % TAU);
             if(radBounded < 0) { return (float) (TAU + radBounded); }
             return (float) radBounded;
+        }
+
+        public static float getDAngle(float angle1, float angle2)
+        {
+            float simpleAngle1 = angle1 % 360;
+            float simpleAngle2 = angle2 % 360;
+            float dif = Math.abs(simpleAngle1 - simpleAngle2);
+            if(dif > 180)
+            {
+                dif = 360-dif;
+            }
+            return dif;
+        }
+
+        public static boolean isCCWQuickest(float angleInit, float angleFinal)
+        {
+            float d;
+            if(angleFinal > angleInit)
+            {
+                d = angleFinal - angleInit;
+                if(d > 180)
+                {
+                    // Since angles are by default cw (navX) this means we should go ccw
+                    return true;
+//                    d = 360-d;
+                }
+            }
+            else if(angleInit > angleFinal)
+            {
+                d = angleInit - angleFinal;
+                if(d > 180)
+                {
+                    d = 360-d;
+                }
+                else
+                {
+                    return true;
+//                    ccw = true;
+                }
+            }
+            return false;
+        }
+
+        /**
+         *
+         * @param start
+         * @param end
+         * @return The theta of the angle created ccw between \vec{i} and the line from start->end
+         */
+        public static float getThetaFromPoints(ImmutableVector2f start, ImmutableVector2f end)
+        {
+            float dx = end.x - start.x;
+            float dy = end.y - start.y;
+            return (float) Math.atan2(dy , dx);
         }
 
         /**

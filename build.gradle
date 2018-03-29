@@ -35,30 +35,28 @@ dependencies {
     testCompile 'junit:junit:4.12'
 }
 
-def branch() {
-    def branch = "DRIVER STATION"
+//def branch() {
 //    def proc = "git rev-parse --abbrev-ref HEAD".execute()
 //    proc.in.eachLine { line -> branch = line }
 //    proc.err.eachLine { line -> println line }
 //    proc.waitFor()
-    branch
-}
+//}
 
 def hash = { ->
-//    def stdout = new ByteArrayOutputStream()
-//    exec {
-//        commandLine 'git', 'rev-parse', '--short', 'HEAD'
-//        standardOutput = stdout
-//    }
-//    return stdout.toString().trim()
-    return "DRIVER STATION"
+    def stdout = new ByteArrayOutputStream()
+    exec {
+        commandLine 'git', 'rev-parse', '--short', 'HEAD'
+        standardOutput = stdout
+    }
+    return stdout.toString().trim()
+
 }
 
 jar {
     from configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
     manifest jaci.openrio.gradle.GradleRIOPlugin.javaManifest(ROBOT_CLASS)
     manifest {
-        attributes("branch": branch())
+//        attributes("branch": branch())
         attributes("commit": hash())
         attributes("version": version)
         attributes("time": new Date().format("yyyy-MM-dd HH:mm:ss"))
