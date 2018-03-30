@@ -31,12 +31,11 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     private final SpeedControllerGroup spgRight;
 
     private final SendablePIDTuner pidTuner;
-
+    private final float SPEED_LIMITER = 0.75F;
     double kP = .7D;
     double kI = 0.0;
     double kD = 0;
     double kF = 0;
-
     private float lastLeft;
     private float lastRight;
     private boolean isNegativePressed;
@@ -83,7 +82,6 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     }
 
     public void stop() { drive.stopMotor(); }
-
 
     private void setTeleopSettings(WPI_TalonSRX talon)
     {
@@ -227,7 +225,6 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
      * <br>
      * Make sure to set the motors according to the control mode. In auton, it's position. In teleop, it's percent voltage.
      *
-     *
      * @param leftWheel  Units for the left side of drivetrain
      * @param rightWheel Units for the right side of drivetrain
      */
@@ -293,6 +290,7 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     public void drive()
     {
         FloatPair speed = getSpeedTank();
+        speed.scale(SPEED_LIMITER);
         SmartDashboard.putNumber("speedL", -speed.left);
         SmartDashboard.putNumber("speedR", -speed.right);
 
@@ -505,6 +503,12 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
                 return left == pair.left && right == pair.right;
             }
             return false;
+        }
+
+        public void scale(double x)
+        {
+            this.left *= x;
+            this.right *= x;
         }
     }
 
