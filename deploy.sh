@@ -1,11 +1,11 @@
 #!/bin/bash
 
-COUNT=10
+COUNT=3
 
 while :
 do
 	./gradlew deploy && exit
 	sleep $COUNT
-	COUNT=$COUNT + 10
+	COUNT=$COUNT + 2
 done
 
