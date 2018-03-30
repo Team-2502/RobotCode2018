@@ -31,7 +31,7 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     private final SpeedControllerGroup spgRight;
 
     private final SendablePIDTuner pidTuner;
-    private final float SPEED_LIMITER = 0.75F;
+    private final float SPEED_LIMITER = 1.0F;
     double kP = .7D;
     double kI = 0.0;
     double kD = 0;
@@ -56,8 +56,8 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         rightRearTalon = new WPI_TalonSRX(RobotMap.Motor.DRIVE_TRAIN_BACK_RIGHT);
 
         // Add encoders (ask nicely for encoders on drivetrain)
-        leftRearTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute, 0, Constants.INIT_TIMEOUT);
-        rightRearTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute, 0, Constants.INIT_TIMEOUT);
+        leftRearTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, Constants.INIT_TIMEOUT);
+        rightRearTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, Constants.INIT_TIMEOUT);
 
 
         spgLeft = new SpeedControllerGroup(leftFrontTalonEnc, leftRearTalon);

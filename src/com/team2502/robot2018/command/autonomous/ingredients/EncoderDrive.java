@@ -48,7 +48,7 @@ public class EncoderDrive extends Command
     @Override
     protected boolean isFinished()
     {
-        return isTimedOut() || Math.abs(Robot.DRIVE_TRAIN.getAvgEncLoopError()) < 100;
+        return isTimedOut();// || Math.abs(Robot.DRIVE_TRAIN.getAvgEncLoopError()) < 100;
     }
 
     @Override
