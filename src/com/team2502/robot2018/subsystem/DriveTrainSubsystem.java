@@ -188,7 +188,7 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
      * @param controlMode The mode that the motors are being driven in
      */
 
-    private void runMotors(ControlMode controlMode, float leftWheel, float rightWheel) // double z
+    public void runMotors(ControlMode controlMode, float leftWheel, float rightWheel) // double z
     {
         // setting slaves as the talons w/ encoders is the only way it works ¯\_(ツ)_/¯
         leftRearTalon.follow(leftFrontTalonEnc);
@@ -432,6 +432,11 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         this.kF = kF;
         leftFrontTalonEnc.config_kF(0, kF, Constants.INIT_TIMEOUT);
         rightFrontTalonEnc.config_kF(0, kF, Constants.INIT_TIMEOUT);
+    }
+
+    public int getAvgEncLoopError()
+    {
+        return rightFrontTalonEnc.getClosedLoopError(0) / 2 + leftFrontTalonEnc.getClosedLoopError(0) / 2;
     }
 
     public enum DriveStrategyType implements Nameable

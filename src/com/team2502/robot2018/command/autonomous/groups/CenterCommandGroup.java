@@ -4,6 +4,8 @@ import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.command.autonomous.ingredients.*;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
+import static com.team2502.robot2018.Robot.autonStrategySelector;
+
 
 public class CenterCommandGroup extends CommandGroup
 {
@@ -18,6 +20,11 @@ public class CenterCommandGroup extends CommandGroup
         if(AUTO_GAME_DATA.charAt(0) == 'L')
         {
             goSwitchLeft();
+
+            if(autonStrategySelector.getSelected().equals(AutonStrategy.DANGEROUS))
+            {
+                secondCubeLeft();
+            }
         }
 
         else if(AUTO_GAME_DATA.charAt(0) == 'R')
@@ -38,6 +45,20 @@ public class CenterCommandGroup extends CommandGroup
         moveElevator();
         addSequential(new PurePursuitCommand(Paths.Center.rightSwitch));
         emitCubeSwitch();
+    }
+
+    private void secondCubeLeft()
+    {
+        addParallel(new ElevatorAutonCommand(1, 0));
+        addSequential(new FastRotateCommand(75, 8, -0.2F));
+
+        addSequential(new EncoderDrive(3, 4));
+        addParallel(new ShootCubeCommand(3, -1));
+
+        addSequential(new EncoderDrive(-3, 4));
+        addSequential(new FastRotateCommand(0, 8, -0.2F));
+        moveElevator();
+
     }
 
     private void moveElevator()

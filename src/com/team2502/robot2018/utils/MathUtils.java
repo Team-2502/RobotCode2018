@@ -539,6 +539,34 @@ public final class MathUtils
             ImmutableVector2f rotated = MathUtils.LinearAlgebra.rotate2D(relativeDPos, robotHeading);
             return rotated;
         }
+
+        /**
+
+         * turn an angle without bounds (-inf,inf) to [0,360)
+
+         * @param angle
+
+         * @return
+
+         */
+
+        public static float navXBound(float angle)
+
+        {
+
+            float bounded = angle % 360;
+
+            if(bounded < 0)
+
+            {
+
+                return 360+bounded;
+
+            }
+
+            return bounded;
+
+        }
     }
 
     public static class Geometry
@@ -693,6 +721,83 @@ public final class MathUtils
             }
             else if(between(lineP1, intersect2, lineP2)) { return new ImmutableVector2f[] { intersect2 }; }
             return new ImmutableVector2f[0];
+        }
+
+        public static boolean isCCWQuickest(float angleInit, float angleFinal)
+
+        {
+
+            float d;
+
+            if(angleFinal > angleInit)
+
+            {
+
+                d = angleFinal - angleInit;
+
+                if(d > 180)
+
+                {
+
+                    // Since angles are by default cw (navX) this means we should go ccw
+
+                    return true;
+
+//                    d = 360-d;
+
+                }
+
+            }
+
+            else if(angleInit > angleFinal)
+
+            {
+
+                d = angleInit - angleFinal;
+
+                if(d > 180)
+
+                {
+
+                    d = 360-d;
+
+                }
+
+                else
+
+                {
+
+                    return true;
+
+//                    ccw = true;
+
+                }
+
+            }
+
+            return false;
+
+        }
+        public static float getDAngle(float angle1, float angle2)
+
+        {
+
+            float simpleAngle1 = angle1 % 360;
+
+            float simpleAngle2 = angle2 % 360;
+
+            float dif = Math.abs(simpleAngle1 - simpleAngle2);
+
+            if(dif > 180)
+
+            {
+
+                dif = 360-dif;
+
+            }
+
+            return dif;
+
         }
     }
 }
