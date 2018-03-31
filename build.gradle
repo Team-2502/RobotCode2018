@@ -2,7 +2,7 @@ plugins {
     id "java"
     id "eclipse"
     id "idea"
-    id "jaci.openrio.gradle.GradleRIO" version "2018.01.22"
+    id "jaci.openrio.gradle.GradleRIO" version "2018.03.06"
     id "net.ltgt.apt" version "0.13"
 }
 
@@ -10,7 +10,12 @@ def TEAM = 2502
 def ROBOT_CLASS = "com.team2502.robot2018.Robot"
 
 deploy {
-    targets { target("roborio", jaci.openrio.gradle.frc.RoboRIO) { team = TEAM } }
+    targets { 
+        target("roborio", jaci.openrio.gradle.frc.RoboRIO) { 
+            team = TEAM 
+            timeout = 15
+        } 
+    }
     artifacts { artifact('frcJava', jaci.openrio.gradle.frc.FRCJavaArtifact) { targets << "roborio" } }
 }
 
@@ -31,25 +36,27 @@ dependencies {
     compile "org.joml:joml:1.9.9:beta0"
     compile group: 'com.google.guava', name: 'guava', version: '23.5-jre'
     compile group: 'org.apache.commons', name: 'commons-math3', version: '3.6.1'
+//    compileOnly group: 'org.xerial', name: 'sqlite-jdbc', version: '3.21.0.1'
+
+    testCompile 'junit:junit:4.12'
 }
 
 def branch() {
-    def branch = "DRIVER STATION"
-//    def proc = "git rev-parse --abbrev-ref HEAD".execute()
-//    proc.in.eachLine { line -> branch = line }
-//    proc.err.eachLine { line -> println line }
-//    proc.waitFor()
+    def branch = ""
+    def proc = "git rev-parse --abbrev-ref HEAD".execute()
+    proc.in.eachLine { line -> branch = line }
+    proc.err.eachLine { line -> println line }
+    proc.waitFor()
     branch
 }
 
 def hash = { ->
-//    def stdout = new ByteArrayOutputStream()
-//    exec {
-//        commandLine 'git', 'rev-parse', '--short', 'HEAD'
-//        standardOutput = stdout
-//    }
-//    return stdout.toString().trim()
-    return "DRIVER STATION"
+    def stdout = new ByteArrayOutputStream()
+    exec {
+        commandLine 'git', 'rev-parse', '--short', 'HEAD'
+        standardOutput = stdout
+    }
+    return stdout.toString().trim()
 }
 
 jar {
@@ -81,7 +88,7 @@ task wrapper(type: Wrapper) {
 
 sourceSets {
     main {
-        java { srcDirs = ['src/'] }
-        resources { srcDirs = ['res/'] }
+        java { srcDirs = ['src/main/java'] }
+        resources { srcDirs = ['src/main/resources'] }
     }
 }
