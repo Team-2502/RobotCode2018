@@ -72,13 +72,13 @@ public class Paths
                 new Waypoint(new ImmutableVector2f(1.5F, 22.0F), 0F, 20, -7),
                 new Waypoint(new ImmutableVector2f(4F, 21.2F), 0F, 20, -9), // max deceleration appears to be -7 ft / s^2
                 new Waypoint(new ImmutableVector2f(10F, 15F), 3F, 10, -9)
-                                                                    );
+                                                                            );
         //TODO: try navX calibration when auto begins ... generally 
         public static final List<Waypoint> leftSwitch = Arrays.asList( //TODO need to fix as was changed because I (Andrew) thought this was the path we were tweaking
-                new Waypoint(new ImmutableVector2f(0, 0), 0, 5, -5),
-                new Waypoint(new ImmutableVector2f(1.636F, 2.454F), 9F, 5, -5),
-                new Waypoint(new ImmutableVector2f(3.82006F, 5.726F), 6F, 5, -5),
-                new Waypoint(new ImmutableVector2f(3.82006F, 10.5F), 2F, 5, -5) // TODO: add ability to coast at end
+                                                                       new Waypoint(new ImmutableVector2f(0, 0), 0, 5, -5),
+                                                                       new Waypoint(new ImmutableVector2f(1.636F, 2.454F), 9F, 5, -5),
+                                                                       new Waypoint(new ImmutableVector2f(3.82006F, 5.726F), 6F, 5, -5),
+                                                                       new Waypoint(new ImmutableVector2f(3.82006F, 10.5F), 2F, 5, -5) // TODO: add ability to coast at end
                                                                      );
 
         public static final List<Waypoint> rightScale = Arrays.asList(
@@ -91,10 +91,20 @@ public class Paths
                 new Waypoint(new ImmutableVector2f(17F - 0.1666666667F, 22F), 0F, 10, -5)
                                                                      );
 
+        public static final List<Waypoint> leftScaleDeepNullZone = Arrays.asList(
+                new Waypoint(new ImmutableVector2f(0, 0), 0, 20, -10),
+                new Waypoint(new ImmutableVector2f(-0.5F, 11.589F), 16F, 20, -7, true),
+                new Waypoint(new ImmutableVector2f(-0.5F, 15.405F), 5F, 20, -7, true, new RaiseElevatorScale()),
+                new Waypoint(new ImmutableVector2f(-0.5F, 23.5F), 3F, 20, -7, true),
+                new Waypoint(new ImmutableVector2f(2.3F, 26.5F), 0F, 20, -7)
+                                                                                );
+
     }
 
     /**
-     * GMO-free soy-based paths for when your robot is placed on the right
+     * GMO-free soy-based paths for when your robot is placed on the right (Andrew? Ritik?)
+     * <p>
+     * These seem pretty processed to me... (Isaac)
      */
     public static class Right
     {
@@ -103,6 +113,8 @@ public class Paths
         public static final List<Waypoint> rightScale = flipY(Left.leftScale);
 
         public static final List<Waypoint> leftScale = flipY(Left.rightScale);
+
+        public static final List<Waypoint> rightScaleDeepNullZone = flipY(Left.leftScaleDeepNullZone);
 
     }
 

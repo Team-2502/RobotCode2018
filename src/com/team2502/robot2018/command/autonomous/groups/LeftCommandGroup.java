@@ -116,6 +116,11 @@ public class LeftCommandGroup extends CommandGroup
         emitCube();
     }
 
+    private void goDeepScaleLeft()
+    {
+        addSequential(new PurePursuitCommand(Paths.Left.leftScaleDeepNullZone));
+    }
+
     private void goScaleRight()
     {
         addSequential(new PurePursuitCommand(Paths.Left.rightScale));
