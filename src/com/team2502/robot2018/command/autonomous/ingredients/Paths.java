@@ -63,9 +63,10 @@ public class Paths
         public static final List<Waypoint> leftScale = Arrays.asList(
                 new Waypoint(new ImmutableVector2f(0, 0), 0, 20, -9),
                 new Waypoint(new ImmutableVector2f(-0.5F, 8.589F), 16F, 20, -7, true),
-                new Waypoint(new ImmutableVector2f(-0.5F, 12.405F), 5F, 20, -7, true, new RaiseElevatorScale()),
-                new Waypoint(new ImmutableVector2f(-0.5F, 20.5F), 3F, 20, -7, true),
-                new Waypoint(new ImmutableVector2f(2.3F, 23.5F), 0F, 20, -7) // max deceleration appears to be -7 ft / s^2
+                new Waypoint(new ImmutableVector2f(-0.5F, 12.405F), 15F, 20, -7, true, new RaiseElevatorScale()),
+                new Waypoint(new ImmutableVector2f(-0.5F, 20.5F), 5F, 20, -7, true),
+                new Waypoint(new ImmutableVector2f(-1.5F, 25F), 3F, 20, -7),
+                new Waypoint(new ImmutableVector2f(1.5F, 25.375F), 0F, 20, -7)
                                                                     );
 
         public static final List<Waypoint> leftScaleToSwitch = Arrays.asList(
