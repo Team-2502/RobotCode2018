@@ -35,11 +35,10 @@ public class ElevatorSubsystem extends NonDefaultSubsystem implements PIDTunable
 
     //    private double kF = 1D;
 //    private double kP = 1D;
-    private double kF = 0D;
+    private double kF = 0.2D;
     private double kP = 0.2D;
     private double kI = 0D;
     private double kD = 0D;
-
     private int timer;
 
     public ElevatorSubsystem()
@@ -133,7 +132,6 @@ public class ElevatorSubsystem extends NonDefaultSubsystem implements PIDTunable
         moveElevator(ControlMode.PercentOutput, speed);
     }
 
-
     /**
      * Move the elevator to a certain position
      *
@@ -148,7 +146,6 @@ public class ElevatorSubsystem extends NonDefaultSubsystem implements PIDTunable
         moveElevator(ControlMode.Position, epos);
 
     }
-
 
     /**
      * Stop the elevator by setting voltage output to 0
