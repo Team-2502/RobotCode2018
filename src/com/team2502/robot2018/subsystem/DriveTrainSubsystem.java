@@ -7,7 +7,6 @@ import com.team2502.robot2018.*;
 import com.team2502.robot2018.command.teleop.DriveCommand;
 import com.team2502.robot2018.sendables.Nameable;
 import com.team2502.robot2018.sendables.PIDTunable;
-import com.team2502.robot2018.sendables.SendableDriveStrategyType;
 import com.team2502.robot2018.sendables.SendablePIDTuner;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -20,16 +19,15 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class DriveTrainSubsystem extends Subsystem implements DashboardData.DashboardUpdater, PIDTunable
 {
     private static final FloatPair SPEED_CONTAINER = new FloatPair();
-
+    private static final float ACCELERATION_DIFF = 0.5F;
+    private static final float DIFF_COMPARISON = 0.15F;
     private final WPI_TalonSRX leftFrontTalonEnc;
     private final WPI_TalonSRX leftRearTalon;
     private final WPI_TalonSRX rightFrontTalonEnc;
     private final WPI_TalonSRX rightRearTalon;
-
     private final DifferentialDrive drive;
     private final SpeedControllerGroup spgLeft;
     private final SpeedControllerGroup spgRight;
-
     private final SendablePIDTuner pidTuner;
     private final float SPEED_LIMITER = 1.0F;
     double kP = .7D;
@@ -37,9 +35,8 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     double kD = 0;
     double kF = 0;
     private float lastLeft;
+    //    private boolean negative;
     private float lastRight;
-    private boolean isNegativePressed;
-    private boolean negative;
 
     public DriveTrainSubsystem()
     {
@@ -256,22 +253,20 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     {
         float joystickLevel;
         // Get the base speed of the robot
-        if(negative) { joystickLevel = (float) OI.JOYSTICK_DRIVE_RIGHT.getY(); }
-        else { joystickLevel = (float) OI.JOYSTICK_DRIVE_LEFT.getY(); }
+        joystickLevel = (float) OI.JOYSTICK_DRIVE_LEFT.getY();
 
         // Only increase the speed by a small amount
         float diff = joystickLevel - lastLeft;
-        if(diff > 0.1F) { joystickLevel = lastLeft + 0.1F; }
-        else if(diff < -0.1F) { joystickLevel = lastLeft - 0.1F; }
+        if(diff > DIFF_COMPARISON) { joystickLevel = lastLeft + ACCELERATION_DIFF; }
+        else if(diff < -DIFF_COMPARISON) { joystickLevel = lastLeft - ACCELERATION_DIFF; }
         lastLeft = joystickLevel;
         out.left = joystickLevel;
 
-        if(negative) { joystickLevel = (float) OI.JOYSTICK_DRIVE_LEFT.getY(); }
-        else { joystickLevel = (float) OI.JOYSTICK_DRIVE_RIGHT.getY(); }
+        joystickLevel = (float) OI.JOYSTICK_DRIVE_RIGHT.getY();
 
         diff = joystickLevel - lastRight;
-        if(diff > 0.1F) { joystickLevel = lastRight + 0.1F; }
-        else if(diff < -0.1F) { joystickLevel = lastRight - 0.1F; }
+        if(diff > DIFF_COMPARISON) { joystickLevel = lastRight + ACCELERATION_DIFF; }
+        else if(diff < -DIFF_COMPARISON) { joystickLevel = lastRight - ACCELERATION_DIFF; }
         lastRight = joystickLevel;
         out.right = joystickLevel;
 
@@ -293,22 +288,7 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         speed.scale(SPEED_LIMITER);
         SmartDashboard.putNumber("speedL", -speed.left);
         SmartDashboard.putNumber("speedR", -speed.right);
-
-        Nameable currentMode = SendableDriveStrategyType.INSTANCE.getCurrentMode();
-
-        if(!(currentMode instanceof DriveStrategyType))
-        {
-            throw new IllegalArgumentException("currentMode is of wrong type!"); // Note this acts as a return statement
-        }
-        DriveStrategyType strategyType = (DriveStrategyType) currentMode;
-        if(negative)
-        {
-            strategyType.getDriveStrategy().drive(speed.left, speed.right);
-        }
-        else
-        {
-            strategyType.getDriveStrategy().drive(-speed.left, -speed.right);
-        }
+        runMotorsTankDrive(-speed.left, -speed.right);
     }
 
     public float getTanSpeed()

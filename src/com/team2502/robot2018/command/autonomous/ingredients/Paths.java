@@ -72,7 +72,7 @@ public class Paths
                 new Waypoint(new ImmutableVector2f(1.5F, 22.0F), 0F, 20, -7),
                 new Waypoint(new ImmutableVector2f(4F, 21.2F), 0F, 20, -9), // max deceleration appears to be -7 ft / s^2
                 new Waypoint(new ImmutableVector2f(10F, 15F), 3F, 10, -9)
-                                                                    );
+                                                                            );
 
         public static final List<Waypoint> leftSwitch = Arrays.asList(
                 new Waypoint(new ImmutableVector2f(0, 0), 0, 5, -5),
@@ -91,10 +91,21 @@ public class Paths
                 new Waypoint(new ImmutableVector2f(17F - 0.1666666667F, 22F), 0F, 10, -5)
                                                                      );
 
+        public static final List<Waypoint> leftScaleDeepNullZone = Arrays.asList(
+                new Waypoint(new ImmutableVector2f(0, 0), 0, 20, -9),
+                new Waypoint(new ImmutableVector2f(-0.5F, 8.589F), 16F, 20, -7, true),
+                new Waypoint(new ImmutableVector2f(-0.5F, 12.405F), 15F, 20, -7, true, new RaiseElevatorScale()),
+                new Waypoint(new ImmutableVector2f(-0.5F, 20.5F), 5F, 20, -7, true),
+                new Waypoint(new ImmutableVector2f(-1.5F, 25F), 3F, 20, -7),
+                new Waypoint(new ImmutableVector2f(1.5F, 25.375F), 0F, 20, -7)
+                                                                                );
+
     }
 
     /**
-     * GMO-free soy-based paths for when your robot is placed on the right
+     * GMO-free soy-based paths for when your robot is placed on the right (Andrew? Ritik?)
+     * <p>
+     * These seem pretty processed to me... (Isaac)
      */
     public static class Right
     {
@@ -103,6 +114,8 @@ public class Paths
         public static final List<Waypoint> rightScale = flipY(Left.leftScale);
 
         public static final List<Waypoint> leftScale = flipY(Left.rightScale);
+
+        public static final List<Waypoint> rightScaleDeepNullZone = flipY(Left.leftScaleDeepNullZone);
 
     }
 

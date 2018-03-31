@@ -40,6 +40,9 @@ public class LeftCommandGroup extends CommandGroup
                             goSwitch();
                             break;
                         }
+                        case DEEP_SCALE:
+                            goDeepScaleLeft();
+                            break;
                     }
                     break;
                 case "LR":
@@ -49,8 +52,16 @@ public class LeftCommandGroup extends CommandGroup
 
 
                 case "RL":
-                    goScaleLeft();
-                    break;
+                    switch(Robot.autonStrategySelector.getSelected())
+                    {
+                        case SCALE:
+                            goScaleLeft();
+                            break;
+
+                        case DEEP_SCALE:
+                            goDeepScaleLeft();
+                            break;
+                    }
 
                 case "RR":
                     System.out.println("Going cross country!");
@@ -114,6 +125,11 @@ public class LeftCommandGroup extends CommandGroup
         addSequential(new ElevatorAutonCommand(3F, Constants.SWITCH_ELEV_HEIGHT_FT + 1));
 
         emitCube();
+    }
+
+    private void goDeepScaleLeft()
+    {
+        addSequential(new PurePursuitCommand(Paths.Left.leftScaleDeepNullZone));
     }
 
     private void goScaleRight()
