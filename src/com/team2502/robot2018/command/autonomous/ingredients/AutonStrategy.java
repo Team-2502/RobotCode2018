@@ -6,6 +6,7 @@ public enum AutonStrategy
     SCALE("Scale"),
     SWITCH_SCALE("Switch then Scale"),
     STRAIGHT("Straight"),
+    DEEP_SCALE("Far Scale"),
     DANGEROUS("Double switch UNDESTD");
 
     private final String name;

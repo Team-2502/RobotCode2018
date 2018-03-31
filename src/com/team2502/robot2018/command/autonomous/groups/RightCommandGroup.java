@@ -28,8 +28,16 @@ public class RightCommandGroup extends CommandGroup
                     break;
 
                 case "LR":
-                    goScaleRight();
-                    break;
+                    switch(Robot.autonStrategySelector.getSelected())
+                    {
+                        case SCALE:
+                            goScaleRight();
+                            break;
+
+                        case DEEP_SCALE:
+                            goDeepScaleRight();
+                            break;
+                    }
 
                 case "RL":
                     System.out.println("Going cross country!");
@@ -48,6 +56,9 @@ public class RightCommandGroup extends CommandGroup
                         case SWITCH_SCALE:
                             goScaleRight();
                             secondCubeRight();
+                            break;
+                        case DEEP_SCALE:
+                            goDeepScaleRight();
                             break;
                     }
                     break;
