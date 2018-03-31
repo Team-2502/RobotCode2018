@@ -47,10 +47,13 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
      */
     private final SendablePIDTuner pidTuner;
 
-    double kP = .7D;
-    double kI = 0.0;
-    double kD = 0;
-    double kF = 0;
+    private double kP = .7D;
+    private double kI = 0.0;
+    private double kD = 0;
+    private double kF = 0;
+
+    private static final float ACCELERATION_DIFF = 0.5F;
+    private static final float DIFF_COMPARISON = 0.15F;
 
     private float lastLeft;
     private float lastRight;
@@ -339,27 +342,24 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     {
         float joystickLevel;
         // Get the base speed of the robot
-        if(negative) { joystickLevel = (float) OI.JOYSTICK_DRIVE_RIGHT.getY(); }
-        else { joystickLevel = (float) OI.JOYSTICK_DRIVE_LEFT.getY(); }
+        joystickLevel = (float) OI.JOYSTICK_DRIVE_LEFT.getY();
 
         // Only increase the speed by a small amount
         float diff = joystickLevel - lastLeft;
-        if(diff > 0.1F) { joystickLevel = lastLeft + 0.1F; }
-        else if(diff < -0.1F) { joystickLevel = lastLeft - 0.1F; }
+        if(diff > DIFF_COMPARISON) { joystickLevel = lastLeft + ACCELERATION_DIFF; }
+        else if(diff < -DIFF_COMPARISON) { joystickLevel = lastLeft - ACCELERATION_DIFF; }
         lastLeft = joystickLevel;
         out.left = joystickLevel;
 
-        if(negative) { joystickLevel = (float) OI.JOYSTICK_DRIVE_LEFT.getY(); }
-        else { joystickLevel = (float) OI.JOYSTICK_DRIVE_RIGHT.getY(); }
+        joystickLevel = (float) OI.JOYSTICK_DRIVE_RIGHT.getY();
 
         diff = joystickLevel - lastRight;
-        if(diff > 0.1F) { joystickLevel = lastRight + 0.1F; }
-        else if(diff < -0.1F) { joystickLevel = lastRight - 0.1F; }
+        if(diff > DIFF_COMPARISON) { joystickLevel = lastRight + ACCELERATION_DIFF; }
+        else if(diff < -DIFF_COMPARISON) { joystickLevel = lastRight - ACCELERATION_DIFF; }
         lastRight = joystickLevel;
         out.right = joystickLevel;
 
         // Sets the speed to 0 if the speed is less than 0.05 and larger than -0.05
-        // Fixes "happy joysticks"
         if(Math.abs(out.left) < 0.05F) { out.left = 0.0F; }
         if(Math.abs(out.right) < 0.05F) { out.right = 0.0F; }
 
