@@ -38,7 +38,6 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     double kF = 0;
     private float lastLeft;
     private float lastRight;
-    private boolean isNegativePressed;
     private boolean negative;
 
     public DriveTrainSubsystem()
@@ -246,6 +245,7 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         rightRearTalon.set(ControlMode.Disabled, 0);
     }
 
+    private static final float ACCELERATION_DIFF = 0.4F;
     /**
      * Used to gradually increase the speed of the robot.
      *
@@ -261,8 +261,8 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
 
         // Only increase the speed by a small amount
         float diff = joystickLevel - lastLeft;
-        if(diff > 0.1F) { joystickLevel = lastLeft + 0.1F; }
-        else if(diff < -0.1F) { joystickLevel = lastLeft - 0.1F; }
+        if(diff > 0.1F) { joystickLevel = lastLeft + ACCELERATION_DIFF; }
+        else if(diff < -0.1F) { joystickLevel = lastLeft - ACCELERATION_DIFF; }
         lastLeft = joystickLevel;
         out.left = joystickLevel;
 
@@ -270,8 +270,8 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         else { joystickLevel = (float) OI.JOYSTICK_DRIVE_RIGHT.getY(); }
 
         diff = joystickLevel - lastRight;
-        if(diff > 0.1F) { joystickLevel = lastRight + 0.1F; }
-        else if(diff < -0.1F) { joystickLevel = lastRight - 0.1F; }
+        if(diff > 0.1F) { joystickLevel = lastRight + ACCELERATION_DIFF; }
+        else if(diff < -0.1F) { joystickLevel = lastRight - ACCELERATION_DIFF; }
         lastRight = joystickLevel;
         out.right = joystickLevel;
 
@@ -294,20 +294,13 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         SmartDashboard.putNumber("speedL", -speed.left);
         SmartDashboard.putNumber("speedR", -speed.right);
 
-        Nameable currentMode = SendableDriveStrategyType.INSTANCE.getCurrentMode();
-
-        if(!(currentMode instanceof DriveStrategyType))
-        {
-            throw new IllegalArgumentException("currentMode is of wrong type!"); // Note this acts as a return statement
-        }
-        DriveStrategyType strategyType = (DriveStrategyType) currentMode;
         if(negative)
         {
-            strategyType.getDriveStrategy().drive(speed.left, speed.right);
+            runMotorsTankDrive(speed.left, speed.right);
         }
         else
         {
-            strategyType.getDriveStrategy().drive(-speed.left, -speed.right);
+            runMotorsTankDrive(-speed.left, -speed.right);
         }
     }
 
