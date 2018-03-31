@@ -1,6 +1,7 @@
 package com.team2502.robot2018;
 
 import com.team2502.robot2018.command.teleop.CalibrateRobotCommand;
+import com.team2502.robot2018.trajectory.record.connectDB;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import java.util.ArrayList;
@@ -26,6 +27,7 @@ public final class DashboardData
     {
         for(DashboardUpdater subsystem : updaters) { subsystem.updateDashboard(); }
         updateNavX();
+        ppRecord();
     }
 
     /**
@@ -49,8 +51,15 @@ public final class DashboardData
     }
 
     /**
-     * An interface to allow you to automatically update stuff
-     * on the Smart Dashboard.
+     * Dashboard widget used to enable and disable Pure Pursuit Record function.
+     */
+    private static void ppRecord(){
+        connectDB.setEnabled(SmartDashboard.getBoolean("", false));
+        SmartDashboard.putBoolean("", connectDB.isStorage());
+    }
+
+    /**
+     * An interface to allow you to automatically update stuff on the Smart Dashboard.
      */
     @FunctionalInterface
     public interface DashboardUpdater
