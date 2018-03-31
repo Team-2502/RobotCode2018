@@ -12,7 +12,8 @@ public enum AutonStrategy
     SCALE("Scale"),
     SCALE_TWICE("Scale and then Scale again"),
     SCALE_SWITCH("Scale and then Switch"),
-    STRAIGHT("Straight");
+    STRAIGHT("Straight"),
+    FCC("Force Cross Country");
 
     private final String name;
 
