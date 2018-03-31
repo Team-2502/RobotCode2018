@@ -17,7 +17,6 @@ public class RaiseElevatorScale extends CommandGroup
 //        addSequential(new WaitCommand(timeout));
         addParallel(new WiggleActiveRotate());
 //        addSequential(new ElevatorAutonCommand(3F, Constants.SCALE_ELEV_HEIGHT_FT));
-//        addSequential(new ElevatorAutonCommand(3F, Constants.SCALE_ELEV_HEIGHT_FT));
-        addSequential(new ElevatorAutonDeadreckoningCommand(3,1));
+        addSequential(new ElevatorAutonCommand(3F, Constants.SCALE_ELEV_HEIGHT_FT));
     }
 }

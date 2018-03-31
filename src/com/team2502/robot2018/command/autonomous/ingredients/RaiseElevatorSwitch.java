@@ -10,7 +10,7 @@ public class RaiseElevatorSwitch extends CommandGroup
     {
         addSequential(new WaitCommand(0.5));
         addParallel(new ActiveIntakeRotate(0.4, 0.8));
-//        addParallel(new ElevatorAutonCommand(1.0F, Constants.SWITCH_ELEV_HEIGHT_FT));
-        addParallel(new ElevatorAutonDeadreckoningCommand(1,1));
+        addParallel(new ElevatorAutonCommand(1.0F, Constants.SWITCH_ELEV_HEIGHT_FT));
+
     }
 }
