@@ -79,8 +79,10 @@ public class RightCommandGroup extends CommandGroup
 
     private void goSwitch()
     {
+        addParallel(new RaiseElevatorSwitch());
+
         addSequential(new PurePursuitCommand(Paths.Right.rightSwitch));
-        addSequential(new ElevatorAutonCommand(.8F, Constants.SWITCH_ELEV_HEIGHT_FT));
+
         addSequential(new ActiveIntakeRotate(0.35, 1));
 
         emitCube();
