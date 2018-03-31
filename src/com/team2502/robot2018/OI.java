@@ -44,9 +44,9 @@ public final class OI
         ELEV_DOWN.whileHeld(new ElevatorCommand(-0.5));
 
         // Active Intake buttons
-        INTAKE_IN.whileHeld(new ActiveIntakeCommand(1.0));
-        INTAKE_OUT_SLOW.whileHeld(new ActiveIntakeCommand(-0.5));
-        INTAKE_OUT_FAST.whileHeld(new ActiveIntakeCommand(-1.0));
+        INTAKE_IN.whileHeld(new ActiveIntakeTeleopCommand(1.0));
+        INTAKE_OUT_SLOW.whileHeld(new ActiveIntakeTeleopCommand(-0.5));
+        INTAKE_OUT_FAST.whileHeld(new ActiveIntakeTeleopCommand(-1.0));
 
         OPEN_INTAKE.whenPressed(new ToggleIntakeCommand());
 

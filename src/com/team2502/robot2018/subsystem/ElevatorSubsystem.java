@@ -221,7 +221,7 @@ public class ElevatorSubsystem extends Subsystem implements PIDTunable, Dashboar
     public double getPos()
     {
         int selectedSensorPosition = elevatorBottom.getSelectedSensorPosition(0);
-        System.out.println("epos real: "+selectedSensorPosition);
+//        System.out.println("epos real: "+selectedSensorPosition);
         return selectedSensorPosition;
     }
 

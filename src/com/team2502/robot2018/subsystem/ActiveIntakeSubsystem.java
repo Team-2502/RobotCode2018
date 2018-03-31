@@ -32,6 +32,12 @@ public class ActiveIntakeSubsystem extends Subsystem
         rightIntake.set(ControlMode.PercentOutput, -speed);
     }
 
+    public void runIntakeIndependent(double speedLeft, double speedRight)
+    {
+        leftIntake.set(ControlMode.PercentOutput, -speedLeft);
+        rightIntake.set(ControlMode.PercentOutput, -speedRight);
+    }
+
     public void stopIntake()
     {
         rotateIntake(0.0D);
