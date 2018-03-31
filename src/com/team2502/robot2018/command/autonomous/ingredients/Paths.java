@@ -77,9 +77,9 @@ public class Paths
         //TODO: try navX calibration when auto begins ... generally 
         public static final List<Waypoint> leftSwitch = Arrays.asList( //TODO need to fix as was changed because I (Andrew) thought this was the path we were tweaking
                 new Waypoint(new ImmutableVector2f(0, 0), 0, 5, -5),
-                new Waypoint(new ImmutableVector2f(1.636F, 2.454F), 9F, 5, -5),
-                new Waypoint(new ImmutableVector2f(3.82006F, 5.726F), 6F, 5, -5),
-                new Waypoint(new ImmutableVector2f(3.82006F, 10.5F), 2F, 5, -5) // TODO: add ability to coast at end
+                new Waypoint(new ImmutableVector2f(0, 2.454F), 9F, 5, -5),
+                new Waypoint(new ImmutableVector2f(0, 9), 6F, 5, -5),
+                new Waypoint(new ImmutableVector2f(3.82006F, 12.5F), 2F, 5, -5) // TODO: add ability to coast at end
                                                                      );
 
         public static final List<Waypoint> rightScale = Arrays.asList(
