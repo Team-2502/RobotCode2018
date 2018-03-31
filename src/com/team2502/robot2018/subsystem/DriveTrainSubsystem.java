@@ -19,8 +19,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class DriveTrainSubsystem extends Subsystem implements DashboardData.DashboardUpdater, PIDTunable
 {
     private static final FloatPair SPEED_CONTAINER = new FloatPair();
-    private static final float ACCELERATION_DIFF = 0.4F;
-    private static final float DIFF_COMPARISON = 0.0F;
+    private static final float ACCELERATION_DIFF = 0.5F;
+    private static final float DIFF_COMPARISON = 0.15F;
     private final WPI_TalonSRX leftFrontTalonEnc;
     private final WPI_TalonSRX leftRearTalon;
     private final WPI_TalonSRX rightFrontTalonEnc;
