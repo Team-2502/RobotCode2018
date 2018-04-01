@@ -12,7 +12,7 @@ public class Constants
     /**
      * How high the elevator must be in order to put a cube in the switch
      */
-    public static final float SWITCH_ELEV_HEIGHT_FT = 2F;
+    public static final float SWITCH_ELEV_HEIGHT_FT = 2.7F;
 
     /**
      * How high the elevator must be in order to put a cube in the scale

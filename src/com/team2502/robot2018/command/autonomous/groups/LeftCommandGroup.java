@@ -91,10 +91,8 @@ public class LeftCommandGroup extends CommandGroup
 
     private void goScaleLeft()
     {
-
         addParallel(new ActiveIntakeRotate(1, 0.5));
         addSequential(new PurePursuitCommand(Paths.Left.leftScale));
-
         addSequential(new ToggleIntakeCommand());
         addSequential(new ActiveIntakeRotate(.25F, -0.5));
 
