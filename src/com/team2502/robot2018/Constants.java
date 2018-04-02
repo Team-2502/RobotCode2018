@@ -131,5 +131,10 @@ public class Constants
          * Base time between trajectory points
          */
         public static final int BASE_TRAJ_PERIOD = 0;
+
+        /**
+         * The minimum number of points in the low-level buffer before we will start executing the motion profile
+         */
+        public static final int MIN_PTS_BUFFER_CNT = 10;
     }
 }

@@ -1,5 +1,6 @@
 package com.team2502.robot2018.subsystem;
 
+import com.ctre.phoenix.motion.SetValueMotionProfile;
 import com.ctre.phoenix.motion.TrajectoryPoint;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
@@ -27,10 +28,10 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     private static final FloatPair SPEED_CONTAINER = new FloatPair();
     private static final float ACCELERATION_DIFF = 0.5F;
     private static final float DIFF_COMPARISON = 0.15F;
-    private final WPI_TalonSRX leftFrontTalonEnc;
-    private final WPI_TalonSRX leftRearTalon;
-    private final WPI_TalonSRX rightFrontTalonEnc;
-    private final WPI_TalonSRX rightRearTalon;
+    public final WPI_TalonSRX leftFrontTalonEnc;
+    public final WPI_TalonSRX leftRearTalon;
+    public final WPI_TalonSRX rightFrontTalonEnc;
+    public final WPI_TalonSRX rightRearTalon;
     private final DifferentialDrive drive;
     private final SpeedControllerGroup spgLeft;
     private final SpeedControllerGroup spgRight;
@@ -458,6 +459,11 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     public int getAvgEncLoopError()
     {
         return rightFrontTalonEnc.getClosedLoopError(0) / 2 + leftFrontTalonEnc.getClosedLoopError(0) / 2;
+    }
+
+    public void setMotionProfilingState(SetValueMotionProfile motionProfilingState)
+    {
+        leftFrontTalonEnc.set(ControlMode.MotionProfile, motionProfilingState.value);
     }
 
     public enum DriveStrategyType implements Nameable

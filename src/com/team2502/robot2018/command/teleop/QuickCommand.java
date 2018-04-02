@@ -13,7 +13,6 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 @Deprecated
 public class QuickCommand extends InstantCommand
 {
-    @Undefined(safe = true)
     final Runnable action;
 
     public QuickCommand(Runnable action)
