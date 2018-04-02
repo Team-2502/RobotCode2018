@@ -1,8 +1,10 @@
 package com.team2502.robot2018.subsystem;
 
+import com.ctre.phoenix.motion.TrajectoryPoint;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.sun.tools.internal.jxc.ap.Const;
 import com.team2502.robot2018.*;
 import com.team2502.robot2018.command.teleop.DriveCommand;
 import com.team2502.robot2018.sendables.Nameable;
@@ -12,6 +14,10 @@ import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import jaci.pathfinder.Pathfinder;
+import jaci.pathfinder.Trajectory;
+
+import static com.team2502.robot2018.Constants.msToSec;
 
 /**
  * Example Implementation, Many changes needed.
@@ -125,8 +131,45 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     {
         setupTalons();
         Robot.TRANSMISSION_SOLENOID.setLowGear(true);
-        // Set high gear
     }
+
+    public void loadTrajectoryPoints(Trajectory trajLeft, Trajectory trajRight)
+    {
+        setAutonSettings();
+        loadTrajectoryPoints(trajLeft, leftFrontTalonEnc);
+        loadTrajectoryPoints(trajRight, rightFrontTalonEnc);
+    }
+
+    private void loadTrajectoryPoints(Trajectory traj, WPI_TalonSRX talon)
+    {
+        talon.clearMotionProfileTrajectories();
+        talon.clearMotionProfileHasUnderrun(Constants.LOOP_TIMEOUT);
+        talon.configMotionProfileTrajectoryPeriod(Constants.SRXProfiling.BASE_TRAJ_PERIOD, Constants.INIT_TIMEOUT);
+
+        for(int i = 0; i < traj.segments.length; i++)
+        {
+            Trajectory.Segment segment = traj.get(i);
+            TrajectoryPoint point = new TrajectoryPoint();
+
+            point.headingDeg = segment.heading;
+
+            point.isLastPoint = i + 1 == traj.segments.length;
+
+            point.timeDur = TrajectoryPoint.TrajectoryDuration.Trajectory_Duration_0ms.valueOf((int) msToSec(segment.dt));
+
+            point.position = segment.position;
+            point.velocity = segment.velocity;
+
+            point.zeroPos = !Constants.SRXProfiling.USE_ABSOLUTE_COORDS && i == 0;
+
+            point.profileSlotSelect0 = 0;
+            point.profileSlotSelect1 = 0;
+
+            talon.pushMotionProfileTrajectory(point);
+        }
+    }
+
+
 
     public void setPID()
     {
