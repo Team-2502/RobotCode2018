@@ -1,7 +1,7 @@
 package com.team2502.robot2018;
 
 import com.team2502.ctannotationprocessor.Undefined;
-import com.team2502.robot2018.pathplanning.Lookahead;
+import com.team2502.robot2018.pathplanning.purepursuit.Lookahead;
 import com.team2502.robot2018.utils.InterpolationMap;
 
 /**
