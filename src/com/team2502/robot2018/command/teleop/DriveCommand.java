@@ -1,8 +1,8 @@
 package com.team2502.robot2018.command.teleop;
 
 import com.team2502.robot2018.Robot;
-import com.team2502.robot2018.trajectory.localization.EncoderDifferentialDriveLocationEstimator;
-import com.team2502.robot2018.trajectory.localization.NavXLocationEstimator;
+import com.team2502.robot2018.pathplanning.localization.EncoderDifferentialDriveLocationEstimator;
+import com.team2502.robot2018.pathplanning.localization.NavXLocationEstimator;
 import com.team2502.robot2018.utils.Stopwatch;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;

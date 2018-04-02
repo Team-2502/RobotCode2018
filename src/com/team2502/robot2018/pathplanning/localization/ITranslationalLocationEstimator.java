@@ -1,4 +1,4 @@
-package com.team2502.robot2018.trajectory.localization;
+package com.team2502.robot2018.pathplanning.localization;
 
 import org.joml.ImmutableVector2f;
 

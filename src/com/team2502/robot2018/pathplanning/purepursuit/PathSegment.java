@@ -1,4 +1,4 @@
-package com.team2502.robot2018.trajectory;
+package com.team2502.robot2018.pathplanning.purepursuit;
 
 /**
  *  Makes segments created by two {@link Waypoint}s easier to work with in {@link Path}

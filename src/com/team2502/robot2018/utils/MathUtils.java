@@ -492,7 +492,7 @@ public final class MathUtils
 
         public static ImmutableVector2f getRelativeDPosCurve(float vL, float vR, float l, float dt)
         {
-            // To account for an infinite trajectory radius when going straight
+            // To account for an infinite pathplanning radius when going straight
             if(Math.abs(vL - vR) <= (vL + vR) * 1E-2)
             {
                 // Probably average is not needed, but it may be useful over long distances
