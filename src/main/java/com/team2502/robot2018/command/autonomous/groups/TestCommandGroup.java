@@ -2,17 +2,10 @@ package com.team2502.robot2018.command.autonomous.groups;
 
 
 import com.team2502.robot2018.Robot;
-import com.team2502.robot2018.command.autonomous.ingredients.ElevatorAutonCommand;
 import com.team2502.robot2018.command.autonomous.ingredients.FastRotateCommand;
-import com.team2502.robot2018.command.autonomous.ingredients.PurePursuitCommand;
-import com.team2502.robot2018.trajectory.Waypoint;
+import com.team2502.robot2018.pathplanning.trajectory.Waypoint;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.command.WaitCommand;
-import org.joml.ImmutableVector2f;
-
-import java.util.Arrays;
-
-import static com.team2502.robot2018.Constants.Physical.Elevator;
 
 /**
  * Should be used for all testing to make sure that we don't test something

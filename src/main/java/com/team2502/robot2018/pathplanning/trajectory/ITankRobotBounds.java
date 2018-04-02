@@ -1,4 +1,4 @@
-package com.team2502.robot2018.trajectory;
+package com.team2502.robot2018.pathplanning.trajectory;
 
 public interface ITankRobotBounds
 {

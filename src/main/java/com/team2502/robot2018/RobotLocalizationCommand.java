@@ -1,8 +1,8 @@
 package com.team2502.robot2018;
 
-import com.team2502.robot2018.trajectory.localization.IRotationalLocationEstimator;
-import com.team2502.robot2018.trajectory.localization.ITranslationalLocationEstimator;
-import com.team2502.robot2018.trajectory.localization.ITranslationalVelocityEstimator;
+import com.team2502.robot2018.pathplanning.localization.IRotationalLocationEstimator;
+import com.team2502.robot2018.pathplanning.localization.ITranslationalLocationEstimator;
+import com.team2502.robot2018.pathplanning.localization.ITranslationalVelocityEstimator;
 import com.team2502.robot2018.utils.MathUtils;
 import edu.wpi.first.wpilibj.command.Command;
 import org.joml.ImmutableVector2f;

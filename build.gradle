@@ -26,11 +26,11 @@ repositories {
 }
 
 dependencies {
+    compile pathfinder()
     compile wpilib()
     compile ctre()
     compile navx()
     compile openrio.powerup.matchData()
-    compile pathfinder()
 
     compile "com.team2502.ctannotationprocessor:CTAnnotationProcessor:1.0"
     apt     "com.team2502.ctannotationprocessor:CTAnnotationProcessor:1.0"

@@ -1,4 +1,4 @@
-package com.team2502.robot2018.trajectory;
+package com.team2502.robot2018.pathplanning.trajectory;
 
 /**
  * An attempt at Trapezoidal Motion Profiling that might work but has never been tested.

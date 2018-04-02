@@ -1,4 +1,4 @@
-package com.team2502.robot2018.trajectory;
+package com.team2502.robot2018.pathplanning.trajectory;
 
 import com.team2502.robot2018.Robot;
 import edu.wpi.first.wpilibj.command.Command;

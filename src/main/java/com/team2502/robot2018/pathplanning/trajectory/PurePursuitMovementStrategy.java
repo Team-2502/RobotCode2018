@@ -1,10 +1,10 @@
-package com.team2502.robot2018.trajectory;
+package com.team2502.robot2018.pathplanning.trajectory;
 
 import com.team2502.robot2018.Constants;
 import com.team2502.robot2018.Robot;
-import com.team2502.robot2018.trajectory.localization.IRotationalLocationEstimator;
-import com.team2502.robot2018.trajectory.localization.ITranslationalLocationEstimator;
-import com.team2502.robot2018.trajectory.localization.ITranslationalVelocityEstimator;
+import com.team2502.robot2018.pathplanning.localization.IRotationalLocationEstimator;
+import com.team2502.robot2018.pathplanning.localization.ITranslationalLocationEstimator;
+import com.team2502.robot2018.pathplanning.localization.ITranslationalVelocityEstimator;
 import com.team2502.robot2018.utils.Files;
 import com.team2502.robot2018.utils.MathUtils;
 import org.joml.ImmutableVector2f;

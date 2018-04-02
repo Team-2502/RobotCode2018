@@ -1,7 +1,7 @@
 package com.team2502.robot2018.command.autonomous.ingredients;
 
 import com.team2502.robot2018.Change;
-import com.team2502.robot2018.trajectory.Waypoint;
+import com.team2502.robot2018.pathplanning.trajectory.Waypoint;
 import org.joml.ImmutableVector2f;
 
 import java.util.ArrayList;
