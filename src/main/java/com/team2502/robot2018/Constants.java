@@ -172,4 +172,28 @@ public class Constants
             private Encoder() { }
         }
     }
+
+    public static class SRXProfiling
+    {
+        public static final int SAMPLES_HIGH = 100000;
+
+        public static final int SAMPLES_LOW = 10000;
+
+        public static final int SAMPLES_FAST = 1000;
+
+        public static final double MAX_VEL_FPS = 10;
+        public static final double MAX_ACCEL_FPS2 = 15;
+        public static final double MAX_JERK_FPS3 = 30;
+
+        public static final double WHEELBASE_WIDTH = PurePursuit.LATERAL_WHEEL_DISTANCE_FT;
+        public static final boolean USE_ABSOLUTE_COORDS = true;
+
+        /**
+         * Base time between trajectory points
+         */
+        public static final int BASE_TRAJ_PERIOD = 0;
+
+        public static final int PERIOD_MS = 10;
+        public static final double PERIOD_SEC = PERIOD_MS / 1000D;
+    }
 }

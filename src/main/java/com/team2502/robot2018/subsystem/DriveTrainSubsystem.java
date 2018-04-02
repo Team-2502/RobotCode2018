@@ -1,5 +1,6 @@
 package com.team2502.robot2018.subsystem;
 
+import com.ctre.phoenix.motion.TrajectoryPoint;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
@@ -13,6 +14,7 @@ import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import jaci.pathfinder.Trajectory;
 
 /**
  * Example Implementation, Many changes needed.
@@ -120,6 +122,48 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         talon.configPeakOutputReverse(-1.0D, Constants.INIT_TIMEOUT);
 
         talon.setInverted(true);
+    }
+
+    public void loadTrajectoryPoints(Trajectory trajLeft, Trajectory trajRight)
+    {
+        setAutonSettings();
+        loadTrajectoryPoints(trajLeft, leftFrontTalonEnc);
+        loadTrajectoryPoints(trajRight, rightFrontTalonEnc);
+    }
+
+    private void loadTrajectoryPoints(Trajectory traj, WPI_TalonSRX talon)
+    {
+        talon.clearMotionProfileTrajectories();
+        talon.clearMotionProfileHasUnderrun(Constants.LOOP_TIMEOUT);
+        talon.configMotionProfileTrajectoryPeriod(Constants.SRXProfiling.BASE_TRAJ_PERIOD, Constants.INIT_TIMEOUT);
+
+        for(int i = 0; i < traj.segments.length; i++)
+        {
+            Trajectory.Segment segment = traj.get(i);
+            TrajectoryPoint point = new TrajectoryPoint();
+
+            point.headingDeg = segment.heading;
+
+            point.isLastPoint = i + 1 == traj.segments.length;
+
+            point.timeDur = TrajectoryPoint.TrajectoryDuration.Trajectory_Duration_0ms.valueOf(Constants.SRXProfiling.PERIOD_MS);
+
+            point.position = segment.position;
+            point.velocity = segment.velocity;
+
+            point.zeroPos = !Constants.SRXProfiling.USE_ABSOLUTE_COORDS && i == 0;
+
+            point.profileSlotSelect0 = 0;
+            point.profileSlotSelect1 = 0;
+
+            talon.pushMotionProfileTrajectory(point);
+        }
+    }
+
+    public void processMotionProfileBuffer()
+    {
+        leftFrontTalonEnc.processMotionProfileBuffer();
+        rightFrontTalonEnc.processMotionProfileBuffer();
     }
 
     /**
@@ -429,12 +473,14 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
 
     /**
      * Assuming we are in a PID loop, return the average error for the 2 sides of the drivetrain
+     *
      * @return the average error
      */
     public double getAvgEncLoopError()
     {
         return (leftFrontTalonEnc.getClosedLoopError(0) + rightFrontTalonEnc.getClosedLoopError(0)) / 2;
     }
+
     /**
      * @return Turns "fake" units into real wheel revolutions
      */
@@ -488,9 +534,9 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     public float getRightPosRaw() { return rightFrontTalonEnc.getSelectedSensorPosition(0);}
 
     /**
-     * @deprecated think this is wrong
      * @param inches
      * @return
+     * @deprecated think this is wrong
      */
     public float inchesToEncUnits(float inches)
     {
