@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import jaci.pathfinder.Pathfinder;
 import jaci.pathfinder.Trajectory;
 
 /**
@@ -124,6 +125,11 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         talon.setInverted(true);
     }
 
+    /**
+     * Load trajectory points into the talons, where trajectory points are in feet
+     * @param trajLeft The trajectory for the left side
+     * @param trajRight The trajectory for the right side
+     */
     public void loadTrajectoryPoints(Trajectory trajLeft, Trajectory trajRight)
     {
         setAutonSettings();
@@ -131,6 +137,11 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         loadTrajectoryPoints(trajRight, rightFrontTalonEnc);
     }
 
+    /**
+     * Load some trajectory points into a particular talon
+     * @param traj The trajectory points in question, with points in feet
+     * @param talon The talon in question
+     */
     private void loadTrajectoryPoints(Trajectory traj, WPI_TalonSRX talon)
     {
         talon.clearMotionProfileTrajectories();
@@ -142,14 +153,15 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
             Trajectory.Segment segment = traj.get(i);
             TrajectoryPoint point = new TrajectoryPoint();
 
-            point.headingDeg = segment.heading;
+            // Trajectory headings are in radians, but SRX wants them in degrees
+            point.headingDeg = Pathfinder.r2d(segment.heading);
 
             point.isLastPoint = i + 1 == traj.segments.length;
 
             point.timeDur = TrajectoryPoint.TrajectoryDuration.Trajectory_Duration_0ms.valueOf(Constants.SRXProfiling.PERIOD_MS);
 
-            point.position = segment.position;
-            point.velocity = segment.velocity;
+            point.position = fakeToRealEncUnits((float) segment.position * Constants.Physical.DriveTrain.FEET_TO_EPOS_DT);
+            point.velocity = fakeToRealEncUnits((float) segment.velocity * Constants.Physical.DriveTrain.FPS_TO_EVEL_DT);
 
             point.zeroPos = !Constants.SRXProfiling.USE_ABSOLUTE_COORDS && i == 0;
 
