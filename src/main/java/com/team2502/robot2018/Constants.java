@@ -3,6 +3,10 @@ package com.team2502.robot2018;
 import com.team2502.ctannotationprocessor.Undefined;
 import com.team2502.robot2018.pathplanning.trajectory.Lookahead;
 import com.team2502.robot2018.utils.InterpolationMap;
+import jaci.pathfinder.Trajectory;
+import jaci.pathfinder.Trajectory.Config;
+
+import static jaci.pathfinder.Trajectory.FitMethod.HERMITE_QUINTIC;
 
 /**
  * Constant variables generally pertaining to Pure Pursuit and encoders
@@ -195,5 +199,7 @@ public class Constants
 
         public static final int PERIOD_MS = 10;
         public static final double PERIOD_SEC = PERIOD_MS / 1000D;
+        public static final int MIN_POINTS = 5;
+        public static final Config CONFIG_SETTINGS = new Config(HERMITE_QUINTIC, SAMPLES_LOW, PERIOD_SEC, MAX_VEL_FPS, MAX_ACCEL_FPS2, MAX_JERK_FPS3);
     }
 }
