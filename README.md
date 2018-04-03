@@ -12,4 +12,4 @@
 ## Special Thanks To
 ![Image YourKit](https://jitsi.org/wp-content/uploads/2017/01/logo-yourkit.png)
 
-[YourKit](http://www.yourkit.com/), the makers of an incredible Java and .NET profiler, help us make our robot code run _fast_. We are currently in the process of requesting an OSS license for Team 2502. 
+[YourKit](http://www.yourkit.com/), the makers of an incredible Java and .NET profiler, help us make our robot code run _fast_. We are currently in the process of requesting an Open Source license for Team 2502. 
