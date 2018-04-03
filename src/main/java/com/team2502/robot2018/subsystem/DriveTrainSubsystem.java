@@ -1,5 +1,7 @@
 package com.team2502.robot2018.subsystem;
 
+import com.ctre.phoenix.motion.MotionProfileStatus;
+import com.ctre.phoenix.motion.SetValueMotionProfile;
 import com.ctre.phoenix.motion.TrajectoryPoint;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
@@ -132,9 +134,46 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
      */
     public void loadTrajectoryPoints(Trajectory trajLeft, Trajectory trajRight)
     {
-        setAutonSettings();
+        setMotionProfileSettings();
         loadTrajectoryPoints(trajLeft, leftFrontTalonEnc);
         loadTrajectoryPoints(trajRight, rightFrontTalonEnc);
+    }
+
+    /**
+     * Sets auton settings and makes the talons update faster
+     */
+    private void setMotionProfileSettings()
+    {
+        setAutonSettings();
+        leftFrontTalonEnc.changeMotionControlFramePeriod(Constants.SRXProfiling.PERIOD_MS  / 2);
+        rightFrontTalonEnc.changeMotionControlFramePeriod(Constants.SRXProfiling.PERIOD_MS  / 2);
+    }
+
+    /**
+     * Make the talons update at their normal rate. Doing so reduces CAN bus utilization.
+     */
+    public void resetTalonControlFramePeriod()
+    {
+        leftFrontTalonEnc.changeMotionControlFramePeriod(20);
+        rightFrontTalonEnc.changeMotionControlFramePeriod(20);
+    }
+
+    /**
+     * Update the given status with the status of the left side
+     *
+     * Hopefully, the status of the left and right side should be the same
+     *
+     * @param status The status reference to update
+     */
+    public void updateStatus(MotionProfileStatus status)
+    {
+        leftFrontTalonEnc.getMotionProfileStatus(status);
+    }
+
+    public void clearMotionProfileHasUnderrun()
+    {
+        leftFrontTalonEnc.clearMotionProfileHasUnderrun(Constants.LOOP_TIMEOUT);
+        rightFrontTalonEnc.clearMotionProfileHasUnderrun(Constants.LOOP_TIMEOUT);
     }
 
     /**
@@ -160,6 +199,7 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
 
             point.timeDur = TrajectoryPoint.TrajectoryDuration.Trajectory_Duration_0ms.valueOf(Constants.SRXProfiling.PERIOD_MS);
 
+            //todo: shift by current pos
             point.position = fakeToRealEncUnits((float) segment.position * Constants.Physical.DriveTrain.FEET_TO_EPOS_DT);
             point.velocity = fakeToRealEncUnits((float) segment.velocity * Constants.Physical.DriveTrain.FPS_TO_EVEL_DT);
 
@@ -172,6 +212,11 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         }
     }
 
+    /**
+     * Pushes points from the top level SRX buffer into the bottom level one
+     *
+     * This must be called repeatedly in order for stuff to work
+     */
     public void processMotionProfileBuffer()
     {
         leftFrontTalonEnc.processMotionProfileBuffer();
@@ -400,6 +445,7 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         // Get the base speed of the robot
         joystickLevel = (float) OI.JOYSTICK_DRIVE_LEFT.getY();
 
+        //TODO: Eliminate this redundant code
         // Only increase the speed by a small amount
         float diff = joystickLevel - lastLeft;
         if(diff > DIFF_COMPARISON) { joystickLevel = lastLeft + ACCELERATION_DIFF; }
@@ -628,6 +674,15 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     }
 
     /**
+     * Enable, disable, or hold a motion profiling position
+     * @param motionProfilingState Something from the enum {@link SetValueMotionProfile}
+     */
+    public void setMotionProfilingState(SetValueMotionProfile motionProfilingState)
+    {
+        runMotors(ControlMode.MotionProfile, motionProfilingState.value, motionProfilingState.value);
+    }
+
+    /**
      * Drive strategies that may be used
      */
     public enum DriveStrategyType implements Nameable
@@ -672,7 +727,7 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     /**
      * A data structure to store a pair of floats.
      */
-    private static class FloatPair
+    private static class FloatPair //TODO: Replace with ImmutableVector2f
     {
         public float left;
         public float right;
