@@ -8,13 +8,12 @@ package com.team2502.robot2018.command.autonomous.ingredients;
 public enum AutonStrategy
 {
     SWITCH("Switch"),
-    CENTER_STRATEGY("Switch-Switch-Vault"),
+    VAULT_2_SWITCH("Vault-Switch-Switch"),
     SWITCH_TWICE("Switch-Switch"), // Used for center
     SCALE("Scale"),
-    SCALE_TWICE("Scale-Scale"),
-    SCALE_SWITCH("Scale-Switch"),
-    STRAIGHT("Cross Auto Line"),
-
+    SCALE_TWICE("Scale and then Scale again"),
+    SCALE_SWITCH("Scale and then Switch"),
+    STRAIGHT("Straight"),
     FCC("Force Cross Country");
 
     private final String name;
