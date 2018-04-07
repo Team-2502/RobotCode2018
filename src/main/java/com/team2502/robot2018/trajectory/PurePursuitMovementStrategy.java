@@ -454,9 +454,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         return minVectorI;
     }
 
-    /**
-     * >>>>>>> develop
-     *
+    /***
      * @return The curvature (1/radius) to the goal point
      */
     private float calcCurvatureToGoal()
