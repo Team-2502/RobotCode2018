@@ -1,7 +1,7 @@
 package com.team2502.robot2018;
 
 import com.team2502.robot2018.command.teleop.CalibrateRobotCommand;
-import com.team2502.robot2018.trajectory.record.connectDB;
+import com.team2502.robot2018.trajectory.record.MySQL;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import java.util.ArrayList;
@@ -50,13 +50,13 @@ public final class DashboardData
 
     }
 
-    /**
-     * Dashboard widget used to enable and disable Pure Pursuit Record function.
-     */
-    private static void ppRecord(){
-        connectDB.setEnabled(SmartDashboard.getBoolean("", false));
-        SmartDashboard.putBoolean("", connectDB.isStorage());
-    }
+//    /**
+//     * Dashboard widget used to enable and disable Pure Pursuit Record function.
+//     */
+//    private static void ppRecord(){
+//        MySQL.setEnabled(SmartDashboard.getBoolean("", false));
+//        SmartDashboard.putBoolean("", MySQL.isStorage());
+//    }
 
     /**
      * An interface to allow you to automatically update stuff on the Smart Dashboard.

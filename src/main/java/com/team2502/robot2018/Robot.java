@@ -26,6 +26,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import logger.Log;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -38,6 +39,7 @@ public final class Robot extends IterativeRobot
 {
     public static double CAL_VELOCITY = 0D;
     public static String GAME_DATA = "...";
+    public static File SAVE_DIR = new File("/media/sda2/roborio");
 
     /**
      * One and only instance of DriveTrainSubsystem. The transmission is in its own class.
