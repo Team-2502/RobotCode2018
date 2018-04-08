@@ -275,7 +275,7 @@ public final class Robot extends IterativeRobot
         // Begin running the localization routine
         ROBOT_LOCALIZATION_COMMAND = new RobotLocalizationCommand(rotEstimator, encoderDifferentialDriveLocationEstimator, encoderDifferentialDriveLocationEstimator);
 
-//        ROBOT_LOCALIZATION_COMMAND.execute();
+        ROBOT_LOCALIZATION_COMMAND.execute();
         Scheduler.getInstance().add(ROBOT_LOCALIZATION_COMMAND);
 
     }

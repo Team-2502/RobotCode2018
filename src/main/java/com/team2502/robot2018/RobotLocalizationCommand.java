@@ -4,6 +4,7 @@ import com.team2502.robot2018.trajectory.localization.IRotationalLocationEstimat
 import com.team2502.robot2018.trajectory.localization.ITranslationalLocationEstimator;
 import com.team2502.robot2018.trajectory.localization.ITranslationalVelocityEstimator;
 import com.team2502.robot2018.utils.MathUtils;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.Command;
 import org.joml.ImmutableVector2f;
 
@@ -58,6 +59,12 @@ public class RobotLocalizationCommand extends Command implements ITranslationalL
         this.velocityEstimator = velocityEstimator;
         this.locationEstimator = locationEstimator;
         this.inverse = new InverseLocalization();
+    }
+
+    @Override
+    protected void initialize()
+    {
+        DriverStation.getInstance().reportWarning("Initializing the localizer", false);
     }
 
     /**
