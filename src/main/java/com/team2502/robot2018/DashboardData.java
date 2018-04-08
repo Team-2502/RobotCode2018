@@ -27,7 +27,7 @@ public final class DashboardData
     {
         for(DashboardUpdater subsystem : updaters) { subsystem.updateDashboard(); }
         updateNavX();
-        ppRecord();
+//        ppRecord();
     }
 
     /**
