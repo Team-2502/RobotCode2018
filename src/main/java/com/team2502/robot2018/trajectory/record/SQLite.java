@@ -217,6 +217,18 @@ public class SQLite
 
     }
 
+    public void close()
+    {
+        try
+        {
+            connection.close();
+        }
+        catch(SQLException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
     public class RecordingNotStartedException extends Exception
     {
 

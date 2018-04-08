@@ -313,6 +313,7 @@ public final class Robot extends IterativeRobot
         Robot.logPop();
         // Print out the logs we saved up
 
+        SQLite.getInstance().close();
     }
 
     /**
