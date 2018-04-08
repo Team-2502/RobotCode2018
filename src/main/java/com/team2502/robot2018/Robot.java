@@ -12,6 +12,7 @@ import com.team2502.robot2018.subsystem.ElevatorSubsystem;
 import com.team2502.robot2018.subsystem.solenoid.*;
 import com.team2502.robot2018.trajectory.localization.EncoderDifferentialDriveLocationEstimator;
 import com.team2502.robot2018.trajectory.localization.NavXLocationEstimator;
+import com.team2502.robot2018.trajectory.record.SQLite;
 import com.team2502.robot2018.utils.Files;
 import com.team2502.robot2018.utils.InterpolationMap;
 import com.team2502.robot2018.utils.MathUtils;
@@ -26,6 +27,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import logger.Log;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -191,6 +194,17 @@ public final class Robot extends IterativeRobot
         // initialize sin lookup table
         MathUtils.init();
 
+        try
+        {
+            SQLite.init();
+        }
+        catch(FileNotFoundException | SQLException | ClassNotFoundException e)
+        {
+            e.printStackTrace();
+        }
+
+        SQLite.getInstance().startNewRecording();
+
         String fileName = "/home/lvuser/FILES";
         Files.setFileName(fileName);
         Files.newFile(fileName);
@@ -325,6 +339,15 @@ public final class Robot extends IterativeRobot
      */
     public void autonomousInit()
     {
+        try
+        {
+            SQLite.getInstance().addEventMarker("Autonomous Init");
+        }
+        catch(SQLite.RecordingNotStartedException e)
+        {
+            e.printStackTrace();
+        }
+
         NAVX.reset();
         TRANSMISSION_SOLENOID.setHighGear(true);
 
@@ -342,6 +365,8 @@ public final class Robot extends IterativeRobot
         Scheduler.getInstance().add(AutoStartLocationSwitcher.getAutoInstance());
     }
 
+
+
     /**
      * This method is called periodically during autonomous
      */
@@ -357,6 +382,16 @@ public final class Robot extends IterativeRobot
      */
     public void teleopInit()
     {
+
+        try
+        {
+            SQLite.getInstance().addEventMarker("Teleop Init");
+        }
+        catch(SQLite.RecordingNotStartedException e)
+        {
+            e.printStackTrace();
+        }
+
         DRIVE_TRAIN.setTeleopSettings();
         ELEVATOR.calibrateEncoder();
     }

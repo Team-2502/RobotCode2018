@@ -158,6 +158,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
     private float usedTangentialVelocity;
     private ImmutableVector2f closestPoint;
     private float dCP;
+    private float usedCurvature;
 
     /**
      * Strategize your movement!
@@ -224,9 +225,14 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         Robot.writeLog("LAST WAYPOINT SPEED: " + lastWaypointSpeed, 1);
     }
 
+    public float getUsedTangentialVelocity()
+    {
+        return usedTangentialVelocity;
+    }
+
     private float generateLookahead()
     {
-        float usedTangentialVelocity = velocityEstimator.estimateSpeed();
+        usedTangentialVelocity = velocityEstimator.estimateSpeed();
         float lookaheadForSpeed = lookahead.getLookaheadForSpeed(usedTangentialVelocity);
 
         PathSegment current = path.getCurrent();
@@ -307,6 +313,12 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         Robot.writeLog("usedVel: %.2f, usedLookahead %.2f", 30, usedTangentialVelocity, usedLookahead);
 
         return usedLookahead;
+    }
+
+
+    public float getSpeedUsed()
+    {
+        return speedUsed;
     }
 
     private float getMaxSpeed(float finalSpeed, float distanceLeft, boolean forward, float currentMaxAccel, float currentMaxDeccel)
@@ -484,13 +496,18 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         return usedEstimatedLocation.add(circleRelativeCenterRotated);
     }
 
+    public float getUsedCurvature()
+    {
+        return usedCurvature;
+    }
+
     /**
      * @return The vector to drive along. first component = left speed, second component = right speed
      * @throws NullPointerException only if it gets confused and doesn't know what vector to drive along
      */
     private ImmutableVector2f calculateWheelVelocities() throws NullPointerException
     {
-        float curvature = calcCurvatureToGoal();
+        usedCurvature = calcCurvatureToGoal();
         ImmutableVector2f bestVector = null;
 
         float v_lMax = speedUsed;
@@ -498,7 +515,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         float v_lMin = -speedUsed;
         float v_rMin = -speedUsed;
 
-        if(Math.abs(curvature) < THRESHOLD_CURVATURE) // if we are a straight line ish (lines are not curvy -> low curvature)
+        if(Math.abs(usedCurvature) < THRESHOLD_CURVATURE) // if we are a straight line ish (lines are not curvy -> low curvature)
         {
             bestVector = new ImmutableVector2f(v_lMax, v_rMax);
             rotVelocity = (bestVector.get(1) - bestVector.get(0)) / tankRobot.getLateralWheelDistance();
@@ -510,7 +527,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         }
         else // if we need to go in a circle
         {
-            float c = 2 / (tankRobot.getLateralWheelDistance() * curvature);
+            float c = 2 / (tankRobot.getLateralWheelDistance() * usedCurvature);
             float velLeftToRightRatio = -(c + 1) / (1 - c); // an equation pulled out of some paper probably
             float velRightToLeftRatio = 1 / velLeftToRightRatio; // invert the ratio
 
@@ -563,7 +580,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
             }
 
             rotVelocity = (bestVector.get(1) - bestVector.get(0)) / tankRobot.getLateralWheelDistance();
-            motionRadius = 1 / curvature;
+            motionRadius = 1 / usedCurvature;
             leftWheelTanVel = Math.abs((motionRadius - tankRobot.getLateralWheelDistance() / 2) * rotVelocity);
             rightWheelTanVel = Math.abs((motionRadius + tankRobot.getLateralWheelDistance() / 2) * rotVelocity);
             tangentialSpeed = (leftWheelTanVel + rightWheelTanVel) / 2;

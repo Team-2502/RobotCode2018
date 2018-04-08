@@ -6,6 +6,8 @@ import com.team2502.robot2018.trajectory.ITankRobotBounds;
 import com.team2502.robot2018.trajectory.Lookahead;
 import com.team2502.robot2018.trajectory.PurePursuitMovementStrategy;
 import com.team2502.robot2018.trajectory.Waypoint;
+import com.team2502.robot2018.trajectory.record.PurePursuitFrame;
+import com.team2502.robot2018.trajectory.record.SQLite;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.joml.ImmutableVector2f;
@@ -167,6 +169,20 @@ public class PurePursuitCommand extends Command
         {
             Robot.writeLog("running wheels: %.2f, %.2f", 200, wheelL, wheelR);
             Robot.DRIVE_TRAIN.runMotorsVelocity(-wheelR, -wheelL);
+        }
+        PurePursuitFrame purePursuitFrame = new PurePursuitFrame(waypoints, usedEstimatedLocation.x,
+                                                                 usedEstimatedLocation.y, purePursuitMovementStrategy.getUsedLookahead(),
+                                                                 purePursuitMovementStrategy.getUsedCurvature(), purePursuitMovementStrategy.getSpeedUsed(),
+                                                                 purePursuitMovementStrategy.getTangentialSpeed(), purePursuitMovementStrategy.getUsedHeading(),
+                                                                 System.currentTimeMillis());
+
+        try
+        {
+            SQLite.getInstance().addFrame(purePursuitFrame);
+        }
+        catch(SQLite.RecordingNotStartedException e)
+        {
+            e.printStackTrace();
         }
     }
 

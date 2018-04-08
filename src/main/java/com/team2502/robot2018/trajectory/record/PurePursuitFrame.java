@@ -9,39 +9,46 @@ public class PurePursuitFrame
 {
     private final List<Waypoint> waypoints;
 
-    private final float robotX, robotY, lookahead, curvature, robotDX, robotDY;
+    private final float robotX, robotY, lookahead, curvature, speedUsed, actualSpeed;
     private final long time;
+    private final float robotHeading;
 
-    public PurePursuitFrame(List<Waypoint> waypoints, float robotX, float robotY, float lookahead, float curvature, float robotDX, float robotDY, long time)
+    public PurePursuitFrame(List<Waypoint> waypoints, float robotX, float robotY, float lookahead, float curvature, float speedUsed, float actualSpeed,  float robotHeading, long time)
     {
         this.waypoints = waypoints;
         this.robotX = robotX;
         this.robotY = robotY;
         this.lookahead = lookahead;
         this.curvature = curvature;
-        this.robotDX = robotDX;
-        this.robotDY = robotDY;
+        this.speedUsed = speedUsed;
+        this.actualSpeed = actualSpeed;
         this.time = time;
+        this.robotHeading = robotHeading;
     }
 
-    String serialize()
+    public float getRobotHeading()
     {
-        StringBuilder sb = new StringBuilder();
-        sb.append("FRAME (").append(time).append(")\n");
-        sb.append("WAYPOINTS\n");
-        sb.append("x,y\n");
-        for(Waypoint waypoint : waypoints)
-        {
-            ImmutableVector2f location = waypoint.getLocation();
-            sb.append(location.x).append(",").append(location.y);
-        }
-
-        sb.append("ROBOT\n");
-        sb.append("x,y,dx,dy,lookahead,curvature\n");
-        sb.append(robotX).append(",").append(robotY).append(",").append(robotDX).append(",").append(robotDY).append(",").append(lookahead).append(",").append(curvature);
-        sb.append("\n\n");
-        return sb.toString();
+        return robotHeading;
     }
+
+    //    String serialize()
+//    {
+//        StringBuilder sb = new StringBuilder();
+//        sb.append("FRAME (").append(time).append(")\n");
+//        sb.append("WAYPOINTS\n");
+//        sb.append("x,y\n");
+//        for(Waypoint waypoint : waypoints)
+//        {
+//            ImmutableVector2f location = waypoint.getLocation();
+//            sb.append(location.x).append(",").append(location.y);
+//        }
+//
+//        sb.append("ROBOT\n");
+//        sb.append("x,y,dx,dy,lookahead,curvature\n");
+//        sb.append(robotX).append(",").append(robotY).append(",").append(robotDX).append(",").append(robotDY).append(",").append(lookahead).append(",").append(curvature);
+//        sb.append("\n\n");
+//        return sb.toString();
+//    }
 
     public List<Waypoint> getWaypoints()
     {
@@ -68,14 +75,14 @@ public class PurePursuitFrame
         return curvature;
     }
 
-    public float getRobotDX()
+    public float getSpeedUsed()
     {
-        return robotDX;
+        return speedUsed;
     }
 
-    public float getRobotDY()
+    public float getActualSpeed()
     {
-        return robotDY;
+        return actualSpeed;
     }
 
     public long getTime()

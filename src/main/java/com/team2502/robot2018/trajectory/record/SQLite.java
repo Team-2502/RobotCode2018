@@ -16,6 +16,7 @@ public class SQLite
     // How tables will look
 
     // Recording(Recording_ID, DateTime)
+    // Recording_Event(Recording_Event_ID, Recording_Event_Time, String event)
     // PurePursuitFrame(PurePursuitFrame_ID, Recording_ID, robotX, robotY, lookahead, curvature, robotDX, robotDY, time)
     // PurePursuitFrame_Waypoint(PurePursuitFrame_Waypoint_ID, PurePursuitFrame_ID, Waypoint_X, Waypoint_Y)
 
@@ -26,17 +27,19 @@ public class SQLite
 
     private int currentRecordingPrimaryKey = -1;
 
-    public SQLite() throws FileNotFoundException, SQLException, ClassNotFoundException
+    public static void init() throws FileNotFoundException, SQLException, ClassNotFoundException
     {
-        instance = this;
-        createNeededFiles();
-        createTables();
+        instance = new SQLite();
+        instance.createNeededFiles();
+        instance.createTables();
     }
 
     public static SQLite getInstance()
     {
         return instance;
     }
+
+    private SQLite() {}
 
     private void createNeededFiles() throws FileNotFoundException
     {
@@ -79,8 +82,8 @@ public class SQLite
               " Robot_Lookahead REAL NOT NULL," +
               " Robot_Heading REAL NOT NULL," +
               " Robot_Curvature REAL NOT NULL," +
-              " Robot_DX REAL NOT NULL," +
-              " Robot_DY REAL NOT NULL," +
+              " Robot_Used_Speed REAL NOT NULL," +
+              " Robot_Actual_Speed REAL NOT NULL," +
               " PurePursuitFrame_Time LONG NOT NULL" +
               ")";
 
@@ -94,6 +97,16 @@ public class SQLite
               ")";
 
         statement.execute(sql);
+
+        sql = "CREATE TABLE IF NOT EXISTS Recording_Event" +
+              "(Recording_Event_ID INT PRIMARY KEY NOT NULL," +
+              " Recording_ID INT NOT NULL," +
+              " Event_Desc TEXT," +
+              "Recording_Event_Time LONG NOT NULL" +
+              ")";
+
+        statement.execute(sql);
+
         statement.close();
     }
 
@@ -119,6 +132,31 @@ public class SQLite
         }
     }
 
+    // TODO: should probably use Enums
+    public void addEventMarker(String description) throws RecordingNotStartedException
+    {
+
+        if(currentRecordingPrimaryKey == -1)
+        {
+            throw new RecordingNotStartedException();
+        }
+
+        String sql = "INSERT INTO Recording_Event (Recording_ID,Event_Desc,Recording_Event_Time) VALUES (?,?,?)";
+        try
+        {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, currentRecordingPrimaryKey);
+            preparedStatement.setString(2, description);
+            preparedStatement.setLong(3, System.currentTimeMillis());
+            preparedStatement.executeUpdate();
+            preparedStatement.close();
+        }
+        catch(SQLException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
     public void addFrame(PurePursuitFrame frame) throws RecordingNotStartedException
     {
 
@@ -129,7 +167,7 @@ public class SQLite
 
         int currentFrameID = -1;
         String sql = "INSERT INTO PurePursuitFrame (Recording_ID,Robot_X,Robot_Y,Robot_Lookahead, " +
-                     "Robot_Curvature, Robot_DX, Robot_DY, PurePursuitFrame_Time) VALUES (?,?,?,?,?,?,?,?)";
+                     "Robot_Curvature, Robot_Used_Speed, Robot_Actual_Speed, PurePursuitFrame_Time, Robot_Heading) VALUES (?,?,?,?,?,?,?,?,?)";
         try
         {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
@@ -138,9 +176,10 @@ public class SQLite
             preparedStatement.setFloat(3, frame.getRobotY());
             preparedStatement.setFloat(4, frame.getLookahead());
             preparedStatement.setFloat(5, frame.getCurvature());
-            preparedStatement.setFloat(6, frame.getRobotDX());
-            preparedStatement.setFloat(7, frame.getRobotDY());
-            preparedStatement.setFloat(8, frame.getTime());
+            preparedStatement.setFloat(6, frame.getSpeedUsed());
+            preparedStatement.setFloat(7, frame.getActualSpeed());
+            preparedStatement.setLong(8, frame.getTime());
+            preparedStatement.setFloat(9, frame.getRobotHeading());
             preparedStatement.executeUpdate();
             ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
             if(generatedKeys.next())
@@ -168,6 +207,7 @@ public class SQLite
                 preparedStatement.setFloat(2, location.x);
                 preparedStatement.setFloat(3, location.y);
                 preparedStatement.executeUpdate();
+                preparedStatement.close();
             }
             catch(SQLException e)
             {
@@ -177,7 +217,7 @@ public class SQLite
 
     }
 
-    private class RecordingNotStartedException extends Exception
+    public class RecordingNotStartedException extends Exception
     {
 
     }
