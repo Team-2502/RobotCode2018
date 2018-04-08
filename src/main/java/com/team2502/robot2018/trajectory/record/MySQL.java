@@ -32,7 +32,7 @@ public class MySQL
     private void createNeededFiles() throws FileNotFoundException
     {
         recordDir = new File(Robot.SAVE_DIR, "record");
-        if( !recordDir.exists())
+        if(!recordDir.exists())
         {
             throw new FileNotFoundException("record directory is not found!");
         }
@@ -50,11 +50,11 @@ public class MySQL
     private void createDatabase() throws ClassNotFoundException, SQLException
     {
         Class.forName("org.sqlite.JDBC");
-        connection = DriverManager.getConnection("jdbc:sqlite:"+databaseFile.getAbsolutePath());
+        connection = DriverManager.getConnection("jdbc:sqlite:" + databaseFile.getAbsolutePath());
         connection.setAutoCommit(false);
         System.out.println("Opened database successfully");
 
-        Statement statement  = connection.createStatement();
+        Statement statement = connection.createStatement();
 
         String sql = "CREATE TABLE Recording" +
                      "(Recording_ID INT PRIMARY KEY NOT NULL," +
@@ -76,7 +76,7 @@ public class MySQL
               ")";
 
         statement.execute(sql);
-        
+
         sql = "CREATE TABLE PurePursuitFrame_Waypoint" +
               "(PurePursuitFrame_Waypoint_ID INT PRIMARY KEY NOT NULL," +
               " PurePursuitFrame_ID INT NOT NULL," +

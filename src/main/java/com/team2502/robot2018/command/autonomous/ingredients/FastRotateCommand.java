@@ -1,4 +1,4 @@
- package com.team2502.robot2018.command.autonomous.ingredients;
+package com.team2502.robot2018.command.autonomous.ingredients;
 
 import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.utils.MathUtils;
@@ -7,21 +7,19 @@ import edu.wpi.first.wpilibj.command.Command;
 public class FastRotateCommand extends Command
 {
 
+    public static final float TOLERANCE_DEG = 5;
     private final float angleFinal;
     private final float maxWheelVel;
-//    private final float maxAccel;
+    //    private final float maxAccel;
     private final float maxDeccel;
     private float angleInit;
     private boolean ccw;
     private float dAngle;
 
-    public static final float TOLERANCE_DEG = 5;
-
     /**
-     *
      * @param angleFinal
      * @param maxWheelVel
-     * @param maxDeccel Really weird units... in wheel deceleration / degrees.
+     * @param maxDeccel   Really weird units... in wheel deceleration / degrees.
      */
     public FastRotateCommand(float angleFinal, float maxWheelVel, float maxDeccel)
     {

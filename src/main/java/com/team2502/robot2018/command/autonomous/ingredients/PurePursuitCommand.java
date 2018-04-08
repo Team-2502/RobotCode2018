@@ -165,7 +165,7 @@ public class PurePursuitCommand extends Command
         }
         else
         {
-            Robot.writeLog("running wheels: %.2f, %.2f",200,wheelL,wheelR);
+            Robot.writeLog("running wheels: %.2f, %.2f", 200, wheelL, wheelR);
             Robot.DRIVE_TRAIN.runMotorsVelocity(-wheelR, -wheelL);
         }
     }

@@ -2,17 +2,9 @@ package com.team2502.robot2018.command.autonomous.groups;
 
 
 import com.team2502.robot2018.Robot;
-import com.team2502.robot2018.command.autonomous.ingredients.ElevatorAutonCommand;
 import com.team2502.robot2018.command.autonomous.ingredients.FastRotateCommand;
-import com.team2502.robot2018.command.autonomous.ingredients.PurePursuitCommand;
-import com.team2502.robot2018.trajectory.Waypoint;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.command.WaitCommand;
-import org.joml.ImmutableVector2f;
-
-import java.util.Arrays;
-
-import static com.team2502.robot2018.Constants.Physical.Elevator;
 
 /**
  * Should be used for all testing to make sure that we don't test something
@@ -22,9 +14,9 @@ public class TestCommandGroup extends CommandGroup
 {
     public TestCommandGroup()
     {
-        Robot.writeLog("TestCommand",200);
+        Robot.writeLog("TestCommand", 200);
 
-        addSequential(new FastRotateCommand(0, 8 ,-0.4F));
+        addSequential(new FastRotateCommand(0, 8, -0.4F));
         addSequential(new WaitCommand(3));
         addSequential(new FastRotateCommand(180, 8, -0.4F));
         addSequential(new WaitCommand(3));

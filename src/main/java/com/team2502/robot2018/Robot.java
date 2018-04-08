@@ -3,7 +3,6 @@ package com.team2502.robot2018;
 import com.google.common.collect.ImmutableMap;
 import com.kauailabs.navx.frc.AHRS;
 import com.team2502.robot2018.command.autonomous.ingredients.AutonStrategy;
-import com.team2502.robot2018.command.teleop.QuickCommand;
 import com.team2502.robot2018.sendables.SendableDriveStrategyType;
 import com.team2502.robot2018.sendables.SendableDriveTrain;
 import com.team2502.robot2018.sendables.SendableVersioning;
@@ -191,7 +190,7 @@ public final class Robot extends IterativeRobot
 
         // initialize sin lookup table
         MathUtils.init();
-        
+
         String fileName = "/home/lvuser/FILES";
         Files.setFileName(fileName);
         Files.newFile(fileName);

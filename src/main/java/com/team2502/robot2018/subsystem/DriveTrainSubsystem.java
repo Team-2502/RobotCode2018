@@ -20,41 +20,32 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class DriveTrainSubsystem extends Subsystem implements DashboardData.DashboardUpdater, PIDTunable
 {
     private static final FloatPair SPEED_CONTAINER = new FloatPair();
-
+    private static final float ACCELERATION_DIFF = 0.5F;
+    private static final float DIFF_COMPARISON = 0.15F;
     private final WPI_TalonSRX leftFrontTalonEnc;
     private final WPI_TalonSRX leftRearTalon;
     private final WPI_TalonSRX rightFrontTalonEnc;
     private final WPI_TalonSRX rightRearTalon;
-
     /**
      * Represents our drivetrain
      */
     private final DifferentialDrive drive;
-
     /**
      * Represents the left side of the drivetrain
      */
     private final SpeedControllerGroup spgLeft;
-
     /**
      * Represents the right side of the drivetrain
      */
     private final SpeedControllerGroup spgRight;
-
-
     /**
      * Allows the PID of the drivetrain to be tuned from shuffleboard
      */
     private final SendablePIDTuner pidTuner;
-
     private double kP = .7D;
     private double kI = 0.0;
     private double kD = 0;
     private double kF = 0;
-
-    private static final float ACCELERATION_DIFF = 0.5F;
-    private static final float DIFF_COMPARISON = 0.15F;
-
     private float lastLeft;
     private float lastRight;
     private boolean isNegativePressed;
@@ -429,12 +420,14 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
 
     /**
      * Assuming we are in a PID loop, return the average error for the 2 sides of the drivetrain
+     *
      * @return the average error
      */
     public double getAvgEncLoopError()
     {
         return (leftFrontTalonEnc.getClosedLoopError(0) + rightFrontTalonEnc.getClosedLoopError(0)) / 2;
     }
+
     /**
      * @return Turns "fake" units into real wheel revolutions
      */
@@ -488,9 +481,9 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     public float getRightPosRaw() { return rightFrontTalonEnc.getSelectedSensorPosition(0);}
 
     /**
-     * @deprecated think this is wrong
      * @param inches
      * @return
+     * @deprecated think this is wrong
      */
     public float inchesToEncUnits(float inches)
     {

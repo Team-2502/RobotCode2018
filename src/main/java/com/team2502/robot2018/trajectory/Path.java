@@ -34,7 +34,7 @@ public class Path
             Waypoint waypoint1 = waypointList.get(i);
             Waypoint waypoint2 = waypointList.get(i + 1);
             DriverStation.getInstance().reportWarning("Waypoint 1: " + waypoint1.getLocation().toString(), false);
-            DriverStation.getInstance().reportWarning("Waypoint 2: " +waypoint2.getLocation().toString(), false);
+            DriverStation.getInstance().reportWarning("Waypoint 2: " + waypoint2.getLocation().toString(), false);
             float length = waypoint1.getLocation().distance(waypoint2.getLocation());
             PathSegment pathSegment = new PathSegment(waypoint1, waypoint2, i == 0, i == waypointList.size() - 2, distance, distance += length, length);
             pathSegments.add(pathSegment);
