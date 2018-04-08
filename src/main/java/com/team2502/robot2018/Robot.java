@@ -15,6 +15,7 @@ import com.team2502.robot2018.trajectory.localization.EncoderDifferentialDriveLo
 import com.team2502.robot2018.trajectory.localization.NavXLocationEstimator;
 import com.team2502.robot2018.utils.Files;
 import com.team2502.robot2018.utils.InterpolationMap;
+import com.team2502.robot2018.utils.MathUtils;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -186,6 +187,9 @@ public final class Robot extends IterativeRobot
     public void robotInit()
     {
 
+        // initialize sin lookup table
+        MathUtils.init();
+        
         String fileName = "/home/lvuser/FILES";
         Files.setFileName(fileName);
         Files.newFile(fileName);
@@ -271,7 +275,7 @@ public final class Robot extends IterativeRobot
         // Begin running the localization routine
         ROBOT_LOCALIZATION_COMMAND = new RobotLocalizationCommand(rotEstimator, encoderDifferentialDriveLocationEstimator, encoderDifferentialDriveLocationEstimator);
 
-//        ROBOT_LOCALIZATION_COMMAND.execute();
+        ROBOT_LOCALIZATION_COMMAND.execute();
         Scheduler.getInstance().add(ROBOT_LOCALIZATION_COMMAND);
 
     }

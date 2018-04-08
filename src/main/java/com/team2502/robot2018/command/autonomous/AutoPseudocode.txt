@@ -34,6 +34,15 @@ Center start position:
         1. score in switch (x2?)
         2. cross line (stay out of way)
 
+    Vault-Switch-Switch:
+        1. Sharp turn to drop off at vault
+        2. Reverse turn to be back at starting point
+        3. Go forwards and grab cube from stack
+        4. Drop cube in correct side
+        5. Go back and get another cube
+        6. Drop cube in correct side
+
+
 Right start position:
     LLx:
         1. score in scale

@@ -97,6 +97,7 @@ public class PathConfig
                                                                        new Waypoint(new ImmutableVector2f(3.82006F, 5.726F), 6F, 5, -5),
                                                                        new Waypoint(new ImmutableVector2f(3.82006F, 10.5F), 2F, 5, -5) // TODO: add ability to coast at end
                                                                      );
+
         public static final List<Waypoint> rightScale = Arrays.asList(
                 new Waypoint(new ImmutableVector2f(0, 0), 0, 20, -10),
                 new Waypoint(new ImmutableVector2f(0F, 8.589F), 25F, 20, -10),

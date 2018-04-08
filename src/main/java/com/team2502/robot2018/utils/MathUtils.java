@@ -39,7 +39,7 @@ public final class MathUtils
      */
     private static final float[] SIN_TABLE = new float[65536];
 
-    static
+    public static void init()
     {
         for(int i = 0; i < 65536; ++i) { SIN_TABLE[i] = (float) Math.sin(((double) i) * Math.PI * 2.0D / 65536.0D); }
 
@@ -49,7 +49,9 @@ public final class MathUtils
         SIN_TABLE[49152] = -1;  /* 3π/2 */
     }
 
-    private MathUtils() { }
+    private MathUtils() {
+
+    }
 
     public static float shiftRadiansBounded(float initRadians, float shift)
     {

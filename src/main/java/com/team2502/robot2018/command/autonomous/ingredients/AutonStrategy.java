@@ -8,7 +8,8 @@ package com.team2502.robot2018.command.autonomous.ingredients;
 public enum AutonStrategy
 {
     SWITCH("Switch"),
-    SWITCH_TWICE("Switch and then Switch again"), // Used for center
+    VAULT_2_SWITCH("Vault-Switch-Switch"),
+    SWITCH_TWICE("Switch-Switch"), // Used for center
     SCALE("Scale"),
     SCALE_TWICE("Scale and then Scale again"),
     SCALE_SWITCH("Scale and then Switch"),
