@@ -12,12 +12,15 @@ import com.team2502.robot2018.sendables.Nameable;
 import com.team2502.robot2018.sendables.PIDTunable;
 import com.team2502.robot2018.sendables.SendableDriveStrategyType;
 import com.team2502.robot2018.sendables.SendablePIDTuner;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import jaci.pathfinder.Pathfinder;
 import jaci.pathfinder.Trajectory;
+
+import java.sql.Driver;
 
 /**
  * Example Implementation, Many changes needed.
@@ -132,11 +135,11 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
      * @param trajLeft The trajectory for the left side
      * @param trajRight The trajectory for the right side
      */
-    public void loadTrajectoryPoints(Trajectory trajLeft, Trajectory trajRight)
+    public void loadTrajectoryPoints(Trajectory trajLeft, Trajectory trajRight, double dir)
     {
         setMotionProfileSettings();
-        loadTrajectoryPoints(trajLeft, leftFrontTalonEnc);
-        loadTrajectoryPoints(trajRight, rightFrontTalonEnc);
+        loadTrajectoryPoints(trajLeft, leftFrontTalonEnc, dir);
+        loadTrajectoryPoints(trajRight, rightFrontTalonEnc, dir);
     }
 
     /**
@@ -144,9 +147,13 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
      */
     private void setMotionProfileSettings()
     {
+        DriverStation.getInstance().reportWarning("Setting MP Settings", false);
         setAutonSettings();
         leftFrontTalonEnc.changeMotionControlFramePeriod(Constants.SRXProfiling.PERIOD_MS  / 2);
         rightFrontTalonEnc.changeMotionControlFramePeriod(Constants.SRXProfiling.PERIOD_MS  / 2);
+
+        leftFrontTalonEnc.config_kF(0, 0.2687473379, Constants.INIT_TIMEOUT);
+        rightFrontTalonEnc.config_kF(0, 0.2687473379, Constants.INIT_TIMEOUT);
     }
 
     /**
@@ -181,8 +188,9 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
      * @param traj The trajectory points in question, with points in feet
      * @param talon The talon in question
      */
-    private void loadTrajectoryPoints(Trajectory traj, WPI_TalonSRX talon)
+    private void loadTrajectoryPoints(Trajectory traj, WPI_TalonSRX talon, double dir)
     {
+        DriverStation.getInstance().reportWarning("Clearing stuff", false);
         talon.clearMotionProfileTrajectories();
         talon.clearMotionProfileHasUnderrun(Constants.LOOP_TIMEOUT);
         talon.configMotionProfileTrajectoryPeriod(Constants.SRXProfiling.BASE_TRAJ_PERIOD, Constants.INIT_TIMEOUT);
@@ -200,7 +208,7 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
             point.timeDur = Constants.SRXProfiling.PERIOD;
 
             //todo: shift by current pos
-            point.position = fakeToRealEncUnits((float) segment.position * Constants.FEET_TO_EPOS_DT);
+            point.position = fakeToRealEncUnits((float) segment.position * Constants.FEET_TO_EPOS_DT) * dir + talon.getSelectedSensorPosition(0);
             point.velocity = fakeToRealEncUnits((float) segment.velocity * Constants.FPS_TO_EVEL_DT);
 
             point.zeroPos = !Constants.SRXProfiling.USE_ABSOLUTE_COORDS && i == 0;
@@ -208,6 +216,7 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
             point.profileSlotSelect0 = 0;
             point.profileSlotSelect1 = 0;
 
+            DriverStation.getInstance().reportWarning("Clearing stuff", false);
             talon.pushMotionProfileTrajectory(point);
         }
     }

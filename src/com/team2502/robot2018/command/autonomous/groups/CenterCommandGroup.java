@@ -3,6 +3,9 @@ package com.team2502.robot2018.command.autonomous.groups;
 import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.command.autonomous.ingredients.*;
 import com.team2502.robot2018.command.teleop.ToggleIntakeCommand;
+import com.team2502.robot2018.pathplanning.srxprofiling.SRXProfilingCommand;
+import com.team2502.robot2018.pathplanning.srxprofiling.ScheduledCommand;
+import com.team2502.robot2018.pathplanning.srxprofiling.TrajConfig;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 import static com.team2502.robot2018.Robot.autonStrategySelector;
@@ -46,6 +49,10 @@ public class CenterCommandGroup extends CommandGroup
         moveElevator();
         addSequential(new PurePursuitCommand(Paths.Center.rightSwitch));
         emitCubeSwitch();
+
+        addSequential(new SRXProfilingCommand(new ScheduledCommand[]{new ScheduledCommand(0, new ElevatorAutonCommand(3, 0))},
+                                              TrajConfig.Center.Right.toSecondCubeDir,
+                                              TrajConfig.Center.Right.toSecondCube));
     }
 
     private void secondCubeLeft()

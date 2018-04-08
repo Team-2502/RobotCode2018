@@ -3,6 +3,7 @@ package com.team2502.robot2018;
 import com.ctre.phoenix.motion.TrajectoryPoint;
 import com.team2502.ctannotationprocessor.Undefined;
 import com.team2502.robot2018.pathplanning.purepursuit.Lookahead;
+import com.team2502.robot2018.pathplanning.srxprofiling.ScheduledCommand;
 import com.team2502.robot2018.utils.InterpolationMap;
 import jaci.pathfinder.Trajectory;
 
@@ -126,7 +127,7 @@ public class Constants
         public static final double MAX_VEL_MPS = ftToMeter(MAX_VEL_FPS);
         public static final double MAX_ACCEL_MPS2 = ftToMeter(MAX_ACCEL_FPS2);
         public static final double MAX_JERK_MPS3 = ftToMeter(MAX_JERK_FPS3);
-        public static final double WHEELBASE_WIDTH = 26.0;
+        public static final double WHEELBASE_WIDTH = 26.0 / 12.0;
         public static final boolean USE_ABSOLUTE_COORDS = true;
 
         /**
@@ -143,5 +144,7 @@ public class Constants
         public static final double PERIOD_SEC = msToSec(PERIOD_MS);
         public static final TrajectoryPoint.TrajectoryDuration PERIOD = TrajectoryPoint.TrajectoryDuration.Trajectory_Duration_10ms;
         public static final Trajectory.Config CONFIG_SETTINGS = new Trajectory.Config(Trajectory.FitMethod.HERMITE_QUINTIC, Trajectory.Config.SAMPLES_LOW, PERIOD_SEC, MAX_VEL_FPS, MAX_ACCEL_FPS2, MAX_JERK_FPS3);
+
+        public static final ScheduledCommand[] NO_COMMANDS = new ScheduledCommand[0];
     }
 }

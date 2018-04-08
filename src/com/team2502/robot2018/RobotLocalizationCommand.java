@@ -35,7 +35,7 @@ public class RobotLocalizationCommand extends Command implements ITranslationalL
         leftWheelSpeed = velocityEstimator.getLeftWheelSpeed();
         rightWheelSpeed = velocityEstimator.getRightWheelSpeed();
         location = locationEstimator.estimateLocation();
-        System.out.printf("locationX %.2f, locationY %.2f\n", location.x, location.y);
+//        System.out.printf("locationX %.2f, locationY %.2f\n", location.x, location.y);
         velocity = velocityEstimator.estimateAbsoluteVelocity();
         speed = velocityEstimator.estimateSpeed();
     }
