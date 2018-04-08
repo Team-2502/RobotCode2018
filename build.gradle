@@ -36,21 +36,21 @@ dependencies {
 
 def branch() {
     def branch = "DRIVER STATION"
-//    def proc = "git rev-parse --abbrev-ref HEAD".execute()
-//    proc.in.eachLine { line -> branch = line }
-//    proc.err.eachLine { line -> println line }
-//    proc.waitFor()
+    def proc = "git rev-parse --abbrev-ref HEAD".execute()
+    proc.in.eachLine { line -> branch = line }
+    proc.err.eachLine { line -> println line }
+    proc.waitFor()
     branch
 }
 
 def hash = { ->
-//    def stdout = new ByteArrayOutputStream()
-//    exec {
-//        commandLine 'git', 'rev-parse', '--short', 'HEAD'
-//        standardOutput = stdout
-//    }
-//    return stdout.toString().trim()
-    return "DRIVER STATION"
+    def stdout = new ByteArrayOutputStream()
+    exec {
+        commandLine 'git', 'rev-parse', '--short', 'HEAD'
+        standardOutput = stdout
+    }
+    return stdout.toString().trim()
+//    return "DRIVER STATION"
 }
 
 jar {

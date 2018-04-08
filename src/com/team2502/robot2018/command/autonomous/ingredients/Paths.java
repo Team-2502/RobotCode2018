@@ -34,15 +34,17 @@ public class Paths
     public static class Center
     {
 
+        private static final float speedLimiter = 0.3F;
         /**
          * Move from the center of the starting wall to the right side of the switch
          */
         public static final List<Waypoint> rightSwitch = Arrays.asList(
                 new Waypoint(new ImmutableVector2f(0, 0), 0, 10, -10),
-                new Waypoint(new ImmutableVector2f(2F, 2.45F), 16, 10, -10),
-                new Waypoint(new ImmutableVector2f(6F, 4F), 16, 10, -10),
-                new Waypoint(new ImmutableVector2f(6F, 9.5F), 1F, 10, -10)
+                new Waypoint(new ImmutableVector2f(2F, 2.45F), 16 * speedLimiter, 10, -10),
+                new Waypoint(new ImmutableVector2f(4F, 4F), 16 * speedLimiter, 10, -10),
+                new Waypoint(new ImmutableVector2f(4F, 9.5F), 1F * speedLimiter, 10, -10)
                                                                       );
+
 
         /**
          * Move from the center of the starting wall to the left side of the switch

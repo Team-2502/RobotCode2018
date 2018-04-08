@@ -27,9 +27,17 @@ public class TrajConfig
 
             public static final int toSecondCubeDir = -1;
             public static final List<Waypoint> toSecondCube = Arrays.asList(new Waypoint(0, 0, 0),
-                                                                            new Waypoint(-44D/12, 26D/12, -Math.PI / 4),
-                                                                            new Waypoint(-80D/12, 55D/12, 0));
-//                                                                            new Waypoint(-32D/12, 55D/12, 0));
+                                                                            new Waypoint(-50D/12, -26D/12, Math.PI / 4),
+                                                                            new Waypoint(-75D/12, -40D/12, 0));
+
+            public static final List<Waypoint> toSecondCubePt2 = Arrays.asList(new Waypoint(0, 0, 0),
+                                                                               new Waypoint(3, 0, Math.PI / 24)); // angle correction for previous step
+
+            public static final List<Waypoint> backToSwitch = Arrays.asList(new Waypoint(-75D/12, 40D/12, 0),
+                                                                            new Waypoint(-50D/12, 26D/12, -Math.PI / 4),
+                                                                            new Waypoint(0, 0, 0));
+
+
 
 
         }

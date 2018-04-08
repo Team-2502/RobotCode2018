@@ -209,7 +209,7 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
 
             //todo: shift by current pos
             point.position = fakeToRealEncUnits((float) segment.position * Constants.FEET_TO_EPOS_DT) * dir + talon.getSelectedSensorPosition(0);
-            point.velocity = fakeToRealEncUnits((float) segment.velocity * Constants.FPS_TO_EVEL_DT);
+            point.velocity = fakeToRealEncUnits((float) segment.velocity * Constants.FPS_TO_EVEL_DT) * dir;
 
             point.zeroPos = !Constants.SRXProfiling.USE_ABSOLUTE_COORDS && i == 0;
 

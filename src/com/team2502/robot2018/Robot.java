@@ -15,6 +15,7 @@ import com.team2502.robot2018.subsystem.ElevatorSubsystem;
 import com.team2502.robot2018.subsystem.solenoid.*;
 import com.team2502.robot2018.utils.Files;
 import com.team2502.robot2018.utils.InterpolationMap;
+import com.team2502.robot2018.utils.MathUtils;
 import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -128,6 +129,8 @@ public final class Robot extends IterativeRobot
         SmartDashboard.putNumber("calibration_velocity", 0);
 
         NAVX.resetDisplacement();
+
+//        MathUtils.init();
 
         fileWriting();
     }
