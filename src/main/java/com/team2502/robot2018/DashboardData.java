@@ -53,8 +53,8 @@ public final class DashboardData
 //     * Dashboard widget used to enable and disable Pure Pursuit Record function.
 //     */
 //    private static void ppRecord(){
-//        MySQL.setEnabled(SmartDashboard.getBoolean("", false));
-//        SmartDashboard.putBoolean("", MySQL.isStorage());
+//        SQLite.setEnabled(SmartDashboard.getBoolean("", false));
+//        SmartDashboard.putBoolean("", SQLite.isStorage());
 //    }
 
     /**

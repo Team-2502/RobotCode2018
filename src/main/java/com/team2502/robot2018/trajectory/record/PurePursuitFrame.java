@@ -10,9 +10,9 @@ public class PurePursuitFrame
     private final List<Waypoint> waypoints;
 
     private final float robotX, robotY, lookahead, curvature, robotDX, robotDY;
-    private final float time;
+    private final long time;
 
-    public PurePursuitFrame(List<Waypoint> waypoints, float robotX, float robotY, float lookahead, float curvature, float robotDX, float robotDY, float time)
+    public PurePursuitFrame(List<Waypoint> waypoints, float robotX, float robotY, float lookahead, float curvature, float robotDX, float robotDY, long time)
     {
         this.waypoints = waypoints;
         this.robotX = robotX;
@@ -41,5 +41,45 @@ public class PurePursuitFrame
         sb.append(robotX).append(",").append(robotY).append(",").append(robotDX).append(",").append(robotDY).append(",").append(lookahead).append(",").append(curvature);
         sb.append("\n\n");
         return sb.toString();
+    }
+
+    public List<Waypoint> getWaypoints()
+    {
+        return waypoints;
+    }
+
+    public float getRobotX()
+    {
+        return robotX;
+    }
+
+    public float getRobotY()
+    {
+        return robotY;
+    }
+
+    public float getLookahead()
+    {
+        return lookahead;
+    }
+
+    public float getCurvature()
+    {
+        return curvature;
+    }
+
+    public float getRobotDX()
+    {
+        return robotDX;
+    }
+
+    public float getRobotDY()
+    {
+        return robotDY;
+    }
+
+    public long getTime()
+    {
+        return time;
     }
 }
