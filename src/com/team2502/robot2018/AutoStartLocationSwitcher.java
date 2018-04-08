@@ -7,6 +7,7 @@ import com.team2502.robot2018.command.autonomous.groups.RightCommandGroup;
 import com.team2502.robot2018.command.autonomous.groups.TestCommandGroup;
 import com.team2502.robot2018.command.teleop.CalibrateRobotCommand;
 import com.team2502.robot2018.command.test.group.FullSystemsTestCommand;
+import com.team2502.robot2018.pathplanning.srxprofiling.CalibrateWheelbaseWidthCommand;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -38,7 +39,8 @@ class AutoStartLocationSwitcher
         RIGHTAUTO("Right", RightCommandGroup::new),
         TEST("Test", TestCommandGroup::new),
         SYSTEMS_CHECK("Systems Check", FullSystemsTestCommand::new),
-        CALIBRATE("Calibrate", CalibrateRobotCommand::new);
+        CALIBRATE("Calibrate", CalibrateRobotCommand::new),
+        CALIBRATE_CIRCLE("Go_In_Circle", CalibrateWheelbaseWidthCommand::new);
 
         private CommandFactory commandFactory;
 

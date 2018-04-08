@@ -4,41 +4,83 @@ import com.ctre.phoenix.motion.MotionProfileStatus;
 import com.ctre.phoenix.motion.SetValueMotionProfile;
 import com.team2502.robot2018.Constants;
 import com.team2502.robot2018.Robot;
+import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.Scheduler;
+import jaci.pathfinder.Pathfinder;
 import jaci.pathfinder.Trajectory;
+import jaci.pathfinder.Waypoint;
 import jaci.pathfinder.modifiers.TankModifier;
+
+import java.util.List;
 
 public class SRXProfilingCommand extends Command
 {
-    private final Trajectory trajectoryLeft;
-    private final Trajectory trajectoryRight;
 
-    private final MotionProfileStatus statusLeft;
-    private final MotionProfileStatus statusRight;
+    private final Trajectory leftTraj;
+    private final Trajectory rightTraj;
 
-    public SRXProfilingCommand(Trajectory trajectory)
+    private final Notifier pointLoader;
+    private final MotionProfileStatus status;
+    private final ScheduledCommand[] commands;
+
+    public SRXProfilingCommand(ScheduledCommand[] commands, List<Waypoint> waypointList)
     {
-        requires(Robot.DRIVE_TRAIN);
+        this(commands, (Waypoint[]) waypointList.toArray());
 
-        TankModifier tankModifier = new TankModifier(trajectory);
-        tankModifier.modify(Constants.SRXProfiling.WHEELBASE_WIDTH);
-        trajectoryLeft = tankModifier.getLeftTrajectory();
-        trajectoryRight = tankModifier.getRightTrajectory();
+    }
 
-        statusLeft = new MotionProfileStatus();
-        statusRight = new MotionProfileStatus();
+    public SRXProfilingCommand(ScheduledCommand[] commands, Waypoint... waypoints)
+    {
+        this(commands, Pathfinder.generate(waypoints, Constants.SRXProfiling.CONFIG_SETTINGS));
+    }
 
-        updateStatus();
+    private SRXProfilingCommand(ScheduledCommand[] commands, Trajectory traj)
+    {
+        TankModifier modifier = new TankModifier(traj);
+        modifier.modify(Constants.SRXProfiling.WHEELBASE_WIDTH);
+
+        leftTraj = modifier.getLeftTrajectory();
+        rightTraj = modifier.getRightTrajectory();
+
+//        if(leftTraj.length() != rightTraj.length())
+//        {
+//            throw new Exception("Somehow, the left trajectory does not have the same number of points as the right trajectory (SRXProfilingCommand)");
+//        }
+
+        pointLoader = new Notifier(Robot.DRIVE_TRAIN::processMotionProfileBuffer);
+        pointLoader.startPeriodic(Constants.SRXProfiling.PERIOD_SEC);
+        status = new MotionProfileStatus();
+        this.commands = commands;
     }
 
     @Override
     protected void initialize()
     {
-        Robot.DRIVE_TRAIN.loadTrajectoryPoints(trajectoryLeft, trajectoryRight);
-
-        while(statusLeft.btmBufferCnt < Constants.SRXProfiling.MIN_PTS_BUFFER_CNT)
+        Robot.DRIVE_TRAIN.setMotionProfilingState(SetValueMotionProfile.Disable);
+        Robot.DRIVE_TRAIN.loadTrajectoryPoints(leftTraj, rightTraj);
+        for(ScheduledCommand command : commands)
         {
-            Robot.DRIVE_TRAIN.leftFrontTalonEnc.
+            Scheduler.getInstance().add(command);
+        }
+    }
+
+    @Override
+    protected void execute()
+    {
+        // Update status
+        Robot.DRIVE_TRAIN.updateStatus(status);
+
+        Robot.DRIVE_TRAIN.setMotionProfilingState(SetValueMotionProfile.Enable);
+
+        // If we have run out of points to send to the lower-level
+        if(status.hasUnderrun)
+        {
+            // stop loading points
+            pointLoader.stop();
+
+            // clear the flag
+            Robot.DRIVE_TRAIN.clearMotionProfileHasUnderrun();
         }
 
     }
@@ -46,18 +88,14 @@ public class SRXProfilingCommand extends Command
     @Override
     protected boolean isFinished()
     {
-        return false;
+        // If this is the last point
+        return status.isLast;
     }
 
     @Override
     protected void end()
     {
         Robot.DRIVE_TRAIN.setMotionProfilingState(SetValueMotionProfile.Hold);
-    }
-
-    private void updateStatus()
-    {
-        Robot.DRIVE_TRAIN.leftFrontTalonEnc.getMotionProfileStatus(statusLeft);
-        Robot.DRIVE_TRAIN.rightFrontTalonEnc.getMotionProfileStatus(statusRight);
+        Robot.DRIVE_TRAIN.resetTalonControlFramePeriod();
     }
 }

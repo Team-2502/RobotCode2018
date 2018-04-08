@@ -1,8 +1,10 @@
 package com.team2502.robot2018;
 
+import com.ctre.phoenix.motion.TrajectoryPoint;
 import com.team2502.ctannotationprocessor.Undefined;
 import com.team2502.robot2018.pathplanning.purepursuit.Lookahead;
 import com.team2502.robot2018.utils.InterpolationMap;
+import jaci.pathfinder.Trajectory;
 
 /**
  * Note E (EVEL, ENC_RES, EPOS) is special encoder units
@@ -136,5 +138,10 @@ public class Constants
          * The minimum number of points in the low-level buffer before we will start executing the motion profile
          */
         public static final int MIN_PTS_BUFFER_CNT = 10;
+
+        public static final int PERIOD_MS = 10;
+        public static final double PERIOD_SEC = msToSec(PERIOD_MS);
+        public static final TrajectoryPoint.TrajectoryDuration PERIOD = TrajectoryPoint.TrajectoryDuration.Trajectory_Duration_10ms;
+        public static final Trajectory.Config CONFIG_SETTINGS = new Trajectory.Config(Trajectory.FitMethod.HERMITE_QUINTIC, Trajectory.Config.SAMPLES_LOW, PERIOD_SEC, MAX_VEL_FPS, MAX_ACCEL_FPS2, MAX_JERK_FPS3);
     }
 }

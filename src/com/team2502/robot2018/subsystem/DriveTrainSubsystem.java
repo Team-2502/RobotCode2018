@@ -1,15 +1,16 @@
 package com.team2502.robot2018.subsystem;
 
+import com.ctre.phoenix.motion.MotionProfileStatus;
 import com.ctre.phoenix.motion.SetValueMotionProfile;
 import com.ctre.phoenix.motion.TrajectoryPoint;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-import com.sun.tools.internal.jxc.ap.Const;
 import com.team2502.robot2018.*;
 import com.team2502.robot2018.command.teleop.DriveCommand;
 import com.team2502.robot2018.sendables.Nameable;
 import com.team2502.robot2018.sendables.PIDTunable;
+import com.team2502.robot2018.sendables.SendableDriveStrategyType;
 import com.team2502.robot2018.sendables.SendablePIDTuner;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -18,32 +19,51 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import jaci.pathfinder.Pathfinder;
 import jaci.pathfinder.Trajectory;
 
-import static com.team2502.robot2018.Constants.msToSec;
-
 /**
  * Example Implementation, Many changes needed.
  */
 public class DriveTrainSubsystem extends Subsystem implements DashboardData.DashboardUpdater, PIDTunable
 {
     private static final FloatPair SPEED_CONTAINER = new FloatPair();
+
+    private final WPI_TalonSRX leftFrontTalonEnc;
+    private final WPI_TalonSRX leftRearTalon;
+    private final WPI_TalonSRX rightFrontTalonEnc;
+    private final WPI_TalonSRX rightRearTalon;
+
+    /**
+     * Represents our drivetrain
+     */
+    private final DifferentialDrive drive;
+
+    /**
+     * Represents the left side of the drivetrain
+     */
+    private final SpeedControllerGroup spgLeft;
+
+    /**
+     * Represents the right side of the drivetrain
+     */
+    private final SpeedControllerGroup spgRight;
+
+
+    /**
+     * Allows the PID of the drivetrain to be tuned from shuffleboard
+     */
+    private final SendablePIDTuner pidTuner;
+
+    private double kP = .7D;
+    private double kI = 0.0;
+    private double kD = 0;
+    private double kF = 0;
+
     private static final float ACCELERATION_DIFF = 0.5F;
     private static final float DIFF_COMPARISON = 0.15F;
-    public final WPI_TalonSRX leftFrontTalonEnc;
-    public final WPI_TalonSRX leftRearTalon;
-    public final WPI_TalonSRX rightFrontTalonEnc;
-    public final WPI_TalonSRX rightRearTalon;
-    private final DifferentialDrive drive;
-    private final SpeedControllerGroup spgLeft;
-    private final SpeedControllerGroup spgRight;
-    private final SendablePIDTuner pidTuner;
-    private final float SPEED_LIMITER = 1.0F;
-    double kP = .7D;
-    double kI = 0.0;
-    double kD = 0;
-    double kF = 0;
+
     private float lastLeft;
-    //    private boolean negative;
     private float lastRight;
+    private boolean isNegativePressed;
+    private boolean negative;
 
     public DriveTrainSubsystem()
     {
@@ -60,8 +80,8 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         rightRearTalon = new WPI_TalonSRX(RobotMap.Motor.DRIVE_TRAIN_BACK_RIGHT);
 
         // Add encoders (ask nicely for encoders on drivetrain)
-        leftRearTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, Constants.INIT_TIMEOUT);
-        rightRearTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, Constants.INIT_TIMEOUT);
+        leftRearTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute, 0, Constants.INIT_TIMEOUT);
+        rightRearTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute, 0, Constants.INIT_TIMEOUT);
 
 
         spgLeft = new SpeedControllerGroup(leftFrontTalonEnc, leftRearTalon);
@@ -85,8 +105,16 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         setDefaultCommand(new DriveCommand());
     }
 
+    /**
+     * Stops the drivetrain
+     */
     public void stop() { drive.stopMotor(); }
 
+    /**
+     * Prepare the talon for driving in teleop
+     *
+     * @param talon the talon in question
+     */
     private void setTeleopSettings(WPI_TalonSRX talon)
     {
         talon.set(ControlMode.PercentOutput, 0.0F);
@@ -97,6 +125,102 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         talon.configPeakOutputReverse(-1.0D, Constants.INIT_TIMEOUT);
 
         talon.setInverted(true);
+    }
+
+    /**
+     * Load trajectory points into the talons, where trajectory points are in feet
+     * @param trajLeft The trajectory for the left side
+     * @param trajRight The trajectory for the right side
+     */
+    public void loadTrajectoryPoints(Trajectory trajLeft, Trajectory trajRight)
+    {
+        setMotionProfileSettings();
+        loadTrajectoryPoints(trajLeft, leftFrontTalonEnc);
+        loadTrajectoryPoints(trajRight, rightFrontTalonEnc);
+    }
+
+    /**
+     * Sets auton settings and makes the talons update faster
+     */
+    private void setMotionProfileSettings()
+    {
+        setAutonSettings();
+        leftFrontTalonEnc.changeMotionControlFramePeriod(Constants.SRXProfiling.PERIOD_MS  / 2);
+        rightFrontTalonEnc.changeMotionControlFramePeriod(Constants.SRXProfiling.PERIOD_MS  / 2);
+    }
+
+    /**
+     * Make the talons update at their normal rate. Doing so reduces CAN bus utilization.
+     */
+    public void resetTalonControlFramePeriod()
+    {
+        leftFrontTalonEnc.changeMotionControlFramePeriod(20);
+        rightFrontTalonEnc.changeMotionControlFramePeriod(20);
+    }
+
+    /**
+     * Update the given status with the status of the left side
+     *
+     * Hopefully, the status of the left and right side should be the same
+     *
+     * @param status The status reference to update
+     */
+    public void updateStatus(MotionProfileStatus status)
+    {
+        leftFrontTalonEnc.getMotionProfileStatus(status);
+    }
+
+    public void clearMotionProfileHasUnderrun()
+    {
+        leftFrontTalonEnc.clearMotionProfileHasUnderrun(Constants.LOOP_TIMEOUT);
+        rightFrontTalonEnc.clearMotionProfileHasUnderrun(Constants.LOOP_TIMEOUT);
+    }
+
+    /**
+     * Load some trajectory points into a particular talon
+     * @param traj The trajectory points in question, with points in feet
+     * @param talon The talon in question
+     */
+    private void loadTrajectoryPoints(Trajectory traj, WPI_TalonSRX talon)
+    {
+        talon.clearMotionProfileTrajectories();
+        talon.clearMotionProfileHasUnderrun(Constants.LOOP_TIMEOUT);
+        talon.configMotionProfileTrajectoryPeriod(Constants.SRXProfiling.BASE_TRAJ_PERIOD, Constants.INIT_TIMEOUT);
+
+        for(int i = 0; i < traj.segments.length; i++)
+        {
+            Trajectory.Segment segment = traj.get(i);
+            TrajectoryPoint point = new TrajectoryPoint();
+
+            // Trajectory headings are in radians, but SRX wants them in degrees
+            point.headingDeg = Pathfinder.r2d(segment.heading);
+
+            point.isLastPoint = i + 1 == traj.segments.length;
+
+            point.timeDur = Constants.SRXProfiling.PERIOD;
+
+            //todo: shift by current pos
+            point.position = fakeToRealEncUnits((float) segment.position * Constants.FEET_TO_EPOS_DT);
+            point.velocity = fakeToRealEncUnits((float) segment.velocity * Constants.FPS_TO_EVEL_DT);
+
+            point.zeroPos = !Constants.SRXProfiling.USE_ABSOLUTE_COORDS && i == 0;
+
+            point.profileSlotSelect0 = 0;
+            point.profileSlotSelect1 = 0;
+
+            talon.pushMotionProfileTrajectory(point);
+        }
+    }
+
+    /**
+     * Pushes points from the top level SRX buffer into the bottom level one
+     *
+     * This must be called repeatedly in order for stuff to work
+     */
+    public void processMotionProfileBuffer()
+    {
+        leftFrontTalonEnc.processMotionProfileBuffer();
+        rightFrontTalonEnc.processMotionProfileBuffer();
     }
 
     /**
@@ -112,9 +236,12 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
 
         setupTalons();
 
-        Robot.TRANSMISSION_SOLENOID.setLowGear(false);
+        Robot.TRANSMISSION_SOLENOID.setHighGear(false);
     }
 
+    /**
+     * Set the encoder settings for the encoder talons, and make the other talons follow the encoder talons
+     */
     public void setupTalons()
     {
 
@@ -131,47 +258,14 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     public void setAutonSettings()
     {
         setupTalons();
-        Robot.TRANSMISSION_SOLENOID.setLowGear(true);
+        Robot.TRANSMISSION_SOLENOID.setHighGear(true);
+        // Set high gear
     }
 
-    public void loadTrajectoryPoints(Trajectory trajLeft, Trajectory trajRight)
-    {
-        setAutonSettings();
-        loadTrajectoryPoints(trajLeft, leftFrontTalonEnc);
-        loadTrajectoryPoints(trajRight, rightFrontTalonEnc);
-    }
-
-    private void loadTrajectoryPoints(Trajectory traj, WPI_TalonSRX talon)
-    {
-        talon.clearMotionProfileTrajectories();
-        talon.clearMotionProfileHasUnderrun(Constants.LOOP_TIMEOUT);
-        talon.configMotionProfileTrajectoryPeriod(Constants.SRXProfiling.BASE_TRAJ_PERIOD, Constants.INIT_TIMEOUT);
-
-        for(int i = 0; i < traj.segments.length; i++)
-        {
-            Trajectory.Segment segment = traj.get(i);
-            TrajectoryPoint point = new TrajectoryPoint();
-
-            point.headingDeg = segment.heading;
-
-            point.isLastPoint = i + 1 == traj.segments.length;
-
-            point.timeDur = TrajectoryPoint.TrajectoryDuration.Trajectory_Duration_0ms.valueOf((int) msToSec(segment.dt));
-
-            point.position = segment.position;
-            point.velocity = segment.velocity;
-
-            point.zeroPos = !Constants.SRXProfiling.USE_ABSOLUTE_COORDS && i == 0;
-
-            point.profileSlotSelect0 = 0;
-            point.profileSlotSelect1 = 0;
-
-            talon.pushMotionProfileTrajectory(point);
-        }
-    }
-
-
-
+    /**
+     * Update the PID
+     */
+    @Override
     public void setPID()
     {
         setPID(kP, kI, kD);
@@ -226,7 +320,6 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
      * @param rightWheel  Units for the right side of drivetrain
      * @param controlMode The mode that the motors are being driven in
      */
-
     public void runMotors(ControlMode controlMode, float leftWheel, float rightWheel) // double z
     {
         // setting slaves as the talons w/ encoders is the only way it works ¯\_(ツ)_/¯
@@ -237,16 +330,24 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         rightFrontTalonEnc.set(controlMode, rightWheel);
     }
 
+    /**
+     * Run the drivetrain at a percent voltage
+     *
+     * @param leftWheel  Percent voltage to left side
+     * @param rightWheel Percent voltage to right side
+     * @see DriveTrainSubsystem#runMotors(ControlMode, float, float)
+     */
     public void runMotorsVoltage(float leftWheel, float rightWheel)
     {
         runMotors(ControlMode.PercentOutput, leftWheel, rightWheel);
     }
 
     /**
-     * Uses fps
+     * Run the drivetrain at a particular speed
      *
-     * @param leftWheel
-     * @param rightWheel
+     * @param leftWheel  Speed of the left side (ft/s)
+     * @param rightWheel Speed of the right side (ft/s)
+     * @see DriveTrainSubsystem#runMotors(ControlMode, float, float)
      */
     public void runMotorsVelocity(float leftWheel, float rightWheel)
     {
@@ -256,15 +357,51 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         runMotors(ControlMode.Velocity, left, right);
     }
 
+    /**
+     * Run the drivetrain at a particular speed in raw enc units
+     *
+     * @param leftWheel  Speed of the left side (enc units/ 100 ms)
+     * @param rightWheel Speed of the right side (enc units/ 100 ms)
+     * @see DriveTrainSubsystem#runMotors(ControlMode, float, float)
+     * @see DriveTrainSubsystem#runMotorsVelocity(float, float)
+     */
     public void runMotorsRawVelocity(float leftWheel, float rightWheel)
     {
         runMotors(ControlMode.Velocity, leftWheel, rightWheel);
     }
 
     /**
+     * Run the drivetrain to a particular distance
+     *
+     * @param leftWheel  Distance of the left side (ft)
+     * @param rightWheel Distance of the right side (ft)
+     * @see DriveTrainSubsystem#runMotors(ControlMode, float, float)
+     */
+    public void runMotorsPosition(float leftWheel, float rightWheel)
+    {
+        float left = fakeToRealEncUnits(leftWheel * Constants.FEET_TO_EPOS_DT);
+        float right = fakeToRealEncUnits(rightWheel * Constants.FEET_TO_EPOS_DT);
+        runMotors(ControlMode.Position, left, right);
+    }
+
+    /**
+     * Run the drivetrain to a particular distance in raw enc units
+     *
+     * @param leftWheel  Distance of the left side (enc units)
+     * @param rightWheel Distance of the right side (enc units)
+     * @see DriveTrainSubsystem#runMotors(ControlMode, float, float)
+     * @see DriveTrainSubsystem#runMotorsPosition(float, float) (float, float)
+     */
+    public void runMotorsRawPosition(float leftWheel, float rightWheel)
+    {
+        runMotors(ControlMode.Position, leftWheel, rightWheel);
+    }
+
+
+    /**
      * Drive the robot using ControlMode.PercentOutput. The equation leftWheel=-rightWheel must be true for the robot to setElevatorPV straight.
      * <br>
-     * Make sure to set the motors according to the control mode. In auton, it's position. In teleop, it's percent voltage.
+     * Make sure to set the motors according to the control mode. In auton, it's {@link ControlMode#Position}. In teleop, it's {@link ControlMode#PercentOutput}.
      *
      * @param leftWheel  Units for the left side of drivetrain
      * @param rightWheel Units for the right side of drivetrain
@@ -274,11 +411,20 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         drive.tankDrive(leftWheel, rightWheel, true);
     }
 
+    /**
+     * @return Difference between left and right joystick. Lets you know how much the driver is trying to turn.
+     */
     public double turningFactor()
     {
         return Math.abs(OI.JOYSTICK_DRIVE_LEFT.getY() - OI.JOYSTICK_DRIVE_RIGHT.getY());
     }
 
+    /**
+     * Disable talons, stopping them.
+     *
+     * @see DriveTrainSubsystem#stop()
+     * @deprecated
+     */
     public void disableTalons()
     {
         leftFrontTalonEnc.set(ControlMode.Disabled, 0);
@@ -299,6 +445,7 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         // Get the base speed of the robot
         joystickLevel = (float) OI.JOYSTICK_DRIVE_LEFT.getY();
 
+        //TODO: Eliminate this redundant code
         // Only increase the speed by a small amount
         float diff = joystickLevel - lastLeft;
         if(diff > DIFF_COMPARISON) { joystickLevel = lastLeft + ACCELERATION_DIFF; }
@@ -321,20 +468,46 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         return out;
     }
 
+    /**
+     * Used to gradually increase the speed of the robot in teleop
+     *
+     * @return
+     */
     private FloatPair getSpeedTank()
     {
         return getSpeedTank(SPEED_CONTAINER);
     }
 
+    /**
+     * Drive the robot in teleop
+     */
     public void drive()
     {
         FloatPair speed = getSpeedTank();
-        speed.scale(SPEED_LIMITER);
         SmartDashboard.putNumber("speedL", -speed.left);
         SmartDashboard.putNumber("speedR", -speed.right);
-        runMotorsTankDrive(-speed.left, -speed.right);
+
+        Nameable currentMode = SendableDriveStrategyType.INSTANCE.getCurrentMode();
+
+        if(!(currentMode instanceof DriveStrategyType))
+        {
+            throw new IllegalArgumentException("currentMode is of wrong type!"); // Note this acts as a return statement
+        }
+        DriveStrategyType strategyType = (DriveStrategyType) currentMode;
+        if(negative)
+        {
+            strategyType.getDriveStrategy().drive(speed.left, speed.right);
+        }
+        else
+        {
+            strategyType.getDriveStrategy().drive(-speed.left, -speed.right);
+        }
     }
 
+    /**
+     * @return Tangent speed
+     * @see DriveTrainSubsystem#getTanVel()
+     */
     public float getTanSpeed()
     {
         return Math.abs(getTanVel());
@@ -353,25 +526,49 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     /**
      * @return Velocity as read by left encoder in Feet per Second
      */
-    public float getLeftVel() { return fakeToRealWheelRev(getLeftRawVel() * Constants.FAKE_EVEL_TO_FPS_DT); }
+    public float getLeftVel()
+    { return fakeToRealWheelRev(getLeftRawVel() * Constants.FAKE_EVEL_TO_FPS_DT); }
 
     /**
-     * @return Velocity as read by right encoder in Feet per Second
+     * Assuming we are in a PID loop, return the average error for the 2 sides of the drivetrain
+     *
+     * @return the average error
+     */
+    public double getAvgEncLoopError()
+    {
+        return (leftFrontTalonEnc.getClosedLoopError(0) + rightFrontTalonEnc.getClosedLoopError(0)) / 2;
+    }
+
+    /**
+     * @return Turns "fake" units into real wheel revolutions
      */
     public float fakeToRealWheelRev(float wheelRev)
     {
-        return Robot.TRANSMISSION_SOLENOID.isHigh() ? wheelRev / Constants.WHEEL_REV_TO_ENC_REV_HIGH : wheelRev / Constants.WHEEL_REV_TO_ENC_REV_LOW;
+        if(Robot.TRANSMISSION_SOLENOID.isHigh()) { return wheelRev / Constants.WHEEL_REV_TO_ENC_REV_HIGH; }
+        else { return wheelRev / Constants.WHEEL_REV_TO_ENC_REV_LOW; }
     }
 
+    /**
+     * @return Turns "fake" units into real encoder units
+     */
     public float fakeToRealEncUnits(float rawUnits)
     {
         return Robot.TRANSMISSION_SOLENOID.isHigh() ? rawUnits * Constants.WHEEL_REV_TO_ENC_REV_HIGH : rawUnits * Constants.WHEEL_REV_TO_ENC_REV_LOW;
     }
 
+    /**
+     * @return Velocity as read by right encoder in ft/s
+     */
     public float getRightVel() { return fakeToRealWheelRev(getRightRawVel() * Constants.FAKE_EVEL_TO_FPS_DT); }
 
+    /**
+     * @return Right side velocity in enc units / 100 ms
+     */
     public int getRightRawVel() { return rightFrontTalonEnc.getSelectedSensorVelocity(0); }
 
+    /**
+     * @return Left side velocity in enc units / 100 ms
+     */
     public int getLeftRawVel() { return leftFrontTalonEnc.getSelectedSensorVelocity(0); }
 
     /**
@@ -384,9 +581,29 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
      */
     public float getLeftPos() { return fakeToRealWheelRev(getLeftPosRaw() * Constants.EPOS_TO_FEET_DT); }
 
+    /**
+     * @return Left side position in enc units
+     */
     public float getLeftPosRaw() { return leftFrontTalonEnc.getSelectedSensorPosition(0);}
 
+    /**
+     * @return Right side position in enc units
+     */
     public float getRightPosRaw() { return rightFrontTalonEnc.getSelectedSensorPosition(0);}
+
+    /**
+     * @param inches
+     * @return
+     * @deprecated think this is wrong
+     */
+    public float inchesToEncUnits(float inches)
+    {
+        float feet = inches / 12;
+
+        // TODO: is this right???
+        return fakeToRealEncUnits(feet * Constants.FEET_TO_EPOS_DT);
+//        return -99;
+    }
 
 
     @Override
@@ -456,16 +673,18 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         rightFrontTalonEnc.config_kF(0, kF, Constants.INIT_TIMEOUT);
     }
 
-    public int getAvgEncLoopError()
-    {
-        return rightFrontTalonEnc.getClosedLoopError(0) / 2 + leftFrontTalonEnc.getClosedLoopError(0) / 2;
-    }
-
+    /**
+     * Enable, disable, or hold a motion profiling position
+     * @param motionProfilingState Something from the enum {@link SetValueMotionProfile}
+     */
     public void setMotionProfilingState(SetValueMotionProfile motionProfilingState)
     {
-        leftFrontTalonEnc.set(ControlMode.MotionProfile, motionProfilingState.value);
+        runMotors(ControlMode.MotionProfile, motionProfilingState.value, motionProfilingState.value);
     }
 
+    /**
+     * Drive strategies that may be used
+     */
     public enum DriveStrategyType implements Nameable
     {
         VOLTAGE("VOLTAGE", (joystickLeft, joystickRight) -> {
@@ -493,15 +712,22 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         }
     }
 
+    @FunctionalInterface
     private interface DriveStrategy
     {
+        /**
+         * Given left and right joystick y levels, run the motors
+         *
+         * @param joystickLeft  Left joy y level
+         * @param joystickRight Right joy y level
+         */
         void drive(float joystickLeft, float joystickRight);
     }
 
     /**
      * A data structure to store a pair of floats.
      */
-    private static class FloatPair
+    private static class FloatPair //TODO: Replace with ImmutableVector2f
     {
         public float left;
         public float right;
@@ -532,12 +758,6 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
                 return left == pair.left && right == pair.right;
             }
             return false;
-        }
-
-        public void scale(double x)
-        {
-            this.left *= x;
-            this.right *= x;
         }
     }
 
