@@ -77,15 +77,19 @@ public class SRXProfilingCommand extends Command
         {
             Scheduler.getInstance().add(command);
         }
+
+        Robot.DRIVE_TRAIN.setMotionProfilingState(SetValueMotionProfile.Enable);
     }
 
     @Override
     protected void execute()
     {
+        DriverStation.getInstance().reportWarning("thinking . . .", false);
+
         // Update status
         Robot.DRIVE_TRAIN.updateStatus(status);
 
-        Robot.DRIVE_TRAIN.setMotionProfilingState(SetValueMotionProfile.Enable);
+
 
         // If we have run out of points to send to the lower-level
         if(status.hasUnderrun)

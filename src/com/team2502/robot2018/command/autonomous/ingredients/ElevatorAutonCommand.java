@@ -29,7 +29,7 @@ public class ElevatorAutonCommand extends TimedCommand
     @Override
     protected void initialize()
     {
-        Robot.ELEVATOR.calibrateEncoder();
+//        Robot.ELEVATOR.calibrateEncoder();
         Robot.writeLog("ElevatorAutonCommand init", 10);
     }
 

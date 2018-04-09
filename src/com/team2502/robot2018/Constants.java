@@ -18,7 +18,7 @@ public class Constants
     /**
      * How high the elevator must be in order to put a cube in the switch
      */
-    public static final float SWITCH_ELEV_HEIGHT_FT = 2.7F;
+    public static final float SWITCH_ELEV_HEIGHT_FT = 4.7F;
 
     /**
      * How high the elevator must be in order to put a cube in the scale
@@ -120,13 +120,11 @@ public class Constants
 
         public static final int SAMPLES_FAST = 1000;
 
-        public static final double MAX_VEL_FPS = 3;
+        public static final double MAX_VEL_FPS = 7;
         public static final double MAX_ACCEL_FPS2 = 15;
         public static final double MAX_JERK_FPS3 = 30;
 
-        public static final double MAX_VEL_MPS = ftToMeter(MAX_VEL_FPS);
-        public static final double MAX_ACCEL_MPS2 = ftToMeter(MAX_ACCEL_FPS2);
-        public static final double MAX_JERK_MPS3 = ftToMeter(MAX_JERK_FPS3);
+
         public static final double WHEELBASE_WIDTH = 26.0 / 12.0;
         public static final boolean USE_ABSOLUTE_COORDS = true;
 
