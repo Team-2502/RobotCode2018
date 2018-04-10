@@ -81,7 +81,7 @@ public class Constants
 
 
         public static final double WHEELBASE_WIDTH = 26.0 / 12.0;
-        public static final boolean USE_ABSOLUTE_COORDS = true;
+        public static final boolean USE_RELATIVE_COORDS = false;
 
         /**
          * Base time between purepursuit points

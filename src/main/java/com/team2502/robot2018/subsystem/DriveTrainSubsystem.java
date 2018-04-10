@@ -8,6 +8,7 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.team2502.robot2018.*;
 import com.team2502.robot2018.command.teleop.DriveCommand;
+import com.team2502.robot2018.pathplanning.srxprofiling.StreamableProfile;
 import com.team2502.robot2018.sendables.Nameable;
 import com.team2502.robot2018.sendables.PIDTunable;
 import com.team2502.robot2018.sendables.SendableDriveStrategyType;
@@ -20,7 +21,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import jaci.pathfinder.Pathfinder;
 import jaci.pathfinder.Trajectory;
 
-import static com.team2502.robot2018.Constants.Physical.DriveTrain.*;
+import static com.team2502.robot2018.Constants.Physical.DriveTrain.FEET_TO_EPOS_DT;
+import static com.team2502.robot2018.Constants.Physical.DriveTrain.FPS_TO_EVEL_DT;
 
 /**
  * Example Implementation, Many changes needed.
@@ -130,9 +132,18 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         talon.setInverted(true);
     }
 
+    public void loadTrajectoryPoints(StreamableProfile profile)
+    {
+        setMotionProfileSettings();
+        loadTrajectoryPoints(profile.getLeftPoints(), leftFrontTalonEnc);
+        loadTrajectoryPoints(profile.getRightPoints(), rightFrontTalonEnc);
+
+    }
+
     /**
      * Load purepursuit points into the talons, where purepursuit points are in feet
-     * @param trajLeft The purepursuit for the left side
+     *
+     * @param trajLeft  The purepursuit for the left side
      * @param trajRight The purepursuit for the right side
      */
     public void loadTrajectoryPoints(Trajectory trajLeft, Trajectory trajRight, double dir)
@@ -149,8 +160,8 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     {
         DriverStation.getInstance().reportWarning("Setting MP Settings", false);
         setAutonSettings();
-        leftFrontTalonEnc.changeMotionControlFramePeriod(Constants.SRXProfiling.PERIOD_MS  / 2);
-        rightFrontTalonEnc.changeMotionControlFramePeriod(Constants.SRXProfiling.PERIOD_MS  / 2);
+        leftFrontTalonEnc.changeMotionControlFramePeriod(Constants.SRXProfiling.PERIOD_MS / 2);
+        rightFrontTalonEnc.changeMotionControlFramePeriod(Constants.SRXProfiling.PERIOD_MS / 2);
 
         leftFrontTalonEnc.config_kF(0, 0.2687473379, Constants.INIT_TIMEOUT);
         rightFrontTalonEnc.config_kF(0, 0.2687473379, Constants.INIT_TIMEOUT);
@@ -167,7 +178,7 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
 
     /**
      * Update the given status with the status of the left side
-     *
+     * <p>
      * Hopefully, the status of the left and right side should be the same
      *
      * @param status The status reference to update
@@ -185,8 +196,11 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
 
     /**
      * Load some purepursuit points into a particular talon
-     * @param traj The purepursuit points in question, with points in feet
+     *
+     * @param traj  The purepursuit points in question, with points in feet
      * @param talon The talon in question
+     * @see DriveTrainSubsystem#loadTrajectoryPoints(StreamableProfile)
+     * @deprecated Don't use {@link Trajectory}, use {@link com.team2502.robot2018.pathplanning.srxprofiling.MotionProfile}
      */
     private void loadTrajectoryPoints(Trajectory traj, WPI_TalonSRX talon, double dir)
     {
@@ -211,7 +225,7 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
             point.position = fakeToRealEncUnits((float) segment.position * FEET_TO_EPOS_DT) * dir + talon.getSelectedSensorPosition(0);
             point.velocity = fakeToRealEncUnits((float) segment.velocity * FPS_TO_EVEL_DT) * dir;
 
-            point.zeroPos = !Constants.SRXProfiling.USE_ABSOLUTE_COORDS && i == 0;
+            point.zeroPos = Constants.SRXProfiling.USE_RELATIVE_COORDS && i == 0;
 
             point.profileSlotSelect0 = 0;
             point.profileSlotSelect1 = 0;
@@ -221,9 +235,27 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         }
     }
 
+    private void loadTrajectoryPoints(TrajectoryPoint[] profile, WPI_TalonSRX talon)
+    {
+        talon.clearMotionProfileTrajectories();
+        talon.clearMotionProfileHasUnderrun(Constants.LOOP_TIMEOUT);
+        talon.configMotionProfileTrajectoryPeriod(Constants.SRXProfiling.BASE_TRAJ_PERIOD, Constants.INIT_TIMEOUT);
+
+        for(TrajectoryPoint point : profile)
+        {
+            //if we are using absolute coordinates
+            if(!Constants.SRXProfiling.USE_RELATIVE_COORDS)
+            {
+                // then shift our robot's position by the necesary amount
+                point.position = point.position + talon.getSelectedSensorPosition(0);
+            }
+            talon.pushMotionProfileTrajectory(point);
+        }
+    }
+
     /**
      * Pushes points from the top level SRX buffer into the bottom level one
-     *
+     * <p>
      * This must be called repeatedly in order for stuff to work
      */
     public void processMotionProfileBuffer()
@@ -540,6 +572,7 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
 
     /**
      * Assuming we are in a PID loop, return the average error for the 2 sides of the drivetrain
+     *
      * @return the average error
      */
     public double getAvgEncLoopError()
@@ -683,6 +716,7 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
 
     /**
      * Enable, disable, or hold a motion profiling position
+     *
      * @param motionProfilingState Something from the enum {@link SetValueMotionProfile}
      */
     public void setMotionProfilingState(SetValueMotionProfile motionProfilingState)
