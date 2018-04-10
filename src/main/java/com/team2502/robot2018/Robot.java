@@ -5,6 +5,8 @@ import com.kauailabs.navx.frc.AHRS;
 import com.team2502.robot2018.command.autonomous.ingredients.AutonStrategy;
 import com.team2502.robot2018.pathplanning.localization.EncoderDifferentialDriveLocationEstimator;
 import com.team2502.robot2018.pathplanning.localization.NavXLocationEstimator;
+import com.team2502.robot2018.pathplanning.srxprofiling.MotionProfile;
+import com.team2502.robot2018.pathplanning.srxprofiling.MotionProfileConstituent;
 import com.team2502.robot2018.sendables.SendableDriveStrategyType;
 import com.team2502.robot2018.sendables.SendableDriveTrain;
 import com.team2502.robot2018.sendables.SendableVersioning;
@@ -280,6 +282,9 @@ public final class Robot extends IterativeRobot
 
         ROBOT_LOCALIZATION_COMMAND.execute();
         Scheduler.getInstance().add(ROBOT_LOCALIZATION_COMMAND);
+
+        MotionProfileConstituent.initTrajectories();
+        MotionProfile.initialize();
 
     }
 

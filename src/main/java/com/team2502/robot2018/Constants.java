@@ -99,6 +99,11 @@ public class Constants
         public static final Trajectory.Config CONFIG_SETTINGS = new Trajectory.Config(Trajectory.FitMethod.HERMITE_QUINTIC, Trajectory.Config.SAMPLES_LOW, PERIOD_SEC, MAX_VEL_FPS, MAX_ACCEL_FPS2, MAX_JERK_FPS3);
 
         public static final ScheduledCommand[] NO_COMMANDS = new ScheduledCommand[0];
+
+        /**
+         * If true, we will write the motion profile that was generated to a file on the robot.
+         */
+        public static final boolean DEBUG = false;
     }
 
     /**

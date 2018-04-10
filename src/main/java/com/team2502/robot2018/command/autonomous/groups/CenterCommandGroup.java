@@ -48,22 +48,10 @@ public class CenterCommandGroup extends CommandGroup
         emitCubeSwitch();
 
 
-        addSequential(new SRXProfilingCommand(new ScheduledCommand[] { new ScheduledCommand(0, new ToggleIntakeCommand()) },
-                                              TrajConfig.Center.Right.toSecondCubeDir,
-                                              TrajConfig.Center.Right.toSecondCube));
+        addSequential(new SRXProfilingCommand(TrajConfig.Center.Right.secondCubeRightSwitch,
+                                              new ScheduledCommand(0, new ToggleIntakeCommand())));
 
         addParallel(new ElevatorAutonCommand(3, 0));
-        addSequential(new SRXProfilingCommand(new ScheduledCommand[] { new ScheduledCommand(1.5, new RunIntakeCommand(1.5, -1)) },
-                                              1,
-                                              TrajConfig.Center.Right.toSecondCubePt2));
-
-        addSequential(new SRXProfilingCommand(new ScheduledCommand[] { new ScheduledCommand(0, new RunIntakeCommand(1.1, -1)) },
-                                              -1,
-                                              TrajConfig.Center.Right.toSecondCubePt2));
-
-        addSequential(new SRXProfilingCommand(new ScheduledCommand[] { new ScheduledCommand(0, new ElevatorAutonCommand(3, Constants.Physical.Elevator.SWITCH_ELEV_HEIGHT_FT)) },
-                                              1,
-                                              TrajConfig.Center.Right.backToSwitch));
 
         emitCubeSwitch();
     }

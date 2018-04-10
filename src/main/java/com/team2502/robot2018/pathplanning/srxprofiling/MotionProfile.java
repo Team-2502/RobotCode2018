@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class MotionProfile
+public class MotionProfile implements StreamableProfile
 {
     private static final List<MotionProfile> profiles = new ArrayList<>();
     private final List<MotionProfileConstituent> constituents;
