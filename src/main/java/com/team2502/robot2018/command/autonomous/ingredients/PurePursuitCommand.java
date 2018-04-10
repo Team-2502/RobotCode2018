@@ -2,10 +2,10 @@ package com.team2502.robot2018.command.autonomous.ingredients;
 
 import com.team2502.robot2018.Constants;
 import com.team2502.robot2018.Robot;
-import com.team2502.robot2018.trajectory.ITankRobotBounds;
-import com.team2502.robot2018.trajectory.Lookahead;
-import com.team2502.robot2018.trajectory.PurePursuitMovementStrategy;
-import com.team2502.robot2018.trajectory.Waypoint;
+import com.team2502.robot2018.pathplanning.purepursuit.ITankRobotBounds;
+import com.team2502.robot2018.pathplanning.purepursuit.Lookahead;
+import com.team2502.robot2018.pathplanning.purepursuit.PurePursuitMovementStrategy;
+import com.team2502.robot2018.pathplanning.purepursuit.Waypoint;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.joml.ImmutableVector2f;

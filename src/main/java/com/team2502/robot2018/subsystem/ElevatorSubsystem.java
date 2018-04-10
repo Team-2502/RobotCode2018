@@ -25,7 +25,7 @@ public class ElevatorSubsystem extends NonDefaultSubsystem implements PIDTunable
     private static int CRUISE_VELOCITY_EVEL = 6000;
 
     private final WPI_TalonSRX elevatorTop;
-    private final WPI_TalonSRX elevatorBottom;
+    public final WPI_TalonSRX elevatorBottom;
 
     // The difference between the climber motors and the elevator motors is that
     // the climber motors are the slower CIMS while the the elevator motors are the faster VEX motors
@@ -270,6 +270,7 @@ public class ElevatorSubsystem extends NonDefaultSubsystem implements PIDTunable
     public double getPos()
     {
         int selectedSensorPosition = elevatorBottom.getSelectedSensorPosition(0);
+
         return selectedSensorPosition;
     }
 

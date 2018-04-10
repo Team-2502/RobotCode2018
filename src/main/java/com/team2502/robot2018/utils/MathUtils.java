@@ -647,7 +647,7 @@ public final class MathUtils
 
         public static ImmutableVector2f getRelativeDPosCurve(float vL, float vR, float l, float dt)
         {
-            // To account for an infinite trajectory radius when going straight
+            // To account for an infinite pathplanning radius when going straight
             if(Math.abs(vL - vR) <= (vL + vR) * 1E-2)
             {
                 // Probably average is not needed, but it may be useful over long distances
@@ -710,15 +710,15 @@ public final class MathUtils
 
         /**
          * turn an angle without bounds (-inf,inf) to [0,360)
-         * @param angle
-         * @return
+         * @param angle Whatever the navX is reading
+         * @return An angle between 0 and 360, in degrees
          */
         public static float navXBound(float angle)
         {
             float bounded = angle % 360;
             if(bounded < 0)
             {
-                return 360+bounded;
+                return 360 + bounded;
             }
             return bounded;
         }

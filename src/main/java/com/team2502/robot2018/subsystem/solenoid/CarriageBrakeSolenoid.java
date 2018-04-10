@@ -4,15 +4,15 @@ import com.team2502.robot2018.RobotMap;
 import com.team2502.robot2018.utils.NonDefaultSubsystem;
 import edu.wpi.first.wpilibj.Solenoid;
 
-public class ClimberCarriageBrakeSubsystem extends NonDefaultSubsystem
+public class CarriageBrakeSolenoid extends NonDefaultSubsystem
 {
     public final Solenoid climberBrake;
 
     private boolean breakEnabled;
 
-    public ClimberCarriageBrakeSubsystem()
+    public CarriageBrakeSolenoid()
     {
-        climberBrake = new Solenoid(RobotMap.Solenoid.CLIMBER_BRAKE_SOLENOID);
+        climberBrake = new Solenoid(RobotMap.Solenoid.CARRIAGE_BRAKE);
         breakEnabled = false;
     }
 

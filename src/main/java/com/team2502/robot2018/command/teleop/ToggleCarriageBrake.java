@@ -6,9 +6,9 @@ import edu.wpi.first.wpilibj.command.InstantCommand;
 /**
  * Manually toggle the lock on the climber
  */
-public class ToggleClimberCarriageBrake extends InstantCommand
+public class ToggleCarriageBrake extends InstantCommand
 {
-    public ToggleClimberCarriageBrake()
+    public ToggleCarriageBrake()
     {
         requires(Robot.CLIMBER_CARRIAGE_BRAKE);
     }

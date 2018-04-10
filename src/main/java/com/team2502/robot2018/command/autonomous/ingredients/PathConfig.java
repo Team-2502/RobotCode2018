@@ -1,7 +1,9 @@
 package com.team2502.robot2018.command.autonomous.ingredients;
 
+
 import com.team2502.robot2018.Change;
-import com.team2502.robot2018.trajectory.Waypoint;
+import com.team2502.robot2018.pathplanning.purepursuit.Waypoint;
+
 import org.joml.ImmutableVector2f;
 
 import java.util.ArrayList;
@@ -44,15 +46,18 @@ public class PathConfig
     public static class Center
     {
 
+        //TODO: Make speedLimiter 1.0F
+        private static final float speedLimiter = 0.3F;
         /**
          * Move from the center of the starting wall to the right side of the switch
          */
         public static final List<Waypoint> rightSwitch = Arrays.asList(
-                new Waypoint(new ImmutableVector2f(0, 0), 0, 10, -5),
-                new Waypoint(new ImmutableVector2f(2F, 2.45F), 16, 10, -5),
-                new Waypoint(new ImmutableVector2f(4F, 4F), 16, 10, -5),
-                new Waypoint(new ImmutableVector2f(4F, 9.5F), 0F, 10, -5)
+                new Waypoint(new ImmutableVector2f(0, 0), 0, 10, -10),
+                new Waypoint(new ImmutableVector2f(2F, 2.45F), 16 * speedLimiter, 10, -10),
+                new Waypoint(new ImmutableVector2f(4F, 4F), 16 * speedLimiter, 10, -10),
+                new Waypoint(new ImmutableVector2f(4F, 9.5F), 1F * speedLimiter, 10, -10)
                                                                       );
+
 
         /**
          * Move from the center of the starting wall to the left side of the switch
@@ -90,12 +95,11 @@ public class PathConfig
                 new Waypoint(new ImmutableVector2f(3.5F, 19F), 0F, 10, -9)
                                                                             );
 
-        //TODO: try navX calibration when auto begins ... generally
-        public static final List<Waypoint> leftSwitch = Arrays.asList( //TODO need to fix as was changed because I (Andrew) thought this was the path we were tweaking
-                                                                       new Waypoint(new ImmutableVector2f(0, 0), 0, 5, -5),
-                                                                       new Waypoint(new ImmutableVector2f(1.636F, 2.454F), 9F, 5, -5),
-                                                                       new Waypoint(new ImmutableVector2f(3.82006F, 5.726F), 6F, 5, -5),
-                                                                       new Waypoint(new ImmutableVector2f(3.82006F, 10.5F), 2F, 5, -5) // TODO: add ability to coast at end
+        public static final List<Waypoint> leftSwitch = Arrays.asList(
+                new Waypoint(new ImmutableVector2f(0, 0), 0, 5, -5),
+                new Waypoint(new ImmutableVector2f(0, 2.454F), 9F, 5, -5),
+                new Waypoint(new ImmutableVector2f(0, 9), 6F, 5, -5),
+                new Waypoint(new ImmutableVector2f(3.82006F, 12.5F), 2F, 5, -5) // TODO: add ability to coast at end
                                                                      );
 
         public static final List<Waypoint> rightScale = Arrays.asList(
@@ -114,10 +118,21 @@ public class PathConfig
                                                                       );
 
 
+        public static final List<Waypoint> leftScaleDeepNullZone = Arrays.asList(
+                new Waypoint(new ImmutableVector2f(0, 0), 0, 20, -9),
+                new Waypoint(new ImmutableVector2f(-0.5F, 8.589F), 16F, 20, -7),
+                new Waypoint(new ImmutableVector2f(-0.5F, 12.405F), 15F, 20, -7, new RaiseElevatorScale()),
+                new Waypoint(new ImmutableVector2f(-0.5F, 20.5F), 5F, 20, -7),
+                new Waypoint(new ImmutableVector2f(-1.5F, 25F), 3F, 20, -7),
+                new Waypoint(new ImmutableVector2f(1.5F, 25.375F), 0F, 20, -7)
+                                                                                );
+
     }
 
     /**
-     * GMO-free soy-based paths for when your robot is placed on the right
+     * GMO-free soy-based paths for when your robot is placed on the right (Andrew? Ritik?)
+     * <p>
+     * These seem pretty processed to me... (Isaac)
      */
     public static class Right
     {
@@ -126,6 +141,8 @@ public class PathConfig
         public static final List<Waypoint> rightScale = flipY(Left.leftScale);
 
         public static final List<Waypoint> leftScale = flipY(Left.rightScale);
+
+        public static final List<Waypoint> rightScaleDeepNullZone = flipY(Left.leftScaleDeepNullZone);
 
     }
 

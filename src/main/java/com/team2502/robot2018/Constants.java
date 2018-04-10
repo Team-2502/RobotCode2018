@@ -1,8 +1,11 @@
 package com.team2502.robot2018;
 
+import com.ctre.phoenix.motion.TrajectoryPoint;
 import com.team2502.ctannotationprocessor.Undefined;
-import com.team2502.robot2018.trajectory.Lookahead;
+import com.team2502.robot2018.pathplanning.purepursuit.Lookahead;
+import com.team2502.robot2018.pathplanning.srxprofiling.ScheduledCommand;
 import com.team2502.robot2018.utils.InterpolationMap;
+import jaci.pathfinder.Trajectory;
 
 /**
  * Constant variables generally pertaining to Pure Pursuit and encoders
@@ -20,6 +23,16 @@ public class Constants
     public static final float MAX_ROT_DEG_PER_SEC = 30;
     public static final int INIT_TIMEOUT = 10; // When initializing a sensor/whatever, the timeout will be 10 ms
     public static final int LOOP_TIMEOUT = 0; // When doing things in a loop, there won't be a timeout
+
+    public static double secToMs(double sec)
+    {
+        return sec * 1000;
+    }
+
+    public static double msToSec(double ms)
+    {
+        return ms / 1000;
+    }
 
     /**
      * Variables that pertain to Pure Pursuit, such as lookahead and max speed for PP
@@ -52,6 +65,40 @@ public class Constants
         public static final float STOP_TOLERANCE_FT = 0.1F;
 
         private PurePursuit() { }
+    }
+
+    public static class SRXProfiling
+    {
+        public static final int SAMPLES_HIGH = 100000;
+
+        public static final int SAMPLES_LOW = 10000;
+
+        public static final int SAMPLES_FAST = 1000;
+
+        public static final double MAX_VEL_FPS = 7;
+        public static final double MAX_ACCEL_FPS2 = 15;
+        public static final double MAX_JERK_FPS3 = 30;
+
+
+        public static final double WHEELBASE_WIDTH = 26.0 / 12.0;
+        public static final boolean USE_ABSOLUTE_COORDS = true;
+
+        /**
+         * Base time between purepursuit points
+         */
+        public static final int BASE_TRAJ_PERIOD = 0;
+
+        /**
+         * The minimum number of points in the low-level buffer before we will start executing the motion profile
+         */
+        public static final int MIN_PTS_BUFFER_CNT = 10;
+
+        public static final int PERIOD_MS = 10;
+        public static final double PERIOD_SEC = msToSec(PERIOD_MS);
+        public static final TrajectoryPoint.TrajectoryDuration PERIOD = TrajectoryPoint.TrajectoryDuration.Trajectory_Duration_10ms;
+        public static final Trajectory.Config CONFIG_SETTINGS = new Trajectory.Config(Trajectory.FitMethod.HERMITE_QUINTIC, Trajectory.Config.SAMPLES_LOW, PERIOD_SEC, MAX_VEL_FPS, MAX_ACCEL_FPS2, MAX_JERK_FPS3);
+
+        public static final ScheduledCommand[] NO_COMMANDS = new ScheduledCommand[0];
     }
 
     /**

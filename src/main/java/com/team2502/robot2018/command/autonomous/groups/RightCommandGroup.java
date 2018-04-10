@@ -4,7 +4,6 @@ import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.command.autonomous.ingredients.*;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
-import static com.team2502.robot2018.Constants.Physical.Elevator;
 
 public class RightCommandGroup extends CommandGroup
 {
@@ -26,8 +25,12 @@ public class RightCommandGroup extends CommandGroup
                     break;
 
                 case "LR":
-                    goScaleRight();
-                    break;
+                    switch(Robot.autonStrategySelector.getSelected())
+                    {
+                        case SCALE:
+                            goScaleRight();
+                            break;
+                    }
 
                 case "RL":
                     System.out.println("Going cross country!");
@@ -68,8 +71,11 @@ public class RightCommandGroup extends CommandGroup
 
     private void goSwitch()
     {
-        addSequential(new PurePursuitCommand(PathConfig.Right.rightSwitch, false));
-        addSequential(new ElevatorAutonCommand(.8F, Elevator.SWITCH_ELEV_HEIGHT_FT));
+
+        addParallel(new RaiseElevatorSwitch());
+
+        addSequential(new PurePursuitCommand(PathConfig.Right.rightSwitch, true));
+
         addSequential(new ActiveIntakeRotate(0.35, 1));
 
         emitCube();

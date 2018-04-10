@@ -1,6 +1,6 @@
 package com.team2502.robot2018.command.autonomous.ingredients;
 
-import com.team2502.robot2018.trajectory.Waypoint;
+import com.team2502.robot2018.pathplanning.purepursuit.Waypoint;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 import java.util.List;

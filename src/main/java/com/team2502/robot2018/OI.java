@@ -58,7 +58,7 @@ public final class OI
 
     private static final Button CALIBRATE_ELEV_ENCODER = new JoystickButton(JOYSTICK_DRIVE_RIGHT, RobotMap.Joystick.Button.CALIBRATE_ELEV_ENCODER);
 
-    private static final Button LOCK_CARRIAGE = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.LOCK_CARRIAGE);
+    private static final Button TOGGLE_CARRIAGE_BRAKE = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.TOGGLE_CARRIAGE_BRAKE);
 
     /*
      * Runs when the first static method (usually OI#init()) is called
@@ -91,7 +91,7 @@ public final class OI
 
         CALIBRATE_ELEV_ENCODER.whenPressed(new QuickCommand(Robot.ELEVATOR::calibrateEncoder));
 
-        LOCK_CARRIAGE.whenPressed(new ToggleClimberCarriageBrake());
+        TOGGLE_CARRIAGE_BRAKE.whenPressed(new ToggleCarriageBrake());
     }
 
     /**

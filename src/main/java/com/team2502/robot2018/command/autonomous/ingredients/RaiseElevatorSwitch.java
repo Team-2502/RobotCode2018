@@ -14,6 +14,5 @@ public class RaiseElevatorSwitch extends CommandGroup
     {
         addSequential(new WaitCommand(0.5));
         addParallel(new ElevatorAutonCommand(1.0F, Elevator.SWITCH_ELEV_HEIGHT_FT));
-
     }
 }

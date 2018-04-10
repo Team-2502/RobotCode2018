@@ -3,7 +3,8 @@ package com.team2502.robot2018;
 import com.google.common.collect.ImmutableMap;
 import com.kauailabs.navx.frc.AHRS;
 import com.team2502.robot2018.command.autonomous.ingredients.AutonStrategy;
-import com.team2502.robot2018.command.teleop.QuickCommand;
+import com.team2502.robot2018.pathplanning.localization.EncoderDifferentialDriveLocationEstimator;
+import com.team2502.robot2018.pathplanning.localization.NavXLocationEstimator;
 import com.team2502.robot2018.sendables.SendableDriveStrategyType;
 import com.team2502.robot2018.sendables.SendableDriveTrain;
 import com.team2502.robot2018.sendables.SendableVersioning;
@@ -11,8 +12,6 @@ import com.team2502.robot2018.subsystem.ActiveIntakeSubsystem;
 import com.team2502.robot2018.subsystem.DriveTrainSubsystem;
 import com.team2502.robot2018.subsystem.ElevatorSubsystem;
 import com.team2502.robot2018.subsystem.solenoid.*;
-import com.team2502.robot2018.trajectory.localization.EncoderDifferentialDriveLocationEstimator;
-import com.team2502.robot2018.trajectory.localization.NavXLocationEstimator;
 import com.team2502.robot2018.utils.Files;
 import com.team2502.robot2018.utils.InterpolationMap;
 import com.team2502.robot2018.utils.MathUtils;
@@ -30,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
 
 /**
  * Software manifestation of Daedalus. If you delete this class you're doing something wrong.
@@ -101,7 +101,7 @@ public final class Robot extends IterativeRobot
      */
     public static TransmissionSolenoid TRANSMISSION_SOLENOID;
 
-    public static ClimberCarriageBrakeSubsystem CLIMBER_CARRIAGE_BRAKE;
+    public static CarriageBrakeSolenoid CLIMBER_CARRIAGE_BRAKE;
 
     /**
      * The NavX on the robot. To fully recalibrate,
@@ -231,7 +231,8 @@ public final class Robot extends IterativeRobot
         ACTIVE_INTAKE_SOLENOID = new ActiveIntakeSolenoid();
         CLIMBER_SOLENOID = new ClimberSolenoid();
         BUTTERFLY_SOLENOID = new ButterflySolenoid();
-        CLIMBER_CARRIAGE_BRAKE = new ClimberCarriageBrakeSubsystem();
+        CLIMBER_CARRIAGE_BRAKE = new CarriageBrakeSolenoid();
+        OI.init();
 
         // Initialize OI
         OI.init();
@@ -265,6 +266,8 @@ public final class Robot extends IterativeRobot
         SmartDashboard.putNumber("calibration_velocity", 0);
 
         NAVX.resetDisplacement();
+
+//        MathUtils.init();
 
         fileWriting();
 
@@ -326,6 +329,10 @@ public final class Robot extends IterativeRobot
     {
         NAVX.reset();
         TRANSMISSION_SOLENOID.setHighGear(true);
+//
+//        String fileName = "/home/lvuser/FILES";
+//        Files.setFileName(fileName);
+//        Files.newFile(fileName);
 
         // Ensure that the motors are in slave mode like they should be
         DRIVE_TRAIN.setAutonSettings();

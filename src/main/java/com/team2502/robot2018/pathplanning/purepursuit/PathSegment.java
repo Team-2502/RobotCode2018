@@ -1,4 +1,4 @@
-package com.team2502.robot2018.trajectory;
+package com.team2502.robot2018.pathplanning.purepursuit;
 
 import com.team2502.robot2018.utils.MathUtils;
 import org.joml.ImmutableVector2f;

@@ -30,6 +30,7 @@ dependencies {
     compile ctre()
     compile navx()
     compile openrio.powerup.matchData()
+    compile pathfinder()
 
     compile "com.team2502.ctannotationprocessor:CTAnnotationProcessor:1.0"
     apt     "com.team2502.ctannotationprocessor:CTAnnotationProcessor:1.0"
@@ -41,7 +42,7 @@ dependencies {
 }
 
 def branch() {
-    def branch = ""
+    def branch = "DRIVER STATION"
     def proc = "git rev-parse --abbrev-ref HEAD".execute()
     proc.in.eachLine { line -> branch = line }
     proc.err.eachLine { line -> println line }
