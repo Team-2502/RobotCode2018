@@ -49,7 +49,7 @@ public class CenterCommandGroup extends CommandGroup
 //
 
         addSequential(new SRXProfilingCommand(new ScheduledCommand[] { new ScheduledCommand(0, new ToggleIntakeCommand()) },
-                                              TrajConfig.Center.Right.toSecondCubeDir,
+                                              (double) TrajConfig.Center.Right.toSecondCubeDir,
                                               TrajConfig.Center.Right.toSecondCube));
 
         addParallel(new ElevatorAutonCommand(3, 0));

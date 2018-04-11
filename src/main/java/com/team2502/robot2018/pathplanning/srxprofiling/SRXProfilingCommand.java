@@ -39,7 +39,7 @@ public class SRXProfilingCommand extends Command
         this(commands, dir, Pathfinder.generate(waypoints, Constants.SRXProfiling.CONFIG_SETTINGS));
     }
 
-    private SRXProfilingCommand(ScheduledCommand[] commands, double dir, Trajectory traj)
+    public SRXProfilingCommand(ScheduledCommand[] commands, double dir, Trajectory traj)
     {
         requires(Robot.DRIVE_TRAIN);
         setInterruptible(false);

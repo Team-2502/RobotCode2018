@@ -5,6 +5,7 @@ import com.kauailabs.navx.frc.AHRS;
 import com.team2502.robot2018.command.autonomous.ingredients.AutonStrategy;
 import com.team2502.robot2018.pathplanning.localization.EncoderDifferentialDriveLocationEstimator;
 import com.team2502.robot2018.pathplanning.localization.NavXLocationEstimator;
+import com.team2502.robot2018.pathplanning.srxprofiling.TrajConfig;
 import com.team2502.robot2018.sendables.SendableDriveStrategyType;
 import com.team2502.robot2018.sendables.SendableDriveTrain;
 import com.team2502.robot2018.sendables.SendableVersioning;
@@ -187,6 +188,7 @@ public final class Robot extends IterativeRobot
     public void robotInit()
     {
 
+        TrajConfig.Center.Right.init();
         // initialize sin lookup table
         MathUtils.init();
         

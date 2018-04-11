@@ -1,7 +1,10 @@
 package com.team2502.robot2018.pathplanning.srxprofiling;
 
+import com.team2502.robot2018.Constants;
 import com.team2502.robot2018.command.autonomous.ingredients.PathConfig;
 import com.team2502.robot2018.pathplanning.purepursuit.Path;
+import jaci.pathfinder.Pathfinder;
+import jaci.pathfinder.Trajectory;
 import jaci.pathfinder.Waypoint;
 
 import java.util.ArrayList;
@@ -27,19 +30,19 @@ public class TrajConfig
             public static final List<Waypoint> rightSwitch = convertFromPP(PathConfig.Center.rightSwitch);
 
             public static final int toSecondCubeDir = -1;
-            public static final List<Waypoint> toSecondCube = Arrays.asList(new Waypoint(0, 0, 0),
+            public static final Trajectory toSecondCube = toTrajectory(new Waypoint(0, 0, 0),
                                                                             new Waypoint(-50D/12, -26D/12, Math.PI / 4),
                                                                             new Waypoint(-75D/12, -40D/12, 0));
 
-            public static final List<Waypoint> toSecondCubePt2 = Arrays.asList(new Waypoint(0, 0, 0),
+            public static final Trajectory toSecondCubePt2 = toTrajectory(new Waypoint(0, 0, 0),
                                                                                new Waypoint(3, 0, Math.PI / 24)); // angle correction for previous step
 
-            public static final List<Waypoint> backToSwitch = Arrays.asList(new Waypoint(-75D/12, 40D/12, 0),
+            public static final Trajectory backToSwitch = toTrajectory(new Waypoint(-75D/12, 40D/12, 0),
                                                                             new Waypoint(-50D/12, 26D/12, -Math.PI / 4),
                                                                             new Waypoint(0, 0, 0));
 
 
-
+public static void init() { }
 
         }
 
@@ -84,5 +87,10 @@ public class TrajConfig
             result.add(new Waypoint(ppY, ppX, angleRadians));
         }
         return result;
+    }
+
+    private static Trajectory toTrajectory(Waypoint... waypoints)
+    {
+        return Pathfinder.generate(waypoints, Constants.SRXProfiling.CONFIG_SETTINGS);
     }
 }
