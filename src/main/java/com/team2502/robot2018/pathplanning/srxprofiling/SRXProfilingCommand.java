@@ -41,6 +41,8 @@ public class SRXProfilingCommand extends Command
 
     private SRXProfilingCommand(ScheduledCommand[] commands, double dir, Trajectory traj)
     {
+        requires(Robot.DRIVE_TRAIN);
+        setInterruptible(false);
         TankModifier modifier = new TankModifier(traj);
         modifier.modify(Constants.SRXProfiling.WHEELBASE_WIDTH);
 
@@ -90,6 +92,7 @@ public class SRXProfilingCommand extends Command
         Robot.DRIVE_TRAIN.updateStatus(status);
 
 
+        Robot.DRIVE_TRAIN.setMotionProfilingState(SetValueMotionProfile.Enable);
 
         // If we have run out of points to send to the lower-level
         if(status.hasUnderrun)

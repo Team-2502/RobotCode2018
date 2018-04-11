@@ -60,7 +60,7 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     private double kP = .7D;
     private double kI = 0.0;
     private double kD = 0;
-    private double kF = 0;
+    private double kF = 0.2;
 
     private static final float ACCELERATION_DIFF = 0.5F;
     private static final float DIFF_COMPARISON = 0.15F;
@@ -730,7 +730,7 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     public enum DriveStrategyType implements Nameable
     {
         VOLTAGE("VOLTAGE", (joystickLeft, joystickRight) -> {
-            Robot.DRIVE_TRAIN.runMotorsTankDrive(joystickLeft, joystickRight);
+            Robot.DRIVE_TRAIN.drive.tankDrive(joystickLeft, joystickRight);
         });
 
         private final String name;

@@ -20,7 +20,7 @@ public class CenterCommandGroup extends CommandGroup
         Robot.NAVX.reset();
 
         // Choose a path to take
-        String AUTO_GAME_DATA = Robot.GAME_DATA.substring(0, 2);
+        String AUTO_GAME_DATA = Robot.GAME_DATA.substring(0, 1);
 
         if(AUTO_GAME_DATA.charAt(0) == 'L')
         {
@@ -43,10 +43,10 @@ public class CenterCommandGroup extends CommandGroup
 
     private void goSwitchRight()
     {
-        moveElevator();
-        addSequential(new PurePursuitCommand(PathConfig.Center.rightSwitch, true));
-        emitCubeSwitch();
-
+//        moveElevator();
+//        addSequential(new PurePursuitCommand(PathConfig.Center.rightSwitch, true));
+//        emitCubeSwitch();
+//
 
         addSequential(new SRXProfilingCommand(new ScheduledCommand[] { new ScheduledCommand(0, new ToggleIntakeCommand()) },
                                               TrajConfig.Center.Right.toSecondCubeDir,
