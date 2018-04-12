@@ -22,18 +22,18 @@ public class TestCommandGroup extends CommandGroup
     {
         Robot.writeLog("TestCommand",200);
 
+        PurePursuitCommand back = new PurePursuitCommand.Builder()
+                .addWaypoint(0, 0, 8)
+                .addWaypoint(0, -3, 0)
+                .setForward(false)
+                .build();
 
-        addSequential(new PurePursuitCommand(
-                Arrays.asList(
-                        new Waypoint(new ImmutableVector2f(0,0),10,5,-8),
-                        new Waypoint(new ImmutableVector2f(-3,-3),10,5,-8),
-                        new Waypoint(new ImmutableVector2f(-3,-5),0,5,-8)
-                             ),false,false));
+        PurePursuitCommand forward = new PurePursuitCommand.Builder()
+                .addWaypoint(0, -3, 8)
+                .addWaypoint(0, 0, 0)
+                .build();
 
-        addSequential(new PurePursuitCommand(
-                Arrays.asList(
-                        new Waypoint(new ImmutableVector2f(-3,-5),10,5,-8),
-                        new Waypoint(new ImmutableVector2f(-3,0),0,5,-8)
-                             ),false,true));
+        addSequential(back);
+        addSequential(forward);
     }
 }

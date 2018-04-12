@@ -10,12 +10,58 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.joml.ImmutableVector2f;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.team2502.robot2018.Constants.PurePursuit;
 
 public class PurePursuitCommand extends Command
 {
+
+    public static class Builder
+    {
+        private float maxAccel = 8F;
+        private float maxDeccel = -8F;
+
+        private boolean forward = true;
+        private boolean drift = false;
+        private Lookahead lookahead = Constants.PurePursuit.LOOKAHEAD;
+        private List<Waypoint> waypoints = new ArrayList<>();
+        public Builder addWaypoint(float x, float y, float maxSpeed, Command... commands)
+        {
+            waypoints.add(new Waypoint(new ImmutableVector2f(x,y),maxSpeed,maxAccel,maxDeccel,commands));
+            return this;
+        }
+
+        public Builder addWaypoint(float x, float y, float maxSpeed, float maxAccel, float maxDeccel, Command... commands)
+        {
+            waypoints.add(new Waypoint(new ImmutableVector2f(x,y),maxSpeed,maxAccel,maxDeccel,commands));
+            return this;
+        }
+
+        public Builder setForward(boolean forward)
+        {
+            this.forward = forward;
+            return this;
+        }
+
+        public Builder setDrift(boolean drift)
+        {
+            this.drift = drift;
+            return this;
+        }
+
+        public Builder setLookahead(Lookahead lookahead)
+        {
+            this.lookahead = lookahead;
+            return this;
+        }
+
+        public PurePursuitCommand build()
+        {
+            return new PurePursuitCommand(waypoints,lookahead,drift,forward);
+        }
+    }
     private ITankRobotBounds tankRobot;
 
     private PurePursuitMovementStrategy purePursuitMovementStrategy;
