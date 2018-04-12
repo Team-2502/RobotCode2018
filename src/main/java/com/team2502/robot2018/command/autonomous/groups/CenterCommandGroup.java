@@ -61,7 +61,7 @@ public class CenterCommandGroup extends CommandGroup
 
 
         addSequential(new NavXRotateCommand(0, 0.5F, false));
-        addParallel(new RunIntakeCommand(3, -1));
+        addParallel(new RunIntakeCommand(1, -1));
         addSequential(new SRXProfilingCommand(NO_COMMANDS,
                                               1,
                                               TrajConfig.Center.Right.toSecondCubePt2));
