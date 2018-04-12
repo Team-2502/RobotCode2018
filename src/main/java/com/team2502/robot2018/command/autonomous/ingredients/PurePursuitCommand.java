@@ -159,6 +159,8 @@ public class PurePursuitCommand extends Command
         SmartDashboard.putNumber("PPwheelL", wheelVelocities.get(0));
         SmartDashboard.putNumber("PPwheelR", wheelVelocities.get(1));
 
+        System.out.printf("estimated location: %.2f, %.2f\n",usedEstimatedLocation.x,usedEstimatedLocation.y);
+
         if(forward)
         {
             Robot.DRIVE_TRAIN.runMotorsVelocity(wheelL, wheelR);

@@ -20,8 +20,9 @@ public class CalibrateWheelbaseWidthCommand extends CommandGroup
 //
         ScheduledCommand[] commands = new ScheduledCommand[0];
 
-        addSequential(new SRXProfilingCommand(commands, 1, new Waypoint(0, 0, 0),
-                                              new Waypoint(5, 5, Math.PI / 2)));
+        // code does not compile
+//        addSequential(new SRXProfilingCommand(commands, 1, new Waypoint(0, 0, 0),
+//                                              new Waypoint(5, 5, Math.PI / 2)));
     }
 
 }

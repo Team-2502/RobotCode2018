@@ -181,6 +181,8 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         this.lookahead = lookahead;
         this.velocityEstimator = velocityEstimator;
         this.driftAtEnd = driftAtEnd;
+        lastWaypointSpeed = waypoints.get(0).getMaxSpeed();
+        speedUsed = lastWaypointSpeed;
     }
 
     /**
