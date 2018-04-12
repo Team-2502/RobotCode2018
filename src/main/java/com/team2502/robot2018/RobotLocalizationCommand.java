@@ -96,46 +96,6 @@ public class RobotLocalizationCommand extends Command implements ITranslationalL
         return inverse;
     }
 
-    public class InverseLocalization implements ITranslationalLocationEstimator, ITranslationalVelocityEstimator, IRotationalLocationEstimator
-    {
-
-        @Override
-        public float estimateHeading()
-        {
-            return MathUtils.shiftRadiansBounded(heading,MathUtils.PI_F);
-        }
-
-        @Override
-        public ImmutableVector2f estimateLocation()
-        {
-            return location;
-        }
-
-        @Override
-        public ImmutableVector2f estimateAbsoluteVelocity()
-        {
-            return velocity.mul(-1);
-        }
-
-        @Override
-        public float getLeftWheelSpeed()
-        {
-            return -rightWheelSpeed;
-        }
-
-        @Override
-        public float getRightWheelSpeed()
-        {
-            return -leftWheelSpeed;
-        }
-
-        @Override
-        public float estimateSpeed()
-        {
-            return speed;
-        }
-    }
-
     /**
      * Never finished - runs continuously
      *
@@ -204,5 +164,45 @@ public class RobotLocalizationCommand extends Command implements ITranslationalL
     public float estimateSpeed()
     {
         return speed;
+    }
+
+    public class InverseLocalization implements ITranslationalLocationEstimator, ITranslationalVelocityEstimator, IRotationalLocationEstimator
+    {
+
+        @Override
+        public float estimateHeading()
+        {
+            return MathUtils.shiftRadiansBounded(heading, MathUtils.PI_F);
+        }
+
+        @Override
+        public ImmutableVector2f estimateLocation()
+        {
+            return location;
+        }
+
+        @Override
+        public ImmutableVector2f estimateAbsoluteVelocity()
+        {
+            return velocity.mul(-1);
+        }
+
+        @Override
+        public float getLeftWheelSpeed()
+        {
+            return -rightWheelSpeed;
+        }
+
+        @Override
+        public float getRightWheelSpeed()
+        {
+            return -leftWheelSpeed;
+        }
+
+        @Override
+        public float estimateSpeed()
+        {
+            return speed;
+        }
     }
 }

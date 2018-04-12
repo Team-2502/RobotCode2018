@@ -1,9 +1,5 @@
 package com.team2502.robot2018.pathplanning.srxprofiling;
 
-import com.ctre.phoenix.motion.MotionProfileStatus;
-import com.team2502.robot2018.Constants;
-import com.team2502.robot2018.Robot;
-import edu.wpi.first.wpilibj.Notifier;
 import jaci.pathfinder.Pathfinder;
 import jaci.pathfinder.Trajectory;
 import jaci.pathfinder.Waypoint;
@@ -23,8 +19,6 @@ public class TestProfilingCommand
         modifier.modify(20);
 
         System.out.println("modifier.getLeftTrajectory() = " + modifier.getLeftTrajectory());
-
-
 
 
     }

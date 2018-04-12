@@ -3,7 +3,6 @@ package com.team2502.robot2018.command.autonomous.ingredients;
 
 import com.team2502.robot2018.Change;
 import com.team2502.robot2018.pathplanning.purepursuit.Waypoint;
-
 import org.joml.ImmutableVector2f;
 
 import java.util.ArrayList;
@@ -46,6 +45,15 @@ public class PathConfig
     public static class Center
     {
 
+        /**
+         * Move from the center of the starting wall to the left side of the switch
+         */
+        public static final List<Waypoint> leftSwitch = Arrays.asList(
+                new Waypoint(new ImmutableVector2f(0, 0), 0, 5, -5),
+                new Waypoint(new ImmutableVector2f(0, 2F), 16, 5, -5),
+                new Waypoint(new ImmutableVector2f(-4.5F, 4), 16, 5, -5),
+                new Waypoint(new ImmutableVector2f(-4.5F, 10), 0F, 5, -5)
+                                                                     );
         //TODO: Make speedLimiter 1.0F
         private static final float speedLimiter = 0.3F;
         /**
@@ -57,17 +65,6 @@ public class PathConfig
                 new Waypoint(new ImmutableVector2f(4F, 4F), 16 * speedLimiter, 10, -10),
                 new Waypoint(new ImmutableVector2f(4F, 9.5F), 1F * speedLimiter, 10, -10)
                                                                       );
-
-
-        /**
-         * Move from the center of the starting wall to the left side of the switch
-         */
-        public static final List<Waypoint> leftSwitch = Arrays.asList(
-                new Waypoint(new ImmutableVector2f(0, 0), 0, 5, -5),
-                new Waypoint(new ImmutableVector2f(0, 2F), 16, 5, -5),
-                new Waypoint(new ImmutableVector2f(-4.5F, 4), 16, 5, -5),
-                new Waypoint(new ImmutableVector2f(-4.5F, 10), 0F, 5, -5)
-                                                                     );
     }
 
     /**
@@ -111,13 +108,6 @@ public class PathConfig
                 new Waypoint(new ImmutableVector2f(20.83F, 17.5F), 3F, 20, -5),
                 new Waypoint(new ImmutableVector2f(16.833F, 22F), 0F, 10, -5)
                                                                      );
-        public static List<Waypoint> leftSwitchToScale = Arrays.asList(
-                new Waypoint(new ImmutableVector2f(5, 19), 8, 20, -7),
-                new Waypoint(new ImmutableVector2f(2, 20.0F), 8, 20, -7),
-                new Waypoint(new ImmutableVector2f(5, 21F), 0, 20, -7)
-                                                                      );
-
-
         public static final List<Waypoint> leftScaleDeepNullZone = Arrays.asList(
                 new Waypoint(new ImmutableVector2f(0, 0), 0, 20, -9),
                 new Waypoint(new ImmutableVector2f(-0.5F, 8.589F), 16F, 20, -7),
@@ -126,6 +116,11 @@ public class PathConfig
                 new Waypoint(new ImmutableVector2f(-1.5F, 25F), 3F, 20, -7),
                 new Waypoint(new ImmutableVector2f(1.5F, 25.375F), 0F, 20, -7)
                                                                                 );
+        public static List<Waypoint> leftSwitchToScale = Arrays.asList(
+                new Waypoint(new ImmutableVector2f(5, 19), 8, 20, -7),
+                new Waypoint(new ImmutableVector2f(2, 20.0F), 8, 20, -7),
+                new Waypoint(new ImmutableVector2f(5, 21F), 0, 20, -7)
+                                                                      );
 
     }
 

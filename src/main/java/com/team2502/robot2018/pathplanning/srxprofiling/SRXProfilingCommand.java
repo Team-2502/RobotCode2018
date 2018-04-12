@@ -62,7 +62,6 @@ public class SRXProfilingCommand extends Command
         Robot.DRIVE_TRAIN.updateStatus(status);
 
 
-
         // If we have run out of points to send to the lower-level
         if(status.hasUnderrun)
         {

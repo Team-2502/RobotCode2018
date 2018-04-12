@@ -18,59 +18,13 @@ import static com.team2502.robot2018.Constants.PurePursuit;
 public class PurePursuitCommand extends Command
 {
 
-    public static class Builder
-    {
-        private float maxAccel = 8F;
-        private float maxDeccel = -8F;
-
-        private boolean forward = true;
-        private boolean drift = false;
-        private Lookahead lookahead = Constants.PurePursuit.LOOKAHEAD;
-        private List<Waypoint> waypoints = new ArrayList<>();
-        public Builder addWaypoint(float x, float y, float maxSpeed, Command... commands)
-        {
-            waypoints.add(new Waypoint(new ImmutableVector2f(x,y),maxSpeed,maxAccel,maxDeccel,commands));
-            return this;
-        }
-
-        public Builder addWaypoint(float x, float y, float maxSpeed, float maxAccel, float maxDeccel, Command... commands)
-        {
-            waypoints.add(new Waypoint(new ImmutableVector2f(x,y),maxSpeed,maxAccel,maxDeccel,commands));
-            return this;
-        }
-
-        public Builder setForward(boolean forward)
-        {
-            this.forward = forward;
-            return this;
-        }
-
-        public Builder setDrift(boolean drift)
-        {
-            this.drift = drift;
-            return this;
-        }
-
-        public Builder setLookahead(Lookahead lookahead)
-        {
-            this.lookahead = lookahead;
-            return this;
-        }
-
-        public PurePursuitCommand build()
-        {
-            return new PurePursuitCommand(waypoints,lookahead,drift,forward);
-        }
-    }
     private ITankRobotBounds tankRobot;
-
     private PurePursuitMovementStrategy purePursuitMovementStrategy;
     private List<Waypoint> waypoints;
     private Lookahead lookahead;
     private boolean drift;
     private boolean autoFirstPoint;
     private boolean forward;
-
     /**
      * Given some waypoints, drive through them
      *
@@ -205,7 +159,7 @@ public class PurePursuitCommand extends Command
         SmartDashboard.putNumber("PPwheelL", wheelVelocities.get(0));
         SmartDashboard.putNumber("PPwheelR", wheelVelocities.get(1));
 
-        System.out.printf("estimated location: %.2f, %.2f\n",usedEstimatedLocation.x,usedEstimatedLocation.y);
+        System.out.printf("estimated location: %.2f, %.2f\n", usedEstimatedLocation.x, usedEstimatedLocation.y);
 
         if(forward)
         {
@@ -213,7 +167,7 @@ public class PurePursuitCommand extends Command
         }
         else
         {
-            Robot.writeLog("running wheels: %.2f, %.2f",200,wheelL,wheelR);
+            Robot.writeLog("running wheels: %.2f, %.2f", 200, wheelL, wheelR);
             Robot.DRIVE_TRAIN.runMotorsVelocity(-wheelR, -wheelL);
         }
     }
@@ -233,5 +187,51 @@ public class PurePursuitCommand extends Command
         }
         return finishedPath;
 
+    }
+
+    public static class Builder
+    {
+        private float maxAccel = 8F;
+        private float maxDeccel = -8F;
+
+        private boolean forward = true;
+        private boolean drift = false;
+        private Lookahead lookahead = Constants.PurePursuit.LOOKAHEAD;
+        private List<Waypoint> waypoints = new ArrayList<>();
+
+        public Builder addWaypoint(float x, float y, float maxSpeed, Command... commands)
+        {
+            waypoints.add(new Waypoint(new ImmutableVector2f(x, y), maxSpeed, maxAccel, maxDeccel, commands));
+            return this;
+        }
+
+        public Builder addWaypoint(float x, float y, float maxSpeed, float maxAccel, float maxDeccel, Command... commands)
+        {
+            waypoints.add(new Waypoint(new ImmutableVector2f(x, y), maxSpeed, maxAccel, maxDeccel, commands));
+            return this;
+        }
+
+        public Builder setForward(boolean forward)
+        {
+            this.forward = forward;
+            return this;
+        }
+
+        public Builder setDrift(boolean drift)
+        {
+            this.drift = drift;
+            return this;
+        }
+
+        public Builder setLookahead(Lookahead lookahead)
+        {
+            this.lookahead = lookahead;
+            return this;
+        }
+
+        public PurePursuitCommand build()
+        {
+            return new PurePursuitCommand(waypoints, lookahead, drift, forward);
+        }
     }
 }

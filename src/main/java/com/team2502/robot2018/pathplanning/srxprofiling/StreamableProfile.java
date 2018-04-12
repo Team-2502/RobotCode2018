@@ -4,8 +4,6 @@ import com.ctre.phoenix.motion.TrajectoryPoint;
 
 /**
  * An interface for things containing {@link TrajectoryPoint}s that can be streamed to the Talons
- *
- *
  */
 public interface StreamableProfile
 {

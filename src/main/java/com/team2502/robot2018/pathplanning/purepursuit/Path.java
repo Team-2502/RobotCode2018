@@ -26,15 +26,15 @@ public class Path
 
     public Path(List<Waypoint> waypointList)
     {
-        DriverStation.getInstance().reportError("waypointList = " + waypointList, false);
+        DriverStation.reportError("waypointList = " + waypointList, false);
         pathSegments = new ArrayList<>();
         float distance = 0;
         for(int i = 0; i < waypointList.size() - 1; i++)
         {
             Waypoint waypoint1 = waypointList.get(i);
             Waypoint waypoint2 = waypointList.get(i + 1);
-            DriverStation.getInstance().reportWarning("Waypoint 1: " + waypoint1.getLocation().toString(), false);
-            DriverStation.getInstance().reportWarning("Waypoint 2: " +waypoint2.getLocation().toString(), false);
+            DriverStation.reportWarning("Waypoint 1: " + waypoint1.getLocation().toString(), false);
+            DriverStation.reportWarning("Waypoint 2: " + waypoint2.getLocation().toString(), false);
             float length = waypoint1.getLocation().distance(waypoint2.getLocation());
             PathSegment pathSegment = new PathSegment(waypoint1, waypoint2, i == 0, i == waypointList.size() - 2, distance, distance += length, length);
             pathSegments.add(pathSegment);

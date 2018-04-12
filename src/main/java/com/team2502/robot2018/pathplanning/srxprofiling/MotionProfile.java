@@ -16,12 +16,26 @@ public class MotionProfile implements StreamableProfile
 
     /**
      * Given some constituent pieces, make a motion profile
+     *
      * @param constituents The {@link MotionProfileConstituent}s that make up this motion profile
      */
     public MotionProfile(MotionProfileConstituent... constituents)
     {
         this.constituents = Arrays.asList(constituents);
         profiles.add(this);
+    }
+
+    /**
+     * Initialize all motion profiles that were created
+     *
+     * @see MotionProfile#init()
+     */
+    public static void initialize()
+    {
+        for(MotionProfile profile : profiles)
+        {
+            profile.init();
+        }
     }
 
     public List<MotionProfileConstituent> getConstituents()
@@ -31,7 +45,6 @@ public class MotionProfile implements StreamableProfile
 
     /**
      * Initialize the motion profile by putting all the left and right {@link TrajectoryPoint}s in their arrays.
-     *
      */
     private void init()
     {
@@ -48,19 +61,6 @@ public class MotionProfile implements StreamableProfile
         }
         leftPointList.toArray(leftPoints);
         rightPointList.toArray(rightPoints);
-    }
-
-    /**
-     * Initialize all motion profiles that were created
-     *
-     * @see MotionProfile#init()
-     */
-    public static void initialize()
-    {
-        for(MotionProfile profile : profiles)
-        {
-            profile.init();
-        }
     }
 
     public TrajectoryPoint[] getLeftPoints()

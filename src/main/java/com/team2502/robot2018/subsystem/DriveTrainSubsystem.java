@@ -30,41 +30,32 @@ import static com.team2502.robot2018.Constants.Physical.DriveTrain.FPS_TO_EVEL_D
 public class DriveTrainSubsystem extends Subsystem implements DashboardData.DashboardUpdater, PIDTunable
 {
     private static final FloatPair SPEED_CONTAINER = new FloatPair();
-
+    private static final float ACCELERATION_DIFF = 0.5F;
+    private static final float DIFF_COMPARISON = 0.15F;
     private final WPI_TalonSRX leftFrontTalonEnc;
     private final WPI_TalonSRX leftRearTalon;
     private final WPI_TalonSRX rightFrontTalonEnc;
     private final WPI_TalonSRX rightRearTalon;
-
     /**
      * Represents our drivetrain
      */
     private final DifferentialDrive drive;
-
     /**
      * Represents the left side of the drivetrain
      */
     private final SpeedControllerGroup spgLeft;
-
     /**
      * Represents the right side of the drivetrain
      */
     private final SpeedControllerGroup spgRight;
-
-
     /**
      * Allows the PID of the drivetrain to be tuned from shuffleboard
      */
     private final SendablePIDTuner pidTuner;
-
     private double kP = .7D;
     private double kI = 0.0;
     private double kD = 0;
     private double kF = 0;
-
-    private static final float ACCELERATION_DIFF = 0.5F;
-    private static final float DIFF_COMPARISON = 0.15F;
-
     private float lastLeft;
     private float lastRight;
     private boolean isNegativePressed;

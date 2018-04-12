@@ -26,6 +26,7 @@ public class MotionProfileConstituent implements StreamableProfile
 
     /**
      * Make a new motion profile constituent that drives in a forward direction
+     *
      * @param waypoints The waypoints to drive through
      */
     public MotionProfileConstituent(List<Waypoint> waypoints)
@@ -35,8 +36,9 @@ public class MotionProfileConstituent implements StreamableProfile
 
     /**
      * Make a new motion profile constituent that drives in a direction
+     *
      * @param waypoints The waypoints to drive through
-     * @param dir Whether to drive forwards or backwards
+     * @param dir       Whether to drive forwards or backwards
      */
     public MotionProfileConstituent(List<Waypoint> waypoints, Direction dir)
     {
@@ -47,12 +49,25 @@ public class MotionProfileConstituent implements StreamableProfile
 
     /**
      * Make copy of another MP constituent that drives in a direction
+     *
      * @param motionProfileConstituent The one to copy
-     * @param dir The direction to drive in
+     * @param dir                      The direction to drive in
      */
     public MotionProfileConstituent(MotionProfileConstituent motionProfileConstituent, Direction dir)
     {
         this(motionProfileConstituent.waypoints, dir);
+    }
+
+    /**
+     * Initialize all the constituents that have been created
+     */
+    public static void initTrajectories()
+    {
+        for(MotionProfileConstituent profile : MOTION_PROFILE_CONSTITUENTS)
+        {
+            profile.init();
+        }
+
     }
 
     /**
@@ -178,23 +193,12 @@ public class MotionProfileConstituent implements StreamableProfile
 
     /**
      * Reverse this motion profile constituent so we can drive backwards across the waypoints
+     *
      * @return This but backwards
      */
     public MotionProfileConstituent reverse()
     {
         return new MotionProfileConstituent(this, Direction.opposite(dir));
-    }
-
-    /**
-     * Initialize all the constituents that have been created
-     */
-    public static void initTrajectories()
-    {
-        for(MotionProfileConstituent profile : MOTION_PROFILE_CONSTITUENTS)
-        {
-            profile.init();
-        }
-
     }
 
 

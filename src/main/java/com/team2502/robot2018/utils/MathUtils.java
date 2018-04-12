@@ -39,6 +39,11 @@ public final class MathUtils
      */
     private static final float[] SIN_TABLE = new float[65536];
 
+    private MathUtils()
+    {
+
+    }
+
     public static void init()
     {
         for(int i = 0; i < 65536; ++i) { SIN_TABLE[i] = (float) Math.sin(((double) i) * Math.PI * 2.0D / 65536.0D); }
@@ -47,10 +52,6 @@ public final class MathUtils
         SIN_TABLE[16384] = 1;   /* π/2 */
         SIN_TABLE[32768] = 0;   /* 2π */
         SIN_TABLE[49152] = -1;  /* 3π/2 */
-    }
-
-    private MathUtils() {
-
     }
 
     public static float shiftRadiansBounded(float initRadians, float shift)
@@ -710,6 +711,7 @@ public final class MathUtils
 
         /**
          * turn an angle without bounds (-inf,inf) to [0,360)
+         *
          * @param angle Whatever the navX is reading
          * @return An angle between 0 and 360, in degrees
          */
@@ -728,7 +730,7 @@ public final class MathUtils
     public static class Geometry
     {
         /**
-         * @param initDegrees init degrees navX (clockwise)
+         * @param initDegrees  init degrees navX (clockwise)
          * @param finalDegrees final degrees navX (counterclockwise)
          * @return the difference in radians between the two degrees from [0,2pi). Increases counterclockwise.
          */
@@ -748,7 +750,7 @@ public final class MathUtils
             float dif = Math.abs(simpleAngle1 - simpleAngle2);
             if(dif > 180)
             {
-                dif = 360-dif;
+                dif = 360 - dif;
             }
             return dif;
         }
@@ -771,7 +773,7 @@ public final class MathUtils
                 d = angleInit - angleFinal;
                 if(d > 180)
                 {
-                    d = 360-d;
+                    d = 360 - d;
                 }
                 else
                 {
@@ -783,7 +785,6 @@ public final class MathUtils
         }
 
         /**
-         *
          * @param start
          * @param end
          * @return The theta of the angle created ccw between \vec{i} and the line from start->end
@@ -792,7 +793,7 @@ public final class MathUtils
         {
             float dx = end.x - start.x;
             float dy = end.y - start.y;
-            return (float) Math.atan2(dy , dx);
+            return (float) Math.atan2(dy, dx);
         }
 
         /**

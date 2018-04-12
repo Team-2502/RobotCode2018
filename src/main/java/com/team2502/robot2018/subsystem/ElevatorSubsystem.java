@@ -23,10 +23,8 @@ public class ElevatorSubsystem extends NonDefaultSubsystem implements PIDTunable
     private static int MAX_ACCEL_EACCEL = 15000;
 
     private static int CRUISE_VELOCITY_EVEL = 6000;
-
-    private final WPI_TalonSRX elevatorTop;
     public final WPI_TalonSRX elevatorBottom;
-
+    private final WPI_TalonSRX elevatorTop;
     // The difference between the climber motors and the elevator motors is that
     // the climber motors are the slower CIMS while the the elevator motors are the faster VEX motors
     private final WPI_TalonSRX climberTop;

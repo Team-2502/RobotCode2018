@@ -191,7 +191,7 @@ public final class Robot extends IterativeRobot
 
         // initialize sin lookup table
         MathUtils.init();
-        
+
         String fileName = "/home/lvuser/FILES";
         Files.setFileName(fileName);
         Files.newFile(fileName);
@@ -269,10 +269,15 @@ public final class Robot extends IterativeRobot
 
         NAVX.resetDisplacement();
 
-//        MathUtils.init();
-
         fileWriting();
 
+        MotionProfileConstituent.initTrajectories();
+        MotionProfile.initialize();
+
+    }
+
+    void startLocalization()
+    {
         // Initialize Estimators
         NavXLocationEstimator rotEstimator = new NavXLocationEstimator();
         EncoderDifferentialDriveLocationEstimator encoderDifferentialDriveLocationEstimator = new EncoderDifferentialDriveLocationEstimator(rotEstimator);
@@ -281,11 +286,6 @@ public final class Robot extends IterativeRobot
         ROBOT_LOCALIZATION_COMMAND = new RobotLocalizationCommand(rotEstimator, encoderDifferentialDriveLocationEstimator, encoderDifferentialDriveLocationEstimator);
 
         ROBOT_LOCALIZATION_COMMAND.execute();
-        Scheduler.getInstance().add(ROBOT_LOCALIZATION_COMMAND);
-
-        MotionProfileConstituent.initTrajectories();
-        MotionProfile.initialize();
-
     }
 
     /**
@@ -332,7 +332,9 @@ public final class Robot extends IterativeRobot
      */
     public void autonomousInit()
     {
+        startLocalization();
         NAVX.reset();
+
         TRANSMISSION_SOLENOID.setHighGear(true);
 //
 //        String fileName = "/home/lvuser/FILES";

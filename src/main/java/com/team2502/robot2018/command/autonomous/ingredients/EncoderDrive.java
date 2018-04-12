@@ -1,8 +1,8 @@
 package com.team2502.robot2018.command.autonomous.ingredients;
 
 import com.team2502.robot2018.Constants;
-import edu.wpi.first.wpilibj.command.Command;
 import com.team2502.robot2018.Robot;
+import edu.wpi.first.wpilibj.command.Command;
 
 public class EncoderDrive extends Command
 {
@@ -54,6 +54,6 @@ public class EncoderDrive extends Command
         Robot.DRIVE_TRAIN.setTeleopSettings();
         Robot.DRIVE_TRAIN.stop();
     }
-    
+
 
 }

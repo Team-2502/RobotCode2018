@@ -1,14 +1,6 @@
 package com.team2502.robot2018.pathplanning.srxprofiling;
 
-import com.team2502.robot2018.Constants;
-import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.CommandGroup;
-import edu.wpi.first.wpilibj.command.ConditionalCommand;
-import jaci.pathfinder.Pathfinder;
-import jaci.pathfinder.Trajectory;
-import jaci.pathfinder.Waypoint;
-
-import java.util.Arrays;
 
 public class CalibrateWheelbaseWidthCommand extends CommandGroup
 {
