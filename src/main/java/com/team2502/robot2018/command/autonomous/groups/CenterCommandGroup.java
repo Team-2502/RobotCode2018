@@ -52,11 +52,13 @@ public class CenterCommandGroup extends CommandGroup
         addParallel(new ToggleIntakeCommand());
 //
 
+        addParallel(new ElevatorAutonCommand(2, 0));
+
         addSequential(new SRXProfilingCommand(NO_COMMANDS,
                                               (double) TrajConfig.Center.Right.toSecondCubeDir,
                                               TrajConfig.Center.Right.toSecondCube));
 
-        addParallel(new ElevatorAutonCommand(2, 0));
+
 
         addSequential(new NavXRotateCommand(0, 0.5F, false));
         addParallel(new RunIntakeCommand(3, -1));
