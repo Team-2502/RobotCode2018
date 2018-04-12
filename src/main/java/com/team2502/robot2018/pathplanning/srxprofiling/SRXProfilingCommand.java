@@ -49,8 +49,34 @@ public class SRXProfilingCommand extends Command
         leftTraj = modifier.getLeftTrajectory();
         rightTraj = modifier.getRightTrajectory();
 
-        Pathfinder.writeToCSV(new File("/home/lvuser/LEFT_TRAJ.csv"), leftTraj);
-        Pathfinder.writeToCSV(new File("/home/lvuser/RIGHT_TRAJ.csv"), rightTraj);
+//        Pathfinder.writeToCSV(new File("/home/lvuser/LEFT_TRAJ.csv"), leftTraj);
+//        Pathfinder.writeToCSV(new File("/home/lvuser/RIGHT_TRAJ.csv"), rightTraj);
+
+//        if(leftTraj.length() != rightTraj.length())
+//        {
+//            throw new Exception("Somehow, the left purepursuit does not have the same number of points as the right purepursuit (SRXProfilingCommand)");
+//        }
+
+        this.dir = dir;
+
+        pointLoader = new Notifier(() -> {
+            Robot.DRIVE_TRAIN.processMotionProfileBuffer();
+        });
+        pointLoader.startPeriodic(Constants.SRXProfiling.PERIOD_SEC);
+        status = new MotionProfileStatus();
+        this.commands = commands;
+    }
+
+    public SRXProfilingCommand(ScheduledCommand[] commands, double dir, Trajectory[] traj)
+    {
+        requires(Robot.DRIVE_TRAIN);
+        setInterruptible(false);
+
+        leftTraj = traj[0];
+        rightTraj = traj[1];
+
+//        Pathfinder.writeToCSV(new File("/home/lvuser/LEFT_TRAJ.csv"), leftTraj);
+//        Pathfinder.writeToCSV(new File("/home/lvuser/RIGHT_TRAJ.csv"), rightTraj);
 
 //        if(leftTraj.length() != rightTraj.length())
 //        {

@@ -10,6 +10,8 @@ import com.team2502.robot2018.pathplanning.srxprofiling.ScheduledCommand;
 import com.team2502.robot2018.pathplanning.srxprofiling.TrajConfig;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
+import static com.team2502.robot2018.Constants.SRXProfiling.NO_COMMANDS;
+
 
 public class CenterCommandGroup extends CommandGroup
 {
@@ -43,25 +45,30 @@ public class CenterCommandGroup extends CommandGroup
 
     private void goSwitchRight()
     {
-//        moveElevator();
-//        addSequential(new PurePursuitCommand(PathConfig.Center.rightSwitch, true));
-//        emitCubeSwitch();
+        moveElevator();
+        addSequential(new PurePursuitCommand(PathConfig.Center.rightSwitch, true));
+        emitCubeSwitch();
+
+        addParallel(new ToggleIntakeCommand());
 //
 
-        addSequential(new SRXProfilingCommand(new ScheduledCommand[] { new ScheduledCommand(0, new ToggleIntakeCommand()) },
+        addSequential(new SRXProfilingCommand(NO_COMMANDS,
                                               (double) TrajConfig.Center.Right.toSecondCubeDir,
                                               TrajConfig.Center.Right.toSecondCube));
 
-        addParallel(new ElevatorAutonCommand(3, 0));
-        addSequential(new SRXProfilingCommand(new ScheduledCommand[] { new ScheduledCommand(1.5, new RunIntakeCommand(1.5, -1)) },
+        addParallel(new ElevatorAutonCommand(2, 0));
+
+        addSequential(new NavXRotateCommand(0, 0.5F, false));
+        addParallel(new RunIntakeCommand(3, -1));
+        addSequential(new SRXProfilingCommand(NO_COMMANDS,
                                               1,
                                               TrajConfig.Center.Right.toSecondCubePt2));
 
-        addSequential(new SRXProfilingCommand(new ScheduledCommand[] { new ScheduledCommand(0, new RunIntakeCommand(1.1, -1)) },
+        addSequential(new SRXProfilingCommand(NO_COMMANDS,
                                               -1,
                                               TrajConfig.Center.Right.toSecondCubePt2));
 
-        addSequential(new SRXProfilingCommand(new ScheduledCommand[] { new ScheduledCommand(0, new ElevatorAutonCommand(3, Constants.Physical.Elevator.SWITCH_ELEV_HEIGHT_FT)) },
+        addSequential(new SRXProfilingCommand(new ScheduledCommand[] { new ScheduledCommand(0, new ElevatorAutonCommand(2.0, Constants.Physical.Elevator.SWITCH_ELEV_HEIGHT_FT)) },
                                               1,
                                               TrajConfig.Center.Right.backToSwitch));
 
