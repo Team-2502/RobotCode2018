@@ -36,6 +36,7 @@ public class TrajConfig
         public static void init()
         {
             System.out.println("secondCubeRightSwitch[0].segments.length = " + (secondCubeRightSwitch[0].segments.length));
+            Right.init();
             Pathfinder.writeToCSV(new File("/home/lvuser/LEFT.csv"), Right.backToSwitch[0]);
             Pathfinder.writeToCSV(new File("/home/lvuser/RIGHT.csv"), Right.backToSwitch[1]);
         }
@@ -58,6 +59,8 @@ public class TrajConfig
             public static final Trajectory[] backToSwitch = flipX(toTankDrive(new Waypoint(0, 0, 0),
                                                                               new Waypoint(30D / 12, 26D / 12, Math.PI / 3),
                                                                               new Waypoint(69D / 12, 40D / 12 + 2, 0)));
+
+            protected static void init() { }
 
 
         }
