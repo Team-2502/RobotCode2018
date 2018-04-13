@@ -1,20 +1,16 @@
 package com.team2502.robot2018.pathplanning.srxprofiling;
 
-import com.ctre.phoenix.motion.TrajectoryPoint;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.team2502.robot2018.Constants;
 import com.team2502.robot2018.command.autonomous.ingredients.PathConfig;
-import edu.wpi.first.wpilibj.DriverStation;
 import jaci.pathfinder.Pathfinder;
 import jaci.pathfinder.Trajectory;
 import jaci.pathfinder.Waypoint;
 import jaci.pathfinder.modifiers.TankModifier;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-
-import static com.team2502.robot2018.Constants.Physical.DriveTrain.FEET_TO_EPOS_DT;
-import static com.team2502.robot2018.Constants.Physical.DriveTrain.FPS_TO_EVEL_DT;
 
 /**
  * Warning!
@@ -35,19 +31,31 @@ public class TrajConfig
             public static final List<Waypoint> rightSwitch = convertFromPP(PathConfig.Center.rightSwitch);
 
             public static final int toSecondCubeDir = -1;
-            public static final Trajectory[] toSecondCube = toTankDrive(new Waypoint(0, 0, 0),
-                                                                       new Waypoint(-50D / 12, -26D / 12, Math.PI / 4),
-                                                                       new Waypoint(-75D / 12, -40D / 12, 0));
+            public static final Trajectory[] toSecondCube = reverseTraj(toTankDrive(new Waypoint(0, 0, 0),
+                                                                                    new Waypoint(50D / 12, 26D / 12, Math.PI / 4),
+                                                                                    new Waypoint(75D / 12, 40D / 12, 0)));
 
             public static final Trajectory[] toSecondCubePt2 = toTankDrive(new Waypoint(0, 0, 0),
-                                                                          new Waypoint(3, 0, 0)); // angle correction for previous step
+                                                                           new Waypoint(3, 0, 0)); // angle correction for previous step
 
-            public static final Trajectory[] backToSwitch = toTankDrive(new Waypoint(-75D / 12, 40D / 12, 0),
-                                                                       new Waypoint(-50D / 12, 26D / 12, -Math.PI / 4),
-                                                                       new Waypoint(0, 0, 0));
+            public static final Trajectory[] toSecondCubePt3 = reverseTraj(toTankDrive(new Waypoint(0, 0, 0),
+                                                                                       new Waypoint(3, 0, 0))); // angle correction for previous step
+
+            public static final Trajectory[] backToSwitch = flipX(toTankDrive(new Waypoint(0, 0, 0),
+                                                                        new Waypoint(30D / 12, 26D / 12, Math.PI / 3),
+                                                                        new Waypoint(69D / 12, 40D / 12+2, 0)));
+
+            public static final Trajectory[] totalThing = combineTraj(toSecondCube, toSecondCubePt2, toSecondCubePt3
+                                                                      ,backToSwitch
+                                                                     );
 
 
-            public static void init() { }
+            public static void init()
+            {
+                System.out.println("totalThing[0].segments.length = " + (totalThing[0].segments.length));
+                Pathfinder.writeToCSV(new File("/home/lvuser/LEFT.csv"), backToSwitch[0]);
+                Pathfinder.writeToCSV(new File("/home/lvuser/RIGHT.csv"), backToSwitch[1]);
+            }
 
         }
 
@@ -62,6 +70,11 @@ public class TrajConfig
             result.add(new Waypoint(-waypoint.x, waypoint.y, waypoint.angle));
         }
         return result;
+    }
+
+    private static Trajectory[] flipX(Trajectory[] input)
+    {
+        return new Trajectory[]{input[1], input[0]};
     }
 
     private static List<Waypoint> convertFromPP(List<com.team2502.robot2018.pathplanning.purepursuit.Waypoint> waypoints)
@@ -104,7 +117,93 @@ public class TrajConfig
         Trajectory traj = toTrajectory(waypoints);
         TankModifier modifier = new TankModifier(traj);
         modifier.modify(Constants.SRXProfiling.WHEELBASE_WIDTH);
-        return new Trajectory[]{modifier.getLeftTrajectory(), modifier.getRightTrajectory()};
+        return new Trajectory[] { modifier.getLeftTrajectory(), modifier.getRightTrajectory() };
+    }
+
+    /**
+     * returns a copied trajectory
+     *
+     * @param traj a traj
+     * @return traj but reversed
+     */
+    private static Trajectory reverseTraj(Trajectory traj)
+    {
+        Trajectory.Segment[] segments = new Trajectory.Segment[traj.length()];
+
+        for(int i = 0; i < traj.length(); i++)
+        {
+            Trajectory.Segment segment = traj.get(i);
+
+            // using pass by reference like a good boy
+            segments[i] = new Trajectory.Segment(segment.dt, segment.x, segment.y, -segment.position, -segment.velocity, segment.acceleration, segment.jerk, segment.heading);
+        }
+
+        return new Trajectory(segments);
+    }
+
+    private static Trajectory[] reverseTraj(Trajectory[] trajs)
+    {
+        Trajectory[] ret = new Trajectory[trajs.length];
+        for(int i = 0; i < trajs.length; i++)
+        {
+            ret[i] = reverseTraj(trajs[i]);
+        }
+        return ret;
+
+    }
+
+
+    private static Trajectory[] combineTraj(Trajectory[]... trajs)
+    {
+        int totalCount = 0;
+        for(Trajectory[] traj : trajs)
+        {
+            totalCount += traj[0].length();
+        }
+        System.out.println("totalCount = " + totalCount);
+
+        Trajectory.Segment[] leftSegments = new Trajectory.Segment[totalCount];
+        Trajectory.Segment[] rightSegments = new Trajectory.Segment[totalCount];
+
+        int currentCountLeft = 0;
+        int currentCountRight = 0;
+        boolean oneLoop = false;
+
+        double lastLeftPos = 0;
+        double lastRightPos = 0;
+
+
+        for(Trajectory[] traj : trajs)
+        {
+            Trajectory.Segment[] partialLeftSegments = traj[0].segments;
+            Trajectory.Segment[] partialRightSegments = traj[1].segments;
+
+            for(int j = 0; j < partialLeftSegments.length; j++)
+            {
+                leftSegments[currentCountLeft] = partialLeftSegments[j];
+                if(oneLoop)
+                {
+                    leftSegments[currentCountLeft].position += lastLeftPos;
+                }
+
+                currentCountLeft++;
+            }
+            for(int j = 0; j < partialRightSegments.length; j++)
+            {
+                rightSegments[currentCountRight] = partialRightSegments[j];
+                if(oneLoop)
+                {
+                    rightSegments[currentCountRight].position += lastRightPos;
+
+                }
+                currentCountRight++;
+            }
+            oneLoop = true;
+            lastLeftPos = leftSegments[currentCountLeft - 1].position;
+            lastRightPos = leftSegments[currentCountRight - 1].position;
+        }
+        return new Trajectory[] { new Trajectory(leftSegments), new Trajectory(rightSegments) };
+
     }
 
 

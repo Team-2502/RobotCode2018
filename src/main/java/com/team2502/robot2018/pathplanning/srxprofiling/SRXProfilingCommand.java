@@ -67,10 +67,10 @@ public class SRXProfilingCommand extends Command
         this.commands = commands;
     }
 
-    public SRXProfilingCommand(ScheduledCommand[] commands, double dir, Trajectory[] traj)
-    {
+    public SRXProfilingCommand(ScheduledCommand[] commands, double dir, Trajectory[] traj){
+
         requires(Robot.DRIVE_TRAIN);
-        setInterruptible(false);
+        setInterruptible(true);
 
         leftTraj = traj[0];
         rightTraj = traj[1];
@@ -121,15 +121,15 @@ public class SRXProfilingCommand extends Command
         Robot.DRIVE_TRAIN.setMotionProfilingState(SetValueMotionProfile.Enable);
 
         // If we have run out of points to send to the lower-level
-        if(status.hasUnderrun)
-        {
-            DriverStation.getInstance().reportWarning("Ran out of points", false);
-            // stop loading points
-            pointLoader.stop();
-
-            // clear the flag
-            Robot.DRIVE_TRAIN.clearMotionProfileHasUnderrun();
-        }
+//        if(status.hasUnderrun)
+//        {
+//            DriverStation.getInstance().reportWarning("Ran out of points", false);
+//            // stop loading points
+//            pointLoader.stop();
+//
+//            // clear the flag
+//            Robot.DRIVE_TRAIN.clearMotionProfileHasUnderrun();
+//        }
 
     }
 
@@ -137,7 +137,7 @@ public class SRXProfilingCommand extends Command
     protected boolean isFinished()
     {
         // If this is the last point
-        return status.isLast;
+        return status.hasUnderrun || super.isTimedOut();
     }
 
     @Override
@@ -145,5 +145,8 @@ public class SRXProfilingCommand extends Command
     {
         Robot.DRIVE_TRAIN.setMotionProfilingState(SetValueMotionProfile.Hold);
         Robot.DRIVE_TRAIN.resetTalonControlFramePeriod();
+        pointLoader.stop();
+        Robot.DRIVE_TRAIN.clearMotionProfileHasUnderrun();
+        DriverStation.getInstance().reportError("ENDING MP", false);
     }
 }

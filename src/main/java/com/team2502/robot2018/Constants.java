@@ -75,8 +75,8 @@ public class Constants
 
         public static final int SAMPLES_FAST = 1000;
 
-        public static final double MAX_VEL_FPS = 7;
-        public static final double MAX_ACCEL_FPS2 = 15;
+        public static final double MAX_VEL_FPS = 5.5;
+        public static final double MAX_ACCEL_FPS2 = 7;
         public static final double MAX_JERK_FPS3 = 30;
 
 
@@ -93,9 +93,9 @@ public class Constants
          */
         public static final int MIN_PTS_BUFFER_CNT = 10;
 
-        public static final int PERIOD_MS = 10;
+        public static final int PERIOD_MS = 20;
         public static final double PERIOD_SEC = msToSec(PERIOD_MS);
-        public static final TrajectoryPoint.TrajectoryDuration PERIOD = TrajectoryPoint.TrajectoryDuration.Trajectory_Duration_10ms;
+        public static final TrajectoryPoint.TrajectoryDuration PERIOD = TrajectoryPoint.TrajectoryDuration.Trajectory_Duration_20ms;
         public static final Trajectory.Config CONFIG_SETTINGS = new Trajectory.Config(Trajectory.FitMethod.HERMITE_QUINTIC, Trajectory.Config.SAMPLES_LOW, PERIOD_SEC, MAX_VEL_FPS, MAX_ACCEL_FPS2, MAX_JERK_FPS3);
 
         public static final ScheduledCommand[] NO_COMMANDS = new ScheduledCommand[0];
@@ -171,7 +171,7 @@ public class Constants
             /**
              * How high the elevator must be in order to put a cube in the switch
              */
-            public static final float SWITCH_ELEV_HEIGHT_FT = 3.4F;
+            public static final float SWITCH_ELEV_HEIGHT_FT = 2F;
             /**
              * How high the elevator must be in order to put a cube in the scale
              */

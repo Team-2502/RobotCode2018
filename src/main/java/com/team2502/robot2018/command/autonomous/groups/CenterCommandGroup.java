@@ -9,6 +9,7 @@ import com.team2502.robot2018.pathplanning.srxprofiling.SRXProfilingCommand;
 import com.team2502.robot2018.pathplanning.srxprofiling.ScheduledCommand;
 import com.team2502.robot2018.pathplanning.srxprofiling.TrajConfig;
 import edu.wpi.first.wpilibj.command.CommandGroup;
+import jaci.pathfinder.Trajectory;
 
 import static com.team2502.robot2018.Constants.SRXProfiling.NO_COMMANDS;
 
@@ -17,7 +18,8 @@ public class CenterCommandGroup extends CommandGroup
 {
     public CenterCommandGroup()
     {
-        addSequential(new QuickCommand(Robot.ELEVATOR::calibrateEncoder));
+        // done in autonomousInit()
+//        addSequential(new QuickCommand(Robot.ELEVATOR::calibrateEncoder));
         // Begin by calibrating the navX
         Robot.NAVX.reset();
 
@@ -50,29 +52,37 @@ public class CenterCommandGroup extends CommandGroup
         emitCubeSwitch();
 
         addParallel(new ToggleIntakeCommand());
+
+
+        addSequential(new SRXProfilingCommand(new ScheduledCommand[]{new ScheduledCommand(1, new ElevatorAutonCommand(2, 0)),
+                                                                     new ScheduledCommand(3.5, new RunIntakeCommand(3, -1)),
+                                                                     new ScheduledCommand(7, new RaiseElevatorSwitch()),},
+                      (double) 1,
+                      TrajConfig.Center.Right.totalThing),
+                      11);
+
+
+
+//        addSequential(new SRXProfilingCommand(NO_COMMANDS,
+//                                              (double) TrajConfig.Center.Right.toSecondCubeDir,
+//                                              TrajConfig.Center.Right.toSecondCube));
 //
-
-        addParallel(new ElevatorAutonCommand(2, 0));
-
-        addSequential(new SRXProfilingCommand(NO_COMMANDS,
-                                              (double) TrajConfig.Center.Right.toSecondCubeDir,
-                                              TrajConfig.Center.Right.toSecondCube));
-
-
-
-        addSequential(new NavXRotateCommand(0, 0.5F, false));
-        addParallel(new RunIntakeCommand(1, -1));
-        addSequential(new SRXProfilingCommand(NO_COMMANDS,
-                                              1,
-                                              TrajConfig.Center.Right.toSecondCubePt2));
-
-        addSequential(new SRXProfilingCommand(NO_COMMANDS,
-                                              -1,
-                                              TrajConfig.Center.Right.toSecondCubePt2));
-
-        addSequential(new SRXProfilingCommand(new ScheduledCommand[] { new ScheduledCommand(0, new ElevatorAutonCommand(2.0, Constants.Physical.Elevator.SWITCH_ELEV_HEIGHT_FT)) },
-                                              1,
-                                              TrajConfig.Center.Right.backToSwitch));
+//
+//
+//        addSequential(new NavXRotateCommand(0, 0.5F, false));
+//        addParallel(new RunIntakeCommand(1, -1));
+//        addSequential(new SRXProfilingCommand(NO_COMMANDS,
+//                                              1,
+//                                              TrajConfig.Center.Right.toSecondCubePt2));
+//
+//        addSequential(new SRXProfilingCommand(NO_COMMANDS,
+//                                              -1,
+//                                              TrajConfig.Center.Right.toSecondCubePt2));
+//
+//        addSequential(new SRXProfilingCommand(NO_COMMANDS,
+////                new ScheduledCommand[] { new ScheduledCommand(0, new ElevatorAutonCommand(2.0, Constants.Physical.Elevator.SWITCH_ELEV_HEIGHT_FT)) },
+//                                              1,
+//                                              TrajConfig.Center.Right.backToSwitch));
 
         emitCubeSwitch();
     }
