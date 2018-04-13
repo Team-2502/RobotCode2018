@@ -55,7 +55,7 @@ public class PathConfig
                 new Waypoint(new ImmutableVector2f(0, 0), 1, 10, -10),
                 new Waypoint(new ImmutableVector2f(2F, 2.45F), 16 * speedLimiter, 10, -10),
                 new Waypoint(new ImmutableVector2f(3.5F, 4F), 16 * speedLimiter, 10, -10),
-                new Waypoint(new ImmutableVector2f(3.5F, 9.5F), 1F * speedLimiter, 10, -10)
+                new Waypoint(new ImmutableVector2f(3.5F, 9F), 1F * speedLimiter, 10, -10) // if this doesn't work, PP is broken or field is off.
                                                                       );
 
 

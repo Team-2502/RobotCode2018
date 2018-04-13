@@ -9,7 +9,6 @@ import jaci.pathfinder.modifiers.TankModifier;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -25,8 +24,23 @@ public class TrajConfig
     public static class Center
     {
 
+        // It works
+        // pos y = go left, flip x makes it go right
+        public static final Trajectory[] firstCubeRightSwitch = flipX(toTankDrive(new Waypoint(0, 0, 0),
+                                                                            new Waypoint(2.45, 2, Math.PI / 4),
+                                                                            new Waypoint(9, 3.5, 0)));
 
-        public static class Right
+
+        public static final Trajectory[] secondCubeRightSwitch = combineTraj(Right.toSecondCube, Right.toSecondCubePt2, Right.toSecondCubePt3, Right.backToSwitch);
+
+        public static void init()
+        {
+            System.out.println("secondCubeRightSwitch[0].segments.length = " + (secondCubeRightSwitch[0].segments.length));
+            Pathfinder.writeToCSV(new File("/home/lvuser/LEFT.csv"), Right.backToSwitch[0]);
+            Pathfinder.writeToCSV(new File("/home/lvuser/RIGHT.csv"), Right.backToSwitch[1]);
+        }
+
+        private static class Right
         {
             public static final List<Waypoint> rightSwitch = convertFromPP(PathConfig.Center.rightSwitch);
 
@@ -42,20 +56,9 @@ public class TrajConfig
                                                                                        new Waypoint(3, 0, 0))); // angle correction for previous step
 
             public static final Trajectory[] backToSwitch = flipX(toTankDrive(new Waypoint(0, 0, 0),
-                                                                        new Waypoint(30D / 12, 26D / 12, Math.PI / 3),
-                                                                        new Waypoint(69D / 12, 40D / 12+2, 0)));
+                                                                              new Waypoint(30D / 12, 26D / 12, Math.PI / 3),
+                                                                              new Waypoint(69D / 12, 40D / 12 + 2, 0)));
 
-            public static final Trajectory[] totalThing = combineTraj(toSecondCube, toSecondCubePt2, toSecondCubePt3
-                                                                      ,backToSwitch
-                                                                     );
-
-
-            public static void init()
-            {
-                System.out.println("totalThing[0].segments.length = " + (totalThing[0].segments.length));
-                Pathfinder.writeToCSV(new File("/home/lvuser/LEFT.csv"), backToSwitch[0]);
-                Pathfinder.writeToCSV(new File("/home/lvuser/RIGHT.csv"), backToSwitch[1]);
-            }
 
         }
 
@@ -74,7 +77,7 @@ public class TrajConfig
 
     private static Trajectory[] flipX(Trajectory[] input)
     {
-        return new Trajectory[]{input[1], input[0]};
+        return new Trajectory[] { input[1], input[0] };
     }
 
     private static List<Waypoint> convertFromPP(List<com.team2502.robot2018.pathplanning.purepursuit.Waypoint> waypoints)

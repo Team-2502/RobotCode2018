@@ -1,15 +1,12 @@
 package com.team2502.robot2018.command.autonomous.groups;
 
-import com.team2502.robot2018.Constants;
 import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.command.autonomous.ingredients.*;
-import com.team2502.robot2018.command.teleop.QuickCommand;
 import com.team2502.robot2018.command.teleop.ToggleIntakeCommand;
 import com.team2502.robot2018.pathplanning.srxprofiling.SRXProfilingCommand;
 import com.team2502.robot2018.pathplanning.srxprofiling.ScheduledCommand;
 import com.team2502.robot2018.pathplanning.srxprofiling.TrajConfig;
 import edu.wpi.first.wpilibj.command.CommandGroup;
-import jaci.pathfinder.Trajectory;
 
 import static com.team2502.robot2018.Constants.SRXProfiling.NO_COMMANDS;
 
@@ -49,6 +46,10 @@ public class CenterCommandGroup extends CommandGroup
     {
         moveElevator();
         addSequential(new PurePursuitCommand(PathConfig.Center.rightSwitch, true));
+        // Just in case . . .
+//        addSequential(new SRXProfilingCommand(NO_COMMANDS,
+//                                              1,
+//                                              TrajConfig.Center.firstCubeRightSwitch));
         emitCubeSwitch();
 
         addParallel(new ToggleIntakeCommand());
@@ -57,8 +58,8 @@ public class CenterCommandGroup extends CommandGroup
         addSequential(new SRXProfilingCommand(new ScheduledCommand[]{new ScheduledCommand(1, new ElevatorAutonCommand(2, 0)),
                                                                      new ScheduledCommand(3.5, new RunIntakeCommand(3, -1)),
                                                                      new ScheduledCommand(7, new RaiseElevatorSwitch()),},
-                      (double) 1,
-                      TrajConfig.Center.Right.totalThing),
+                                              (double) 1,
+                                              TrajConfig.Center.secondCubeRightSwitch),
                       11);
 
 

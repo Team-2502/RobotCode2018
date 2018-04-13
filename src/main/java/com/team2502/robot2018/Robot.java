@@ -188,7 +188,7 @@ public final class Robot extends IterativeRobot
     public void robotInit()
     {
 
-        TrajConfig.Center.Right.init();
+        TrajConfig.Center.init();
         // initialize sin lookup table
         MathUtils.init();
         
