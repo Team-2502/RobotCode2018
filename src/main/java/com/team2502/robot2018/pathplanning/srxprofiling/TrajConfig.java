@@ -33,6 +33,12 @@ public class TrajConfig
 
         public static final Trajectory[] secondCubeRightSwitch = combineTraj(Right.toSecondCube, Right.toSecondCubePt2, Right.toSecondCubePt3, Right.backToSwitch);
 
+
+        // If we flip the thing that does stuff on the right across the X axis,
+        // It will do stuff on the left
+        // Right?
+        public static final Trajectory[] secondCubeLeftSwitch = flipX(secondCubeRightSwitch);
+
         public static void init()
         {
             System.out.println("secondCubeRightSwitch[0].segments.length = " + (secondCubeRightSwitch[0].segments.length));

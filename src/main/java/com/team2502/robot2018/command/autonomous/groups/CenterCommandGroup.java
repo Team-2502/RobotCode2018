@@ -39,7 +39,15 @@ public class CenterCommandGroup extends CommandGroup
         moveElevator();
         addSequential(new PurePursuitCommand(PathConfig.Center.leftSwitch, true));
         emitCubeSwitch();
-        addSequential(new BackOffCommand());
+        addParallel(new ToggleIntakeCommand());
+
+
+        addSequential(new SRXProfilingCommand(new ScheduledCommand[]{new ScheduledCommand(1, new ElevatorAutonCommand(2, 0)),
+                                                                     new ScheduledCommand(3.5, new RunIntakeCommand(3, -1)),
+                                                                     new ScheduledCommand(7, new RaiseElevatorSwitch()),},
+                                              (double) 1,
+                                              TrajConfig.Center.secondCubeLeftSwitch),
+                      11);
     }
 
     private void goSwitchRight()
@@ -86,23 +94,6 @@ public class CenterCommandGroup extends CommandGroup
 //                                              TrajConfig.Center.Right.backToSwitch));
 
         emitCubeSwitch();
-    }
-
-    private void secondCubeLeft()
-    {
-        addParallel(new ElevatorAutonCommand(1, 0));
-        addSequential(new FastRotateCommand(75, 8, -0.2F));
-
-        addSequential(new EncoderDrive(3, 4));
-        addParallel(new RunIntakeCommand(3, -1));
-
-        addSequential(new EncoderDrive(-3, 4));
-        moveElevator();
-
-        addSequential(new FastRotateCommand(0, 8, -0.2F));
-        addSequential(new DeadreckoningDrive(1, 8));
-        emitCubeSwitch();
-
     }
 
     private void moveElevator()
