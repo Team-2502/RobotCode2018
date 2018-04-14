@@ -1,7 +1,6 @@
 package com.team2502.robot2018.pathplanning.srxprofiling;
 
 import com.team2502.robot2018.Constants;
-import com.team2502.robot2018.command.autonomous.ingredients.PathConfig;
 import jaci.pathfinder.Pathfinder;
 import jaci.pathfinder.Trajectory;
 import jaci.pathfinder.Waypoint;
@@ -31,45 +30,52 @@ public class TrajConfig
                                                                             new Waypoint(9, 3.5, 0)));
 
 
-        public static final Trajectory[] secondCubeRightSwitch = combineTraj(Right.toSecondCube, Right.toSecondCubePt2, Right.toSecondCubePt3, Right.backToSwitch);
+        public static final Trajectory[] secondCubeRightSwitch = combineTraj(TwoCube.toSecondCube, TwoCube.toSecondCubePt2, TwoCube.toSecondCubePt3, TwoCube.backToSwitch);
 
 
         // If we flip the thing that does stuff on the right across the X axis,
         // It will do stuff on the left
-        // Right?
+        // TwoCube?
         public static final Trajectory[] secondCubeLeftSwitch = flipX(secondCubeRightSwitch);
 
         public static void init()
         {
             System.out.println("secondCubeRightSwitch[0].segments.length = " + (secondCubeRightSwitch[0].segments.length));
-            Right.init();
-            Pathfinder.writeToCSV(new File("/home/lvuser/LEFT.csv"), Right.backToSwitch[0]);
-            Pathfinder.writeToCSV(new File("/home/lvuser/RIGHT.csv"), Right.backToSwitch[1]);
+            TwoCube.init();
+            Pathfinder.writeToCSV(new File("/home/lvuser/LEFT.csv"), TwoCube.backToSwitch[0]);
+            Pathfinder.writeToCSV(new File("/home/lvuser/RIGHT.csv"), TwoCube.backToSwitch[1]);
         }
 
-        private static class Right
+        /**PathC
+         * Contains two cube trajectories for the RIGHT side of the switch
+         *
+         * {@link TrajConfig#flipX(Trajectory[])} if you want the left side, or {@link TrajConfig.Center#secondCubeLeftSwitch}
+         */
+        private static class TwoCube
         {
-            public static final List<Waypoint> rightSwitch = convertFromPP(PathConfig.Center.rightSwitch);
-
-            public static final int toSecondCubeDir = -1;
-            public static final Trajectory[] toSecondCube = reverseTraj(toTankDrive(new Waypoint(0, 0, 0),
+            static final Trajectory[] toSecondCube = reverseTraj(toTankDrive(new Waypoint(0, 0, 0),
                                                                                     new Waypoint(50D / 12, 26D / 12, Math.PI / 4),
                                                                                     new Waypoint(75D / 12, 40D / 12, 0)));
 
-            public static final Trajectory[] toSecondCubePt2 = toTankDrive(new Waypoint(0, 0, 0),
+            static final Trajectory[] toSecondCubePt2 = toTankDrive(new Waypoint(0, 0, 0),
                                                                            new Waypoint(3, 0, 0)); // angle correction for previous step
 
-            public static final Trajectory[] toSecondCubePt3 = reverseTraj(toTankDrive(new Waypoint(0, 0, 0),
+            static final Trajectory[] toSecondCubePt3 = reverseTraj(toTankDrive(new Waypoint(0, 0, 0),
                                                                                        new Waypoint(3, 0, 0))); // angle correction for previous step
 
-            public static final Trajectory[] backToSwitch = flipX(toTankDrive(new Waypoint(0, 0, 0),
+            static final Trajectory[] backToSwitch = flipX(toTankDrive(new Waypoint(0, 0, 0),
                                                                               new Waypoint(30D / 12, 26D / 12, Math.PI / 3),
                                                                               new Waypoint(69D / 12, 40D / 12 + 2, 0)));
 
-            protected static void init() { }
+            static void init() { }
 
 
         }
+
+    }
+
+    public static class Left
+    {
 
     }
 

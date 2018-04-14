@@ -39,6 +39,7 @@ public class CenterCommandGroup extends CommandGroup
         moveElevator();
         addSequential(new PurePursuitCommand(PathConfig.Center.leftSwitch, true));
         emitCubeSwitch();
+
         addParallel(new ToggleIntakeCommand());
 
 
