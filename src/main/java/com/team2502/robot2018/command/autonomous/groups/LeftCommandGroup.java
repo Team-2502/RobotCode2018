@@ -2,6 +2,7 @@ package com.team2502.robot2018.command.autonomous.groups;
 
 import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.command.autonomous.ingredients.*;
+import com.team2502.robot2018.command.teleop.ActiveIntakeCommand;
 import com.team2502.robot2018.command.teleop.ToggleIntakeCommand;
 import com.team2502.robot2018.pathplanning.srxprofiling.SRXProfilingCommand;
 import com.team2502.robot2018.pathplanning.srxprofiling.ScheduledCommand;
@@ -115,7 +116,18 @@ public class LeftCommandGroup extends CommandGroup
     private void goScaleLeft()
     {
         addParallel(new ActiveIntakeRotate(2.0, 0.6));
-        addSequential(new GoScaleSameSide(PathConfig.Left.leftScale));
+//        addSequential(new GoScaleSameSide(PathConfig.Left.leftScale));
+        goScaleLeftMP();
+    }
+
+    private void goScaleLeftMP()
+    {
+        addSequential(new SRXProfilingCommand(NO_COMMANDS,
+                                              1,
+                                              TrajConfig.Left.firstCube));
+
+        addSequential(new RunIntakeCommand(0.3F, .5F));
+        addSequential(new ToggleIntakeCommand());
     }
 
     private void secondCubeLeft()
@@ -126,7 +138,8 @@ public class LeftCommandGroup extends CommandGroup
 
     private void secondCubeLeftMP()
     {
-        addSequential(new SRXProfilingCommand(NO_COMMANDS,
+        addParallel(new ElevatorAutonCommand(3, 0));
+        addSequential(new SRXProfilingCommand(new ScheduledCommand[]{new ScheduledCommand(3, new RunIntakeCommand(3, -1))},
                                               1,
                                               TrajConfig.Left.twoCube));
     }

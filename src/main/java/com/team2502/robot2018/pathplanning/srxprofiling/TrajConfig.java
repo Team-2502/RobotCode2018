@@ -75,6 +75,14 @@ public class TrajConfig
     {
         public static final Trajectory[] twoCube = combineTraj(TwoCube.backUpToCube, TwoCube.forwardToCube, TwoCube.backUpToCube, TwoCube.forwardToScale);
 
+        public static final Trajectory[] firstCube = toTankDrive(new Waypoint(0, 0, 0),
+                                                                 new Waypoint(4, 0, 0),
+                                                                 new Waypoint(8.589, -0.5, 0),
+                                                                 new Waypoint(12.405F, -0.5, 0),
+                                                                 new Waypoint(17, -0.5, 0),
+                                                                 new Waypoint(19.5, 3.0, 0),
+                                                                 new Waypoint(21, 3.0, 0));
+
         private static class TwoCube
         {
             static final Trajectory[] backUpToCube = reverseTraj(toTankDrive(new Waypoint(0, 0, -Math.PI / 2),
