@@ -137,7 +137,7 @@ public class SRXProfilingCommand extends Command
     protected boolean isFinished()
     {
         // If this is the last point
-        return status.hasUnderrun || super.isTimedOut();
+        return status.hasUnderrun || status.isLast || super.isTimedOut();
     }
 
     @Override

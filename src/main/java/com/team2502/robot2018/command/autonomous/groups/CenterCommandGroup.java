@@ -54,37 +54,38 @@ public class CenterCommandGroup extends CommandGroup
     private void goSwitchRight()
     {
         moveElevator();
-        addSequential(new PurePursuitCommand(PathConfig.Center.rightSwitch, true));
+//        addSequential(new PurePursuitCommand(PathConfig.Center.rightSwitch, true));
         // Just in case . . .
-//        addSequential(new SRXProfilingCommand(NO_COMMANDS,
-//                                              1,
-//                                              TrajConfig.Center.firstCubeRightSwitch));
+        addSequential(new SRXProfilingCommand(NO_COMMANDS,
+                                              1,
+                                              TrajConfig.Center.firstCubeRightSwitch),
+                      3);
         emitCubeSwitch();
 
-        addParallel(new ToggleIntakeCommand());
+//        addParallel(new ToggleIntakeCommand());
 
 
         addSequential(new SRXProfilingCommand(new ScheduledCommand[]{new ScheduledCommand(1, new ElevatorAutonCommand(2, 0)),
-                                                                     new ScheduledCommand(3.5, new RunIntakeCommand(3, -1)),
-                                                                     new ScheduledCommand(7, new RaiseElevatorSwitch()),},
+                                                                     new ScheduledCommand(2.5, new RunIntakeCommand(2.5, -1)),
+                                                                     new ScheduledCommand(5, new RaiseElevatorSwitch()),},
                                               (double) 1,
                                               TrajConfig.Center.secondCubeRightSwitch),
-                      11);
+                      11.5);
 
 
 
 //        addSequential(new SRXProfilingCommand(NO_COMMANDS,
-//                                              (double) TrajConfig.Center.Right.toSecondCubeDir,
-//                                              TrajConfig.Center.Right.toSecondCube));
-//
-//
-//
+//                                              (double) -1,
+//                                              TrajConfig.Center.secondCubeRightSwitch));
+
+
+
 //        addSequential(new NavXRotateCommand(0, 0.5F, false));
 //        addParallel(new RunIntakeCommand(1, -1));
 //        addSequential(new SRXProfilingCommand(NO_COMMANDS,
 //                                              1,
-//                                              TrajConfig.Center.Right.toSecondCubePt2));
-//
+//                                              TrajConfig.Center.Right.finishDoubleCube));
+////
 //        addSequential(new SRXProfilingCommand(NO_COMMANDS,
 //                                              -1,
 //                                              TrajConfig.Center.Right.toSecondCubePt2));
@@ -106,8 +107,8 @@ public class CenterCommandGroup extends CommandGroup
     private void emitCubeSwitch()
     {
 //        addSequential(new ActiveIntakeRotate(0.4, 0.7));
-        addSequential(new ToggleIntakeCommand());
-        addSequential(new RunIntakeCommand(1));
+        addParallel(new RunIntakeCommand(1));
+//        addParallel(new ToggleIntakeCommand());
     }
 
 }

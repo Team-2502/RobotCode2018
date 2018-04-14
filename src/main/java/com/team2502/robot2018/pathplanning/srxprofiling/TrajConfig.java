@@ -29,7 +29,7 @@ public class TrajConfig
                                                                             new Waypoint(9, 3.5, 0)));
 
 
-        public static final Trajectory[] secondCubeRightSwitch = combineTraj(TwoCube.toSecondCube, TwoCube.toSecondCubePt2, TwoCube.toSecondCubePt3, TwoCube.backToSwitch);
+        public static final Trajectory[] secondCubeRightSwitch = combineTraj(Right.toSecondCube, Right.toSecondCubePt2, Right.toSecondCubePt3, Right.backToSwitch);
 
 
         // If we flip the thing that does stuff on the right across the X axis,
@@ -40,21 +40,18 @@ public class TrajConfig
         public static void init()
         {
             System.out.println("secondCubeRightSwitch[0].segments.length = " + (secondCubeRightSwitch[0].segments.length));
-            TwoCube.init();
+            Right.init();
 //            Pathfinder.writeToCSV(new File("/home/lvuser/LEFT.csv"), TwoCube.backToSwitch[0]);
 //            Pathfinder.writeToCSV(new File("/home/lvuser/RIGHT.csv"), TwoCube.backToSwitch[1]);
         }
 
-        /**PathC
-         * Contains two cube trajectories for the RIGHT side of the switch
-         *
-         * {@link TrajConfig#flipX(Trajectory[])} if you want the left side, or {@link TrajConfig.Center#secondCubeLeftSwitch}
-         */
-        private static class TwoCube
+        public static class Right
         {
-            static final Trajectory[] toSecondCube = reverseTraj(toTankDrive(new Waypoint(0, 0, 0),
-                                                                                    new Waypoint(50D / 12, 26D / 12, Math.PI / 4),
-                                                                                    new Waypoint(75D / 12, 40D / 12, 0)));
+
+            public static final int toSecondCubeDir = -1;
+            public static final Trajectory[] toSecondCube = reverseTraj(toTankDrive(new Waypoint(0, 0, 0),
+                                                                                    new Waypoint(50D / 12, 26D / 12, Math.PI / 6),
+                                                                                    new Waypoint(75D / 12, 44D / 12, 0)));
 
             static final Trajectory[] toSecondCubePt2 = toTankDrive(new Waypoint(0, 0, 0),
                                                                            new Waypoint(3, 0, 0)); // angle correction for previous step
@@ -64,7 +61,8 @@ public class TrajConfig
 
             static final Trajectory[] backToSwitch = flipX(toTankDrive(new Waypoint(0, 0, 0),
                                                                               new Waypoint(30D / 12, 26D / 12, Math.PI / 3),
-                                                                              new Waypoint(69D / 12, 40D / 12 + 2, 0)));
+                                                                              new Waypoint(96D / 12, 46D / 12, 0)));
+            public static Trajectory[] finishDoubleCube = combineTraj(toSecondCubePt2, toSecondCubePt3, backToSwitch);
 
             static void init() { }
 
