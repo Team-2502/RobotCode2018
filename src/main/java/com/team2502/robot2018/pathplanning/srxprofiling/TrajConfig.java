@@ -6,7 +6,6 @@ import jaci.pathfinder.Trajectory;
 import jaci.pathfinder.Waypoint;
 import jaci.pathfinder.modifiers.TankModifier;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,8 +41,8 @@ public class TrajConfig
         {
             System.out.println("secondCubeRightSwitch[0].segments.length = " + (secondCubeRightSwitch[0].segments.length));
             TwoCube.init();
-            Pathfinder.writeToCSV(new File("/home/lvuser/LEFT.csv"), TwoCube.backToSwitch[0]);
-            Pathfinder.writeToCSV(new File("/home/lvuser/RIGHT.csv"), TwoCube.backToSwitch[1]);
+//            Pathfinder.writeToCSV(new File("/home/lvuser/LEFT.csv"), TwoCube.backToSwitch[0]);
+//            Pathfinder.writeToCSV(new File("/home/lvuser/RIGHT.csv"), TwoCube.backToSwitch[1]);
         }
 
         /**PathC
@@ -76,6 +75,31 @@ public class TrajConfig
 
     public static class Left
     {
+        public static final Trajectory[] twoCube = combineTraj(TwoCube.backUpToCube, TwoCube.forwardToCube, TwoCube.backUpToCube, TwoCube.forwardToScale);
+
+        private static class TwoCube
+        {
+            static final Trajectory[] backUpToCube = reverseTraj(toTankDrive(new Waypoint(0, 0, -Math.PI / 2),
+                                                                       new Waypoint(4.25, -2.5, 0)));
+
+            static final Trajectory[] forwardToCube = toTankDrive(new Waypoint(0, 0, 0),
+                                                                  new Waypoint(3.75, -2.5, -Math.PI));
+
+            static final Trajectory[] backUpToScale = reverseTraj(forwardToCube);
+
+            static final Trajectory[] forwardToScale = reverseTraj(backUpToCube);
+
+            static void init() { }
+
+        }
+
+        public static void init()
+        {
+            System.out.println("twoCube[0].segments.length = " + (twoCube[0].segments.length));
+            TwoCube.init();
+//            Pathfinder.writeToCSV(new File("/home/lvuser/LEFT.csv"), TwoCube.backToSwitch[0]);
+//            Pathfinder.writeToCSV(new File("/home/lvuser/RIGHT.csv"), TwoCube.backToSwitch[1]);
+        }
 
     }
 
