@@ -3,7 +3,12 @@ package com.team2502.robot2018.command.autonomous.groups;
 import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.command.autonomous.ingredients.*;
 import com.team2502.robot2018.command.teleop.ToggleIntakeCommand;
+import com.team2502.robot2018.pathplanning.srxprofiling.SRXProfilingCommand;
+import com.team2502.robot2018.pathplanning.srxprofiling.ScheduledCommand;
+import com.team2502.robot2018.pathplanning.srxprofiling.TrajConfig;
 import edu.wpi.first.wpilibj.command.CommandGroup;
+
+import static com.team2502.robot2018.Constants.SRXProfiling.NO_COMMANDS;
 
 public class LeftCommandGroup extends CommandGroup
 {
@@ -60,9 +65,15 @@ public class LeftCommandGroup extends CommandGroup
                             goScaleRight();
                             break;
                         }
-                        default:
+                        case SCALE:
                         {
                             goScaleLeft();
+                            break;
+                        }
+                        case SCALE_TWICE:
+                        {
+                            goScaleLeft();
+                            secondCubeLeft();
                             break;
                         }
                     }
@@ -109,7 +120,15 @@ public class LeftCommandGroup extends CommandGroup
 
     private void secondCubeLeft()
     {
-        secondCubeLeftPP();
+//        secondCubeLeftPP();
+        secondCubeLeftMP();
+    }
+
+    private void secondCubeLeftMP()
+    {
+        addSequential(new SRXProfilingCommand(NO_COMMANDS,
+                                              1,
+                                              TrajConfig.Left.twoCube));
     }
 
     private void secondCubeLeftDeadReckoning()
