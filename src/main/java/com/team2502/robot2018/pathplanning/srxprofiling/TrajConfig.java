@@ -41,14 +41,14 @@ public class TrajConfig
             Pathfinder.writeToCSV(new File("/home/lvuser/RIGHT.csv"), Right.backToSwitch[1]);
         }
 
-        private static class Right
+        public static class Right
         {
             public static final List<Waypoint> rightSwitch = convertFromPP(PathConfig.Center.rightSwitch);
 
             public static final int toSecondCubeDir = -1;
             public static final Trajectory[] toSecondCube = reverseTraj(toTankDrive(new Waypoint(0, 0, 0),
-                                                                                    new Waypoint(50D / 12, 26D / 12, Math.PI / 4),
-                                                                                    new Waypoint(75D / 12, 40D / 12, 0)));
+                                                                                    new Waypoint(50D / 12, 26D / 12, Math.PI / 6),
+                                                                                    new Waypoint(75D / 12, 44D / 12, 0)));
 
             public static final Trajectory[] toSecondCubePt2 = toTankDrive(new Waypoint(0, 0, 0),
                                                                            new Waypoint(3, 0, 0)); // angle correction for previous step
@@ -58,7 +58,8 @@ public class TrajConfig
 
             public static final Trajectory[] backToSwitch = flipX(toTankDrive(new Waypoint(0, 0, 0),
                                                                               new Waypoint(30D / 12, 26D / 12, Math.PI / 3),
-                                                                              new Waypoint(69D / 12, 40D / 12 + 2, 0)));
+                                                                              new Waypoint(96D / 12, 46D / 12, 0)));
+            public static Trajectory[] finishDoubleCube = combineTraj(toSecondCubePt2, toSecondCubePt3, backToSwitch);
 
             protected static void init() { }
 
