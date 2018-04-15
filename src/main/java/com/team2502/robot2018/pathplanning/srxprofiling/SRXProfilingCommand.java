@@ -47,11 +47,6 @@ public class SRXProfilingCommand extends Command
 //        Pathfinder.writeToCSV(new File("/home/lvuser/LEFT_TRAJ.csv"), leftTraj);
 //        Pathfinder.writeToCSV(new File("/home/lvuser/RIGHT_TRAJ.csv"), rightTraj);
 
-//        if(leftTraj.length() != rightTraj.length())
-//        {
-//            throw new Exception("Somehow, the left purepursuit does not have the same number of points as the right purepursuit (SRXProfilingCommand)");
-//        }
-
         this.dir = dir;
 
         pointLoader = new Notifier(() -> {
@@ -99,8 +94,6 @@ public class SRXProfilingCommand extends Command
     @Override
     protected void execute()
     {
-        DriverStation.getInstance().reportWarning("thinking . . .", false);
-
         // Update status
         Robot.DRIVE_TRAIN.updateStatus(status);
 
