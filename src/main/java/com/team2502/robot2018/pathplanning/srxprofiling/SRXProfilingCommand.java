@@ -4,18 +4,13 @@ import com.ctre.phoenix.motion.MotionProfileStatus;
 import com.ctre.phoenix.motion.SetValueMotionProfile;
 import com.team2502.robot2018.Constants;
 import com.team2502.robot2018.Robot;
-import com.team2502.robot2018.pathplanning.purepursuit.Path;
+import com.team2502.robot2018.utils.Stopwatch;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
-import jaci.pathfinder.Pathfinder;
 import jaci.pathfinder.Trajectory;
 import jaci.pathfinder.Waypoint;
-import jaci.pathfinder.modifiers.TankModifier;
-
-import java.io.File;
-import java.util.List;
 
 public class SRXProfilingCommand extends Command
 {
@@ -27,46 +22,20 @@ public class SRXProfilingCommand extends Command
     private final MotionProfileStatus status;
     private final ScheduledCommand[] commands;
 
+    private final Stopwatch stopwatch = new Stopwatch();
+
     private final double dir;
 
-    public SRXProfilingCommand(ScheduledCommand[] commands, double dir, List<Waypoint> waypointList)
-    {
-        this(commands, dir, (Waypoint[]) waypointList.toArray());
-    }
-
-    public SRXProfilingCommand(ScheduledCommand[] commands, double dir, Waypoint... waypoints)
-    {
-        this(commands, dir, Pathfinder.generate(waypoints, Constants.SRXProfiling.CONFIG_SETTINGS));
-    }
-
-    public SRXProfilingCommand(ScheduledCommand[] commands, double dir, Trajectory traj)
-    {
-        requires(Robot.DRIVE_TRAIN);
-        setInterruptible(false);
-        TankModifier modifier = new TankModifier(traj);
-        modifier.modify(Constants.SRXProfiling.WHEELBASE_WIDTH);
-
-        leftTraj = modifier.getLeftTrajectory();
-        rightTraj = modifier.getRightTrajectory();
-
-//        Pathfinder.writeToCSV(new File("/home/lvuser/LEFT_TRAJ.csv"), leftTraj);
-//        Pathfinder.writeToCSV(new File("/home/lvuser/RIGHT_TRAJ.csv"), rightTraj);
-
-//        if(leftTraj.length() != rightTraj.length())
-//        {
-//            throw new Exception("Somehow, the left purepursuit does not have the same number of points as the right purepursuit (SRXProfilingCommand)");
-//        }
-
-        this.dir = dir;
-
-        pointLoader = new Notifier(() -> {
-            Robot.DRIVE_TRAIN.processMotionProfileBuffer();
-        });
-        pointLoader.startPeriodic(Constants.SRXProfiling.PERIOD_SEC);
-        status = new MotionProfileStatus();
-        this.commands = commands;
-    }
-
+    /**
+     * Start a motion profiling command
+     *
+     * @param commands Any commands to run whilst driving
+     * @param dir Drive forwards or backwards?
+     * @param traj An array of length 2. Item 0 contains trajectory for left side, Item 1 contains trajectory for right side
+     *
+     * @see TrajConfig
+     * @see TrajConfig#toTankDrive(Waypoint...)
+     */
     public SRXProfilingCommand(ScheduledCommand[] commands, double dir, Trajectory[] traj){
 
         requires(Robot.DRIVE_TRAIN);
@@ -96,15 +65,33 @@ public class SRXProfilingCommand extends Command
     @Override
     protected void initialize()
     {
-        DriverStation.getInstance().reportWarning("Disabling the robot", false);
-        Robot.DRIVE_TRAIN.setMotionProfilingState(SetValueMotionProfile.Disable);
+        float timeSpent;
 
-        DriverStation.getInstance().reportWarning("Loading purepursuit points", false);
+        // start stopwatch
+        stopwatch.poll();
+        Robot.DRIVE_TRAIN.setMotionProfilingState(SetValueMotionProfile.Disable);
+        timeSpent = stopwatch.poll();
+
+        DriverStation.getInstance().reportWarning("Disabling the robot (took " + timeSpent + "ms)", false);
+
+        DriverStation.getInstance().reportWarning("Loading motion profiling points", false);
+
+        stopwatch.poll(); //reset the stopwatch
         Robot.DRIVE_TRAIN.loadTrajectoryPoints(leftTraj, rightTraj, dir);
+        timeSpent = stopwatch.pollMs(); // check stopwatch
+
+        DriverStation.getInstance().reportWarning("Loaded MP points (took " + timeSpent + "ms)", false);
+
+
+        stopwatch.poll(); // reset stopwatch
         for(ScheduledCommand command : commands)
         {
             Scheduler.getInstance().add(command);
         }
+        timeSpent = stopwatch.pollMs(); // record time
+
+        DriverStation.getInstance().reportWarning("Adding scheduled commands to scheduler (took " + timeSpent + "ms)", false);
+
 
         Robot.DRIVE_TRAIN.setMotionProfilingState(SetValueMotionProfile.Enable);
     }
