@@ -20,7 +20,6 @@ public class LeftCommandGroup extends CommandGroup
             switch(AUTO_GAME_DATA)
             {
                 case "LL":
-                    goScaleRight();
                     switch(Robot.autonStrategySelector.getSelected())
                     {
                         case FCC:

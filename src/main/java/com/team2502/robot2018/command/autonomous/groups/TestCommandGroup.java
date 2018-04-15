@@ -22,7 +22,6 @@ public class TestCommandGroup extends CommandGroup
     {
         addSequential(new FastRotateCommand(0,8,-0.4F));
         addSequential(new FastRotateCommand(90,8,-0.4F));
-//        addSequential(new FastRotateCommand(270,16,-0.4F));
     }
 
     public void testPurePursuitBackForth()
