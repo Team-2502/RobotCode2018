@@ -1,6 +1,8 @@
 package com.team2502.robot2018.pathplanning.srxprofiling;
 
+import com.ctre.phoenix.motion.TrajectoryPoint;
 import com.team2502.robot2018.Constants;
+import com.team2502.robot2018.Robot;
 import jaci.pathfinder.Pathfinder;
 import jaci.pathfinder.Trajectory;
 import jaci.pathfinder.Waypoint;
@@ -8,6 +10,9 @@ import jaci.pathfinder.modifiers.TankModifier;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.team2502.robot2018.Constants.Physical.DriveTrain.FEET_TO_EPOS_DT;
+import static com.team2502.robot2018.Constants.Physical.DriveTrain.FPS_TO_EVEL_DT;
 
 /**
  * Warning!
@@ -30,6 +35,10 @@ public class TrajConfig
 
 
         public static final Trajectory[] secondCubeRightSwitch = combineTraj(Right.toSecondCube, Right.toSecondCubePt2, Right.toSecondCubePt3, Right.backToSwitch);
+
+        public static final TrajectoryPoint[][] secondCubeRightSwitchSRX = toTrajPoints(secondCubeRightSwitch);
+
+
 
 
         // If we flip the thing that does stuff on the right across the X axis,
@@ -252,6 +261,50 @@ public class TrajConfig
         }
         return new Trajectory[] { new Trajectory(leftSegments), new Trajectory(rightSegments) };
 
+    }
+
+    private static TrajectoryPoint[][] toTrajPoints(Trajectory[] trajs)
+    {
+        TrajectoryPoint[][] ret = new TrajectoryPoint[trajs.length][trajs[0].length()];
+
+        for(int i = 0; i < trajs.length; i++)
+        {
+            Trajectory traj = trajs[i];
+            ret[i] = toTrajPoints(traj);
+        }
+
+        return ret;
+
+
+    }
+
+    private static TrajectoryPoint[] toTrajPoints(Trajectory traj)
+    {
+        TrajectoryPoint[] ret = new TrajectoryPoint[traj.length()];
+        for(int i = 0; i < traj.length(); i++)
+        {
+            Trajectory.Segment segment = traj.get(i);
+            TrajectoryPoint point = new TrajectoryPoint();
+
+            // Trajectory headings are in radians, but SRX wants them in degrees
+            point.headingDeg = Pathfinder.r2d(segment.heading);
+
+            point.isLastPoint = i + 1 == traj.segments.length;
+
+            point.timeDur = Constants.SRXProfiling.PERIOD;
+
+            //direction should be "fixed" with {@link reverseTraj}
+            point.position = Robot.DRIVE_TRAIN.fakeToRealEncUnits((float) segment.position * FEET_TO_EPOS_DT) ;
+            point.velocity = Robot.DRIVE_TRAIN.fakeToRealEncUnits((float) segment.velocity * FPS_TO_EVEL_DT);
+
+            point.zeroPos = Constants.SRXProfiling.USE_RELATIVE_COORDS && i == 0;
+
+            point.profileSlotSelect0 = 0;
+            point.profileSlotSelect1 = 0;
+
+            ret[i] = point;
+        }
+        return ret;
     }
 
 

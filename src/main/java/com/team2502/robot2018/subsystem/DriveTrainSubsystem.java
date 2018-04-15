@@ -724,6 +724,13 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         runMotors(ControlMode.MotionProfile, motionProfilingState.value, motionProfilingState.value);
     }
 
+    public void loadTrajectoryPoints(TrajectoryPoint[] leftTraj, TrajectoryPoint[] rightTraj)
+    {
+        setMotionProfileSettings();
+        loadTrajectoryPoints(leftTraj, leftFrontTalonEnc);
+        loadTrajectoryPoints(rightTraj, rightFrontTalonEnc);
+    }
+
     /**
      * Drive strategies that may be used
      */
