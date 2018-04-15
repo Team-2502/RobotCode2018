@@ -159,7 +159,10 @@ public class PurePursuitCommand extends Command
         SmartDashboard.putNumber("PPwheelL", wheelVelocities.get(0));
         SmartDashboard.putNumber("PPwheelR", wheelVelocities.get(1));
 
-        System.out.printf("estimated location: %.2f, %.2f\n", usedEstimatedLocation.x, usedEstimatedLocation.y);
+        ImmutableVector2f gp = purePursuitMovementStrategy.getAbsoluteGoalPoint();
+        Robot.writeLog("loc: %.2f, %.2f", 200, usedEstimatedLocation.x, usedEstimatedLocation.y);
+        Robot.writeLog("goal point: %.2f, %.2f", 200, gp.x, gp.y);
+        Robot.writeLog("running wheels: %.2f, %.2f", 200, wheelL, wheelR);
 
         if(forward)
         {
@@ -167,7 +170,6 @@ public class PurePursuitCommand extends Command
         }
         else
         {
-            Robot.writeLog("running wheels: %.2f, %.2f", 200, wheelL, wheelR);
             Robot.DRIVE_TRAIN.runMotorsVelocity(-wheelR, -wheelL);
         }
     }

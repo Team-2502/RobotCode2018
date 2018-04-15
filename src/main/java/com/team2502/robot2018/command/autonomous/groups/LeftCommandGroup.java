@@ -103,6 +103,7 @@ public class LeftCommandGroup extends CommandGroup
      */
     private void goScaleLeft()
     {
+        Robot.writeLog("Going Scale Same Side Left",200);
         addParallel(new ActiveIntakeRotate(2.0, 0.6));
         addSequential(new GoScaleSameSide(PathConfig.Left.leftScale));
     }

@@ -26,7 +26,6 @@ public class FastRotateCommand extends Command
         requires(Robot.DRIVE_TRAIN);
         this.angleFinal = angleFinal;
         this.maxWheelVel = maxWheelVel;
-//        this.maxAccel = maxAccel;
         this.maxDeccel = maxDeccel;
     }
 

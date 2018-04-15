@@ -81,17 +81,17 @@ public class Path
         if(lookahead < distanceLeftCurrentSegment || current.isEnd())
         {
             float relativeDistance = current.getLength() - distanceLeftCurrentSegment + lookahead;
-            Robot.writeLog("look current segment ... relativeDist: %.2f", 100, relativeDistance);
+            Robot.writeLog("look current segment ... relativeDist: %.2f", 200, relativeDistance);
             return current.getPoint(relativeDistance);
         }
         else
         {
-            Robot.writeLog("look non-current segment", 80);
+            Robot.writeLog("look non-current segment", 200);
             lookahead -= distanceLeftCurrentSegment;
 
             for(int i = segmentOnI + 1; i < pathSegments.size(); i++)
             {
-//                Robot.writeLog("checking segment {segmentOn %d}", 100, segmentOnI);
+//                Robot.writeLog("checking segment {segmentOn %d}", 200, segmentOnI);
                 PathSegment pathSegment = pathSegments.get(i);
                 float length = pathSegment.getLength();
                 if(lookahead > length && !pathSegment.isEnd())
@@ -100,6 +100,7 @@ public class Path
                 }
                 else
                 {
+                    Robot.writeLog("path seg: "+pathSegment.toString()+" lookahead: "+lookahead,200);
                     return pathSegment.getPoint(lookahead);
                 }
             }

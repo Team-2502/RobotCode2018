@@ -385,15 +385,15 @@ public class ImmutableVector2f
     }
 
     /**
-     * Return a string representation of this vector.
-     * <p>
-     * This method creates a new {@link DecimalFormat} on every invocation with the format string "<tt>0.000E0;-</tt>".
-     *
-     * @return the string representation
      */
     @Override
     public String toString()
-    { return formatNumbers(toString(NUMBER_FORMAT)); }
+    {
+        return "ImmutableVector2f{" +
+               "x=" + x +
+               ", y=" + y +
+               '}';
+    }
 
     /**
      * Return a string representation of this vector by formatting the vector components with the given {@link NumberFormat}.

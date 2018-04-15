@@ -25,7 +25,6 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import logger.Log;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -221,7 +220,7 @@ public final class Robot extends IterativeRobot
         SmartDashboard.putData("auto_strategy", autonStrategySelector);
 
         // Make Donovan's logger
-        Log.createLogger(true);
+//        Log.createLogger(true);
 
         // Initialize all subsystems
         TRANSMISSION_SOLENOID = new TransmissionSolenoid();
@@ -286,6 +285,8 @@ public final class Robot extends IterativeRobot
         ROBOT_LOCALIZATION_COMMAND = new RobotLocalizationCommand(rotEstimator, encoderDifferentialDriveLocationEstimator, encoderDifferentialDriveLocationEstimator);
 
         ROBOT_LOCALIZATION_COMMAND.execute();
+
+        Scheduler.getInstance().add(ROBOT_LOCALIZATION_COMMAND);
     }
 
     /**
@@ -332,8 +333,8 @@ public final class Robot extends IterativeRobot
      */
     public void autonomousInit()
     {
-        startLocalization();
         NAVX.reset();
+        startLocalization();
 
         TRANSMISSION_SOLENOID.setHighGear(true);
 //

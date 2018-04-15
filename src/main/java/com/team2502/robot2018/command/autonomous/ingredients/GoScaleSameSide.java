@@ -1,5 +1,6 @@
 package com.team2502.robot2018.command.autonomous.ingredients;
 
+import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.command.teleop.ToggleIntakeCommand;
 import com.team2502.robot2018.pathplanning.purepursuit.Waypoint;
 import edu.wpi.first.wpilibj.command.CommandGroup;
@@ -18,6 +19,7 @@ public class GoScaleSameSide extends CommandGroup
      */
     public GoScaleSameSide(List<Waypoint> path)
     {
+        Robot.writeLog("Go Scale Same Side",200);
         addSequential(new PurePursuitCommand(path, false));
 
         addSequential(new ToggleIntakeCommand());

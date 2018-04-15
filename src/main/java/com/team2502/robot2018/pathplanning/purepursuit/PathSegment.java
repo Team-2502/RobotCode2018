@@ -120,4 +120,13 @@ public class PathSegment
     {
         return length;
     }
+
+    @Override
+    public String toString()
+    {
+        return "PathSegment{" +
+               "first=" + first +
+               ", last=" + last +
+               '}';
+    }
 }

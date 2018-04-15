@@ -3,7 +3,6 @@ package com.team2502.robot2018.subsystem.solenoid;
 import com.team2502.robot2018.RobotMap;
 import com.team2502.robot2018.utils.NonDefaultSubsystem;
 import edu.wpi.first.wpilibj.Solenoid;
-import logger.Log;
 
 /*
 TODO make sure that climber solenoid cannot be accessed by classes it should not be accessed by due to the fact that elevator warmup can be bypassed
@@ -32,7 +31,7 @@ public class ClimberSolenoid extends NonDefaultSubsystem
      */
     public void lockElevator()
     {
-        Log.info("Locking elevator");
+//        Log.info("Locking elevator");
         climberSolenoid.set(climberEnabled = false);
     }
 
@@ -41,7 +40,7 @@ public class ClimberSolenoid extends NonDefaultSubsystem
      */
     public void unlockElevator()
     {
-        Log.info("Unlocking elevator");
+//        Log.info("Unlocking elevator");
         climberSolenoid.set(climberEnabled = true);
     }
 

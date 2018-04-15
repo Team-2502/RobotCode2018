@@ -105,7 +105,7 @@ public class Waypoint
     {
         return "Waypoint{" +
                "maxSpeed=" + maxSpeed +
-               ", location=" + location +
+               ", location=" + location.x  +"," + location.y +
                '}';
     }
 

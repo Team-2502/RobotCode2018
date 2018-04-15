@@ -193,6 +193,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
      */
     private ImmutableVector2f calculateAbsoluteGoalPoint(float distanceCurrentSegmentLeft, float lookAheadDistance)
     {
+        Robot.writeLog("calc GP ... distCurrentSegLeft: %.2f, lookAheadDist: %.2f\n",200,distanceCurrentSegmentLeft,lookAheadDistance);
         // The path is finished — there are no more goal points to compute
         if(brakeStage || finishedPath)
         {
