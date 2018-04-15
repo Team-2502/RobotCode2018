@@ -24,7 +24,7 @@ public class FastRotateCommand extends Command
     public FastRotateCommand(float angleFinal, float maxWheelVel, float maxDeccel)
     {
         requires(Robot.DRIVE_TRAIN);
-        this.angleFinal = angleFinal;
+        this.angleFinal = MathUtils.Kinematics.navXBound(angleFinal);
         this.maxWheelVel = maxWheelVel;
         this.maxDeccel = maxDeccel;
     }
@@ -40,7 +40,7 @@ public class FastRotateCommand extends Command
     @Override
     protected void execute()
     {
-        float currentAngle = MathUtils.Kinematics.navXBound((float) Robot.NAVX.getAngle());
+        float currentAngle = MathUtils.Kinematics.navXBound((float) Robot.NAVX.getYaw());
         // v_f^2 = v_i^2 + 2ad
         // -2ad = v_i^2
         // sqrt(-2ad) = v_i
@@ -59,6 +59,7 @@ public class FastRotateCommand extends Command
     @Override
     protected boolean isFinished()
     {
+        System.out.println("dAngle: "+dAngle);
         return dAngle <= TOLERANCE_DEG;
     }
 
