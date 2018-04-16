@@ -2,6 +2,7 @@ package com.team2502.robot2018.command.autonomous.groups;
 
 import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.command.autonomous.ingredients.*;
+import com.team2502.robot2018.command.teleop.ActiveIntakeCommand;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 public class LeftCommandGroup extends CommandGroup
@@ -102,11 +103,10 @@ public class LeftCommandGroup extends CommandGroup
     private void goScaleLeft()
     {
         Robot.writeLog("Going Scale Same Side Left",200);
-//        addParallel(new ActiveIntakeRotate(2.0, 0.6));
         addParallel(new RaiseElevatorScale());
         addParallel(new ActiveIntakeLowerCommand());
         addSequential(new GoScaleSameSide(PathConfig.Left.leftScale));
-        addParallel(new ActiveShootCommand());
+        addSequential(new ActiveShootCommand());
     }
 
     private void secondCubeLeft()
@@ -133,15 +133,25 @@ public class LeftCommandGroup extends CommandGroup
     private void secondCubeLeftPP()
     {
         addParallel(new ElevatorLowerCommand());
-        // changed from 92
         addSequential(new FastRotateCommand(120,8,-0.4F));
-//        addSequential(new PurePursuitCommand(PathConfig.Left.leftScaleToSwitch, false));
 
-//        addParallel(new ToggleIntakeCommand());
-//        emitCube();
+        addParallel(new ActiveIntakeLowerCommand());
+        addParallel(new RunIntakeCommand(4, -0.5));
 
-//        addSequential(new WaitCommand(2));
-//        addSequential(new BackOffCommand());
+        PurePursuitCommand forward = new PurePursuitCommand.Builder() // (0,0) is replaced with current robot position
+                .addWaypoint(0,0,8,20,-16)
+                .addWaypoint(5,15,0,20,-16)
+                .build();
+
+        PurePursuitCommand back = new PurePursuitCommand.Builder() // (0,0) is replaced with current robot position
+                                         .addWaypoint(0,0,8,20,-16)
+                                         .addWaypoint(1,20,0,20,-16)
+                                       .setForward(false)
+                                         .build();
+
+        addSequential(forward);
+        addSequential(back);
+
     }
 
     /**
@@ -156,7 +166,4 @@ public class LeftCommandGroup extends CommandGroup
     {
         addParallel(new RunIntakeCommand(0.3F, .5F));
     }
-
-
 }
- 

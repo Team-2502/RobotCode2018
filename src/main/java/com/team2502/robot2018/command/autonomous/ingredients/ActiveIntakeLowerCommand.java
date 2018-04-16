@@ -6,6 +6,6 @@ public class ActiveIntakeLowerCommand extends CommandGroup
 {
     public ActiveIntakeLowerCommand()
     {
-        addSequential(new ActiveIntakeRotate(0.35, 1));
+        addSequential(new ActiveIntakeRotate(0.42, 1));
     }
 }

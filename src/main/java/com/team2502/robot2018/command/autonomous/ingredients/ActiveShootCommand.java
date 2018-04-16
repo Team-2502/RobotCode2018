@@ -6,6 +6,6 @@ public class ActiveShootCommand extends CommandGroup
 {
     public ActiveShootCommand()
     {
-        addSequential(new RunIntakeCommand(0.6F, .7F));
+        addSequential(new RunIntakeCommand(0.3F, 0.7F));
     }
 }
