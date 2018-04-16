@@ -15,29 +15,35 @@ public class TestCommandGroup extends CommandGroup
     public TestCommandGroup()
     {
         Robot.writeLog("TestCommand", 200);
-        testRotation();
+        testPurePursuitBackForth();
+//        testRotation();
     }
 
     public void testRotation()
     {
-        addSequential(new FastRotateCommand(0,8,-0.4F));
-        addSequential(new FastRotateCommand(90,8,-0.4F));
+        addSequential(new FastRotateCommand(0,8,-0.4F)); // rotate 0 degrees (shouldn't move anywhere)
+        addSequential(new FastRotateCommand(90,8,-0.4F)); // rotate 90 degrees clockwise
     }
 
+    // should arrive at same location at end
     public void testPurePursuitBackForth()
     {
         PurePursuitCommand back = new PurePursuitCommand.Builder()
                 .addWaypoint(0, 0, 8)
-                .addWaypoint(0, -3, 0)
-                .setForward(false)
+                .addWaypoint(0, 4.0F, 0)
+                .setForward(true)
                 .build();
 
         PurePursuitCommand forward = new PurePursuitCommand.Builder()
-                .addWaypoint(0, -3, 8)
-                .addWaypoint(0, 0, 0)
+                .addWaypoint(0, 4.0F, 8)
+                .addWaypoint(0, 0.8F, 0)
+                .setForward(false)
                 .build();
 
+        // move back
         addSequential(back);
+
+        // move forward
         addSequential(forward);
     }
 }
