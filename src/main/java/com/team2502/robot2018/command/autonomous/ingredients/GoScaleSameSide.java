@@ -22,15 +22,15 @@ public class GoScaleSameSide extends CommandGroup
         Robot.writeLog("Go Scale Same Side",200);
         addSequential(new PurePursuitCommand(path, false));
 
-        addSequential(new ToggleIntakeCommand());
+//        addSequential(new ToggleIntakeCommand());
 
-        emitCube();
+//        emitCube();
 
-        addParallel(new BackOffCommand());
+//        addParallel(new BackOffCommand());
     }
 
     private void emitCube()
     {
-        addParallel(new RunIntakeCommand(0.3F, .5F));
+        addParallel(new RunIntakeCommand(0.6F, .7F));
     }
 }

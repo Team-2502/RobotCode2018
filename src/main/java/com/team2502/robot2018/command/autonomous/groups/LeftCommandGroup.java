@@ -2,7 +2,6 @@ package com.team2502.robot2018.command.autonomous.groups;
 
 import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.command.autonomous.ingredients.*;
-import com.team2502.robot2018.command.teleop.ToggleIntakeCommand;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 public class LeftCommandGroup extends CommandGroup
@@ -92,7 +91,7 @@ public class LeftCommandGroup extends CommandGroup
 
         addSequential(new PurePursuitCommand(PathConfig.Left.leftSwitch, true));
 
-        addSequential(new ActiveIntakeRotate(0.35, 1));
+        addSequential(new ActiveIntakeLowerCommand());
 
         emitCube();
     }
@@ -103,8 +102,11 @@ public class LeftCommandGroup extends CommandGroup
     private void goScaleLeft()
     {
         Robot.writeLog("Going Scale Same Side Left",200);
-        addParallel(new ActiveIntakeRotate(2.0, 0.6));
+//        addParallel(new ActiveIntakeRotate(2.0, 0.6));
+        addParallel(new RaiseElevatorScale());
+        addParallel(new ActiveIntakeLowerCommand());
         addSequential(new GoScaleSameSide(PathConfig.Left.leftScale));
+        addParallel(new ActiveShootCommand());
     }
 
     private void secondCubeLeft()
@@ -130,13 +132,16 @@ public class LeftCommandGroup extends CommandGroup
 
     private void secondCubeLeftPP()
     {
-        addSequential(new PurePursuitCommand(PathConfig.Left.leftScaleToSwitch, false));
+        addParallel(new ElevatorLowerCommand());
+        // changed from 92
+        addSequential(new FastRotateCommand(120,8,-0.4F));
+//        addSequential(new PurePursuitCommand(PathConfig.Left.leftScaleToSwitch, false));
 
-        addParallel(new ToggleIntakeCommand());
-        emitCube();
+//        addParallel(new ToggleIntakeCommand());
+//        emitCube();
 
 //        addSequential(new WaitCommand(2));
-        addSequential(new BackOffCommand());
+//        addSequential(new BackOffCommand());
     }
 
     /**
@@ -150,8 +155,8 @@ public class LeftCommandGroup extends CommandGroup
     private void emitCube()
     {
         addParallel(new RunIntakeCommand(0.3F, .5F));
-
     }
 
 
 }
+ 

@@ -19,17 +19,17 @@ public class RobotLocalizationCommand extends Command implements ITranslationalL
     /**
      * A lambda that estimates the robot's rotation
      */
-    private final IRotationalLocationEstimator rotEstimator;
+    private IRotationalLocationEstimator rotEstimator;
 
     /**
      * A lambda that estimates the robot's velocity
      */
-    private final ITranslationalVelocityEstimator velocityEstimator;
+    private ITranslationalVelocityEstimator velocityEstimator;
 
     /**
      * A lambda that estimates the robot's location
      */
-    private final ITranslationalLocationEstimator locationEstimator;
+    private ITranslationalLocationEstimator locationEstimator;
 
     private InverseLocalization inverse;
 
@@ -59,6 +59,21 @@ public class RobotLocalizationCommand extends Command implements ITranslationalL
         this.velocityEstimator = velocityEstimator;
         this.locationEstimator = locationEstimator;
         this.inverse = new InverseLocalization();
+    }
+
+    public void setRotEstimator(IRotationalLocationEstimator rotEstimator)
+    {
+        this.rotEstimator = rotEstimator;
+    }
+
+    public void setVelocityEstimator(ITranslationalVelocityEstimator velocityEstimator)
+    {
+        this.velocityEstimator = velocityEstimator;
+    }
+
+    public void setLocationEstimator(ITranslationalLocationEstimator locationEstimator)
+    {
+        this.locationEstimator = locationEstimator;
     }
 
     @Override

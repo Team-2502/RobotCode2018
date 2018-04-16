@@ -15,18 +15,25 @@ public class TestCommandGroup extends CommandGroup
     public TestCommandGroup()
     {
         Robot.writeLog("TestCommand", 200);
+        testRotateScaleToSwitch();
+//        Robot.resetLocalization();
         testPurePursuitForwardBackScaleSwitch();
-//        testRotation();
     }
 
-    public void testRotation()
+
+    private void testRotation()
     {
         addSequential(new FastRotateCommand(0,8,-0.4F)); // rotate 0 degrees (shouldn't move anywhere)
         addSequential(new FastRotateCommand(90,8,-0.4F)); // rotate 90 degrees clockwise
     }
 
+    private void testRotateScaleToSwitch()
+    {
+        addSequential(new FastRotateCommand(92,8,-0.4F));
+    }
+
     // test going forward from scale to switch in auton after a rotation
-    public void testPurePursuitForwardBackScaleSwitch()
+    private void testPurePursuitForwardBackScaleSwitch()
     {
         PurePursuitCommand back = new PurePursuitCommand.Builder()
                 .addWaypoint(0, 0, 8)

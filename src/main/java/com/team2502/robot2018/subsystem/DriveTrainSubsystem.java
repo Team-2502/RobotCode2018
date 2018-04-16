@@ -52,7 +52,7 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
      * Allows the PID of the drivetrain to be tuned from shuffleboard
      */
     private final SendablePIDTuner pidTuner;
-    private double kP = .7D;
+    private double kP = 1D;
     private double kI = 0.0;
     private double kD = 0;
     private double kF = 0;

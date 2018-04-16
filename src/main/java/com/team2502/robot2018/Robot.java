@@ -275,7 +275,7 @@ public final class Robot extends IterativeRobot
 
     }
 
-    void startLocalization()
+    public void startLocalization()
     {
         // Initialize Estimators
         NavXLocationEstimator rotEstimator = new NavXLocationEstimator();
@@ -287,6 +287,19 @@ public final class Robot extends IterativeRobot
         ROBOT_LOCALIZATION_COMMAND.execute();
 
         Scheduler.getInstance().add(ROBOT_LOCALIZATION_COMMAND);
+    }
+
+    public static void resetLocalization()
+    {
+        // Initialize Estimators
+        NavXLocationEstimator rotEstimator = new NavXLocationEstimator();
+        EncoderDifferentialDriveLocationEstimator encoderDifferentialDriveLocationEstimator = new EncoderDifferentialDriveLocationEstimator(rotEstimator);
+
+        ROBOT_LOCALIZATION_COMMAND.setLocationEstimator(encoderDifferentialDriveLocationEstimator);
+        ROBOT_LOCALIZATION_COMMAND.setRotEstimator(rotEstimator);
+        ROBOT_LOCALIZATION_COMMAND.setVelocityEstimator(encoderDifferentialDriveLocationEstimator);
+
+        ROBOT_LOCALIZATION_COMMAND.execute();
     }
 
     /**
