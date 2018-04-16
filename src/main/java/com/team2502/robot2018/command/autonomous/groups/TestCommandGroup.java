@@ -15,7 +15,7 @@ public class TestCommandGroup extends CommandGroup
     public TestCommandGroup()
     {
         Robot.writeLog("TestCommand", 200);
-        testPurePursuitBackForth();
+        testPurePursuitForwardBackScaleSwitch();
 //        testRotation();
     }
 
@@ -25,8 +25,8 @@ public class TestCommandGroup extends CommandGroup
         addSequential(new FastRotateCommand(90,8,-0.4F)); // rotate 90 degrees clockwise
     }
 
-    // should arrive at same location at end
-    public void testPurePursuitBackForth()
+    // test going forward from scale to switch in auton after a rotation
+    public void testPurePursuitForwardBackScaleSwitch()
     {
         PurePursuitCommand back = new PurePursuitCommand.Builder()
                 .addWaypoint(0, 0, 8)
