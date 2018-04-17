@@ -72,28 +72,23 @@ public class CenterCommandGroup extends CommandGroup
                                               TrajConfig.Center.secondCubeRightSwitch),
                       11.5);
 
+        emitCubeSwitch();
+    }
 
-//        addSequential(new SRXProfilingCommand(NO_COMMANDS,
-//                                              (double) -1,
-//                                              TrajConfig.Center.secondCubeRightSwitch));
+    private void goSwitchRightUnified()
+    {
+        addSequential(new SRXProfilingCommand(new ScheduledCommand[]{
+                new ScheduledCommand(0, new RaiseElevatorSwitch()),
+                new ScheduledCommand(0, new ActiveIntakeRotate(0.35, 1)),
+                new ScheduledCommand(3, new RunIntakeCommand(1)),
+                new ScheduledCommand(4, new ElevatorAutonCommand(2, 0)),
+                new ScheduledCommand(5.5, new RunIntakeCommand(2.5, -1)),
+                new ScheduledCommand(8, new RaiseElevatorSwitch()),
 
 
-
-//        addSequential(new NavXRotateCommand(0, 0.5F, false));
-//        addParallel(new RunIntakeCommand(1, -1));
-//        addSequential(new SRXProfilingCommand(NO_COMMANDS,
-//                                              1,
-//                                              TrajConfig.Center.Right.finishDoubleCube));
-////
-//        addSequential(new SRXProfilingCommand(NO_COMMANDS,
-//                                              -1,
-//                                              TrajConfig.Center.Right.toSecondCubePt2));
-//
-//        addSequential(new SRXProfilingCommand(NO_COMMANDS,
-////                new ScheduledCommand[] { new ScheduledCommand(0, new ElevatorAutonCommand(2.0, Constants.Physical.Elevator.SWITCH_ELEV_HEIGHT_FT)) },
-//                                              1,
-//                                              TrajConfig.Center.Right.backToSwitch));
-
+        },
+                                              1,
+                                              TrajConfig.Center.twoCubesRightSwitch));
         emitCubeSwitch();
     }
 
