@@ -73,7 +73,8 @@ public class ElevatorSubsystem extends NonDefaultSubsystem implements PIDTunable
         pidTuner = new SendablePIDTuner(this, this);
 
         DashboardData.addUpdater(this);
-        calibrateEncoder();
+        // Done in teleopInit, autonomousInit
+//        calibrateEncoder();
 
 
     }

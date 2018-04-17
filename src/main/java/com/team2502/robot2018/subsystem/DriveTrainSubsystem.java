@@ -8,7 +8,6 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.team2502.robot2018.*;
 import com.team2502.robot2018.command.teleop.DriveCommand;
-import com.team2502.robot2018.pathplanning.srxprofiling.StreamableProfile;
 import com.team2502.robot2018.sendables.Nameable;
 import com.team2502.robot2018.sendables.PIDTunable;
 import com.team2502.robot2018.sendables.SendableDriveStrategyType;
@@ -55,7 +54,8 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     private double kP = 1D;
     private double kI = 0.0;
     private double kD = 0;
-    private double kF = 0;
+    private double kF = 0.2;
+
     private float lastLeft;
     private float lastRight;
     private boolean isNegativePressed;
@@ -123,13 +123,6 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         talon.setInverted(true);
     }
 
-    public void loadTrajectoryPoints(StreamableProfile profile)
-    {
-        setMotionProfileSettings();
-        loadTrajectoryPoints(profile.getLeftPoints(), leftFrontTalonEnc);
-        loadTrajectoryPoints(profile.getRightPoints(), rightFrontTalonEnc);
-
-    }
 
     /**
      * Load purepursuit points into the talons, where purepursuit points are in feet
@@ -137,7 +130,7 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
      * @param trajLeft  The purepursuit for the left side
      * @param trajRight The purepursuit for the right side
      */
-    public void loadTrajectoryPoints(Trajectory trajLeft, Trajectory trajRight, double dir)
+    public void TloadTrajectoryPoints(Trajectory trajLeft, Trajectory trajRight, double dir)
     {
         setMotionProfileSettings();
         loadTrajectoryPoints(trajLeft, leftFrontTalonEnc, dir);
@@ -190,8 +183,6 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
      *
      * @param traj  The purepursuit points in question, with points in feet
      * @param talon The talon in question
-     * @see DriveTrainSubsystem#loadTrajectoryPoints(StreamableProfile)
-     * @deprecated Don't use {@link Trajectory}, use {@link com.team2502.robot2018.pathplanning.srxprofiling.MotionProfile}
      */
     private void loadTrajectoryPoints(Trajectory traj, WPI_TalonSRX talon, double dir)
     {
@@ -721,7 +712,7 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     public enum DriveStrategyType implements Nameable
     {
         VOLTAGE("VOLTAGE", (joystickLeft, joystickRight) -> {
-            Robot.DRIVE_TRAIN.runMotorsTankDrive(joystickLeft, joystickRight);
+            Robot.DRIVE_TRAIN.drive.tankDrive(joystickLeft, joystickRight);
         });
 
         private final String name;

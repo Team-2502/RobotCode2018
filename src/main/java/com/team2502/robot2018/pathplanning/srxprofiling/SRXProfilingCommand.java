@@ -8,19 +8,33 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
+import jaci.pathfinder.Trajectory;
 
 public class SRXProfilingCommand extends Command
 {
 
-    private final StreamableProfile profile;
 
     private final Notifier pointLoader;
     private final MotionProfileStatus status;
     private final ScheduledCommand[] commands;
 
-    public SRXProfilingCommand(StreamableProfile profile, ScheduledCommand... commands)
+    private final Trajectory leftTraj;
+    private final Trajectory rightTraj;
+    private final double dir;
+
+    public SRXProfilingCommand(ScheduledCommand[] commands, double dir, Trajectory[] traj)
     {
-        this.profile = profile;
+
+        requires(Robot.DRIVE_TRAIN);
+        setInterruptible(true);
+
+        leftTraj = traj[0];
+        rightTraj = traj[1];
+
+        this.dir = dir;
+
+//        Pathfinder.writeToCSV(new File("/home/lvuser/LEFT_TRAJ.csv"), leftTraj);
+//        Pathfinder.writeToCSV(new File("/home/lvuser/RIGHT_TRAJ.csv"), rightTraj);
 
 //        if(leftTraj.length() != rightTraj.length())
 //        {
@@ -42,7 +56,7 @@ public class SRXProfilingCommand extends Command
         Robot.DRIVE_TRAIN.setMotionProfilingState(SetValueMotionProfile.Disable);
 
         DriverStation.getInstance().reportWarning("Loading motion profile points", false);
-        Robot.DRIVE_TRAIN.loadTrajectoryPoints(profile);
+        Robot.DRIVE_TRAIN.loadTrajectoryPoints(leftTraj, rightTraj, dir);
         for(ScheduledCommand command : commands)
         {
             Scheduler.getInstance().add(command);
@@ -61,17 +75,18 @@ public class SRXProfilingCommand extends Command
         // Update status
         Robot.DRIVE_TRAIN.updateStatus(status);
 
+        Robot.DRIVE_TRAIN.setMotionProfilingState(SetValueMotionProfile.Enable);
 
         // If we have run out of points to send to the lower-level
-        if(status.hasUnderrun)
-        {
-            DriverStation.getInstance().reportWarning("Ran out of points", false);
-            // stop loading points
-            pointLoader.stop();
-
-            // clear the flag
-            Robot.DRIVE_TRAIN.clearMotionProfileHasUnderrun();
-        }
+//        if(status.hasUnderrun)
+//        {
+//            DriverStation.getInstance().reportWarning("Ran out of points", false);
+//            // stop loading points
+//            pointLoader.stop();
+//
+//            // clear the flag
+//            Robot.DRIVE_TRAIN.clearMotionProfileHasUnderrun();
+//        }
 
     }
 
@@ -79,7 +94,7 @@ public class SRXProfilingCommand extends Command
     protected boolean isFinished()
     {
         // If this is the last point
-        return status.isLast;
+        return status.hasUnderrun || status.isLast || super.isTimedOut();
     }
 
     @Override
@@ -87,5 +102,8 @@ public class SRXProfilingCommand extends Command
     {
         Robot.DRIVE_TRAIN.setMotionProfilingState(SetValueMotionProfile.Hold);
         Robot.DRIVE_TRAIN.resetTalonControlFramePeriod();
+        pointLoader.stop();
+        Robot.DRIVE_TRAIN.clearMotionProfileHasUnderrun();
+        DriverStation.getInstance().reportError("ENDING MP", false);
     }
 }
