@@ -75,7 +75,7 @@ public class Constants
 
         public static final int SAMPLES_FAST = 1000;
 
-        public static final double MAX_VEL_FPS = 16;
+        public static final double MAX_VEL_FPS = 6;
         public static final double MAX_ACCEL_FPS2 = 5;
         public static final double MAX_JERK_FPS3 = 30;
 

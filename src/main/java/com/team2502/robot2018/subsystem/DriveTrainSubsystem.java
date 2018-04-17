@@ -130,7 +130,7 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
      * @param trajLeft  The purepursuit for the left side
      * @param trajRight The purepursuit for the right side
      */
-    public void TloadTrajectoryPoints(Trajectory trajLeft, Trajectory trajRight, double dir)
+    public void loadTrajectoryPoints(Trajectory trajLeft, Trajectory trajRight, double dir)
     {
         setMotionProfileSettings();
         loadTrajectoryPoints(trajLeft, leftFrontTalonEnc, dir);
