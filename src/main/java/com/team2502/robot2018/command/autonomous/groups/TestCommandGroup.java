@@ -4,7 +4,11 @@ package com.team2502.robot2018.command.autonomous.groups;
 import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.command.autonomous.ingredients.FastRotateCommand;
 import com.team2502.robot2018.command.autonomous.ingredients.PurePursuitCommand;
+import com.team2502.robot2018.pathplanning.srxprofiling.SRXProfilingCommand;
+import com.team2502.robot2018.pathplanning.srxprofiling.TrajConfig;
 import edu.wpi.first.wpilibj.command.CommandGroup;
+
+import static com.team2502.robot2018.Constants.SRXProfiling.NO_COMMANDS;
 
 /**
  * Should be used for all testing to make sure that we don't test something
@@ -15,9 +19,18 @@ public class TestCommandGroup extends CommandGroup
     public TestCommandGroup()
     {
         Robot.writeLog("TestCommand", 200);
-        testRotateScaleToSwitch();
+//        testRotateScaleToSwitch();
 //        Robot.resetLocalization();
-        testPurePursuitForwardBackScaleSwitch();
+//        testPurePursuitForwardBackScaleSwitch();
+        testMotionProfiling();
+    }
+
+    private void testMotionProfiling()
+    {
+        addSequential(new SRXProfilingCommand(NO_COMMANDS
+        , 1,
+                                              TrajConfig.testTraj
+        ));
     }
 
 

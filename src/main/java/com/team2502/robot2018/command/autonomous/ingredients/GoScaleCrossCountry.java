@@ -14,7 +14,8 @@ public class GoScaleCrossCountry extends CommandGroup
      */
     public GoScaleCrossCountry(List<Waypoint> path)
     {
-        addSequential(new PurePursuitCommand(PathConfig.Right.leftScale, false));
+        System.out.println("GOING CROSS COUNRY SCALE!!!");
+        addSequential(new PurePursuitCommand(path, false));
 
         addParallel(new ActiveIntakeRotate(1F, -0.5));
 

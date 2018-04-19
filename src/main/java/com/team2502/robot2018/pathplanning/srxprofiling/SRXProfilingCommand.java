@@ -104,6 +104,9 @@ public class SRXProfilingCommand extends Command
         Robot.DRIVE_TRAIN.resetTalonControlFramePeriod();
         pointLoader.stop();
         Robot.DRIVE_TRAIN.clearMotionProfileHasUnderrun();
-        DriverStation.getInstance().reportError("ENDING MP", false);
+        DriverStation.reportError("ENDING MP", false);
+        System.out.println("status.hasUnderrun = " + status.hasUnderrun);
+        System.out.println("status.isLast = " + status.isLast);
+        System.out.println("super.isTimedOut() = " + super.isTimedOut());
     }
 }

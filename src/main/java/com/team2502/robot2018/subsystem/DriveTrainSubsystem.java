@@ -186,11 +186,12 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
      */
     private void loadTrajectoryPoints(Trajectory traj, WPI_TalonSRX talon, double dir)
     {
-        DriverStation.getInstance().reportWarning("Clearing stuff", false);
+        DriverStation.reportWarning("Clearing stuff", false);
         talon.clearMotionProfileTrajectories();
         talon.clearMotionProfileHasUnderrun(Constants.LOOP_TIMEOUT);
         talon.configMotionProfileTrajectoryPeriod(Constants.SRXProfiling.BASE_TRAJ_PERIOD, Constants.INIT_TIMEOUT);
 
+        System.out.println("Pushing 1 traj point . . .");
         for(int i = 0; i < traj.segments.length; i++)
         {
             Trajectory.Segment segment = traj.get(i);
@@ -212,9 +213,11 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
             point.profileSlotSelect0 = 0;
             point.profileSlotSelect1 = 0;
 
-            DriverStation.getInstance().reportWarning("Clearing stuff", false);
+            DriverStation.reportWarning("Clearing stuff", false);
             talon.pushMotionProfileTrajectory(point);
+
         }
+
     }
 
     private void loadTrajectoryPoints(TrajectoryPoint[] profile, WPI_TalonSRX talon)
