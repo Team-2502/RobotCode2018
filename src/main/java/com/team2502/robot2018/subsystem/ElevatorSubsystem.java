@@ -70,6 +70,9 @@ public class ElevatorSubsystem extends NonDefaultSubsystem implements PIDTunable
         elevatorBottom.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, 5, Constants.INIT_TIMEOUT);
         elevatorBottom.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 5, Constants.INIT_TIMEOUT);
 
+        elevatorBottom.configPeakOutputForward(0.9, Constants.INIT_TIMEOUT);
+        elevatorBottom.configPeakOutputReverse(-0.9, Constants.INIT_TIMEOUT);
+
         pidTuner = new SendablePIDTuner(this, this);
 
         DashboardData.addUpdater(this);

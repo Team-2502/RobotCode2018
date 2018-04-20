@@ -2,7 +2,9 @@ package com.team2502.robot2018.command.autonomous.groups;
 
 import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.command.autonomous.ingredients.*;
+import com.team2502.robot2018.command.teleop.ToggleIntakeCommand;
 import com.team2502.robot2018.pathplanning.srxprofiling.SRXProfilingCommand;
+import com.team2502.robot2018.pathplanning.srxprofiling.ScheduledCommand;
 import com.team2502.robot2018.pathplanning.srxprofiling.TrajConfig;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
@@ -46,6 +48,12 @@ public class LeftCommandGroup extends CommandGroup
                             secondCubeLeft();
                             break;
                         }
+                        case TEST_SECOND_CUBE:
+                        {
+                            System.out.println("testing second cube");
+                            secondCubeLeft();
+                            break;
+                        }
                     }
                     break;
                 case "LR":
@@ -70,6 +78,12 @@ public class LeftCommandGroup extends CommandGroup
                         case SCALE_TWICE:
                         {
                             goScaleLeft();
+                            secondCubeLeft();
+                            break;
+                        }
+                        case TEST_SECOND_CUBE:
+                        {
+                            System.out.println("testing second cube");
                             secondCubeLeft();
                             break;
                         }
@@ -113,8 +127,11 @@ public class LeftCommandGroup extends CommandGroup
     {
         Robot.writeLog("Going Scale Same Side Left",200);
         addParallel(new RaiseElevatorScale());
-        addParallel(new ActiveIntakeLowerCommand());
+//        addParallel(new ActiveIntakeLowerCommand());
         addSequential(new GoScaleSameSide(PathConfig.Left.leftScale));
+//        addSequential(new SRXProfilingCommand(NO_COMMANDS,
+//                                              1,
+//                                              TrajConfig.Left.firstCube));
         addSequential(new ActiveShootCommand());
     }
 
@@ -126,9 +143,36 @@ public class LeftCommandGroup extends CommandGroup
 
     private void secondCubeLeftMP()
     {
+        addParallel(new ElevatorLowerCommand());
+        addSequential(new FastRotateCommand(140,8,-0.4F));
+
+//        addParallel(new ActiveIntakeLowerCommand());
+//        addParallel(new ToggleIntakeCommand());
+        addParallel(new RunIntakeCommand(2, -1));
+
+//new ScheduledCommand[]{
+//                new ScheduledCommand(0, ),
+//                new ScheduledCommand(2, new ToggleIntakeCommand())
+//        }
         addSequential(new SRXProfilingCommand(NO_COMMANDS,
                                               1,
-                                              TrajConfig.Left.twoCube));
+                                              TrajConfig.Left.goForward));
+//        addSequential(new ToggleIntakeCommand());
+
+        addParallel(new RaiseElevatorScale());
+        addSequential(new SRXProfilingCommand(NO_COMMANDS,
+                                              1,
+                                              TrajConfig.Left.goBack));
+
+//        addSequential(new SRXProfilingCommand(NO_COMMANDS,
+//                                              1,
+//                                              TrajConfig.Left.twoCube));
+
+
+        addSequential(new FastRotateCommand(30, 1.75F, -0.4F));
+
+
+        addSequential(new RunIntakeCommand(2F, .5F));
     }
 
     private void secondCubeLeftDeadReckoning()

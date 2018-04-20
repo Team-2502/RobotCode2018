@@ -14,7 +14,8 @@ public enum AutonStrategy
     SCALE_TWICE("Scale and then Scale again"),
     SCALE_SWITCH("Scale and then Switch"),
     STRAIGHT("Straight"),
-    FCC("Force Cross Country");
+    FCC("Force Cross Country"),
+    TEST_SECOND_CUBE("Test only second cube");
 
     private final String name;
 

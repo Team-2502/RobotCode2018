@@ -10,6 +10,8 @@ import jaci.pathfinder.modifiers.TankModifier;
 import java.util.ArrayList;
 import java.util.List;
 
+import static jaci.pathfinder.Pathfinder.d2r;
+
 /**
  * Warning!
  * <p>
@@ -78,6 +80,17 @@ public class TrajConfig
     public static class Left
     {
         public static final Trajectory[] twoCube = combineTraj(TwoCube.backUpToCube, TwoCube.forwardToCube, TwoCube.backUpToCube, TwoCube.forwardToScale);
+
+        public static Trajectory[] firstCube = flipX(toTankDrive(new Waypoint(0, 0, 0),
+                                                           new Waypoint(4, 0, 0),
+                                                           new Waypoint(14, 0, 0),
+                                                           new Waypoint(18.4, 1.5, d2r(-10)),
+                                                           new Waypoint(19.4, 2.0, d2r(-10))));
+
+        public static Trajectory[] goForward = toTankDrive(new Waypoint(0, 0, 0),
+                                                           new Waypoint(4.2, 0, 0));
+        public static Trajectory[] goBack = reverseTraj(toTankDrive(new Waypoint(0, 0, 0),
+                                                        new Waypoint(4.7, 0, 0)));
 
         private static class TwoCube
         {

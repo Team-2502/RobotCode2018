@@ -16,6 +16,7 @@ public class ActiveIntakeRotate extends TimedCommand
     public ActiveIntakeRotate(double timeout, double speed)
     {
         super(timeout);
+        requires(Robot.ACTIVE_INTAKE);
         this.speed = speed;
     }
 
