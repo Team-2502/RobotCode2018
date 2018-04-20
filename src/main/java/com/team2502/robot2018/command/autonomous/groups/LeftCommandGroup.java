@@ -22,6 +22,8 @@ public class LeftCommandGroup extends CommandGroup
         {
             switch(AUTO_GAME_DATA)
             {
+                // Left scale -- second letter is L
+                case "RL":
                 case "LL":
                     switch(Robot.autonStrategySelector.getSelected())
                     {
@@ -48,34 +50,9 @@ public class LeftCommandGroup extends CommandGroup
                         }
                     }
                     break;
+
+                // Right scale - 2nd letter is R
                 case "LR":
-                    System.out.println("Going cross country");
-                    goScaleRight();
-                    break;
-
-
-                case "RL":
-                    switch(Robot.autonStrategySelector.getSelected())
-                    {
-                        case FCC:
-                        {
-                            goScaleRight();
-                            break;
-                        }
-                        case SCALE:
-                        {
-                            goScaleLeft();
-                            break;
-                        }
-                        case SCALE_TWICE:
-                        {
-                            goScaleLeft();
-                            secondCubeLeft();
-                            break;
-                        }
-                    }
-                    break;
-
                 case "RR":
                     System.out.println("Going cross country!");
                     goScaleRight();

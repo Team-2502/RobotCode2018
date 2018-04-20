@@ -19,11 +19,13 @@ public class RightCommandGroup extends CommandGroup
         {
             switch(AUTO_GAME_DATA)
             {
+                case "RL":
                 case "LL":
                     System.out.println("Going cross country!");
                     goScaleLeft();
                     break;
 
+                case "RR":
                 case "LR":
                     switch(Robot.autonStrategySelector.getSelected())
                     {
@@ -32,26 +34,7 @@ public class RightCommandGroup extends CommandGroup
                             break;
                     }
 
-                case "RL":
-                    System.out.println("Going cross country!");
-                    goScaleLeft();
-                    break;
 
-                case "RR":
-                    switch(Robot.autonStrategySelector.getSelected())
-                    {
-                        case SCALE:
-                            goScaleRight();
-                            break;
-                        case SWITCH:
-                            goSwitch();
-                            break;
-                        case SCALE_TWICE:
-                            goScaleRight();
-                            secondCubeRight();
-                            break;
-                    }
-                    break;
             }
         }
     }
