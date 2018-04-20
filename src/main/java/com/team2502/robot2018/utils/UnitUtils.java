@@ -22,6 +22,7 @@ public class UnitUtils
      */
     public static class Distance
     {
+        public static final float WHEEL_REV_FEET = 4*MathUtils.PI_F; //TODO: is this good to put in the Distance class?
         public static final float FEET = 1;
         public static final float METER = 0.3048F;
     }
@@ -44,6 +45,9 @@ public class UnitUtils
     public static class Time
     {
         public static final float SECOND = 1;
+        public static final float ENC_TIME = 0.1F; // the time provided in encoder velocity... is per 100ms
+        public static final float MILLIS = 0.001F;
+        public static final float NANOS = 1E-9F;
         public static final float MINUTE = 60;
         public static final float HOUR = 3600;
         public static final float DAY = 86400;
