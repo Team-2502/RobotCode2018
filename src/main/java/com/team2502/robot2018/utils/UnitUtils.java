@@ -14,6 +14,7 @@ public class UnitUtils
      */
     public static float convert(float value, float unitOne, float unitTwo)
     {
+        // Use dimensional analysis to prove this equation. Hint: The unit of value is unitOne. The units need to cancel.
         return unitTwo/unitOne * value;
     }
 
