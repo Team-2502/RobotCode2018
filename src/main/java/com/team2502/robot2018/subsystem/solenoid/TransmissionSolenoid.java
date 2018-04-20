@@ -1,7 +1,9 @@
 package com.team2502.robot2018.subsystem.solenoid;
 
+import com.team2502.robot2018.Constants;
 import com.team2502.robot2018.RobotMap;
 import com.team2502.robot2018.utils.NonDefaultSubsystem;
+import com.team2502.robot2018.utils.UnitUtils;
 import edu.wpi.first.wpilibj.Solenoid;
 
 /**
@@ -39,6 +41,15 @@ public class TransmissionSolenoid extends NonDefaultSubsystem
      */
     public void setHighGear(boolean highGear)
     {
+        if(highGear)
+        {
+            UnitUtils.Rotations.ENC_ROTATIONS = Constants.Physical.DriveTrain.WHEEL_REV_TO_ENC_REV_HIGH;
+        }
+        else
+        {
+            UnitUtils.Rotations.ENC_ROTATIONS = Constants.Physical.DriveTrain.WHEEL_REV_TO_ENC_REV_LOW;
+        }
+
         // Low gear is not high gear, hence lowGear = !highGear
         transmission.set(this.lowGear = !highGear);
     }
