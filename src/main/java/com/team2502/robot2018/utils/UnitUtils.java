@@ -14,7 +14,7 @@ public class UnitUtils
      */
     public static float convert(float value, float unitOne, float unitTwo)
     {
-        return unitOne/unitTwo * value;
+        return unitTwo/unitOne * value;
     }
 
     /**
@@ -36,7 +36,7 @@ public class UnitUtils
         public static float ENC_ROTATIONS = Constants.Physical.DriveTrain.WHEEL_REV_TO_ENC_REV_HIGH;
         public static final float RADIANS = MathUtils.TAU;
         public static final float DEGREES = 360;
-        public static final float ENC_UNITS = 0.000244140625F; // 1/4096
+        public static final float ENC_UNITS = 4096F; // 1/4096
     }
 
     /**
@@ -45,14 +45,14 @@ public class UnitUtils
     public static class Time
     {
         public static final float SECOND = 1;
-        public static final float ENC_TIME = 0.1F; // the time provided in encoder velocity... is per 100ms
-        public static final float MILLIS = 0.001F;
-        public static final float NANOS = 1E-9F;
-        public static final float MINUTE = 60;
-        public static final float HOUR = 3600;
-        public static final float DAY = 86400;
-        public static final float WEEK = 604800;
-        public static final float  MONTH = 2592000; // 30 days
-        public static final float YEAR = 31557600; // 365.25 days
+        public static final float ENC_TIME = 10F; // the time provided in encoder velocity... is per 100ms
+        public static final float MILLIS = 1000F;
+        public static final float NANOS = 1E9F;
+        public static final float MINUTE = 1/60F;
+        public static final float HOUR = 1/3600F;
+        public static final float DAY = 1/86400F;
+        public static final float WEEK = 1/604800F;
+        public static final float  MONTH = 1/2592000F; // 30 days
+        public static final float YEAR = 1/31557600F; // 365.25 days
     }
 }
