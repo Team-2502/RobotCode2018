@@ -6,6 +6,7 @@ import com.ctre.phoenix.motion.TrajectoryPoint;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+
 import com.team2502.robot2018.*;
 import com.team2502.robot2018.command.teleop.DriveCommand;
 import com.team2502.robot2018.sendables.Nameable;
@@ -22,6 +23,7 @@ import jaci.pathfinder.Trajectory;
 
 import static com.team2502.robot2018.Constants.Physical.DriveTrain.FEET_TO_EPOS_DT;
 import static com.team2502.robot2018.Constants.Physical.DriveTrain.FPS_TO_EVEL_DT;
+import static com.team2502.robot2018.Constants.Physical.DriveTrain.SECONDS_FROM_NEUTRAL_TO_FULL;
 
 /**
  * Example Implementation, Many changes needed.
@@ -94,6 +96,10 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         drive.setSafetyEnabled(true);
         setTeleopSettings();
         DashboardData.addUpdater(this);
+
+
+        leftFrontTalonEnc.configClosedloopRamp(SECONDS_FROM_NEUTRAL_TO_FULL, Constants.INIT_TIMEOUT);
+        rightFrontTalonEnc.configClosedloopRamp(SECONDS_FROM_NEUTRAL_TO_FULL, Constants.INIT_TIMEOUT);
     }
 
     @Override

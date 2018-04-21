@@ -14,6 +14,6 @@ public class RaiseElevatorScale extends CommandGroup
     public RaiseElevatorScale()
     {
         Robot.writeLog("raising elevator scale", 10);
-        addSequential(new ElevatorAutonCommand(3F, Elevator.SCALE_ELEV_HEIGHT_FT));
+        addSequential(new ElevatorAutonCommand(4F, Elevator.SCALE_ELEV_HEIGHT_FT));
     }
 }

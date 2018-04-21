@@ -6,7 +6,7 @@ public class ElevatorLowerCommand extends CommandGroup
 {
     public ElevatorLowerCommand()
     {
-        addParallel(new ActiveIntakeRaiseCommand());
+//        addParallel(new ActiveIntakeRaiseCommand());
         addSequential(new ElevatorAutonCommand(2.5, 0));
     }
 }

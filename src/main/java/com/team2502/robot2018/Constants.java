@@ -120,6 +120,10 @@ public class Constants
          */
         public static class DriveTrain
         {
+            /**
+             * Ramp up time on closed loop mode for drivetrain
+             */
+            public static final double SECONDS_FROM_NEUTRAL_TO_FULL = 0.25;
 
             public static final float WHEEL_DIAMETER_INCH = 6F; // 3.6944444443F;
 

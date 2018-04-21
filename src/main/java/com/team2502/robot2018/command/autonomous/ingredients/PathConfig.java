@@ -79,7 +79,7 @@ public class PathConfig
                 new Waypoint(new ImmutableVector2f(-0.5F, 8.589F), 12F, 20, -12),
                 new Waypoint(new ImmutableVector2f(-0.5F, 12.405F), 12F, 20, -12),
                 new Waypoint(new ImmutableVector2f(-0.5F, 16F), 10F, 20, -7),
-                new Waypoint(new ImmutableVector2f(2.3F, 18.7F), 0F, 20, -4) // max deceleration appears to be -7 ft / s^2
+                new Waypoint(new ImmutableVector2f(3.5F, 20.7F), 0F, 20, -4) // max deceleration appears to be -7 ft / s^2
                                                                     );
 
         @Change(reason = "help")

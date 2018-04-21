@@ -35,7 +35,7 @@ public class NavXRotateCommand extends Command implements PIDOutput
         driveTrain = Robot.DRIVE_TRAIN;
         navx = Robot.NAVX;
 
-        turnController = new PIDController(0.02, 0.000007, 0, 0, navx, this);
+        turnController = new PIDController(1, 0, 0, 0, navx, this);
         //.0225 , .0002, 0
         turnController.setInputRange(-180.0f, 180.0f);
         turnController.setOutputRange(-1.0, 1.0);
@@ -104,7 +104,7 @@ public class NavXRotateCommand extends Command implements PIDOutput
     {
         turnRate = (float) turnController.get();
         System.out.println("turnRate: " + turnRate);
-        driveTrain.runMotorsVoltage(turnRate, -turnRate);
+        driveTrain.runMotorsVelocity(turnRate, -turnRate);
     }
 
     @Override

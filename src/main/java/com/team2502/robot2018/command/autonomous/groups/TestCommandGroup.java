@@ -2,12 +2,12 @@ package com.team2502.robot2018.command.autonomous.groups;
 
 
 import com.team2502.robot2018.Robot;
-import com.team2502.robot2018.command.autonomous.ingredients.ActiveIntakeLowerCommand;
 import com.team2502.robot2018.command.autonomous.ingredients.FastRotateCommand;
 import com.team2502.robot2018.command.autonomous.ingredients.PurePursuitCommand;
 import com.team2502.robot2018.pathplanning.srxprofiling.SRXProfilingCommand;
 import com.team2502.robot2018.pathplanning.srxprofiling.TrajConfig;
 import edu.wpi.first.wpilibj.command.CommandGroup;
+import edu.wpi.first.wpilibj.command.WaitCommand;
 
 import static com.team2502.robot2018.Constants.SRXProfiling.NO_COMMANDS;
 
@@ -20,27 +20,41 @@ public class TestCommandGroup extends CommandGroup
     public TestCommandGroup()
     {
         Robot.writeLog("TestCommand", 200);
-        addSequential(new ActiveIntakeLowerCommand());
+        testRotation(-0.1F);
+        // -0.4 consistently overshoots
+        addSequential(new WaitCommand(5));
+        testRotation(-0.6F); // enh
+        addSequential(new WaitCommand(5));
+        testRotation(-0.7F);
     }
 
     private void testMotionProfiling()
     {
         addSequential(new SRXProfilingCommand(NO_COMMANDS
-        , 1,
+                , 1,
                                               TrajConfig.testTraj
         ));
     }
 
 
-    private void testRotation()
+    private void testRotation(float maxDeccel)
     {
-        addSequential(new FastRotateCommand(0,8,-0.4F)); // rotate 0 degrees (shouldn't move anywhere)
-        addSequential(new FastRotateCommand(90,8,-0.4F)); // rotate 90 degrees clockwise
+        addSequential(new FastRotateCommand(0, 16, maxDeccel)); // rotate 0 degrees (shouldn't move anywhere)
+        addSequential(new WaitCommand(2));
+        addSequential(new FastRotateCommand(45, 16, maxDeccel)); // rotate 45 degrees clockwise
+        addSequential(new WaitCommand(2));
+        addSequential(new FastRotateCommand(90, 16, maxDeccel)); // rotate 90 degrees clockwise
+        addSequential(new WaitCommand(2));
+        addSequential(new FastRotateCommand(180, 16, maxDeccel)); // rotate 90 degrees clockwise
+        addSequential(new WaitCommand(2));
+        addSequential(new FastRotateCommand(90, 16, maxDeccel)); // rotate 90 degrees counterclockwise
+        addSequential(new WaitCommand(2));
+        addSequential(new FastRotateCommand(0, 16, maxDeccel));
     }
 
     private void testRotateScaleToSwitch()
     {
-        addSequential(new FastRotateCommand(92,8,-0.4F));
+        addSequential(new FastRotateCommand(92, 8, -0.4F));
     }
 
     // test going forward from scale to switch in auton after a rotation
