@@ -126,7 +126,7 @@ public class LeftCommandGroup extends CommandGroup
     {
         Robot.writeLog("Going Scale Same Side Left",200);
         addParallel(new RaiseElevatorScale());
-//        addParallel(new ActiveIntakeLowerCommand());
+        addParallel(new ActiveIntakeLowerCommand());
         addSequential(new GoScaleSameSide(PathConfig.Left.leftScale));
         addSequential(new WaitCommand(0.3));
         addSequential(new ActiveShootCommand());
@@ -140,10 +140,12 @@ public class LeftCommandGroup extends CommandGroup
 
     private void secondCubeLeftMP()
     {
-        addSequential(new ElevatorLowerCommand());
+        addSequential(new FastRotateCommand(140,16,-0.4F));
+
+
+        addParallel(new ElevatorLowerCommand());
 
 //        addParallel(new ActiveIntakeLowerCommand());
-        addSequential(new FastRotateCommand(140,6,-0.4F));
 
         addSequential(new WaitCommand(0.3));
 
@@ -153,14 +155,14 @@ public class LeftCommandGroup extends CommandGroup
                                               1,
                                               TrajConfig.Left.goForward));
 
-        addParallel(new RaiseElevatorScale());
+        addParallel(new RaiseElevatorScale(3));
         addSequential(new SRXProfilingCommand(NO_COMMANDS,
                                               1,
                                               TrajConfig.Left.goBack));
 
 
         addSequential(new WaitCommand(0.3));
-        addSequential(new FastRotateCommand(30, 2.5F, -0.4F));
+        addSequential(new FastRotateCommand(30, 16F, -0.4F));
 
 
         addSequential(new RunIntakeCommand(2F, .7F));

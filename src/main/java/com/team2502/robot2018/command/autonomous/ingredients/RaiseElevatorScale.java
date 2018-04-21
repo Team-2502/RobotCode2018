@@ -11,9 +11,14 @@ public class RaiseElevatorScale extends CommandGroup
     /**
      * Raise the elevator to the right height for the scale
      */
-    public RaiseElevatorScale()
+    public RaiseElevatorScale(float timeout)
     {
         Robot.writeLog("raising elevator scale", 10);
-        addSequential(new ElevatorAutonCommand(4F, Elevator.SCALE_ELEV_HEIGHT_FT));
+        addSequential(new ElevatorAutonCommand(timeout, Elevator.SCALE_ELEV_HEIGHT_FT));
+    }
+
+    public RaiseElevatorScale()
+    {
+        this(3.7F);
     }
 }
