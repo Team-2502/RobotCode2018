@@ -31,6 +31,7 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     private static final FloatPair SPEED_CONTAINER = new FloatPair();
     private static final float ACCELERATION_DIFF = 0.5F;
     private static final float DIFF_COMPARISON = 0.15F;
+    private static final float JOYSTICK_DEAD_ZONE = 0.12F;
     private final WPI_TalonSRX leftFrontTalonEnc;
     private final WPI_TalonSRX leftRearTalon;
     private final WPI_TalonSRX rightFrontTalonEnc;
@@ -488,8 +489,8 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         out.right = joystickLevel;
 
         // Sets the speed to 0 if the speed is less than 0.05 and larger than -0.05
-        if(Math.abs(out.left) < 0.05F) { out.left = 0.0F; }
-        if(Math.abs(out.right) < 0.05F) { out.right = 0.0F; }
+        if(Math.abs(out.left) < JOYSTICK_DEAD_ZONE) { out.left = 0.0F; }
+        if(Math.abs(out.right) < JOYSTICK_DEAD_ZONE) { out.right = 0.0F; }
 
         return out;
     }

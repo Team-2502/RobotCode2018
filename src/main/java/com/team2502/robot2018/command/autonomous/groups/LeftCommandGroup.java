@@ -97,8 +97,6 @@ public class LeftCommandGroup extends CommandGroup
                     break;
             }
         }
-
-
     }
 
 
@@ -127,13 +125,14 @@ public class LeftCommandGroup extends CommandGroup
     private void goScaleLeft()
     {
         Robot.writeLog("Going Scale Same Side Left",200);
-        addParallel(new RaiseElevatorScale());
+//        addParallel(new RaiseElevatorScale());
         addParallel(new ActiveIntakeLowerCommand());
         addSequential(new GoScaleSameSide(PathConfig.Left.leftScale));
+        addSequential(new RaiseElevatorScale());
 //        addSequential(new SRXProfilingCommand(NO_COMMANDS,
 //                                              1,
 //                                              TrajConfig.Left.firstCube));
-        addSequential(new WaitCommand(0.3));
+//        addSequential(new WaitCommand(0.3));
         addSequential(new ActiveShootCommand());
     }
 

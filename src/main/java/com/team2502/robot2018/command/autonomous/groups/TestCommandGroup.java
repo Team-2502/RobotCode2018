@@ -2,6 +2,7 @@ package com.team2502.robot2018.command.autonomous.groups;
 
 
 import com.team2502.robot2018.Robot;
+import com.team2502.robot2018.command.autonomous.ingredients.ActiveIntakeLowerCommand;
 import com.team2502.robot2018.command.autonomous.ingredients.FastRotateCommand;
 import com.team2502.robot2018.command.autonomous.ingredients.PurePursuitCommand;
 import com.team2502.robot2018.pathplanning.srxprofiling.SRXProfilingCommand;
@@ -19,10 +20,7 @@ public class TestCommandGroup extends CommandGroup
     public TestCommandGroup()
     {
         Robot.writeLog("TestCommand", 200);
-//        testRotateScaleToSwitch();
-//        Robot.resetLocalization();
-//        testPurePursuitForwardBackScaleSwitch();
-        testMotionProfiling();
+        addSequential(new ActiveIntakeLowerCommand());
     }
 
     private void testMotionProfiling()
