@@ -6,6 +6,6 @@ public class ActiveIntakeRaiseCommand extends CommandGroup
 {
     public ActiveIntakeRaiseCommand()
     {
-//        addSequential(new ActiveIntakeRotate(0.55, -1));
+        addSequential(new ActiveIntakeRotate(0.55, -1));
     }
 }

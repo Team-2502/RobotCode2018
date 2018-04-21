@@ -180,7 +180,7 @@ public class Constants
             /**
              * How high the elevator must be in order to put a cube in the scale
              */
-            public static final float SCALE_ELEV_HEIGHT_FT = 5.75F;
+            public static final float SCALE_ELEV_HEIGHT_FT = 7F;
             public static final float ELEVATOR_SPEED_PERCENT_LIMIT = 0.6F;
 
             /**

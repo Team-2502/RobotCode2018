@@ -88,9 +88,9 @@ public class TrajConfig
                                                            new Waypoint(19.4, 2.0, d2r(-10))));
 
         public static Trajectory[] goForward = toTankDrive(new Waypoint(0, 0, 0),
-                                                           new Waypoint(4.2, 0, 0));
+                                                           new Waypoint(4, 0, 0));
         public static Trajectory[] goBack = reverseTraj(toTankDrive(new Waypoint(0, 0, 0),
-                                                        new Waypoint(4.5, 0, 0)));
+                                                        new Waypoint(4.2, 0, 0)));
 
         private static class TwoCube
         {

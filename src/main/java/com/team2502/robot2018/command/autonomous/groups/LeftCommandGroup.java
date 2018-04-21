@@ -7,6 +7,7 @@ import com.team2502.robot2018.pathplanning.srxprofiling.SRXProfilingCommand;
 import com.team2502.robot2018.pathplanning.srxprofiling.ScheduledCommand;
 import com.team2502.robot2018.pathplanning.srxprofiling.TrajConfig;
 import edu.wpi.first.wpilibj.command.CommandGroup;
+import edu.wpi.first.wpilibj.command.WaitCommand;
 
 import static com.team2502.robot2018.Constants.SRXProfiling.NO_COMMANDS;
 
@@ -127,11 +128,12 @@ public class LeftCommandGroup extends CommandGroup
     {
         Robot.writeLog("Going Scale Same Side Left",200);
         addParallel(new RaiseElevatorScale());
-//        addParallel(new ActiveIntakeLowerCommand());
+        addParallel(new ActiveIntakeLowerCommand());
         addSequential(new GoScaleSameSide(PathConfig.Left.leftScale));
 //        addSequential(new SRXProfilingCommand(NO_COMMANDS,
 //                                              1,
 //                                              TrajConfig.Left.firstCube));
+        addSequential(new WaitCommand(0.3));
         addSequential(new ActiveShootCommand());
     }
 
@@ -143,32 +145,26 @@ public class LeftCommandGroup extends CommandGroup
 
     private void secondCubeLeftMP()
     {
-        addParallel(new ElevatorLowerCommand());
-        addSequential(new FastRotateCommand(140,8,-0.4F));
+        addSequential(new ElevatorLowerCommand());
 
-//        addParallel(new ActiveIntakeLowerCommand());
-//        addParallel(new ToggleIntakeCommand());
+        addParallel(new ActiveIntakeLowerCommand());
+        addSequential(new FastRotateCommand(170,8,-0.4F));
+
+        addSequential(new WaitCommand(0.3));
+
         addParallel(new RunIntakeCommand(2, -1));
 
-//new ScheduledCommand[]{
-//                new ScheduledCommand(0, ),
-//                new ScheduledCommand(2, new ToggleIntakeCommand())
-//        }
         addSequential(new SRXProfilingCommand(NO_COMMANDS,
                                               1,
                                               TrajConfig.Left.goForward));
-//        addSequential(new ToggleIntakeCommand());
 
         addParallel(new RaiseElevatorScale());
         addSequential(new SRXProfilingCommand(NO_COMMANDS,
                                               1,
                                               TrajConfig.Left.goBack));
 
-//        addSequential(new SRXProfilingCommand(NO_COMMANDS,
-//                                              1,
-//                                              TrajConfig.Left.twoCube));
 
-
+        addSequential(new WaitCommand(0.3));
         addSequential(new FastRotateCommand(30, 1.75F, -0.4F));
 
 
