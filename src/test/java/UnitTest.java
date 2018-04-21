@@ -28,7 +28,7 @@ public class UnitTest
         float rightAngle = 90F;
         float rightAngleRad = UnitUtils.convert(rightAngle, DEGREES, RADIANS);
 
-        Assert.assertEquals(Math.PI / 2, rightAngleRad, 1E-3g);
+        Assert.assertEquals(Math.PI / 2, rightAngleRad, 1E-3);
 
     }
 }
