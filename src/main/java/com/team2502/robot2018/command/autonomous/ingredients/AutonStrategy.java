@@ -11,10 +11,10 @@ public enum AutonStrategy
     VAULT_2_SWITCH("Vault-Switch-Switch"),
     SWITCH_TWICE("Switch-Switch"), // Used for center
     SCALE("Scale"),
-    SCALE_TWICE("Scale and then Scale again"),
-    SCALE_SWITCH("Scale and then Switch"),
+    SCALE_TWICE("Scale-Scale"),
+    SCALE_SWITCH("Scale-Switch"),
     STRAIGHT("Straight"),
-    FCC("Force Cross Country"),
+    FCC("FCC"),
     TEST_SECOND_CUBE("Test only second cube");
 
     private final String name;
