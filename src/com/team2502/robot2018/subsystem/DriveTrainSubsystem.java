@@ -29,7 +29,6 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     private final SpeedControllerGroup spgLeft;
     private final SpeedControllerGroup spgRight;
     private final SendablePIDTuner pidTuner;
-    private final float SPEED_LIMITER = 1.0F;
     double kP = .7D;
     double kI = 0.0;
     double kD = 0;
@@ -249,43 +248,19 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         rightRearTalon.set(ControlMode.Disabled, 0);
     }
 
-    /**
-     * Used to gradually increase the speed of the robot.
-     *
-     * @param out The percent voltages of each wheel
-     * @return the speed of the robot
-     */
-    private FloatPair getSpeedTank(FloatPair out)
-    {
-        float joystickLevel;
-        // Get the base speed of the robot
-        joystickLevel = (float) OI.JOYSTICK_DRIVE_LEFT.getY();
-
-        // Only increase the speed by a small amount
-        float diff = joystickLevel - lastLeft;
-        if(diff > DIFF_COMPARISON) { joystickLevel = lastLeft + ACCELERATION_DIFF; }
-        else if(diff < -DIFF_COMPARISON) { joystickLevel = lastLeft - ACCELERATION_DIFF; }
-        lastLeft = joystickLevel;
-        out.left = joystickLevel;
-
-        joystickLevel = (float) OI.JOYSTICK_DRIVE_RIGHT.getY();
-
-        diff = joystickLevel - lastRight;
-        if(diff > DIFF_COMPARISON) { joystickLevel = lastRight + ACCELERATION_DIFF; }
-        else if(diff < -DIFF_COMPARISON) { joystickLevel = lastRight - ACCELERATION_DIFF; }
-        lastRight = joystickLevel;
-        out.right = joystickLevel;
-
-        // Sets the speed to 0 if the speed is less than 0.05 and larger than -0.05
-        if(Math.abs(out.left) < 0.05F) { out.left = 0.0F; }
-        if(Math.abs(out.right) < 0.05F) { out.right = 0.0F; }
-
-        return out;
-    }
-
     private FloatPair getSpeedTank()
     {
-        return getSpeedTank(SPEED_CONTAINER);
+        // Get the base speed of the robot
+        SPEED_CONTAINER.left = (float) OI.JOYSTICK_DRIVE_LEFT.getY();;
+
+        SPEED_CONTAINER.right = (float) OI.JOYSTICK_DRIVE_RIGHT.getY();
+
+        // Sets the speed to 0 if the speed is less than 0.05 and larger than -0.05
+        if(Math.abs(SPEED_CONTAINER.left) < 0.05F) { SPEED_CONTAINER.left = 0.0F; }
+        if(Math.abs(SPEED_CONTAINER.right) < 0.05F) { SPEED_CONTAINER.right = 0.0F; }
+
+        return SPEED_CONTAINER;
+
     }
 
     public void drive()
