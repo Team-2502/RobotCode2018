@@ -75,9 +75,9 @@ public class Constants
 
         public static final int SAMPLES_FAST = 1000;
 
-        public static final double MAX_VEL_FPS = 10;
-        public static final double MAX_ACCEL_FPS2 = 5;
-        public static final double MAX_JERK_FPS3 = 30;
+        public static final double MAX_VEL_FPS = 16;
+        public static final double MAX_ACCEL_FPS2 = 7;
+        public static final double MAX_JERK_FPS3 = 6;
 
 
         public static final double WHEELBASE_WIDTH = 26.0 / 12.0;

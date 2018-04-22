@@ -31,8 +31,8 @@ public class TrajConfig
         // It works
         // pos y = go left, flip x makes it go right
         public static final Trajectory[] firstCubeRightSwitch = flipX(toTankDrive(new Waypoint(0, 0, 0),
-                                                                                  new Waypoint(2.45, 2, Math.PI / 4),
-                                                                                  new Waypoint(9, 3.5, 0)));
+//                                                                                  new Waypoint(2.45, 2, Math.PI / 4),
+                                                                                  new Waypoint(8.5, 3.5, 0)));
 
 
         public static final Trajectory[] secondCubeRightSwitch = combineTraj(Right.toSecondCube, Right.forwardToCube, Right.backUpFromCube, Right.backToSwitch);
@@ -57,7 +57,7 @@ public class TrajConfig
                                                                                     new Waypoint(50D / 12, 26D / 12, Math.PI / 6),
                                                                                     new Waypoint(75D / 12, 44D / 12, 0)));
 
-            static final Trajectory[] forwardToCube = toTankDrive(new Waypoint(0, 0, 0),
+            public static final Trajectory[] forwardToCube = toTankDrive(new Waypoint(0, 0, 0),
                                                                   new Waypoint(3, 0, 0));
 
             static final Trajectory[] backUpFromCube = reverseTraj(toTankDrive(new Waypoint(0, 0, 0),
