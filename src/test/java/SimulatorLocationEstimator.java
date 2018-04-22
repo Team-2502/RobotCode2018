@@ -1,6 +1,7 @@
 import com.team2502.robot2018.pathplanning.localization.IRotationalLocationEstimator;
 import com.team2502.robot2018.pathplanning.localization.ITranslationalLocationEstimator;
 import com.team2502.robot2018.pathplanning.localization.ITranslationalVelocityEstimator;
+import com.team2502.robot2018.utils.MathUtils;
 import com.team2502.robot2018.utils.Stopwatch;
 import org.joml.ImmutableVector2f;
 
@@ -13,7 +14,7 @@ public class SimulatorLocationEstimator implements ITranslationalLocationEstimat
     private float heading = 0;
     private ImmutableVector2f location = new ImmutableVector2f();
     private ImmutableVector2f velocity = new ImmutableVector2f();
-    Stopwatch stopwatch = null;
+    private Stopwatch stopwatch;
 
     public SimulatorLocationEstimator(SimulatedRobot simulatedRobot)
     {
@@ -26,10 +27,9 @@ public class SimulatorLocationEstimator implements ITranslationalLocationEstimat
         float time = stopwatch.poll();
         float leftVel = simulatedRobot.getLeftVel();
         float rightVel = simulatedRobot.getRightVel();
-//        float angularVel = MathUtils.Kinematics.getAngularVel(leftVel, rightVel, SimulatedRobot.LATERAL_WHEEL_DIST);
-//        MathUtils.Kinematics.getAbsoluteDPosCurve()
-
-//        heading+=angularVel*time;
+        float angularVel = MathUtils.Kinematics.getAngularVel(leftVel, rightVel, SimulatedRobot.LATERAL_WHEEL_DIST);
+        heading+=angularVel*time;
+        MathUtils.Kinematics.getAbsoluteDPosCurve(leftVel,rightVel,simulatedRobot.getLateralWheelDistance(),time,heading);
     }
 
     @Override

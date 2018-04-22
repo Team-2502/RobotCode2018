@@ -1,7 +1,6 @@
 import com.team2502.robot2018.utils.UnitUtils;
 import org.junit.Assert;
 import org.junit.Test;
-import sun.tools.jconsole.Plotter;
 
 import static com.team2502.robot2018.utils.UnitUtils.Distance.FEET;
 import static com.team2502.robot2018.utils.UnitUtils.Distance.METER;
@@ -11,7 +10,7 @@ import static com.team2502.robot2018.utils.UnitUtils.Rotations.RADIANS;
 /**
  * A class to test unit conversions
  */
-public class UnitTest
+public class UnitsTest
 {
     @Test
     public void testFeetTomMeters()

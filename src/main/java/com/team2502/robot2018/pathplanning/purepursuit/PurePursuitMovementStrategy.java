@@ -234,10 +234,6 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
 
         PathSegment current = path.getCurrent();
 
-        Waypoint waypointEnd = current.getLast();
-
-//        forward = waypointEnd.isForward();
-
         float pathSegmentLength = current.getLength();
 
         closestPoint = path.getClosestPoint(usedEstimatedLocation);
@@ -266,10 +262,18 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
             return Float.NaN;
         }
 
-        float finalSpeed = waypointEnd.getMaxSpeed();
+        dCP = distanceClosestPoint.length();
 
-        Robot.writeLog("distance left: " + distanceLeft, 1);
-        Robot.writeLog("speedUsed: " + speedUsed, 1);
+        float usedLookahead = lookaheadForSpeed + dCP;
+
+        Robot.writeLog("usedVel: %.2f, usedLookahead %.2f", 30, usedTangentialVelocity, usedLookahead);
+
+        return usedLookahead;
+    }
+
+    void generateSpeedUsed(float closestPointPathDistance, Waypoint waypointEnd)
+    {
+        float finalSpeed = waypointEnd.getMaxSpeed();
 
         float speed = Float.MAX_VALUE;
 
@@ -300,16 +304,6 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
             speedUsed = MathUtils.minF(finalSpeed, lastWaypointSpeed + dTime * waypointEnd.getMaxAccel());
             Robot.writeLog("accel ... speedUsed: %.2f, poll: %.2f, lastSpeed: %.2f, aMax %.2f", 1, speedUsed, dTime, lastWaypointSpeed, waypointEnd.getMaxAccel());
         }
-
-        Robot.writeLog("speed: %.2f, speedUsed: %.2f, finalSpeed %.2f", 80, speed, speedUsed, finalSpeed);
-
-        dCP = distanceClosestPoint.length();
-
-        float usedLookahead = lookaheadForSpeed + dCP;
-
-        Robot.writeLog("usedVel: %.2f, usedLookahead %.2f", 30, usedTangentialVelocity, usedLookahead);
-
-        return usedLookahead;
     }
 
     private float getMaxSpeed(float finalSpeed, float distanceLeft, boolean forward, float currentMaxAccel, float currentMaxDeccel)

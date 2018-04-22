@@ -7,6 +7,7 @@ public class SimulatedRobot
     public static final float MAX_VEL = 16F;
     public static final float VOLTAGE_CHANGE_MAX = .1F;
     public static final float LATERAL_WHEEL_DIST = 2F;
+    private final float lateralWheelDistance;
 
     ImmutableVector2f position;
     float heading;
@@ -14,9 +15,14 @@ public class SimulatedRobot
     private float leftMotorPercentVoltage = 0;
     private float rightMotorPercentVoltage = 0;
 
-    public SimulatedRobot()
+    public SimulatedRobot(float lateralWheelDistance)
     {
+        this.lateralWheelDistance = lateralWheelDistance;
+    }
 
+    public float getLateralWheelDistance()
+    {
+        return lateralWheelDistance;
     }
 
     public void update()
