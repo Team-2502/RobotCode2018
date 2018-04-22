@@ -140,10 +140,10 @@ public class LeftCommandGroup extends CommandGroup
 
     private void secondCubeLeftMP()
     {
-        addSequential(new FastRotateCommand(140,16,-0.4F));
+        addSequential(new FastRotateCommand(165,16,-0.4F));
 
 
-        addParallel(new ElevatorLowerCommand());
+        addSequential(new ElevatorLowerCommand());
 
 //        addParallel(new ActiveIntakeLowerCommand());
 

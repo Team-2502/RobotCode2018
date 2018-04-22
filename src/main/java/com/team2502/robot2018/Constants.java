@@ -50,7 +50,7 @@ public class Constants
 
         // The lookahead distance (feet) for Pure Pursuit
         public static final float LOOKAHEAD_MIN_DISTANCE_FT = 2F;
-        public static final float LOOKAHEAD_MAX_DISTANCE_FT = 5.5F;
+        public static final float LOOKAHEAD_MAX_DISTANCE_FT = 7F;
         public static final float LOOKAHEAD_MIN_SPEED_FPS = 1F;
         public static final float LOOKAHEAD_MAX_SPEED_FPS = 10F;
         public static final Lookahead LOOKAHEAD = new Lookahead(LOOKAHEAD_MIN_DISTANCE_FT, LOOKAHEAD_MAX_DISTANCE_FT,
