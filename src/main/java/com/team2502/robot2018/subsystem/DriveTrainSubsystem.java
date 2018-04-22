@@ -93,6 +93,11 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         drive.setSafetyEnabled(true);
         setTeleopSettings();
         DashboardData.addUpdater(this);
+
+        leftFrontTalonEnc.configOpenloopRamp(1.5, Constants.INIT_TIMEOUT);
+        leftRearTalon.configOpenloopRamp(1.5, Constants.INIT_TIMEOUT);
+        rightFrontTalonEnc.configOpenloopRamp(1.5, Constants.INIT_TIMEOUT);
+        rightRearTalon.configOpenloopRamp(1.5, Constants.INIT_TIMEOUT);
     }
 
     @Override
@@ -459,40 +464,6 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         rightRearTalon.set(ControlMode.Disabled, 0);
     }
 
-    /**
-     * Used to gradually increase the speed of the robot.
-     *
-     * @param out The percent voltages of each wheel
-     * @return the speed of the robot
-     */
-    private FloatPair getSpeedTank(FloatPair out)
-    {
-        float joystickLevel;
-        // Get the base speed of the robot
-        joystickLevel = (float) OI.JOYSTICK_DRIVE_LEFT.getY();
-
-        //TODO: Eliminate this redundant code
-        // Only increase the speed by a small amount
-        float diff = joystickLevel - lastLeft;
-        if(diff > DIFF_COMPARISON) { joystickLevel = lastLeft + ACCELERATION_DIFF; }
-        else if(diff < -DIFF_COMPARISON) { joystickLevel = lastLeft - ACCELERATION_DIFF; }
-        lastLeft = joystickLevel;
-        out.left = joystickLevel;
-
-        joystickLevel = (float) OI.JOYSTICK_DRIVE_RIGHT.getY();
-
-        diff = joystickLevel - lastRight;
-        if(diff > DIFF_COMPARISON) { joystickLevel = lastRight + ACCELERATION_DIFF; }
-        else if(diff < -DIFF_COMPARISON) { joystickLevel = lastRight - ACCELERATION_DIFF; }
-        lastRight = joystickLevel;
-        out.right = joystickLevel;
-
-        // Sets the speed to 0 if the speed is less than 0.05 and larger than -0.05
-        if(Math.abs(out.left) < 0.05F) { out.left = 0.0F; }
-        if(Math.abs(out.right) < 0.05F) { out.right = 0.0F; }
-
-        return out;
-    }
 
     /**
      * Used to gradually increase the speed of the robot in teleop
@@ -501,7 +472,13 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
      */
     private FloatPair getSpeedTank()
     {
-        return getSpeedTank(SPEED_CONTAINER);
+
+        // Get the base speed of the robot
+        SPEED_CONTAINER.left = (float) OI.JOYSTICK_DRIVE_LEFT.getY();
+
+        SPEED_CONTAINER.right = (float) OI.JOYSTICK_DRIVE_RIGHT.getY();
+
+        return SPEED_CONTAINER;
     }
 
     /**
