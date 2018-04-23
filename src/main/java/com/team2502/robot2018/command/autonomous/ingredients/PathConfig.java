@@ -3,6 +3,7 @@ package com.team2502.robot2018.command.autonomous.ingredients;
 
 import com.team2502.robot2018.Change;
 import com.team2502.robot2018.command.autonomous.ingredients.activeintake.ActiveIntakeRotate;
+import com.team2502.robot2018.command.autonomous.ingredients.elevator.RaiseElevatorScale;
 import com.team2502.robot2018.pathplanning.purepursuit.Waypoint;
 import org.joml.ImmutableVector2f;
 

@@ -9,6 +9,9 @@ import com.team2502.robot2018.command.autonomous.ingredients.drivetrain.Deadreck
 import com.team2502.robot2018.command.autonomous.ingredients.drivetrain.DriveTime;
 import com.team2502.robot2018.command.autonomous.ingredients.drivetrain.FastRotateCommand;
 import com.team2502.robot2018.command.autonomous.ingredients.drivetrain.NavXRotateCommand;
+import com.team2502.robot2018.command.autonomous.ingredients.elevator.ElevatorLowerCommand;
+import com.team2502.robot2018.command.autonomous.ingredients.elevator.RaiseElevatorScale;
+import com.team2502.robot2018.command.autonomous.ingredients.elevator.RaiseElevatorSwitch;
 import com.team2502.robot2018.pathplanning.srxprofiling.SRXProfilingCommand;
 import com.team2502.robot2018.pathplanning.srxprofiling.TrajConfig;
 import edu.wpi.first.wpilibj.command.CommandGroup;

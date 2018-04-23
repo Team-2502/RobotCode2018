@@ -1,6 +1,7 @@
-package com.team2502.robot2018.command.autonomous.ingredients;
+package com.team2502.robot2018.command.autonomous.ingredients.elevator;
 
 import com.team2502.robot2018.Robot;
+import com.team2502.robot2018.command.autonomous.ingredients.elevator.ElevatorAutonCommand;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 import static com.team2502.robot2018.Constants.Physical.Elevator;

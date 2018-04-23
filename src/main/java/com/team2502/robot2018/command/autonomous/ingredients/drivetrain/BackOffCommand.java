@@ -1,6 +1,6 @@
 package com.team2502.robot2018.command.autonomous.ingredients.drivetrain;
 
-import com.team2502.robot2018.command.autonomous.ingredients.ElevatorAutonCommand;
+import com.team2502.robot2018.command.autonomous.ingredients.elevator.ElevatorAutonCommand;
 import com.team2502.robot2018.command.teleop.ToggleIntakeCommand;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 

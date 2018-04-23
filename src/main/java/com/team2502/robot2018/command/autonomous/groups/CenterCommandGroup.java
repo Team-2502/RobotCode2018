@@ -4,6 +4,8 @@ import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.command.autonomous.ingredients.*;
 import com.team2502.robot2018.command.autonomous.ingredients.activeintake.ActiveIntakeRotate;
 import com.team2502.robot2018.command.autonomous.ingredients.activeintake.RunIntakeCommand;
+import com.team2502.robot2018.command.autonomous.ingredients.elevator.ElevatorAutonCommand;
+import com.team2502.robot2018.command.autonomous.ingredients.elevator.RaiseElevatorSwitch;
 import com.team2502.robot2018.command.teleop.ToggleIntakeCommand;
 import com.team2502.robot2018.pathplanning.srxprofiling.SRXProfilingCommand;
 import com.team2502.robot2018.pathplanning.srxprofiling.ScheduledCommand;
@@ -45,9 +47,9 @@ public class CenterCommandGroup extends CommandGroup
         addParallel(new ToggleIntakeCommand());
 
 
-        addSequential(new SRXProfilingCommand(new ScheduledCommand[]{new ScheduledCommand(1, new ElevatorAutonCommand(2, 0)),
-                                                                     new ScheduledCommand(3.5, new RunIntakeCommand(3, -1)),
-                                                                     new ScheduledCommand(7, new RaiseElevatorSwitch()),},
+        addSequential(new SRXProfilingCommand(new ScheduledCommand[]{ new ScheduledCommand(1, new ElevatorAutonCommand(2, 0)),
+                                                                      new ScheduledCommand(3.5, new RunIntakeCommand(3, -1)),
+                                                                      new ScheduledCommand(7, new RaiseElevatorSwitch()), },
                                               (double) 1,
                                               TrajConfig.Center.secondCubeLeftSwitch),
                       11);
