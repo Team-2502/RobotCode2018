@@ -2,7 +2,7 @@ package com.team2502.robot2018;
 
 import com.google.common.collect.ImmutableMap;
 import com.kauailabs.navx.frc.AHRS;
-import com.team2502.change.Change;
+import com.team2502.ctannotationprocessor.Change;
 import com.team2502.robot2018.command.autonomous.ingredients.AutonStrategy;
 import com.team2502.robot2018.pathplanning.localization.EncoderDifferentialDriveLocationEstimator;
 import com.team2502.robot2018.pathplanning.localization.NavXLocationEstimator;
