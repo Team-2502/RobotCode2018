@@ -32,8 +32,8 @@ dependencies {
     compile openrio.powerup.matchData()
     compile pathfinder()
 
-    compile "com.team2502.ctannotationprocessor:CTAnnotationProcessor:1.0"
-    apt     "com.team2502.ctannotationprocessor:CTAnnotationProcessor:1.0"
+    compile "com.team2502.ctannotationprocessor:CTAnnotationProcessor:1.1.0"
+    apt     "com.team2502.ctannotationprocessor:CTAnnotationProcessor:1.1.0"
     compile group: 'com.google.guava', name: 'guava', version: '23.5-jre'
     compile group: 'org.apache.commons', name: 'commons-math3', version: '3.6.1'
 //    compileOnly group: 'org.xerial', name: 'sqlite-jdbc', version: '3.21.0.1'
