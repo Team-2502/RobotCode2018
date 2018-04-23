@@ -266,7 +266,6 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     public void drive()
     {
         FloatPair speed = getSpeedTank();
-        speed.scale(SPEED_LIMITER);
         SmartDashboard.putNumber("speedL", -speed.left);
         SmartDashboard.putNumber("speedR", -speed.right);
         runMotorsTankDrive(-speed.left, -speed.right);
