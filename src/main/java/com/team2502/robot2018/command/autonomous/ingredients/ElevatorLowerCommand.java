@@ -1,5 +1,6 @@
 package com.team2502.robot2018.command.autonomous.ingredients;
 
+import com.team2502.robot2018.command.autonomous.ingredients.activeintake.ActiveIntakeRaiseCommand;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 public class ElevatorLowerCommand extends CommandGroup

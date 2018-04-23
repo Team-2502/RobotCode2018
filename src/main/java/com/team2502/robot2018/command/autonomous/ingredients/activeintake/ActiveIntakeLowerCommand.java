@@ -1,4 +1,4 @@
-package com.team2502.robot2018.command.autonomous.ingredients;
+package com.team2502.robot2018.command.autonomous.ingredients.activeintake;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 

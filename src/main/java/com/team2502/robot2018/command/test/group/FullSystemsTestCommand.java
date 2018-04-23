@@ -1,8 +1,8 @@
 package com.team2502.robot2018.command.test.group;
 
-import com.team2502.robot2018.command.autonomous.ingredients.ActiveIntakeRotate;
+import com.team2502.robot2018.command.autonomous.ingredients.activeintake.ActiveIntakeRotate;
 import com.team2502.robot2018.command.autonomous.ingredients.ElevatorAutonCommand;
-import com.team2502.robot2018.command.autonomous.ingredients.RunIntakeCommand;
+import com.team2502.robot2018.command.autonomous.ingredients.activeintake.RunIntakeCommand;
 import com.team2502.robot2018.command.teleop.ButterflySetCommand;
 import com.team2502.robot2018.command.teleop.ShiftElevatorCommand;
 import com.team2502.robot2018.command.teleop.ToggleIntakeCommand;

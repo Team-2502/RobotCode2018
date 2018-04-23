@@ -2,6 +2,9 @@ package com.team2502.robot2018.command.autonomous.groups;
 
 import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.command.autonomous.ingredients.*;
+import com.team2502.robot2018.command.autonomous.ingredients.activeintake.ActiveIntakeLowerCommand;
+import com.team2502.robot2018.command.autonomous.ingredients.activeintake.ActiveShootCommand;
+import com.team2502.robot2018.command.autonomous.ingredients.activeintake.RunIntakeCommand;
 import com.team2502.robot2018.command.autonomous.ingredients.drivetrain.DeadreckoningDrive;
 import com.team2502.robot2018.command.autonomous.ingredients.drivetrain.DriveTime;
 import com.team2502.robot2018.command.autonomous.ingredients.drivetrain.FastRotateCommand;
