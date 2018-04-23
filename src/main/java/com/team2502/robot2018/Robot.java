@@ -2,6 +2,7 @@ package com.team2502.robot2018;
 
 import com.google.common.collect.ImmutableMap;
 import com.kauailabs.navx.frc.AHRS;
+import com.team2502.change.Change;
 import com.team2502.robot2018.command.autonomous.ingredients.AutonStrategy;
 import com.team2502.robot2018.pathplanning.localization.EncoderDifferentialDriveLocationEstimator;
 import com.team2502.robot2018.pathplanning.localization.NavXLocationEstimator;
@@ -36,6 +37,7 @@ import java.util.Map;
 /**
  * Software manifestation of Daedalus. If you delete this class you're doing something wrong.
  */
+@Change(reason = "Make cheesy")
 public final class Robot extends IterativeRobot
 {
     public static double CAL_VELOCITY = 0D;

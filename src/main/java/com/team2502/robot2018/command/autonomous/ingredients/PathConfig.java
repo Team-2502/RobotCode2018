@@ -1,7 +1,7 @@
 package com.team2502.robot2018.command.autonomous.ingredients;
 
 
-import com.team2502.robot2018.utils.change.Change;
+import com.team2502.change.Change;
 import com.team2502.robot2018.pathplanning.purepursuit.Waypoint;
 import org.joml.ImmutableVector2f;
 

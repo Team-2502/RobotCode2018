@@ -1,4 +1,4 @@
-package com.team2502.robot2018.utils.change;
+package com.team2502.change;
 
 public @interface Change
 {

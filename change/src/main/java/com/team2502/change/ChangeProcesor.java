@@ -1,4 +1,4 @@
-package com.team2502.robot2018.utils.change;
+package com.team2502.change;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.RoundEnvironment;
@@ -16,10 +16,11 @@ public class ChangeProcesor extends AbstractProcessor
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv)
     {
         for(TypeElement typeElement : annotations)
-        {
+        {processingEnv.getMessager().printMessage(Diagnostic.Kind.WARNING, "hello change");
             for(Element element : roundEnv.getElementsAnnotatedWith(typeElement))
             {
                 Change annotation = element.getAnnotation(Change.class);
+
                 processingEnv.getMessager().printMessage(Diagnostic.Kind.WARNING, "WARNING [Change]: " + typeElement.getQualifiedName() + " needs to be changed for the following reason: " + annotation.reason());
 
             }
