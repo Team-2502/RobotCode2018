@@ -2,6 +2,10 @@ package com.team2502.robot2018.command.autonomous.groups;
 
 import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.command.autonomous.ingredients.*;
+import com.team2502.robot2018.command.autonomous.ingredients.drivetrain.DeadreckoningDrive;
+import com.team2502.robot2018.command.autonomous.ingredients.drivetrain.DriveTime;
+import com.team2502.robot2018.command.autonomous.ingredients.drivetrain.FastRotateCommand;
+import com.team2502.robot2018.command.autonomous.ingredients.drivetrain.NavXRotateCommand;
 import com.team2502.robot2018.pathplanning.srxprofiling.SRXProfilingCommand;
 import com.team2502.robot2018.pathplanning.srxprofiling.TrajConfig;
 import edu.wpi.first.wpilibj.command.CommandGroup;
@@ -127,7 +131,7 @@ public class LeftCommandGroup extends CommandGroup
     private void secondCubeLeftPP()
     {
         addParallel(new ElevatorLowerCommand());
-        addSequential(new FastRotateCommand(120,8,-0.4F));
+        addSequential(new FastRotateCommand(120, 8, -0.4F));
 
         addParallel(new ActiveIntakeLowerCommand());
         addParallel(new RunIntakeCommand(4, -0.5));

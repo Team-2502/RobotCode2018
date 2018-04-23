@@ -160,7 +160,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
     private float dCP;
 
     /**
-     * Strategize your movement!
+     * Strategize your drivetrain!
      *
      * @param tankRobot                      An instance of ITanRobotBounds, an interface that has getters for robot max speed and accel.
      * @param translationalLocationEstimator An estimator for the absolute position of the robot

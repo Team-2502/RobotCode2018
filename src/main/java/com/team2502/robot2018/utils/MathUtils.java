@@ -617,7 +617,7 @@ public final class MathUtils
     }
 
     /**
-     * A class containing methods pertaining to determining our robot's movement information
+     * A class containing methods pertaining to determining our robot's drivetrain information
      */
     public static class Kinematics
     {

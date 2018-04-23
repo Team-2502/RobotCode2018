@@ -2,6 +2,7 @@ package com.team2502.robot2018;
 
 import com.ctre.phoenix.motion.TrajectoryPoint;
 import com.team2502.ctannotationprocessor.Undefined;
+import com.team2502.robot2018.command.autonomous.ingredients.drivetrain.EncoderDrive;
 import com.team2502.robot2018.pathplanning.purepursuit.Lookahead;
 import com.team2502.robot2018.pathplanning.srxprofiling.ScheduledCommand;
 import com.team2502.robot2018.utils.InterpolationMap;
@@ -146,7 +147,7 @@ public class Constants
             public static final float FPS_TO_EVEL_DT = FPS_TO_RPM_DT * RPM_TO_EVEL_DT;
 
             /**
-             * When running {@link com.team2502.robot2018.command.autonomous.ingredients.EncoderDrive}, this is the tolerance for position.
+             * When running {@link EncoderDrive}, this is the tolerance for position.
              * After getting within this many enc units, the command terminates and moves onto the next command.
              */
             public static final double ALLOWABLE_POS_ERROR_EPOS = 300;

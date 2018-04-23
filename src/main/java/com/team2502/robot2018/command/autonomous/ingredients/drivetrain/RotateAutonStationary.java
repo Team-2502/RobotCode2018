@@ -1,7 +1,8 @@
-package com.team2502.robot2018.command.autonomous.ingredients;
+package com.team2502.robot2018.command.autonomous.ingredients.drivetrain;
 
 import com.kauailabs.navx.frc.AHRS;
 import com.team2502.robot2018.Robot;
+import com.team2502.robot2018.command.autonomous.ingredients.drivetrain.NavXRotateCommand;
 import com.team2502.robot2018.subsystem.DriveTrainSubsystem;
 import com.team2502.robot2018.utils.MathUtils;
 import edu.wpi.first.wpilibj.command.Command;

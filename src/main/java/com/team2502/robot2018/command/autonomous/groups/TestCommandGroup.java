@@ -2,7 +2,7 @@ package com.team2502.robot2018.command.autonomous.groups;
 
 
 import com.team2502.robot2018.Robot;
-import com.team2502.robot2018.command.autonomous.ingredients.FastRotateCommand;
+import com.team2502.robot2018.command.autonomous.ingredients.drivetrain.FastRotateCommand;
 import com.team2502.robot2018.command.autonomous.ingredients.PurePursuitCommand;
 import com.team2502.robot2018.pathplanning.srxprofiling.SRXProfilingCommand;
 import com.team2502.robot2018.pathplanning.srxprofiling.TrajConfig;
