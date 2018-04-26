@@ -77,9 +77,10 @@ public class RightCommandGroup extends CommandGroup
 
     private void goScaleLeft()
     {
+        addParallel(new ActiveIntakeRotate(1F, 0.5));
         addSequential(new PurePursuitCommand(Paths.Right.leftScale));
 
-        addParallel(new ActiveIntakeRotate(1F, -0.5));
+
 
         emitCube();
 
@@ -100,12 +101,11 @@ public class RightCommandGroup extends CommandGroup
 
     private void goScaleRight()
     {
-        // TODO: Move things into constants
         addParallel(new ActiveIntakeRotate(1, 0.5));
         addSequential(new PurePursuitCommand(Paths.Right.rightScale));
 
         addSequential(new ToggleIntakeCommand());
-        addSequential(new ActiveIntakeRotate(.25F, -0.5));
+        addSequential(new ActiveIntakeRotate(.25F, 0.5));
 
         emitCube();
 

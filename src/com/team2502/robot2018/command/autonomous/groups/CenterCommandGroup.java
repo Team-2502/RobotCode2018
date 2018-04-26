@@ -4,6 +4,7 @@ import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.command.autonomous.ingredients.*;
 import com.team2502.robot2018.command.teleop.ToggleIntakeCommand;
 import edu.wpi.first.wpilibj.command.CommandGroup;
+import edu.wpi.first.wpilibj.command.WaitCommand;
 
 import static com.team2502.robot2018.Robot.autonStrategySelector;
 
@@ -73,8 +74,11 @@ public class CenterCommandGroup extends CommandGroup
     private void emitCubeSwitch()
     {
 //        addSequential(new ActiveIntakeRotate(0.4, 0.7));
+
+        // Shoot cube while waiting for the "main thread"
+        addParallel(new ShootCubeCommand(3));
+        addSequential(new WaitCommand(1));
         addSequential(new ToggleIntakeCommand());
-        addSequential(new ShootCubeCommand(1));
     }
 
 }

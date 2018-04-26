@@ -132,9 +132,10 @@ public class LeftCommandGroup extends CommandGroup
 
     private void goScaleRight()
     {
+        addParallel(new ActiveIntakeRotate(1F, 0.5));
         addSequential(new PurePursuitCommand(Paths.Left.rightScale));
 
-        addParallel(new ActiveIntakeRotate(1F, -0.5));
+
 
         emitCube();
 

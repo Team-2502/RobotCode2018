@@ -9,9 +9,9 @@ public class ActiveIntakeRotate extends TimedCommand
     private final double speed;
 
     /**
-     *
-     * @param timeout
-     * @param speed
+     * Rotate the active for a certain period of time
+     * @param timeout How long to rotate the active for
+     * @param speed Speed in percent voltage. Positive is down, negative is up (as of champs)
      */
     public ActiveIntakeRotate(double timeout, double speed)
     {
