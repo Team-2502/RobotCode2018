@@ -50,7 +50,9 @@ public class LeftCommandGroup extends CommandGroup
                             goScaleLeft();
                             break;
                         }
-
+                        default:
+                            crossLine();
+                            break;
                     }
                     break;
                 case "LR":
@@ -71,6 +73,9 @@ public class LeftCommandGroup extends CommandGroup
                         case SWITCH:
                             goSwitch();
                             break;
+                        default:
+                            crossLine();
+                            break;
                     }
 
 
@@ -88,6 +93,9 @@ public class LeftCommandGroup extends CommandGroup
                         case ONLY_SAME_SIDE:
                             goScaleLeft();
                             break;
+                        default:
+                            crossLine();
+                            break;
 
 
                     }
@@ -104,6 +112,9 @@ public class LeftCommandGroup extends CommandGroup
                             break;
 
                         case ONLY_SAME_SIDE:
+                            crossLine();
+                            break;
+                        default:
                             crossLine();
                             break;
                     }

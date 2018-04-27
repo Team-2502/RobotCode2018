@@ -38,6 +38,7 @@ public class RightCommandGroup extends CommandGroup
                             crossLine();
                             break;
                         default:
+                            crossLine();
                             break;
                     }
                     break;
@@ -57,6 +58,7 @@ public class RightCommandGroup extends CommandGroup
                             goScaleRight();
                             break;
                         default:
+                            crossLine();
                             break;
                     }
                     break;
@@ -78,6 +80,7 @@ public class RightCommandGroup extends CommandGroup
                             goSwitch();
                             break;
                         default:
+                            crossLine();
                             break;
                     }
                     break;
@@ -102,6 +105,7 @@ public class RightCommandGroup extends CommandGroup
                             goScaleRight();
                             break;
                         default:
+                            crossLine();
                             break;
                     }
                     break;
