@@ -13,12 +13,21 @@ public class TestCommandGroup extends CommandGroup
 {
     public TestCommandGroup()
     {
-        testElevatorScale();
+        testNonPPSideSwitch();
     }
 
     private void testElevatorScale()
     {
         addSequential(new RaiseElevatorScale());
+    }
+
+    private void testNonPPSideSwitch() // much jank
+    {
+        addParallel(new RaiseElevatorSwitch());
+        addSequential(new EncoderDrive(12.5, 4));
+        addSequential(new FastRotateCommand(80, 8, -0.4F)); //80 ==> 90 because of overshoot
+        addSequential(new EncoderDrive(3, 3));
+        addSequential(new ShootCubeCommand(2,.7));
     }
 
     private void testEmitCubeSwitch()
