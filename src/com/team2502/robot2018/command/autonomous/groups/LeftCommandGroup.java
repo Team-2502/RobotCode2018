@@ -114,6 +114,7 @@ public class LeftCommandGroup extends CommandGroup
                         case ONLY_SAME_SIDE:
                             crossLine();
                             break;
+
                         default:
                             crossLine();
                             break;
@@ -134,6 +135,10 @@ public class LeftCommandGroup extends CommandGroup
         addParallel(new RaiseElevatorSwitch());
 
         addSequential(new PurePursuitCommand(Paths.Left.leftSwitch));
+
+        addSequential(new FastRotateCommand(85, 5, -0.4F));
+
+        addSequential(new DeadreckoningDrive(1.5, 4));
 
         emitCube();
     }

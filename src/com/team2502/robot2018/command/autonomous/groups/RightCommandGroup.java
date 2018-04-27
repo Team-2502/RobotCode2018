@@ -70,7 +70,7 @@ public class RightCommandGroup extends CommandGroup
                     switch(Robot.autonStrategySelector.getSelected())
                     {
                         case SCALE:
-                            goScaleRight();
+                            goScaleLeft();
                             break;
 
                         case ONLY_SAME_SIDE:
@@ -135,7 +135,11 @@ public class RightCommandGroup extends CommandGroup
     {
         addParallel(new RaiseElevatorSwitch());
 
-        addSequential(new PurePursuitCommand(Paths.Right.rightSwitch));
+        addSequential(new PurePursuitCommand(Paths.Left.leftSwitch));
+
+        addSequential(new FastRotateCommand(360-85, 5, -0.4F));
+
+        addSequential(new DeadreckoningDrive(1.5, 4));
 
         emitCube();
     }
