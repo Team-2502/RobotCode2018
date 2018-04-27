@@ -13,9 +13,12 @@ public class TestCommandGroup extends CommandGroup
 {
     public TestCommandGroup()
     {
-//        addSequential(new RaiseElevatorScale());
-//        testEmitCubeSwitch();
-        testLefttoScaleRight();
+        testElevatorScale();
+    }
+
+    private void testElevatorScale()
+    {
+        addSequential(new RaiseElevatorScale());
     }
 
     private void testEmitCubeSwitch()

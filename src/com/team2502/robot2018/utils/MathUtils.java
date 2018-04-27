@@ -10,6 +10,16 @@ import java.util.Set;
 @SuppressWarnings("unused")
 public final class MathUtils
 {
+
+    public static void init()
+    {
+        for(int i = 0; i < 65536; ++i) { SIN_TABLE[i] = (float) Math.sin(((double) i) * Math.PI * 2.0D / 65536.0D); }
+
+        SIN_TABLE[0] = 0;       /* 0π */
+        SIN_TABLE[16384] = 1;   /* π/2 */
+        SIN_TABLE[32768] = 0;   /* 2π */
+        SIN_TABLE[49152] = -1;  /* 3π/2 */
+    }
     public static final double PHI = 1.618033989D;
     public static final float PHI_F = 1.618033989F;
 
@@ -30,16 +40,6 @@ public final class MathUtils
      * A table of sin values computed from 0 (inclusive) to 2π (exclusive), with steps of 2π / 65536.
      */
     private static final float[] SIN_TABLE = new float[65536];
-
-    static
-    {
-        for(int i = 0; i < 65536; ++i) { SIN_TABLE[i] = (float) Math.sin(((double) i) * Math.PI * 2.0D / 65536.0D); }
-
-        SIN_TABLE[0] = 0;       /* 0π */
-        SIN_TABLE[16384] = 1;   /* π/2 */
-        SIN_TABLE[32768] = 0;   /* 2π */
-        SIN_TABLE[49152] = -1;  /* 3π/2 */
-    }
 
     private MathUtils() { }
 

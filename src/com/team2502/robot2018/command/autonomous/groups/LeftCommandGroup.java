@@ -41,14 +41,34 @@ public class LeftCommandGroup extends CommandGroup
                             break;
                         }
                         case DEEP_SCALE:
+                        {
                             goDeepScaleLeft();
                             break;
+                        }
+                        case ONLY_SAME_SIDE:
+                        {
+                            goScaleLeft();
+                            break;
+                        }
+
                     }
                     break;
                 case "LR":
-                    System.out.println("Going cross country");
-                    goScaleRight();
-                    break;
+
+//                    System.out.println("Going cross country");
+//                    goScaleRight();
+//                    break;
+
+                    switch(Robot.autonStrategySelector.getSelected())
+                    {
+                        case SCALE:
+                            goScaleRight();
+                            break;
+
+                        case ONLY_SAME_SIDE:
+                            crossLine();
+                            break;
+                    }
 
 
                 case "RL":
@@ -61,12 +81,27 @@ public class LeftCommandGroup extends CommandGroup
                         case DEEP_SCALE:
                             goDeepScaleLeft();
                             break;
+
+                        case ONLY_SAME_SIDE:
+                            goScaleLeft();
+                            break;
                     }
 
                 case "RR":
-                    System.out.println("Going cross country!");
-                    goScaleRight();
-                    break;
+//                    System.out.println("Going cross country!");
+//                    goScaleRight();
+//                    break;
+
+                    switch(Robot.autonStrategySelector.getSelected())
+                    {
+                        case SCALE:
+                            goScaleRight();
+                            break;
+
+                        case ONLY_SAME_SIDE:
+                            crossLine();
+                            break;
+                    }
             }
         }
 
@@ -75,7 +110,7 @@ public class LeftCommandGroup extends CommandGroup
 
     private void crossLine()
     {
-        addSequential(new DriveTime(7, 0.4F));
+        addSequential(new DriveTime(9, 0.5F));
     }
 
     private void goSwitch()
@@ -91,15 +126,13 @@ public class LeftCommandGroup extends CommandGroup
 
     private void goScaleLeft()
     {
-        addParallel(new ActiveIntakeRotate(1, 0.5));
-        addSequential(new PurePursuitCommand(Paths.Left.leftScale));
-        addSequential(new ToggleIntakeCommand());
-        addSequential(new ActiveIntakeRotate(.25F, -0.5));
+        addSequential(new PurePursuitCommand(Paths.Left.leftScale)); //Drive to location and raise elevator
 
-        emitCube();
 
-        addSequential(new DeadreckoningDrive(0.7F, -4F));
-        addSequential(new ElevatorAutonCommand(2.5, 0));
+        emitCube(); // Shoot cube via active spinning wheels, then open up for safety
+
+        addSequential(new DeadreckoningDrive(0.7F, -4F)); // Back up
+        addSequential(new ElevatorAutonCommand(2.5, 0)); // Lower the elevator
 
     }
 
@@ -127,27 +160,32 @@ public class LeftCommandGroup extends CommandGroup
 
     private void goDeepScaleLeft()
     {
-        addSequential(new PurePursuitCommand(Paths.Left.leftScaleDeepNullZone));
+        addSequential(new PurePursuitCommand(Paths.Left.leftScaleDeepNullZone)); // Drive to deep scale
+        emitCube(); // Shoot cube via active spinning wheels, then open up for safety
+
+        addSequential(new DeadreckoningDrive(0.7F, -4F)); // Back up
+        addSequential(new ElevatorAutonCommand(2.5, 0)); // Lower the elevator
     }
 
     private void goScaleRight()
     {
-        addParallel(new ActiveIntakeRotate(1F, 0.5));
-        addSequential(new PurePursuitCommand(Paths.Left.rightScale));
+//        addParallel(new ActiveIntakeRotate(1F, 0.5));
+        addSequential(new PurePursuitCommand(Paths.Left.rightScale)); // Drive to location and raise elevator
 
+        emitCube(); // Special cube shooty boi
 
-
-        emitCube();
-
-        addSequential(new DeadreckoningDrive(0.7F, -4F));
-        addSequential(new ElevatorAutonCommand(2.5, 0));
+        addSequential(new DeadreckoningDrive(0.7F, -4F)); // Reverse, reverse
+        addSequential(new ElevatorAutonCommand(2.5, 0)); // resetti elevatori
 
     }
 
     private void emitCube()
     {
-        addSequential(new ShootCubeCommand(1, .5F));
+        addSequential(new ActiveIntakeRotate(0.4, 1));
 
+        addParallel(new ShootCubeCommand(3));
+        addSequential(new WaitCommand(1));
+        addSequential(new ToggleIntakeCommand());
     }
 
 

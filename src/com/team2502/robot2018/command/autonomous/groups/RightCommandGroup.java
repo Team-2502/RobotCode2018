@@ -5,6 +5,7 @@ import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.command.autonomous.ingredients.*;
 import com.team2502.robot2018.command.teleop.ToggleIntakeCommand;
 import edu.wpi.first.wpilibj.command.CommandGroup;
+import edu.wpi.first.wpilibj.command.WaitCommand;
 
 public class RightCommandGroup extends CommandGroup
 {
@@ -23,8 +24,22 @@ public class RightCommandGroup extends CommandGroup
             switch(AUTO_GAME_DATA)
             {
                 case "LL":
-                    System.out.println("Going cross country!");
-                    goScaleLeft();
+//                    System.out.println("Going cross country!");
+//                    goScaleLeft();
+//                    break;
+
+                    switch(Robot.autonStrategySelector.getSelected())
+                    {
+                        case SCALE:
+                            goScaleLeft();
+                            break;
+
+                        case ONLY_SAME_SIDE:
+                            crossLine();
+                            break;
+                        default:
+                            break;
+                    }
                     break;
 
                 case "LR":
@@ -37,11 +52,31 @@ public class RightCommandGroup extends CommandGroup
                         case DEEP_SCALE:
                             goDeepScaleRight();
                             break;
+
+                        case ONLY_SAME_SIDE:
+                            goScaleRight();
+                            break;
+                        default:
+                            break;
                     }
+                    break;
 
                 case "RL":
-                    System.out.println("Going cross country!");
-                    goScaleLeft();
+//                    System.out.println("Going cross country!");
+//                    goScaleLeft();
+//                    break;
+                    switch(Robot.autonStrategySelector.getSelected())
+                    {
+                        case SCALE:
+                            goScaleRight();
+                            break;
+
+                        case ONLY_SAME_SIDE:
+                            crossLine();
+                            break;
+                        default:
+                            break;
+                    }
                     break;
 
                 case "RR":
@@ -60,6 +95,11 @@ public class RightCommandGroup extends CommandGroup
                         case DEEP_SCALE:
                             goDeepScaleRight();
                             break;
+                        case ONLY_SAME_SIDE:
+                            goScaleRight();
+                            break;
+                        default:
+                            break;
                     }
                     break;
 
@@ -77,15 +117,11 @@ public class RightCommandGroup extends CommandGroup
 
     private void goScaleLeft()
     {
-        addParallel(new ActiveIntakeRotate(1F, 0.5));
-        addSequential(new PurePursuitCommand(Paths.Right.leftScale));
+        addSequential(new PurePursuitCommand(Paths.Right.leftScale)); // Drive to locatino and raise elevator
+        emitCube(); // Special cube shooty boi
 
-
-
-        emitCube();
-
-        addSequential(new DeadreckoningDrive(0.7F, -4F));
-        addSequential(new ElevatorAutonCommand(2.5, 0));
+        addSequential(new DeadreckoningDrive(0.7F, -4F)); // Reverse, reverse
+        addSequential(new ElevatorAutonCommand(2.5, 0)); // resetti elevatori
     }
 
     private void goSwitch()
@@ -101,34 +137,36 @@ public class RightCommandGroup extends CommandGroup
 
     private void goScaleRight()
     {
-        addParallel(new ActiveIntakeRotate(1, 0.5));
+//        addParallel(new ActiveIntakeRotate(1, 0.5));
         addSequential(new PurePursuitCommand(Paths.Right.rightScale));
 
-        addSequential(new ToggleIntakeCommand());
-        addSequential(new ActiveIntakeRotate(.25F, 0.5));
+        emitCube(); // Special cube shooty boi
 
-        emitCube();
-
-        addSequential(new DeadreckoningDrive(0.7F, -4F));
-        addSequential(new ElevatorAutonCommand(2.5, 0));
-
-
+        addSequential(new DeadreckoningDrive(0.7F, -4F)); // Reverse, reverse
+        addSequential(new ElevatorAutonCommand(2.5, 0)); // resetti elevatori
     }
 
     private void goDeepScaleRight()
     {
         addParallel(new PurePursuitCommand(Paths.Right.rightScaleDeepNullZone));
+        emitCube(); // Special cube shooty boi
+
+        addSequential(new DeadreckoningDrive(0.7F, -4F)); // Reverse, reverse
+        addSequential(new ElevatorAutonCommand(2.5, 0)); // resetti elevatori
     }
 
     private void crossLine()
     {
-        addSequential(new DriveTime(7, 0.4F));
+        addSequential(new DriveTime(9, 0.5F));
 
     }
 
     private void emitCube()
     {
-        addSequential(new ShootCubeCommand(1, .5));
+        addSequential(new ActiveIntakeRotate(0.4, 1));
 
+        addParallel(new ShootCubeCommand(3));
+        addSequential(new WaitCommand(1));
+        addSequential(new ToggleIntakeCommand());
     }
 }

@@ -15,6 +15,7 @@ import com.team2502.robot2018.trajectory.localization.EncoderDifferentialDriveLo
 import com.team2502.robot2018.trajectory.localization.NavXLocationEstimator;
 import com.team2502.robot2018.utils.Files;
 import com.team2502.robot2018.utils.InterpolationMap;
+import com.team2502.robot2018.utils.MathUtils;
 import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -68,6 +69,7 @@ public final class Robot extends IterativeRobot
     @Override
     public void robotInit()
     {
+        MathUtils.init();
         NAVX = new AHRS(SPI.Port.kMXP);
         CameraServer.getInstance().startAutomaticCapture();
         autonStrategySelector = new SendableChooser<>();
