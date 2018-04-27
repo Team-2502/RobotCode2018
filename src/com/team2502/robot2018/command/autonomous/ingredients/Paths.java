@@ -76,9 +76,10 @@ public class Paths
 
         public static final List<Waypoint> leftSwitch = Arrays.asList(
                 new Waypoint(new ImmutableVector2f(0, 0), 0, 5, -5),
-                new Waypoint(new ImmutableVector2f(0, 2.454F), 9F, 5, -5),
-                new Waypoint(new ImmutableVector2f(0, 9), 6F, 5, -5),
-                new Waypoint(new ImmutableVector2f(3.82006F, 6F), 2F, 5, -5) // TODO: add ability to coast at end
+                new Waypoint(new ImmutableVector2f(-1, 8.125F), 6F, 5, -5),
+                new Waypoint(new ImmutableVector2f(-1, 10.5F), 6F, 5, -5),
+                new Waypoint(new ImmutableVector2f(0, 12.5F), 6F, 5, -5),
+                new Waypoint(new ImmutableVector2f(2.4F, 12.5F), 6F, 5, -5)
                                                                      );
 
         public static final List<Waypoint> rightScale = Arrays.asList(
