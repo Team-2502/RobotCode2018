@@ -68,6 +68,9 @@ public class LeftCommandGroup extends CommandGroup
                         case ONLY_SAME_SIDE:
                             crossLine();
                             break;
+                        case SWITCH:
+                            goSwitch();
+                            break;
                     }
 
 
@@ -85,6 +88,8 @@ public class LeftCommandGroup extends CommandGroup
                         case ONLY_SAME_SIDE:
                             goScaleLeft();
                             break;
+
+
                     }
 
                 case "RR":
@@ -118,8 +123,6 @@ public class LeftCommandGroup extends CommandGroup
         addParallel(new RaiseElevatorSwitch());
 
         addSequential(new PurePursuitCommand(Paths.Left.leftSwitch));
-
-        addSequential(new ActiveIntakeRotate(0.35, 1));
 
         emitCube();
     }

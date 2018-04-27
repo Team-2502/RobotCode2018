@@ -74,6 +74,9 @@ public class RightCommandGroup extends CommandGroup
                         case ONLY_SAME_SIDE:
                             crossLine();
                             break;
+                        case SWITCH:
+                            goSwitch();
+                            break;
                         default:
                             break;
                     }
@@ -129,8 +132,6 @@ public class RightCommandGroup extends CommandGroup
         addParallel(new RaiseElevatorSwitch());
 
         addSequential(new PurePursuitCommand(Paths.Right.rightSwitch));
-
-        addSequential(new ActiveIntakeRotate(0.35, 1));
 
         emitCube();
     }
