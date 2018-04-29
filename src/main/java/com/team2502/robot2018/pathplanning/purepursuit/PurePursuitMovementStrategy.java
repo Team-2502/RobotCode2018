@@ -1,12 +1,12 @@
 package com.team2502.robot2018.pathplanning.purepursuit;
 
 import com.team2502.robot2018.Constants;
-import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.pathplanning.localization.IRotationalLocationEstimator;
 import com.team2502.robot2018.pathplanning.localization.ITranslationalLocationEstimator;
 import com.team2502.robot2018.pathplanning.localization.ITranslationalVelocityEstimator;
-import com.team2502.robot2018.utils.Files;
 import com.team2502.robot2018.utils.MathUtils;
+import com.team2502.robot2018.utils.PurePursuitUtils;
+import com.team2502.robot2018.utils.Stopwatch;
 import org.joml.ImmutableVector2f;
 
 import java.util.List;
@@ -16,11 +16,6 @@ import java.util.List;
  */
 public class PurePursuitMovementStrategy implements ITankMovementStrategy
 {
-    /**
-     * This represents the threshold curvature beyond which it's basically a straight line.
-     */
-    private static final float THRESHOLD_CURVATURE = 0.001F;
-
     /**
      * The path that we're driving on
      */
@@ -34,7 +29,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
     /**
      * Something that can automatically generate a lookahead for us
      */
-    private final Lookahead lookahead;
+    private final LookaheadBounds lookahead;
 
     /**
      * Someone who knows how fast we're going
@@ -45,6 +40,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
      * If the robot should brake at the end or drift at the end
      */
     private final boolean driftAtEnd;
+    private final Stopwatch stopwatch;
 
     /**
      * Someone who knows where we are
@@ -61,16 +57,6 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
      * The goal point relative to us
      */
     private ImmutableVector2f relativeGoalPoint;
-
-    /**
-     * The radius of our motion, assuming that our current path if we didn't change motor velocity would follow a circle
-     */
-    private float motionRadius;
-
-    /**
-     * How fast we're rotating
-     */
-    private float rotVelocity;
 
     /**
      * If we're done
@@ -112,16 +98,6 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
     private float dThetaToRotate;
 
     /**
-     * If we're close to our next waypoint
-     */
-    private boolean isClose = false;
-
-    /**
-     * If we are within tolerances for finishing
-     */
-    private boolean withinTolerences;
-
-    /**
      * The lookahead we used
      */
 
@@ -131,16 +107,6 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
      * The speed we used
      */
     private float speedUsed;
-
-    /**
-     * When we last updated where we're going
-     */
-    private double lastUpdatedS = -1;
-
-    /**
-     * The current time
-     */
-    private double currentS;
 
     /**
      * Distance remaining
@@ -158,6 +124,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
     private float usedTangentialVelocity;
     private ImmutableVector2f closestPoint;
     private float dCP;
+    private float usedCurvature;
 
     /**
      * Strategize your movement!
@@ -170,9 +137,9 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
      */
     public PurePursuitMovementStrategy(ITankRobotBounds tankRobot, ITranslationalLocationEstimator translationalLocationEstimator,
                                        IRotationalLocationEstimator rotEstimator, ITranslationalVelocityEstimator velocityEstimator,
-                                       List<Waypoint> waypoints, Lookahead lookahead, boolean driftAtEnd)
+                                       List<Waypoint> waypoints, LookaheadBounds lookahead, boolean driftAtEnd)
     {
-        this.path = new Path(waypoints);
+        this.path = Path.fromPoints(waypoints);
 
         this.tankRobot = tankRobot;
         this.translationalLocationEstimator = translationalLocationEstimator;
@@ -183,6 +150,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         this.driftAtEnd = driftAtEnd;
         lastWaypointSpeed = waypoints.get(0).getMaxSpeed();
         speedUsed = lastWaypointSpeed;
+        stopwatch = new Stopwatch();
     }
 
     /**
@@ -193,11 +161,9 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
      */
     private ImmutableVector2f calculateAbsoluteGoalPoint(float distanceCurrentSegmentLeft, float lookAheadDistance)
     {
-        Robot.writeLog("calc GP ... distCurrentSegLeft: %.2f, lookAheadDist: %.2f\n",200,distanceCurrentSegmentLeft,lookAheadDistance);
         // The path is finished — there are no more goal points to compute
         if(brakeStage || finishedPath)
         {
-            Robot.writeLog("RETURN NULL brakeStage %b finishedPath %b", 80, brakeStage, finishedPath);
             return null;
         }
 
@@ -215,113 +181,12 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
 
         if(currentWaypoint != null)
         {
-            ImmutableVector2f locationB = currentWaypoint.getLocation();
-            Robot.writeLog("next waypoint (%.2f,%.2f) ... lookahead: %.2f ... pos: (%.2f,%.2f)", 10, locationB.x, locationB.y, usedLookahead, usedEstimatedLocation.x, usedEstimatedLocation.y);
             currentWaypoint.executeCommands(this);
         }
 
         lastWaypointSpeed = speedUsed;
 
-        lastUpdatedS = currentS;
-
-        Robot.writeLog("LAST WAYPOINT SPEED: " + lastWaypointSpeed, 1);
-    }
-
-    private float generateLookahead()
-    {
-        float usedTangentialVelocity = velocityEstimator.estimateSpeed();
-        float lookaheadForSpeed = lookahead.getLookaheadForSpeed(usedTangentialVelocity);
-
-        PathSegment current = path.getCurrent();
-
-        float pathSegmentLength = current.getLength();
-
-        closestPoint = path.getClosestPoint(usedEstimatedLocation);
-        float closestPointPathDistance = path.getDistanceOfClosestPoint(closestPoint);
-        ImmutableVector2f distanceClosestPoint = usedEstimatedLocation.sub(closestPoint);
-
-        float distanceAlongPath = closestPointPathDistance - current.getAbsoluteDistanceStart();
-
-        distanceLeft = pathSegmentLength - distanceAlongPath;
-
-        Robot.writeLog("distanceLeft: %.2f, pathSegmentLength: %.2f, distanceAlongPath: %.2f, cp: (%.2f, %.2f)", 100, distanceLeft, pathSegmentLength, distanceAlongPath, closestPoint.x, closestPoint.y);
-
-        // This occurs if we are at the end of the path
-        if(distanceLeft <= Constants.PurePursuit.STOP_TOLERANCE_FT && current.isEnd())
-        {
-            if(driftAtEnd)
-            {
-                finishedPath = true;
-                Robot.writeLog("Commencing drift", 100);
-            }
-            else
-            {
-                Robot.writeLog("Commencing brake (getLookahead())", 100);
-                brakeStage = true;
-            }
-            return Float.NaN;
-        }
-
-        dCP = distanceClosestPoint.length();
-
-        float usedLookahead = lookaheadForSpeed + dCP;
-
-        Robot.writeLog("usedVel: %.2f, usedLookahead %.2f", 30, usedTangentialVelocity, usedLookahead);
-
-        return usedLookahead;
-    }
-
-    void generateSpeedUsed(float closestPointPathDistance, Waypoint waypointEnd)
-    {
-        float finalSpeed = waypointEnd.getMaxSpeed();
-
-        float speed = Float.MAX_VALUE;
-
-        // Looks within 15 feet ahead
-        for(PathSegment pathSegment : path.nextSegmentsInclusive(15))
-        {
-            Waypoint last = (Waypoint) pathSegment.getLast();
-            float distanceTo = pathSegment.getAbsoluteDistanceEnd() - closestPointPathDistance;
-            float maxSpeed = getMaxSpeed(last.getMaxSpeed(), distanceTo, true, waypointEnd.getMaxAccel(), waypointEnd.getMaxDeccel());
-
-            if(maxSpeed < speed)
-            {
-                speed = maxSpeed;
-            }
-        }
-
-        if(speed < lastWaypointSpeed)
-        {
-            Robot.writeLog("forward decel", 80);
-            speedUsed = speed;
-        }
-        else if((finalSpeed > 0 && finalSpeed > lastWaypointSpeed) || (finalSpeed < 0 && finalSpeed < lastWaypointSpeed))
-        {
-            // what the motors should be
-            float dTime = (float) (currentS - lastUpdatedS);
-            Robot.writeLog("forward accel", 80);
-            Robot.writeLog("forward", 1);
-            speedUsed = MathUtils.minF(finalSpeed, lastWaypointSpeed + dTime * waypointEnd.getMaxAccel());
-            Robot.writeLog("accel ... speedUsed: %.2f, poll: %.2f, lastSpeed: %.2f, aMax %.2f", 1, speedUsed, dTime, lastWaypointSpeed, waypointEnd.getMaxAccel());
-        }
-    }
-
-    private float getMaxSpeed(float finalSpeed, float distanceLeft, boolean forward, float currentMaxAccel, float currentMaxDeccel)
-    {
-        float speed;
-        if(forward)
-        {
-            float maxVel = (float) Math.sqrt(finalSpeed * finalSpeed - 2 * currentMaxDeccel * distanceLeft);
-            speed = Math.min(lastWaypointSpeed, maxVel);
-        }
-        else
-        {
-            // TODO: Not sure this works
-            // closest to 0 ft/s speed
-            float minVel = (float) Math.sqrt(finalSpeed * finalSpeed + 2 * currentMaxAccel * distanceLeft);
-            speed = Math.max(lastWaypointSpeed, minVel);
-        }
-        return speed;
+        stopwatch.reset();
     }
 
     /**
@@ -329,65 +194,63 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
      */
     public void update()
     {
-//        Robot.writeLog("update", 80);
 
         if(shouldEnd())
         {
             return;
         }
 
-        currentS = System.currentTimeMillis() / 1000D;
-        if(lastUpdatedS == -1)
+        if(!stopwatch.isInit())
         {
-            lastUpdatedS = currentS;
+            stopwatch.reset();
         }
 
         usedEstimatedLocation = translationalLocationEstimator.estimateLocation();
-        Robot.writeLog("estimated Loc (%.2f,%.2f)", 80, usedEstimatedLocation.x, usedEstimatedLocation.y);
         usedHeading = rotEstimator.estimateHeading();
 
-        usedLookahead = generateLookahead();
-        Robot.writeLog("generated Lookahead, %.2f", 1, usedLookahead);
+        ImmutableVector2f closestPoint = path.getClosestPoint(usedEstimatedLocation);
+        dCP = usedEstimatedLocation.sub(closestPoint).length();
+
+        usedLookahead = PurePursuitUtils.generateLookahead(lookahead,velocityEstimator.estimateSpeed(),dCP);
+
+        distanceLeft = path.getCurrent().getDistanceLeft(closestPoint);
+
+        // This occurs if we are at the end of the path
+        if(distanceLeft <= Constants.PurePursuit.STOP_TOLERANCE_FT && path.getCurrent().isEnd())
+        {
+            if(driftAtEnd)
+            {
+                finishedPath = true;
+            }
+            else
+            {
+                brakeStage = true;
+            }
+        }
+
+        float absDistanceOfClosestPoint = path.getAbsDistanceOfClosestPoint(closestPoint);
+
+        speedUsed = PurePursuitUtils.generateSpeedUsed(absDistanceOfClosestPoint,lastWaypointSpeed,stopwatch.read(),path);
+
         if(usedLookahead == Float.NaN)
         {
-            Robot.writeLog("generated Lookahead, %.2f", 100, "Lookahead is NaN");
             commenceBreak();
             return;
         }
-        Robot.writeLog("lookAhead: %.2f", 80, usedLookahead);
+
         absoluteGoalPoint = calculateAbsoluteGoalPoint(distanceLeft, usedLookahead);
-//        Robot.writeLog("abs GP: (%.2f, %.2f)", 80,absoluteGoalPoint.x,absoluteGoalPoint.y);
 
         if(shouldEnd())
         {
             return;
         }
-
-        if(absoluteGoalPoint == null)
-        {
-            Robot.logPop();
-        }
         relativeGoalPoint = MathUtils.LinearAlgebra.absoluteToRelativeCoord(absoluteGoalPoint, usedEstimatedLocation, usedHeading);
 
-        Robot.writeLog("relativeGP: (%.2f,%.2f)", 30, relativeGoalPoint.x, relativeGoalPoint.y);
-
-        wheelVelocities = calculateWheelVelocities();
-
-        Files.setNameAndValue("Wheel Velocity (planned) L", wheelVelocities.x);
-        Files.setNameAndValue("Wheel Velocity (planned) R", wheelVelocities.y);
-
-        Files.setNameAndValue("Relative Goal Point x", relativeGoalPoint.x);
-        Files.setNameAndValue("Relative Goal Point y", relativeGoalPoint.y);
-
-        Files.setNameAndValue("Abs Goal Point x", absoluteGoalPoint.x);
-        Files.setNameAndValue("Abs Goal Point y", absoluteGoalPoint.y);
-
-        Files.setNameAndValue("Est Loc x", usedEstimatedLocation.x);
-        Files.setNameAndValue("Abs Goal Point y", usedEstimatedLocation.y);
+        usedCurvature = PurePursuitUtils.calculateCurvature(relativeGoalPoint);
+        wheelVelocities = PurePursuitUtils.calculateWheelVelocities(usedCurvature,tankRobot.getLateralWheelDistance(),speedUsed);
 
         if(path.progressIfNeeded(distanceLeft, dCP, usedEstimatedLocation))
         {
-            Robot.writeLog("updating for new segment!", 80);
             updateForNewSegment();
         }
     }
@@ -427,43 +290,6 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
     }
 
     /**
-     * Chooses which goal point should be chosen given a list of possible goal points (generated by circle-line intersection)
-     *
-     * @param origin             the absolute location of the robot
-     * @param possibleGoalPoints the absolute location of goal points
-     */
-    int bestGoalPoint(ImmutableVector2f origin, List<ImmutableVector2f> possibleGoalPoints)
-    {
-        float minMagSquared = Float.MAX_VALUE;
-        int minVectorI = -1;
-        for(int i = 0; i < possibleGoalPoints.size(); ++i)
-        {
-            ImmutableVector2f vector = possibleGoalPoints.get(i);
-
-            float magnitudeSquared = origin.sub(vector).lengthSquared(); // find dist squared
-
-            if(magnitudeSquared < minMagSquared)
-            {
-                minMagSquared = magnitudeSquared;
-                minVectorI = i;
-            }
-        }
-        return minVectorI;
-    }
-
-    /***
-     * @return The curvature (1/radius) to the goal point
-     */
-    private float calcCurvatureToGoal()
-    {
-        float lSquared = relativeGoalPoint.lengthSquared(); // x^2 + y^2 = l^2 (length)
-
-        // curvature = 2x / l^2 (from Pure Pursuit paper)
-        // added - so it is positive when counterclockwise
-        return -2 * relativeGoalPoint.get(0) / lSquared;
-    }
-
-    /**
      * @return The lateral distance (with respect to the robot) between the robot and the goal point.
      */
     public float getCrossTrackError()
@@ -476,105 +302,16 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
      */
     public ImmutableVector2f getCircleCenter()
     {
-        ImmutableVector2f circleRelativeCenter = new ImmutableVector2f(-motionRadius, 0.0F);
+        ImmutableVector2f circleRelativeCenter = new ImmutableVector2f(-calcMotionRadius(), 0.0F);
         ImmutableVector2f circleRelativeCenterRotated = MathUtils.LinearAlgebra.rotate2D(circleRelativeCenter, usedHeading);
         return usedEstimatedLocation.add(circleRelativeCenterRotated);
     }
 
     /**
-     * @return The vector to drive along. first component = left speed, second component = right speed
-     * @throws NullPointerException only if it gets confused and doesn't know what vector to drive along
-     */
-    private ImmutableVector2f calculateWheelVelocities() throws NullPointerException
-    {
-        float curvature = calcCurvatureToGoal();
-        ImmutableVector2f bestVector = null;
-
-        float v_lMax = speedUsed;
-        float v_rMax = speedUsed;
-        float v_lMin = -speedUsed;
-        float v_rMin = -speedUsed;
-
-        if(Math.abs(curvature) < THRESHOLD_CURVATURE) // if we are a straight line ish (lines are not curvy -> low curvature)
-        {
-            bestVector = new ImmutableVector2f(v_lMax, v_rMax);
-            rotVelocity = (bestVector.get(1) - bestVector.get(0)) / tankRobot.getLateralWheelDistance();
-            motionRadius = Float.MAX_VALUE;
-            leftWheelTanVel = bestVector.get(0);
-            rightWheelTanVel = bestVector.get(1);
-            tangentialSpeed = leftWheelTanVel;
-            dThetaToRotate = 0;
-        }
-        else // if we need to go in a circle
-        {
-            float c = 2 / (tankRobot.getLateralWheelDistance() * curvature);
-            float velLeftToRightRatio = -(c + 1) / (1 - c); // an equation pulled out of some paper probably
-            float velRightToLeftRatio = 1 / velLeftToRightRatio; // invert the ratio
-
-            // This first big repetitive section is just finding the largest possible velocities while maintaining a ratio.
-            float score = Float.MIN_VALUE;
-
-            float v_r = v_lMax * velLeftToRightRatio;
-
-            if(MathUtils.Algebra.between(v_rMin, v_r, v_rMax))
-            {
-                score = Math.abs(v_lMax + v_r);
-                bestVector = new ImmutableVector2f(v_lMax, v_r);
-            }
-
-            v_r = v_lMin * velLeftToRightRatio;
-            if(MathUtils.Algebra.between(v_rMin, v_r, v_rMax))
-            {
-                float tempScore = Math.abs(v_lMin + v_r);
-                if(tempScore > score)
-                {
-                    score = tempScore;
-                    bestVector = new ImmutableVector2f(v_lMin, v_r);
-                }
-            }
-
-            float v_l = v_rMax * velRightToLeftRatio;
-            if(MathUtils.Algebra.between(v_lMin, v_l, v_lMax))
-            {
-                float tempScore = Math.abs(v_lMax + v_l);
-                if(tempScore > score)
-                {
-                    score = tempScore;
-                    bestVector = new ImmutableVector2f(v_l, v_rMax);
-                }
-            }
-
-            v_l = v_rMin * velRightToLeftRatio;
-            if(MathUtils.Algebra.between(v_lMin, v_l, v_lMax))
-            {
-                float tempScore = Math.abs(v_lMin + v_l);
-                if(tempScore > score)
-                {
-                    bestVector = new ImmutableVector2f(v_l, v_rMin);
-                }
-            }
-
-            if(bestVector == null)
-            {
-                throw new NullPointerException("bestVector is null!");
-            }
-
-            rotVelocity = (bestVector.get(1) - bestVector.get(0)) / tankRobot.getLateralWheelDistance();
-            motionRadius = 1 / curvature;
-            leftWheelTanVel = Math.abs((motionRadius - tankRobot.getLateralWheelDistance() / 2) * rotVelocity);
-            rightWheelTanVel = Math.abs((motionRadius + tankRobot.getLateralWheelDistance() / 2) * rotVelocity);
-            tangentialSpeed = (leftWheelTanVel + rightWheelTanVel) / 2;
-            dThetaToRotate = (float) (Math.signum(rotVelocity) * Math.atan(relativeGoalPoint.get(1) / (Math.abs(motionRadius) - relativeGoalPoint.get(0))));
-        }
-
-        return bestVector;
-    }
-
-    /**
      * @return The radius of the circle that the robot is traveling across. Positive if the robot is turning left, negative if right.
      */
-    public float getMotionRadius()
-    { return motionRadius; }
+    public float calcMotionRadius()
+    { return MathUtils.epsilonEquals(usedCurvature,0) ? Float.MAX_VALUE : 1/usedCurvature; }
 
     /**
      * @return The velocities (left,right) of the wheels. If you are setting input as voltage, "velocities" will actually be voltages. Magnitude doesn't matter the most; ratio does.
@@ -610,18 +347,10 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
     { return relativeGoalPoint; }
 
     /**
-     * @return The rotational velocity of the robot. WARNING: will not work if you are inputting voltage instead of actual velocities
-     * @deprecated
-     */
-    public float getRotVelocity()
-    { return rotVelocity; }
-
-    /**
      * @return If the robot is finished traveling the path
      */
     public boolean isFinishedPath()
     {
-        Robot.writeLog("isFinised? %b, %b", 1, finishedPath, !path.exists());
         return finishedPath || !path.exists();
     }
 

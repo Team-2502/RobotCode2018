@@ -10,11 +10,28 @@ public class Stopwatch
     /**
      * @return 0 if first time running or the time in seconds since last method call
      */
-    public float poll()
+    public float pop()
     {
         long nanoTime = System.nanoTime();
         long dTime = (lastTime == -1) ? 0 : nanoTime - lastTime;
         lastTime = nanoTime;
         return dTime / 1E9F;
+    }
+
+    public float read()
+    {
+        long nanoTime = System.nanoTime();
+        long dTime = (lastTime == -1) ? 0 : nanoTime - lastTime;
+        return dTime / 1E9F;
+    }
+
+    public void reset()
+    {
+        lastTime = System.nanoTime();
+    }
+
+    public boolean isInit()
+    {
+        return lastTime != -1;
     }
 }

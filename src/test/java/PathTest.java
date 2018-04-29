@@ -4,7 +4,6 @@ import com.team2502.robot2018.pathplanning.purepursuit.Point;
 import org.joml.ImmutableVector2f;
 import org.junit.Test;
 
-import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -13,11 +12,11 @@ import static org.junit.Assert.assertTrue;
 
 public class PathTest
 {
-    private Path basePath = new Path(Arrays.asList(
+    private Path basePath = Path.fromPoints(
             new Point(0, 0),
             new Point(2, 2),
             new Point(4, 2)
-                                                  ));
+                                           );
 
     @Test
     public void testClosestPoint()
@@ -52,7 +51,7 @@ public class PathTest
     @Test
     public void testClosestPointDistance()
     {
-        float closestPointPathDistance = clonePath().getDistanceOfClosestPoint(new ImmutableVector2f(0.5F, 0.5F));
+        float closestPointPathDistance = clonePath().getAbsDistanceOfClosestPoint(new ImmutableVector2f(0.5F, 0.5F));
         assertEquals(Math.hypot(0.5, 0.5), closestPointPathDistance, 1E-6);
     }
 

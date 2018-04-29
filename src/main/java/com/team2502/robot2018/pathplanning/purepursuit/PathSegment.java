@@ -57,6 +57,7 @@ public class PathSegment
     /**
      * Get the distance left squared
      *
+     * @deprecated
      * @param point a close point
      * @return
      */
@@ -69,12 +70,14 @@ public class PathSegment
     /**
      * Get the distance left
      *
-     * @param point a close point
+     * @param point a point on the line
      * @return
      */
     public float getDistanceLeft(ImmutableVector2f point)
     {
-        return (float) Math.sqrt(getDistanceLeft2(point));
+        float firstX = this.first.getLocation().x;
+        float lastX = this.last.getLocation().x;
+        return length*(1 - (point.x - firstX) / (lastX - firstX));
     }
 
     public boolean isPast(ImmutableVector2f point)

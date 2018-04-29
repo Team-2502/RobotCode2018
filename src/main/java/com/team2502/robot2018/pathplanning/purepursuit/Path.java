@@ -24,20 +24,6 @@ public class Path
     private ImmutableVector2f closestPoint;
     private ImmutableVector2f robotLocationClosestPoint;
 
-    public Path(List<? extends Point> waypointList)
-    {
-        pathSegments = new ArrayList<>();
-        float distance = 0;
-        for(int i = 0; i < waypointList.size() - 1; i++)
-        {
-            Point waypoint1 = waypointList.get(i);
-            Point waypoint2 = waypointList.get(i + 1);
-            float length = waypoint1.getLocation().distance(waypoint2.getLocation());
-            PathSegment pathSegment = new PathSegment(waypoint1, waypoint2, i == 0, i == waypointList.size() - 2, distance, distance += length, length);
-            pathSegments.add(pathSegment);
-        }
-        moveNextSegment();
-    }
     private Path(){}
 
     public static Path fromSegments(List<PathSegment> pathSegments)
@@ -149,7 +135,7 @@ public class Path
     }
 
 
-    public float getDistanceOfClosestPoint(ImmutableVector2f closestPoint)
+    public float getAbsDistanceOfClosestPoint(ImmutableVector2f closestPoint)
     {
         PathSegment current = getCurrent();
         ImmutableVector2f firstLocation = current.getFirst().getLocation();

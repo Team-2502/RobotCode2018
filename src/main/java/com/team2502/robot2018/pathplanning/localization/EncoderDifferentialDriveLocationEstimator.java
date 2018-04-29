@@ -38,7 +38,7 @@ public class EncoderDifferentialDriveLocationEstimator implements ITranslational
     public ImmutableVector2f estimateLocation()
     {
         // figure out time since last estimated
-        float dTime = stopwatch.poll();
+        float dTime = stopwatch.pop();
         float leftVel = Robot.DRIVE_TRAIN.getLeftVel();
         float rightVel = Robot.DRIVE_TRAIN.getRightVel();
 

@@ -3,7 +3,7 @@ package com.team2502.robot2018.pathplanning.purepursuit;
 /**
  * A dynamic lookahead based on speed
  */
-public class Lookahead
+public class LookaheadBounds
 {
     private final float minDistance, maxDistance;
     private final float minSpeed, maxSpeed;
@@ -16,7 +16,7 @@ public class Lookahead
      * @param minSpeed    The speed at which lookahead starts to grow
      * @param maxSpeed    The speed at which lookahead stops growing
      */
-    public Lookahead(float minDistance, float maxDistance, float minSpeed, float maxSpeed)
+    public LookaheadBounds(float minDistance, float maxDistance, float minSpeed, float maxSpeed)
     {
         this.minDistance = minDistance;
         this.maxDistance = maxDistance;
@@ -33,7 +33,7 @@ public class Lookahead
      * @param speed The speed of our robot
      * @return How far our robot should look ahead
      */
-    float getLookaheadForSpeed(float speed)
+    public float getLookaheadForSpeed(float speed)
     {
         float lookahead = dDistance * (speed - minSpeed) / dSpeed + minDistance;
         return Double.isNaN(lookahead) ? minDistance : Math.max(minDistance, Math.min(maxDistance, lookahead));

@@ -24,7 +24,7 @@ public class SimulatorLocationEstimator implements ITranslationalLocationEstimat
 
     public void update()
     {
-        float time = stopwatch.poll();
+        float time = stopwatch.pop();
         float leftVel = simulatedRobot.getLeftVel();
         float rightVel = simulatedRobot.getRightVel();
         float angularVel = MathUtils.Kinematics.getAngularVel(leftVel, rightVel, SimulatedRobot.LATERAL_WHEEL_DIST);

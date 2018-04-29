@@ -2,7 +2,7 @@ package com.team2502.robot2018;
 
 import com.ctre.phoenix.motion.TrajectoryPoint;
 import com.team2502.ctannotationprocessor.Undefined;
-import com.team2502.robot2018.pathplanning.purepursuit.Lookahead;
+import com.team2502.robot2018.pathplanning.purepursuit.LookaheadBounds;
 import com.team2502.robot2018.pathplanning.srxprofiling.ScheduledCommand;
 import com.team2502.robot2018.utils.InterpolationMap;
 import jaci.pathfinder.Trajectory;
@@ -53,8 +53,8 @@ public class Constants
         public static final float LOOKAHEAD_MAX_DISTANCE_FT = 5.5F;
         public static final float LOOKAHEAD_MIN_SPEED_FPS = 1F;
         public static final float LOOKAHEAD_MAX_SPEED_FPS = 10F;
-        public static final Lookahead LOOKAHEAD = new Lookahead(LOOKAHEAD_MIN_DISTANCE_FT, LOOKAHEAD_MAX_DISTANCE_FT,
-                                                                LOOKAHEAD_MIN_SPEED_FPS, LOOKAHEAD_MAX_SPEED_FPS);
+        public static final LookaheadBounds LOOKAHEAD = new LookaheadBounds(LOOKAHEAD_MIN_DISTANCE_FT, LOOKAHEAD_MAX_DISTANCE_FT,
+                                                                            LOOKAHEAD_MIN_SPEED_FPS, LOOKAHEAD_MAX_SPEED_FPS);
         public static final float STOP_DIST_TOLERANCE_FT = 1.5F; //TODO: completely remove tolerance
         // half of the width of the wheel that is in contact with the ground
         public static final float WHEEL_ROLLING_RADIUS_INCH = 1.5F;

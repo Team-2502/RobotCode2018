@@ -3,7 +3,7 @@ package com.team2502.robot2018.command.autonomous.ingredients;
 import com.team2502.robot2018.Constants;
 import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.pathplanning.purepursuit.ITankRobotBounds;
-import com.team2502.robot2018.pathplanning.purepursuit.Lookahead;
+import com.team2502.robot2018.pathplanning.purepursuit.LookaheadBounds;
 import com.team2502.robot2018.pathplanning.purepursuit.PurePursuitMovementStrategy;
 import com.team2502.robot2018.pathplanning.purepursuit.Waypoint;
 import edu.wpi.first.wpilibj.command.Command;
@@ -21,7 +21,7 @@ public class PurePursuitCommand extends Command
     private ITankRobotBounds tankRobot;
     private PurePursuitMovementStrategy purePursuitMovementStrategy;
     private List<Waypoint> waypoints;
-    private Lookahead lookahead;
+    private LookaheadBounds lookahead;
     private boolean drift;
     private boolean autoFirstPoint;
     private boolean forward;
@@ -52,7 +52,7 @@ public class PurePursuitCommand extends Command
      * @param lookahead Bean for max + min vel and accel
      * @param drift     If the robot should brake at the end or drift
      */
-    public PurePursuitCommand(List<Waypoint> waypoints, Lookahead lookahead, boolean drift, boolean forward)
+    public PurePursuitCommand(List<Waypoint> waypoints, LookaheadBounds lookahead, boolean drift, boolean forward)
     {
         this.autoFirstPoint = autoFirstPoint;
         this.drift = drift;
@@ -198,7 +198,7 @@ public class PurePursuitCommand extends Command
 
         private boolean forward = true;
         private boolean drift = false;
-        private Lookahead lookahead = Constants.PurePursuit.LOOKAHEAD;
+        private LookaheadBounds lookahead = Constants.PurePursuit.LOOKAHEAD;
         private List<Waypoint> waypoints = new ArrayList<>();
 
         public Builder addWaypoint(float x, float y, float maxSpeed, Command... commands)
@@ -225,7 +225,7 @@ public class PurePursuitCommand extends Command
             return this;
         }
 
-        public Builder setLookahead(Lookahead lookahead)
+        public Builder setLookahead(LookaheadBounds lookahead)
         {
             this.lookahead = lookahead;
             return this;
