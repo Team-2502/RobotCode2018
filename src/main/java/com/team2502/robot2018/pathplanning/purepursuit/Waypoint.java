@@ -9,27 +9,13 @@ import org.joml.ImmutableVector2f;
  * A human-entered waypoint that we want the robot to go to. Has parameters to set max speeds, acceleration and deceleration.
  * Also commands can be activated when the Waypoint is reached.
  */
-public class Waypoint
+public class Waypoint extends Point
 {
 
     private final float maxSpeed;
-    private ImmutableVector2f location;
     private Command[] commands;
     private float maxAccel;
     private float maxDeccel;
-
-//    /**
-//     * Make a new waypoint
-//     *
-//     * @param location  Location of the waypoint
-//     * @param maxSpeed  Max speed at the waypoint (in ft/s)
-//     * @param maxAccel  Max accel at the waypoint (in ft/s^2)
-//     * @param maxDeccel Max decel at the waypoint (in ft/s^2)
-//     */
-//    public Waypoint(ImmutableVector2f location, float maxSpeed, float maxAccel, float maxDeccel)
-//    {
-//        this(location, maxSpeed, maxAccel, maxDeccel);
-//    }
 
     /**
      * Make a new waypoint
@@ -42,7 +28,7 @@ public class Waypoint
      */
     public Waypoint(ImmutableVector2f location, float maxSpeed, float maxAccel, float maxDeccel, Command... commands)
     {
-        this.location = location;
+        super(location);
         this.maxSpeed = maxSpeed;
         this.maxAccel = maxAccel;
         this.commands = commands;
@@ -63,16 +49,6 @@ public class Waypoint
     public float getMaxSpeed()
     {
         return maxSpeed;
-    }
-
-    public ImmutableVector2f getLocation()
-    {
-        return location;
-    }
-
-    public void setLocation(ImmutableVector2f location)
-    {
-        this.location = location;
     }
 
     public Command[] getCommands()
@@ -105,7 +81,7 @@ public class Waypoint
     {
         return "Waypoint{" +
                "maxSpeed=" + maxSpeed +
-               ", location=" + location.x  +"," + location.y +
+               ", location=" + getLocation().x  +"," + getLocation().y +
                '}';
     }
 

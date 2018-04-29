@@ -3,10 +3,10 @@ package com.team2502.robot2018.pathplanning.purepursuit;
 import com.team2502.robot2018.Constants;
 import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.utils.MathUtils;
-import edu.wpi.first.wpilibj.DriverStation;
 import org.joml.ImmutableVector2f;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -24,28 +24,54 @@ public class Path
     private ImmutableVector2f closestPoint;
     private ImmutableVector2f robotLocationClosestPoint;
 
-    public Path(List<Waypoint> waypointList)
+    public Path(List<? extends Point> waypointList)
     {
-        DriverStation.reportError("waypointList = " + waypointList, false);
         pathSegments = new ArrayList<>();
         float distance = 0;
         for(int i = 0; i < waypointList.size() - 1; i++)
         {
-            Waypoint waypoint1 = waypointList.get(i);
-            Waypoint waypoint2 = waypointList.get(i + 1);
-            DriverStation.reportWarning("Waypoint 1: " + waypoint1.getLocation().toString(), false);
-            DriverStation.reportWarning("Waypoint 2: " + waypoint2.getLocation().toString(), false);
+            Point waypoint1 = waypointList.get(i);
+            Point waypoint2 = waypointList.get(i + 1);
             float length = waypoint1.getLocation().distance(waypoint2.getLocation());
             PathSegment pathSegment = new PathSegment(waypoint1, waypoint2, i == 0, i == waypointList.size() - 2, distance, distance += length, length);
             pathSegments.add(pathSegment);
         }
         moveNextSegment();
     }
+    private Path(){}
+
+    public static Path fromSegments(List<PathSegment> pathSegments)
+    {
+        Path path = new Path();
+        path.pathSegments = pathSegments;
+        path.moveNextSegment();
+        return path;
+    }
+
+    public static Path fromPoints(List<? extends Point> waypointList)
+    {
+        List<PathSegment> pathSegments = new ArrayList<>();
+        float distance = 0;
+        for(int i = 0; i < waypointList.size() - 1; i++)
+        {
+            Point waypoint1 = waypointList.get(i);
+            Point waypoint2 = waypointList.get(i + 1);
+            float length = waypoint1.getLocation().distance(waypoint2.getLocation());
+            PathSegment pathSegment = new PathSegment(waypoint1, waypoint2, i == 0, i == waypointList.size() - 2, distance, distance += length, length);
+            pathSegments.add(pathSegment);
+        }
+        return fromSegments(pathSegments);
+    }
+
+    public static Path fromPoints(Point... points)
+    {
+        return fromPoints(Arrays.asList(points));
+    }
 
     /**
      * @return If there are more segments
      */
-    boolean moveNextSegment()
+    public boolean moveNextSegment()
     {
         if(segmentOnI < pathSegments.size() - 1)
         {
@@ -61,7 +87,7 @@ public class Path
         return !pathSegments.isEmpty();
     }
 
-    ImmutableVector2f getClosestPoint(ImmutableVector2f origin) // TODO: it might be better to not look purely at the current pathsegment and instead previous path segments
+    public ImmutableVector2f getClosestPoint(ImmutableVector2f origin) // TODO: it might be better to not look purely at the current pathsegment and instead previous path segments
     {
         if(this.robotLocationClosestPoint != null && MathUtils.epsilonEquals(this.robotLocationClosestPoint, origin))
         {
@@ -75,23 +101,20 @@ public class Path
         return closestPoint;
     }
 
-    ImmutableVector2f getGoalPoint(float distanceLeftCurrentSegment, float lookahead)
+    public ImmutableVector2f getGoalPoint(float distanceLeftCurrentSegment, float lookahead)
     {
         PathSegment current = getCurrent();
         if(lookahead < distanceLeftCurrentSegment || current.isEnd())
         {
             float relativeDistance = current.getLength() - distanceLeftCurrentSegment + lookahead;
-            Robot.writeLog("look current segment ... relativeDist: %.2f", 200, relativeDistance);
             return current.getPoint(relativeDistance);
         }
         else
         {
-            Robot.writeLog("look non-current segment", 200);
             lookahead -= distanceLeftCurrentSegment;
 
             for(int i = segmentOnI + 1; i < pathSegments.size(); i++)
             {
-//                Robot.writeLog("checking segment {segmentOn %d}", 200, segmentOnI);
                 PathSegment pathSegment = pathSegments.get(i);
                 float length = pathSegment.getLength();
                 if(lookahead > length && !pathSegment.isEnd())
@@ -100,52 +123,48 @@ public class Path
                 }
                 else
                 {
-                    Robot.writeLog("path seg: "+pathSegment.toString()+" lookahead: "+lookahead,200);
                     return pathSegment.getPoint(lookahead);
                 }
             }
         }
-        Robot.writeLog("RETURNING NULL", 80);
         return null;
     }
 
-    boolean progressIfNeeded(float distanceLeft, float closestPointDist, ImmutableVector2f robotPos)
+    public boolean progressIfNeeded(float distanceLeftSegment, float closestPointDist, ImmutableVector2f robotPos)
     {
-        PathSegment pathSegment = getCurrent();
         PathSegment nextSegment = getNext();
         if(nextSegment == null) // we are on the last segment... we cannot progress
         {
             return false;
         }
 
-        ImmutableVector2f location = pathSegment.getLast().getLocation();
-        Robot.writeLog("distanceLeft: %.2f, segmentOnI: %d, point: (%.2f,%.2f)", 80, distanceLeft, segmentOnI, location.x, location.y);
         ImmutableVector2f closestPointNext = nextSegment.getClosestPoint(robotPos);
         float nextClosestPointDistance = closestPointNext.distance(robotPos);
         // TODO: add 0.5 as constant
-        if((distanceLeft < Constants.PurePursuit.DISTANCE_COMPLETE_SEGMENT_TOLERANCE) || closestPointDist > nextClosestPointDistance + 0.5F)
+        if((distanceLeftSegment < Constants.PurePursuit.DISTANCE_COMPLETE_SEGMENT_TOLERANCE) || closestPointDist > nextClosestPointDistance + 0.5F)
         {
-            Robot.writeLog("closestPointDist: %.2f, nCPD: %.2f, segmentI: %d, distanceLeft: %.2f", 200, closestPointDist, nextClosestPointDistance, segmentOnI, distanceLeft);
-            Robot.writeLog("pos: (%.2f, %.2f)", 200, robotPos.x, robotPos.y);
-            boolean moved = moveNextSegment();
-            Robot.writeLog("progressing: %b", 80, moved);
-            return moved;
+            return moveNextSegment();
         }
         return false;
     }
 
 
-    float getClosestPointPathDistance(ImmutableVector2f closestPoint)
+    public float getDistanceOfClosestPoint(ImmutableVector2f closestPoint)
     {
         PathSegment current = getCurrent();
         ImmutableVector2f firstLocation = current.getFirst().getLocation();
         return current.getAbsoluteDistanceStart() + firstLocation.distance(closestPoint);
     }
 
-    List<PathSegment> nextSegmentsInclusive(float maxAheadDistance)
+    /**
+     *
+     * @param maxAheadDistance The distance to look ahead from the last segment
+     * @return
+     */
+    public List<PathSegment> nextSegmentsInclusive(float maxAheadDistance)
     {
         List<PathSegment> segments = new ArrayList<>();
-        PathSegment startSegment = pathSegments.get(segmentOnI);
+        PathSegment startSegment = getCurrent();
         segments.add(startSegment);
         float distanceStart = startSegment.getAbsoluteDistanceEnd();
         for(int i = segmentOnI + 1; i < pathSegments.size(); i++)
@@ -163,12 +182,12 @@ public class Path
         return segments;
     }
 
-    PathSegment getCurrent()
+    public PathSegment getCurrent()
     {
         return segmentOn;
     }
 
-    PathSegment getNext()
+    public PathSegment getNext()
     {
         int nextSegmentI = segmentOnI + 1;
         if(nextSegmentI >= pathSegments.size())
@@ -179,14 +198,25 @@ public class Path
         return nextSegment;
     }
 
-    Waypoint getStart()
+    public Point getStart()
     {
         return pathSegments.get(0).getFirst();
     }
 
-    Waypoint getEnd()
+    public Point getEnd()
     {
         return pathSegments.get(pathSegments.size() - 1).getLast();
     }
 
+    @Override
+    public Path clone()
+    {
+        Path path = new Path();
+        path.pathSegments = pathSegments;
+        path.segmentOn = segmentOn;
+        path.segmentOnI = segmentOnI;
+        path.closestPoint = closestPoint;
+        path.robotLocationClosestPoint = robotLocationClosestPoint;
+        return path;
+    }
 }

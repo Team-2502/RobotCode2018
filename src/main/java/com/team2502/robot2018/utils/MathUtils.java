@@ -804,7 +804,7 @@ public final class MathUtils
          * @param robotPos   The point at which our robot is
          * @return The point on the line closest to the robot
          */
-        public static ImmutableVector2f getClosestPoint(ImmutableVector2f linePointA, ImmutableVector2f linePointB, ImmutableVector2f robotPos)
+        public static ImmutableVector2f getClosestPointLineSegments(ImmutableVector2f linePointA, ImmutableVector2f linePointB, ImmutableVector2f robotPos)
         {
 
             double d1 = Math.hypot(linePointA.x - robotPos.x, linePointA.y - robotPos.y);

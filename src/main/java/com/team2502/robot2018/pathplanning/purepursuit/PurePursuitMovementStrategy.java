@@ -211,7 +211,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
     private void updateForNewSegment()
     {
         PathSegment current = path.getCurrent();
-        Waypoint currentWaypoint = current.getFirst();
+        Waypoint currentWaypoint = (Waypoint) current.getFirst();
 
         if(currentWaypoint != null)
         {
@@ -237,7 +237,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         float pathSegmentLength = current.getLength();
 
         closestPoint = path.getClosestPoint(usedEstimatedLocation);
-        float closestPointPathDistance = path.getClosestPointPathDistance(closestPoint);
+        float closestPointPathDistance = path.getDistanceOfClosestPoint(closestPoint);
         ImmutableVector2f distanceClosestPoint = usedEstimatedLocation.sub(closestPoint);
 
         float distanceAlongPath = closestPointPathDistance - current.getAbsoluteDistanceStart();
@@ -280,7 +280,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         // Looks within 15 feet ahead
         for(PathSegment pathSegment : path.nextSegmentsInclusive(15))
         {
-            Waypoint last = pathSegment.getLast();
+            Waypoint last = (Waypoint) pathSegment.getLast();
             float distanceTo = pathSegment.getAbsoluteDistanceEnd() - closestPointPathDistance;
             float maxSpeed = getMaxSpeed(last.getMaxSpeed(), distanceTo, true, waypointEnd.getMaxAccel(), waypointEnd.getMaxDeccel());
 

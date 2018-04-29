@@ -8,8 +8,8 @@ import org.joml.ImmutableVector2f;
  */
 public class PathSegment
 {
-    private final Waypoint first;
-    private final Waypoint last;
+    private final Point first;
+    private final Point last;
     private final float length;
     private final boolean end;
     private final boolean start;
@@ -18,7 +18,7 @@ public class PathSegment
     private final ImmutableVector2f dPos;
     private final ImmutableVector2f startLocation;
 
-    protected PathSegment(Waypoint first, Waypoint last, boolean start, boolean end, float distanceStart, float distanceEnd, float length)
+    protected PathSegment(Point first, Point last, boolean start, boolean end, float distanceStart, float distanceEnd, float length)
     {
         this.first = first;
         this.last = last;
@@ -33,7 +33,7 @@ public class PathSegment
 
     public ImmutableVector2f getClosestPoint(ImmutableVector2f robotPos)
     {
-        return MathUtils.Geometry.getClosestPoint(first.getLocation(), last.getLocation(), robotPos);
+        return MathUtils.Geometry.getClosestPointLineSegments(first.getLocation(), last.getLocation(), robotPos);
     }
 
     public ImmutableVector2f getPoint(float relativeDistance)
@@ -106,12 +106,12 @@ public class PathSegment
         return start;
     }
 
-    public Waypoint getFirst()
+    public Point getFirst()
     {
         return first;
     }
 
-    public Waypoint getLast()
+    public Point getLast()
     {
         return last;
     }
