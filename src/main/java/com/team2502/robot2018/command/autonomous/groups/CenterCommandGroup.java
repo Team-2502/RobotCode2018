@@ -59,20 +59,29 @@ public class CenterCommandGroup extends CommandGroup
         addSequential(new SRXProfilingCommand(NO_COMMANDS,
                                               1,
                                               TrajConfig.Center.firstCubeRightSwitch),
-                      3);
+                      30);
         emitCubeSwitch();
-
-//        addParallel(new ToggleIntakeCommand());
-
-
-        addSequential(new SRXProfilingCommand(new ScheduledCommand[]{new ScheduledCommand(1, new ElevatorAutonCommand(2, 0)),
-                                                                     new ScheduledCommand(2.5, new RunIntakeCommand(2.5, -1)),
-                                                                     new ScheduledCommand(5, new RaiseElevatorSwitch()),},
-                                              (double) 1,
-                                              TrajConfig.Center.secondCubeRightSwitch),
-                      11.5);
-
-        emitCubeSwitch();
+//
+////        addParallel(new ToggleIntakeCommand());
+//
+//        addParallel(new ScheduledCommand(1, new ElevatorLowerCommand()));
+//        addSequential(new SRXProfilingCommand(NO_COMMANDS,
+//                                              -1,
+//                                              TrajConfig.Center.firstCubeRightSwitch),
+//                      3);
+//
+//        addParallel(new RunIntakeCommand(2.5, -1));
+//        addSequential(new SRXProfilingCommand(NO_COMMANDS, 1, TrajConfig.Center.Right.forwardToCube));
+//        addSequential(new SRXProfilingCommand(NO_COMMANDS, -1, TrajConfig.Center.Right.forwardToCube));
+//
+//        moveElevator();
+////        addSequential(new PurePursuitCommand(PathConfig.Center.rightSwitch, true));
+//        // Just in case . .
+//        addSequential(new SRXProfilingCommand(NO_COMMANDS,
+//                                              1,
+//                                              TrajConfig.Center.firstCubeRightSwitch),
+//                      3);
+//        emitCubeSwitch();
     }
 
     private void goSwitchRightUnified()
