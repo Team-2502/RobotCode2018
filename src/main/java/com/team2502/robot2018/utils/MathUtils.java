@@ -32,7 +32,7 @@ public final class MathUtils
 
     public static final float PI_F = (float) Math.PI;
 
-    public static final ImmutableVector2f VECTOR_STRAIGHT = new ImmutableVector2f(0, 1);
+    public static final ImmutableVector2f VECTOR_STRAIGHT = new ImmutableVector2f(1, 0);
 
     /**
      * A table of sin values computed from 0 (inclusive) to 2π (exclusive), with steps of 2π / 65536.
@@ -44,8 +44,7 @@ public final class MathUtils
 
     }
 
-    public static void init()
-    {
+    static {
         for(int i = 0; i < 65536; ++i) { SIN_TABLE[i] = (float) Math.sin(((double) i) * Math.PI * 2.0D / 65536.0D); }
 
         SIN_TABLE[0] = 0;       /* 0π */
@@ -53,6 +52,9 @@ public final class MathUtils
         SIN_TABLE[32768] = 0;   /* 2π */
         SIN_TABLE[49152] = -1;  /* 3π/2 */
     }
+
+    public static void init()
+    {}
 
     public static float shiftRadiansBounded(float initRadians, float shift)
     {
@@ -526,8 +528,9 @@ public final class MathUtils
         {
             float sin = sin(theta);
             float cos = cos(theta);
-            return new ImmutableVector2f((vector.get(0) * cos - vector.get(1) * sin),
-                                         (vector.get(0) * sin + vector.get(1) * cos));
+            ImmutableVector2f immutableVector2f = new ImmutableVector2f((vector.get(0) * cos - vector.get(1) * sin),
+                                                                        (vector.get(0) * sin + vector.get(1) * cos));
+            return immutableVector2f;
         }
 
         public static ImmutableVector2f absoluteToRelativeCoord(ImmutableVector2f coordinateAbsolute, ImmutableVector2f robotCoordAbs, float robotHeading)
@@ -652,7 +655,7 @@ public final class MathUtils
             if(Math.abs(vL - vR) <= (vL + vR) * 1E-2)
             {
                 // Probably average is not needed, but it may be useful over long distances
-                return new ImmutableVector2f(0, (vL + vR) / 2F * dt);
+                return new ImmutableVector2f((vL + vR) / 2F * dt, 0);
             }
             float w = getAngularVel(vL, vR, l);
             float dTheta = w * dt;
@@ -691,12 +694,12 @@ public final class MathUtils
         public static ImmutableVector2f getAbsoluteDPosCurve(float vL, float vR, float l, float dt, float robotHeading)
         {
             ImmutableVector2f relativeDPos = getRelativeDPosCurve(vL, vR, l, dt);
-            ImmutableVector2f rotated = MathUtils.LinearAlgebra.rotate2D(relativeDPos, robotHeading);
-            return rotated;
+            System.out.println("vL = [" + vL + "], vR = [" + vR + "], l = [" + l + "], dt = [" + dt + "], robotHeading = [" + robotHeading + "]");
+            return LinearAlgebra.rotate2D(relativeDPos, robotHeading);
         }
 
         /**
-         * Turn NavX angle into radians
+         * Turn NavX angle into radians (navX 0 degrees is facing (0,1) ... increases CW)
          *
          * @param yawDegTot What the NavX is reading
          * @return The angle in radians, between 0 and 2pi.
@@ -704,7 +707,7 @@ public final class MathUtils
 
         public static double navXToRad(double yawDegTot)
         {
-            double yawDeg = yawDegTot % 360;
+            double yawDeg = -yawDegTot % 360;
             if(yawDeg < 0) { yawDeg = 360 + yawDeg; }
             return MathUtils.deg2Rad(yawDeg);
         }

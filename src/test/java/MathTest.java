@@ -64,12 +64,18 @@ public class MathTest
         Assert.assertEquals(Math.sqrt(1/2F),dPos.y, 0.001);
     }
 
-    @Test //fail
+    @Test
     public void navXToRad()
     {
         // TODO: returns cw radians not ccw I think
         double rad = MathUtils.Kinematics.navXToRad(270);
 
+        Assert.assertEquals(Math.PI/2F,rad, 0.001);
+
+        rad = MathUtils.Kinematics.navXToRad(270+360);
+        Assert.assertEquals(Math.PI/2F,rad, 0.001);
+
+        rad = MathUtils.Kinematics.navXToRad(270-360);
         Assert.assertEquals(Math.PI/2F,rad, 0.001);
     }
 

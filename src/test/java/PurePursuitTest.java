@@ -107,7 +107,7 @@ public class PurePursuitTest
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testLookaheadIllegalArg()
+    public void testLookaheadIllegalArgNegCP()
     {
         LookaheadBounds lookahead = new LookaheadBounds(2, 4, 2, 5);
         assertEquals(5, generateLookahead(lookahead, 5F, -1), 1E-6);
