@@ -36,6 +36,11 @@ public class Waypoint extends Point
         this.maxDeccel = maxDeccel;
     }
 
+    public Waypoint(float x, float y, float maxSpeed, float maxAccel, float maxDeccel, Command... commands)
+    {
+        this(new ImmutableVector2f(x,y),maxSpeed,maxAccel,maxDeccel,commands);
+    }
+
     public float getMaxDeccel()
     {
         return maxDeccel;

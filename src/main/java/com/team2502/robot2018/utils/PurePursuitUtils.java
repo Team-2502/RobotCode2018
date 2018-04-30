@@ -22,13 +22,30 @@ public class PurePursuitUtils
      */
     public static float generateLookahead(LookaheadBounds lookahead, float robotTangentialVelocity, float closestPointDistance)
     {
+        if(closestPointDistance < 0)
+        {
+            throw new IllegalArgumentException("Closest point cannot have negative distance!");
+        }
         float lookaheadForSpeed = lookahead.getLookaheadForSpeed(robotTangentialVelocity);
 
         return lookaheadForSpeed + closestPointDistance;
     }
 
-    public static float generateSpeedUsed(float closestPointDistAbsAlongPath, float lastWaypointSpeed, float cycleTime, Path path)
+    /**
+     *
+     * @param positionOnPath often the distance along the path the closest point is
+     * @param speedAtLastWaypoint
+     * @param cycleTime
+     * @param path
+     * @return
+     */
+    public static float generateSpeedUsed(float positionOnPath, float speedAtLastWaypoint, float cycleTime, Path path)
     {
+        float start = path.getCurrent().getAbsoluteDistanceStart();
+        if(start > positionOnPath)
+        {
+            throw new IllegalArgumentException("Looking behind on path");
+        }
         Waypoint waypointEnd = (Waypoint) path.getCurrent().getLast();
         float finalSpeed = waypointEnd.getMaxSpeed();
 
@@ -38,8 +55,12 @@ public class PurePursuitUtils
         for(PathSegment pathSegment : path.nextSegmentsInclusive(15))
         {
             Waypoint last = (Waypoint) pathSegment.getLast();
-            float distanceTo = pathSegment.getAbsoluteDistanceEnd() - closestPointDistAbsAlongPath;
-            float maxSpeed = getMaxSpeed(lastWaypointSpeed, last.getMaxSpeed(), distanceTo, waypointEnd.getMaxDeccel());
+            float distanceTo = pathSegment.getAbsoluteDistanceEnd() - positionOnPath;
+            if(distanceTo < 0)
+            {
+                throw new IllegalArgumentException("Path should have progressed (looking ahead on path)");
+            }
+            float maxSpeed = getMaxSpeed(speedAtLastWaypoint, last.getMaxSpeed(), distanceTo, waypointEnd.getMaxDeccel());
 
             if(maxSpeed < speed)
             {
@@ -47,15 +68,15 @@ public class PurePursuitUtils
             }
         }
 
-        if(speed < lastWaypointSpeed)
+        if(speed < speedAtLastWaypoint)
         {
             return speed;
         }
-        else if((finalSpeed > 0 && finalSpeed > lastWaypointSpeed) || (finalSpeed < 0 && finalSpeed < lastWaypointSpeed))
+        else if((finalSpeed > 0 && finalSpeed > speedAtLastWaypoint) || (finalSpeed < 0 && finalSpeed < speedAtLastWaypoint))
         {
-            return  MathUtils.minF(finalSpeed, lastWaypointSpeed + cycleTime * waypointEnd.getMaxAccel());
+            return  MathUtils.minF(finalSpeed, speedAtLastWaypoint + cycleTime * waypointEnd.getMaxAccel());
         }
-        return Float.NaN;
+        return speedAtLastWaypoint;
     }
 
     private static float getMaxSpeed(float initSpeed, float finalSpeed,float distanceLeft, float currentMaxDeccel)
@@ -68,7 +89,8 @@ public class PurePursuitUtils
 
     public static ImmutableVector2f calculateWheelVelocities(float curvature, float lateralWheelDistance, float speedUsed)
     {
-//        float curvature = calcCurvatureToGoal();
+
+        float lateralWheelDistTwice = lateralWheelDistance*2F;
         ImmutableVector2f bestVector = null;
 
         float v_lMax = speedUsed;
@@ -78,7 +100,7 @@ public class PurePursuitUtils
 
         if(Math.abs(curvature) < THRESHOLD_CURVATURE) // if we are a straight line ish (lines are not curvy -> low curvature)
         {
-            bestVector = new ImmutableVector2f(v_lMax, v_rMax);
+            return new ImmutableVector2f(v_lMax, v_rMax);
 //            rotVelocity = (bestVector.get(1) - bestVector.get(0)) / tankRobot.getLateralWheelDistance();
 //            motionRadius = Float.MAX_VALUE;
 //            leftWheelTanVel = bestVector.get(0);
@@ -88,8 +110,17 @@ public class PurePursuitUtils
         }
         else // if we need to go in a circle
         {
-            float c = 2 / (lateralWheelDistance * curvature);
-            float velLeftToRightRatio = -(c + 1) / (1 - c); // an equation pulled out of some paper probably
+
+            // Formula for differential drive radius of cricle
+            // r = L/2 * (vl + vr)/(vr - vl)
+            // 2(vr - vl) * r = L(vl + vr)
+            // L*vl + L*vr - 2r*vr + 2r*vl = 0
+            // vl(L+2r) + vr(L-2r) = 0
+            // vl(L+2r) = -vr(L-2r)
+            // vl/vr = -(L+2r)/(L-2r)
+            float r = 1/curvature;
+
+            float velLeftToRightRatio = -(lateralWheelDistance + 2*r)/(lateralWheelDistance - 2*r);
             float velRightToLeftRatio = 1 / velLeftToRightRatio; // invert the ratio
 
             // This first big repetitive section is just finding the largest possible velocities while maintaining a ratio.
@@ -152,7 +183,7 @@ public class PurePursuitUtils
     }
 
     /***
-     * @return The curvature (1/radius) to the goal point
+     * @return The curvature (1/radius) to the goal point ... positive when CCW
      */
     public static float calculateCurvature(ImmutableVector2f relativeGoalPoint)
     {
