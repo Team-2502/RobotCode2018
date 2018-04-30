@@ -64,21 +64,21 @@ public class SimulatorTest
     }
 
     @Test
-    public void testPPLeftStraightScale()
+    public void testLeft()
     {
         testPath(PathConfig.Left.leftScale);
-    }
-
-    @Test
-    public void testPPLeftCCScale()
-    {
         testPath(PathConfig.Left.rightScale);
+        testPath(PathConfig.Left.leftSwitch);
+        testPath(PathConfig.Left.leftScaleDeepNullZone);
+        testPath(PathConfig.Left.leftScaleToSwitch);
+        testPath(PathConfig.Left.leftSwitchToScale);
     }
 
 
 
     private void testPath(List<Waypoint> pathToTest)
     {
+        System.out.println("start: "+pathToTest);
         List<Waypoint> path = new ArrayList<>();
         for(Waypoint waypoint : pathToTest)
         {
@@ -101,7 +101,6 @@ public class SimulatorTest
             ImmutableVector2f wheelVels = purePursuitMovementStrategy.getWheelVelocities();
             simulatedRobot.runMotorsVel(wheelVels.x,wheelVels.y);
             simulatorLocationEstimator.update();
-            System.out.println("EL: "+simulatorLocationEstimator.estimateLocation());
         }
         Assert.assertTrue(isSuccess(simulatorLocationEstimator.estimateLocation(),path));
     }

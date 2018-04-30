@@ -63,7 +63,6 @@ public class PurePursuitUtils
                 // TODO: fix this... kinda jank
                 if(distanceTo < -0.5)
                 {
-                    System.out.println("distanceTo = " + distanceTo);
                     throw new IllegalArgumentException("Path should have progressed (looking ahead on path)");
                 }
                 else
