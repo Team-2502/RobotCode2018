@@ -12,7 +12,7 @@ public class SimulatorLocationEstimator implements ITranslationalLocationEstimat
 
     private final SimulatedRobot simulatedRobot;
 
-    private float heading = MathUtils.PI_F/2;
+    private float heading = 0F;
     private ImmutableVector2f location = new ImmutableVector2f();
     private ImmutableVector2f velocity = new ImmutableVector2f();
     private IStopwatch stopwatch;

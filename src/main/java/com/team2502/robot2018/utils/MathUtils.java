@@ -32,7 +32,7 @@ public final class MathUtils
 
     public static final float PI_F = (float) Math.PI;
 
-    public static final ImmutableVector2f VECTOR_STRAIGHT = new ImmutableVector2f(1, 0);
+    public static final ImmutableVector2f VECTOR_STRAIGHT = new ImmutableVector2f(0, 1);
 
     /**
      * A table of sin values computed from 0 (inclusive) to 2π (exclusive), with steps of 2π / 65536.
@@ -529,17 +529,13 @@ public final class MathUtils
         {
             float sin = sin(theta);
             float cos = cos(theta);
-            ImmutableVector2f immutableVector2f = new ImmutableVector2f((vector.get(0) * cos - vector.get(1) * sin),
-                                                                        (vector.get(0) * sin + vector.get(1) * cos));
-            return immutableVector2f;
+            return new ImmutableVector2f((vector.get(0) * cos - vector.get(1) * sin),
+                                         (vector.get(0) * sin + vector.get(1) * cos));
         }
 
         public static ImmutableVector2f absoluteToRelativeCoord(ImmutableVector2f coordinateAbsolute, ImmutableVector2f robotCoordAbs, float robotHeading)
         {
-            // TODO: is this proper?
-            float adjHeading = (robotHeading - PI_F/2);
-            ImmutableVector2f toReturn = rotate2D(coordinateAbsolute.sub(robotCoordAbs), adjHeading);
-            return toReturn;
+            return rotate2D(coordinateAbsolute.sub(robotCoordAbs), -robotHeading);
         }
     }
 
@@ -661,7 +657,7 @@ public final class MathUtils
             if(Math.abs(vL - vR) <= (vL + vR) * 1E-2)
             {
                 // Probably average is not needed, but it may be useful over long distances
-                return new ImmutableVector2f((vL + vR) / 2F * dt, 0);
+                return new ImmutableVector2f(0, (vL + vR) / 2F * dt);
             }
             float w = getAngularVel(vL, vR, l);
             float dTheta = w * dt;
@@ -671,7 +667,7 @@ public final class MathUtils
             float dxRelative = -r * (1 - MathUtils.cos(-dTheta));
             float dyRelative = -r * MathUtils.sin(-dTheta);
 
-            return new ImmutableVector2f(dyRelative, dxRelative);
+            return new ImmutableVector2f(dxRelative, dyRelative);
         }
 
         public static float getTangentialSpeed(float wheelL, float wheelR)

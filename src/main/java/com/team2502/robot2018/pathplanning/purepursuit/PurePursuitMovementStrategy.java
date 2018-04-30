@@ -255,7 +255,6 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         usedCurvature = PurePursuitUtils.calculateCurvature(relativeGoalPoint);
         wheelVelocities = PurePursuitUtils.calculateWheelVelocities(usedCurvature,tankRobot.getLateralWheelDistance(),speedUsed);
 
-        float deg = usedHeading * 180/MathUtils.PI_F;
         if(path.progressIfNeeded(distanceLeft, dCP, usedEstimatedLocation))
         {
             updateForNewSegment();

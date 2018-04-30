@@ -44,6 +44,8 @@ public class PurePursuitUtils
         float start = path.getCurrent().getAbsoluteDistanceStart();
         if(start > positionOnPath)
         {
+            System.out.println("start = " + start);
+            System.out.println("positionOnPath = " + positionOnPath);
             throw new IllegalArgumentException("Looking behind on path");
         }
         Waypoint waypointEnd = (Waypoint) path.getCurrent().getLast();
@@ -58,7 +60,16 @@ public class PurePursuitUtils
             float distanceTo = pathSegment.getAbsoluteDistanceEnd() - positionOnPath;
             if(distanceTo < 0)
             {
-                throw new IllegalArgumentException("Path should have progressed (looking ahead on path)");
+                // TODO: fix this... kinda jank
+                if(distanceTo < -0.5)
+                {
+                    System.out.println("distanceTo = " + distanceTo);
+                    throw new IllegalArgumentException("Path should have progressed (looking ahead on path)");
+                }
+                else
+                {
+                    distanceTo = 0;
+                }
             }
             float maxSpeed = getMaxSpeed(speedAtLastWaypoint, last.getMaxSpeed(), distanceTo, waypointEnd.getMaxDeccel());
 
