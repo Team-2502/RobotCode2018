@@ -41,7 +41,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
      * If the robot should brake at the end or drift at the end
      */
     private final boolean driftAtEnd;
-    private final IStopwatch stopwatch;
+    private IStopwatch stopwatch;
 
     /**
      * Someone who knows where we are
@@ -154,6 +154,11 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         stopwatch = new RealStopwatch();
     }
 
+    public void setStopwatch(IStopwatch stopwatch)
+    {
+        this.stopwatch = stopwatch;
+    }
+
     /**
      * @return The absolute location of the selected goal point.
      * The goal point is a point on the path 1 lookahead distance away from us.
@@ -250,6 +255,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         usedCurvature = PurePursuitUtils.calculateCurvature(relativeGoalPoint);
         wheelVelocities = PurePursuitUtils.calculateWheelVelocities(usedCurvature,tankRobot.getLateralWheelDistance(),speedUsed);
 
+        float deg = usedHeading * 180/MathUtils.PI_F;
         if(path.progressIfNeeded(distanceLeft, dCP, usedEstimatedLocation))
         {
             updateForNewSegment();

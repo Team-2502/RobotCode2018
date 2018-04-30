@@ -77,7 +77,24 @@ public class PathSegment
     {
         float firstX = this.first.getLocation().x;
         float lastX = this.last.getLocation().x;
-        return length*(1 - (point.x - firstX) / (lastX - firstX));
+        if(firstX - lastX != 0)
+        {
+            return length*(1 - (point.x - firstX) / (lastX - firstX));
+        }
+        else
+        {
+            float firstY = this.first.getLocation().y;
+            float lastY = this.last.getLocation().y;
+            if(firstY - lastY != 0)
+            {
+                return length*(1 - (point.y - firstY) / (lastY - firstY));
+            }
+            else
+            {
+                System.out.println(this);
+                throw new IllegalArgumentException("line segment cannot be a point!");
+            }
+        }
     }
 
     public boolean isPast(ImmutableVector2f point)

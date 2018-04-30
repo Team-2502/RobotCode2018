@@ -44,7 +44,8 @@ public final class MathUtils
 
     }
 
-    static {
+    static
+    {
         for(int i = 0; i < 65536; ++i) { SIN_TABLE[i] = (float) Math.sin(((double) i) * Math.PI * 2.0D / 65536.0D); }
 
         SIN_TABLE[0] = 0;       /* 0π */
@@ -534,7 +535,12 @@ public final class MathUtils
         }
 
         public static ImmutableVector2f absoluteToRelativeCoord(ImmutableVector2f coordinateAbsolute, ImmutableVector2f robotCoordAbs, float robotHeading)
-        { return rotate2D(coordinateAbsolute.sub(robotCoordAbs), -robotHeading); }
+        {
+            // TODO: is this proper?
+            float adjHeading = (robotHeading - PI_F/2);
+            ImmutableVector2f toReturn = rotate2D(coordinateAbsolute.sub(robotCoordAbs), adjHeading);
+            return toReturn;
+        }
     }
 
     /**
@@ -665,7 +671,7 @@ public final class MathUtils
             float dxRelative = -r * (1 - MathUtils.cos(-dTheta));
             float dyRelative = -r * MathUtils.sin(-dTheta);
 
-            return new ImmutableVector2f(dxRelative, dyRelative);
+            return new ImmutableVector2f(dyRelative, dxRelative);
         }
 
         public static float getTangentialSpeed(float wheelL, float wheelR)

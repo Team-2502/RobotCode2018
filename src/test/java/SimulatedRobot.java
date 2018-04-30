@@ -1,6 +1,7 @@
+import com.team2502.robot2018.pathplanning.purepursuit.ITankRobotBounds;
 import org.joml.ImmutableVector2f;
 
-public class SimulatedRobot
+public class SimulatedRobot implements ITankRobotBounds
 {
 
     public static final float MAX_VEL = 16F;
@@ -70,11 +71,12 @@ public class SimulatedRobot
 
     private float runMotorVoltage(float percentVoltage, float currentVoltage)
     {
-        if(percentVoltage -currentVoltage < -VOLTAGE_CHANGE_MAX)
+        float dif = percentVoltage - currentVoltage;
+        if(dif < -VOLTAGE_CHANGE_MAX)
         {
             percentVoltage= currentVoltage-VOLTAGE_CHANGE_MAX;
         }
-        else if(percentVoltage - currentVoltage > VOLTAGE_CHANGE_MAX)
+        else if(dif > VOLTAGE_CHANGE_MAX)
         {
             percentVoltage=currentVoltage+VOLTAGE_CHANGE_MAX;
         }

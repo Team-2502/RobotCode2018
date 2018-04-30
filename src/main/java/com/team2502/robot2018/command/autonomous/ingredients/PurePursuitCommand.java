@@ -64,58 +64,6 @@ public class PurePursuitCommand extends Command
         tankRobot = new ITankRobotBounds()
         {
             /**
-             * @return The max velocity the right wheels can travel
-             */
-            @Override
-            public float getV_rMax()
-            { return Float.NaN; } // Not used in PurePursuitMovementStrategy
-
-            @Override
-            public float getA_rMax()
-            {
-                return Float.NaN;
-            }
-
-            /**
-             * @return The max velocity the left wheels can travel
-             */
-            @Override
-            public float getV_lMax()
-            { return Float.NaN; }
-
-            @Override
-            public float getA_lMax()
-            {
-                return Float.NaN;
-            }
-
-            /**
-             * @return The min velocity the left wheels can travel
-             */
-            @Override
-            public float getV_lMin()
-            { return Float.NaN; }
-
-            @Override
-            public float getA_lMin()
-            {
-                return Float.NaN;
-            }
-
-            /**
-             * @return The min velocity the right wheels can travel
-             */
-            @Override
-            public float getV_rMin()
-            { return Float.NaN; }
-
-            @Override
-            public float getA_rMin()
-            {
-                return Float.NaN;
-            }
-
-            /**
              * @return The lateral distance between wheels
              */
             @Override
