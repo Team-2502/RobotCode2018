@@ -2,7 +2,8 @@ package com.team2502.robot2018.pathplanning.localization;
 
 import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.utils.MathUtils;
-import com.team2502.robot2018.utils.Stopwatch;
+import com.team2502.robot2018.utils.IStopwatch;
+import com.team2502.robot2018.utils.RealStopwatch;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.joml.ImmutableVector2f;
 
@@ -15,7 +16,7 @@ public class EncoderDifferentialDriveLocationEstimator implements ITranslational
 {
     private ImmutableVector2f location;
     private IRotationalLocationEstimator rotEstimator;
-    private Stopwatch stopwatch;
+    private IStopwatch stopwatch;
 
     /**
      * Make a new position estimator
@@ -25,7 +26,7 @@ public class EncoderDifferentialDriveLocationEstimator implements ITranslational
     public EncoderDifferentialDriveLocationEstimator(IRotationalLocationEstimator rotEstimator)
     {
         location = new ImmutableVector2f(0F, 0F);
-        stopwatch = new Stopwatch();
+        stopwatch = new RealStopwatch();
         this.rotEstimator = rotEstimator;
     }
 

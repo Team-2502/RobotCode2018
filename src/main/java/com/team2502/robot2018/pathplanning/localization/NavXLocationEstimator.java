@@ -16,6 +16,9 @@ public class NavXLocationEstimator implements IRotationalLocationEstimator, ITra
     double initHeading;
     ImmutableVector2f initPosition;
 
+    // TODO: Need to fix to have pi/2 init heading
+
+
     /**
      * Make a new estimator for our angle
      */

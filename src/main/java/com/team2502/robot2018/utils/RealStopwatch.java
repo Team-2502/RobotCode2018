@@ -3,7 +3,7 @@ package com.team2502.robot2018.utils;
 /**
  * A handy stopwatch for recording time in seconds every time it is polled
  */
-public class Stopwatch
+public class RealStopwatch implements IStopwatch
 {
     private long lastTime = -1;
 

@@ -6,7 +6,8 @@ import com.team2502.robot2018.pathplanning.localization.ITranslationalLocationEs
 import com.team2502.robot2018.pathplanning.localization.ITranslationalVelocityEstimator;
 import com.team2502.robot2018.utils.MathUtils;
 import com.team2502.robot2018.utils.PurePursuitUtils;
-import com.team2502.robot2018.utils.Stopwatch;
+import com.team2502.robot2018.utils.IStopwatch;
+import com.team2502.robot2018.utils.RealStopwatch;
 import org.joml.ImmutableVector2f;
 
 import java.util.List;
@@ -40,7 +41,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
      * If the robot should brake at the end or drift at the end
      */
     private final boolean driftAtEnd;
-    private final Stopwatch stopwatch;
+    private final IStopwatch stopwatch;
 
     /**
      * Someone who knows where we are
@@ -150,7 +151,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         this.driftAtEnd = driftAtEnd;
         lastWaypointSpeed = waypoints.get(0).getMaxSpeed();
         speedUsed = lastWaypointSpeed;
-        stopwatch = new Stopwatch();
+        stopwatch = new RealStopwatch();
     }
 
     /**

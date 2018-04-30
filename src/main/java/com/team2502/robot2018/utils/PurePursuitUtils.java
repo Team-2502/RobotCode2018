@@ -90,7 +90,6 @@ public class PurePursuitUtils
     public static ImmutableVector2f calculateWheelVelocities(float curvature, float lateralWheelDistance, float speedUsed)
     {
 
-        float lateralWheelDistTwice = lateralWheelDistance*2F;
         ImmutableVector2f bestVector = null;
 
         float v_lMax = speedUsed;

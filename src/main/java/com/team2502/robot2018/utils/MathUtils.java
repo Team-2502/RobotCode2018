@@ -694,7 +694,6 @@ public final class MathUtils
         public static ImmutableVector2f getAbsoluteDPosCurve(float vL, float vR, float l, float dt, float robotHeading)
         {
             ImmutableVector2f relativeDPos = getRelativeDPosCurve(vL, vR, l, dt);
-            System.out.println("vL = [" + vL + "], vR = [" + vR + "], l = [" + l + "], dt = [" + dt + "], robotHeading = [" + robotHeading + "]");
             return LinearAlgebra.rotate2D(relativeDPos, robotHeading);
         }
 

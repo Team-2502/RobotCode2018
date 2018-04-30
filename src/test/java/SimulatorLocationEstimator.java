@@ -2,7 +2,8 @@ import com.team2502.robot2018.pathplanning.localization.IRotationalLocationEstim
 import com.team2502.robot2018.pathplanning.localization.ITranslationalLocationEstimator;
 import com.team2502.robot2018.pathplanning.localization.ITranslationalVelocityEstimator;
 import com.team2502.robot2018.utils.MathUtils;
-import com.team2502.robot2018.utils.Stopwatch;
+import com.team2502.robot2018.utils.IStopwatch;
+import com.team2502.robot2018.utils.SimulatedStopwatch;
 import org.joml.ImmutableVector2f;
 
 //TODO: WIP
@@ -11,15 +12,15 @@ public class SimulatorLocationEstimator implements ITranslationalLocationEstimat
 
     private final SimulatedRobot simulatedRobot;
 
-    private float heading = 0;
+    private float heading = MathUtils.PI_F/2;
     private ImmutableVector2f location = new ImmutableVector2f();
     private ImmutableVector2f velocity = new ImmutableVector2f();
-    private Stopwatch stopwatch;
+    private IStopwatch stopwatch;
 
     public SimulatorLocationEstimator(SimulatedRobot simulatedRobot)
     {
         this.simulatedRobot = simulatedRobot;
-        stopwatch = new Stopwatch();
+        this.stopwatch = new SimulatedStopwatch(0.02F); // each 20ms
     }
 
     public void update()
@@ -27,9 +28,11 @@ public class SimulatorLocationEstimator implements ITranslationalLocationEstimat
         float time = stopwatch.pop();
         float leftVel = simulatedRobot.getLeftVel();
         float rightVel = simulatedRobot.getRightVel();
+        velocity = MathUtils.LinearAlgebra.rotate2D(new ImmutableVector2f(leftVel,rightVel),heading);
         float angularVel = MathUtils.Kinematics.getAngularVel(leftVel, rightVel, SimulatedRobot.LATERAL_WHEEL_DIST);
         heading+=angularVel*time;
-        MathUtils.Kinematics.getAbsoluteDPosCurve(leftVel,rightVel,simulatedRobot.getLateralWheelDistance(),time,heading);
+        ImmutableVector2f dPos = MathUtils.Kinematics.getAbsoluteDPosCurve(leftVel, rightVel, simulatedRobot.getLateralWheelDistance(), time, heading);
+        location = location.add(dPos);
     }
 
     @Override
@@ -53,18 +56,18 @@ public class SimulatorLocationEstimator implements ITranslationalLocationEstimat
     @Override
     public float getLeftWheelSpeed()
     {
-        return 0;
+        return simulatedRobot.getLeftVel();
     }
 
     @Override
     public float getRightWheelSpeed()
     {
-        return 0;
+        return simulatedRobot.getRightVel();
     }
 
     @Override
     public float estimateSpeed()
     {
-        return 0;
+        return (simulatedRobot.getLeftVel()+simulatedRobot.getRightVel())/2F;
     }
 }
