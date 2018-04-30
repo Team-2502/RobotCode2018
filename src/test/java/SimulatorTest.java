@@ -56,10 +56,9 @@ public class SimulatorTest
         {
             simulatedRobot.runMotorsVel(-5,5);
             simulatorLocationEstimator.update();
-            ImmutableVector2f estimateLocation = simulatorLocationEstimator.estimateLocation();
-            System.out.println("estimateLocation = " + estimateLocation);
         }
         ImmutableVector2f estimateLocation = simulatorLocationEstimator.estimateLocation();
+        System.out.println("estimateLocation = " + estimateLocation);
         assertEquals(estimateLocation,new ImmutableVector2f(0,0));
     }
 

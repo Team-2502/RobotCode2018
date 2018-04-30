@@ -38,8 +38,8 @@ public class MathTest
 
         ImmutableVector2f relativeCoord = MathUtils.LinearAlgebra.absoluteToRelativeCoord(absoluteCoord, robotLocation, robotHeading);
 
-        assertEquals(distance,relativeCoord.x, 0.001);
-        assertEquals(0,relativeCoord.y, 0.001);
+        assertEquals(0,relativeCoord.x, 0.001);
+        assertEquals(distance,relativeCoord.y, 0.001);
     }
 
     @Test
@@ -53,8 +53,8 @@ public class MathTest
 
         ImmutableVector2f relativeCoord = MathUtils.LinearAlgebra.absoluteToRelativeCoord(absoluteCoord, robotLocation, robotHeading);
 
-        assertEquals(0,relativeCoord.x, 0.001);
-        assertEquals(distance,relativeCoord.y, 0.001);
+        assertEquals(distance,relativeCoord.x, 0.001);
+        assertEquals(0,relativeCoord.y, 0.001);
     }
 
     @Test //fail
@@ -100,7 +100,7 @@ public class MathTest
         // l * pi = 1 (circumference)
         // 1/pi = l
         ImmutableVector2f absoluteDPosCurve = MathUtils.Kinematics.getAbsoluteDPosCurve(1, 1, 123, 1, (float) (Math.PI / 4F));
-        assertEquals(Math.sqrt(1/2F),absoluteDPosCurve.x, 0.001);
+        assertEquals(-Math.sqrt(1/2F),absoluteDPosCurve.x, 0.001);
         assertEquals(Math.sqrt(1/2F),absoluteDPosCurve.y, 0.001);
     }
 

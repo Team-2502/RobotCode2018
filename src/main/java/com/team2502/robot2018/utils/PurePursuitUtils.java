@@ -63,7 +63,7 @@ public class PurePursuitUtils
                 // TODO: fix this... kinda jank
                 if(distanceTo < -0.5)
                 {
-                    throw new IllegalArgumentException("Path should have progressed (looking ahead on path)");
+                    throw new IllegalArgumentException("Path should have progressed (looking ahead on path), distanceTo: "+distanceTo);
                 }
                 else
                 {

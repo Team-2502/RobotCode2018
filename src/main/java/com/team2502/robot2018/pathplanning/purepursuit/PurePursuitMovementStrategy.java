@@ -215,6 +215,15 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         usedHeading = rotEstimator.estimateHeading();
 
         ImmutableVector2f closestPoint = path.getClosestPoint(usedEstimatedLocation);
+        float absDistanceOfClosestPoint = path.getAbsDistanceOfClosestPoint(closestPoint);
+        float distanceTo = path.getCurrent().getAbsoluteDistanceEnd() - absDistanceOfClosestPoint;
+        if(distanceTo < 0)
+        {
+            path.moveNextSegment();
+            updateForNewSegment();
+        }
+
+
         if(closestPoint == null)
         {
             // TODO: fix jankiness
@@ -240,8 +249,6 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
                 brakeStage = true;
             }
         }
-
-        float absDistanceOfClosestPoint = path.getAbsDistanceOfClosestPoint(closestPoint);
 
         speedUsed = PurePursuitUtils.generateSpeedUsed(absDistanceOfClosestPoint,lastWaypointSpeed,stopwatch.read(),path);
 
