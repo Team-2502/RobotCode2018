@@ -1,4 +1,8 @@
-package com.team2502.robot2018.utils;
+import com.team2502.robot2018.utils.InterpolationMap;
+import org.junit.Assert;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Tests the InterpolationMap
@@ -9,16 +13,11 @@ package com.team2502.robot2018.utils;
  *
  * @see InterpolationMap
  */
-class TestIHT
+public class TestIHT
 {
-    public static void main(String[] args)
-    {
-        testLineIntegration();
-        interpolatingIntegrationTest();
 
-    }
-
-    private static void testLineIntegration()
+    @Test
+    public void testLineIntegration()
     {
 //        ImmutableVector2d a = new ImmutableVector2d(3, 4);
 //        ImmutableVector2d b = new ImmutableVector2d(-2, -1);
@@ -33,20 +32,18 @@ class TestIHT
 //        System.out.println("Line tests were fine");
     }
 
-    private static void interpolatingIntegrationTest()
+    @Test
+    public void interpolatingIntegrationTest()
     {
         InterpolationMap map = new InterpolationMap(0D, 0D);
         map.put(1D, 1D);
         map.put(2D, 1D);
         map.put(3D, 0D);
 
-
-        assert map.integrate(0, 1) == 0.5 : "Expected .5, got " + map.integrate(0, 1);
-        assert map.integrate(0, 2) == 1.5 : "Expected 1.5, got " + map.integrate(0, 2);
-        assert map.integrate(0, 3) == 2 : "Expected 2, got " + map.integrate(0, 3);
-        assert map.integrate(0, 10) == 2 : "Expected 2, got " + map.integrate(0, 10);
-        assert map.integrate(-10, 0) == 0 : "Expected 0, got " + map.integrate(-10, 0);
-
-        System.out.println("Map tests were fine");
+        assertEquals(0.5,map.integrate(0, 1),1E-6);
+        assertEquals(1.5F,map.integrate(0, 2),1E-6);
+        assertEquals(2F,map.integrate(0, 3),1E-6);
+        assertEquals(2F,map.integrate(0, 10),1E-6);
+        assertEquals(0F,map.integrate(-10, 0),1E-6);
     }
 }
