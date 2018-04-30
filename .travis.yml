@@ -1,6 +1,3 @@
-sudo: false
 language: java
-install: true
-before_script: chmod a+x gradlew
-script: ./gradlew test
-jdk: oraclejdk8
+jdk: 
+  - oraclejdk8
