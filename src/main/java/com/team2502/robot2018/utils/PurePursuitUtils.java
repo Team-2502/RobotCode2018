@@ -201,6 +201,7 @@ public class PurePursuitUtils
 
         // curvature = 2x / l^2 (from Pure Pursuit paper)
         // added - so it is positive when counterclockwise
-        return -2 * relativeGoalPoint.get(0) / lSquared;
+        float toReturn = -2 * relativeGoalPoint.get(0) / lSquared;
+        return toReturn;
     }
 }

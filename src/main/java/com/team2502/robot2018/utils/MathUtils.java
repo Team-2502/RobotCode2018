@@ -834,6 +834,10 @@ public final class MathUtils
             }
             else
             {
+                if(lineSegment.slope == 0)
+                {
+                    return new ImmutableVector2f(robotPos.x, (float) lineSegment.evaluateY(robotPos.x));
+                }
                 return intersect;
             }
         }

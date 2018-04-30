@@ -7,6 +7,7 @@ import org.joml.ImmutableVector2f;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -55,22 +56,41 @@ public class SimulatorTest
         {
             simulatedRobot.runMotorsVel(-5,5);
             simulatorLocationEstimator.update();
+            ImmutableVector2f estimateLocation = simulatorLocationEstimator.estimateLocation();
+            System.out.println("estimateLocation = " + estimateLocation);
         }
         ImmutableVector2f estimateLocation = simulatorLocationEstimator.estimateLocation();
-        System.out.println("estimateLocation = " + estimateLocation);
         assertEquals(estimateLocation,new ImmutableVector2f(0,0));
     }
 
     @Test
-    public void testPPLeft()
+    public void testPPLeftStraightScale()
     {
+        testPath(PathConfig.Left.leftScale);
+    }
+
+    @Test
+    public void testPPLeftCCScale()
+    {
+        testPath(PathConfig.Left.rightScale);
+    }
+
+
+
+    private void testPath(List<Waypoint> pathToTest)
+    {
+        List<Waypoint> path = new ArrayList<>();
+        for(Waypoint waypoint : pathToTest)
+        {
+            // Strip commands from waypoint because involve wpilib
+            path.add(new Waypoint(waypoint.getLocation(),waypoint.getMaxSpeed(),waypoint.getMaxAccel(),waypoint.getMaxDeccel()));
+        }
         SimulatedRobot simulatedRobot = new SimulatedRobot(Constants.PurePursuit.LATERAL_WHEEL_DISTANCE_FT);
         SimulatorLocationEstimator simulatorLocationEstimator = new SimulatorLocationEstimator(simulatedRobot);
-        List<Waypoint> leftScale = PathConfig.Left.leftScale;
         PurePursuitMovementStrategy purePursuitMovementStrategy = new PurePursuitMovementStrategy(simulatedRobot,
-                                                                                                  simulatorLocationEstimator, simulatorLocationEstimator, simulatorLocationEstimator, leftScale, Constants.PurePursuit.LOOKAHEAD, false);
+                                                                                                  simulatorLocationEstimator, simulatorLocationEstimator, simulatorLocationEstimator, path, Constants.PurePursuit.LOOKAHEAD, false);
         purePursuitMovementStrategy.setStopwatch(new SimulatedStopwatch(0.02F));
-        for(int i = 0; i < 100; i++)
+        for(int i = 0; i < 1000; i++)
         {
             if(purePursuitMovementStrategy.isFinishedPath())
             {
@@ -81,8 +101,9 @@ public class SimulatorTest
             ImmutableVector2f wheelVels = purePursuitMovementStrategy.getWheelVelocities();
             simulatedRobot.runMotorsVel(wheelVels.x,wheelVels.y);
             simulatorLocationEstimator.update();
+            System.out.println("EL: "+simulatorLocationEstimator.estimateLocation());
         }
-        Assert.assertTrue(isSuccess(simulatorLocationEstimator.estimateLocation(),leftScale));
+        Assert.assertTrue(isSuccess(simulatorLocationEstimator.estimateLocation(),path));
     }
 
     boolean isSuccess(ImmutableVector2f finalLoc, List<Waypoint> path)

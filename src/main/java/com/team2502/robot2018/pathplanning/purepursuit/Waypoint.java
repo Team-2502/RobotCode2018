@@ -70,7 +70,6 @@ public class Waypoint extends Point
     {
         for(Command command : commands)
         {
-            Robot.writeLog("scheduling command", 10);
             Scheduler.getInstance().add(command);
             if(command instanceof PurePursuitReciever)
             {

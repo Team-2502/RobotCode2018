@@ -215,6 +215,13 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         usedHeading = rotEstimator.estimateHeading();
 
         ImmutableVector2f closestPoint = path.getClosestPoint(usedEstimatedLocation);
+        if(closestPoint == null)
+        {
+            // TODO: fix jankiness
+            path.moveNextSegment();
+            updateForNewSegment();
+            closestPoint  = path.getClosestPoint(usedEstimatedLocation);
+        }
         dCP = usedEstimatedLocation.sub(closestPoint).length();
 
         usedLookahead = PurePursuitUtils.generateLookahead(lookahead,velocityEstimator.estimateSpeed(),dCP);
