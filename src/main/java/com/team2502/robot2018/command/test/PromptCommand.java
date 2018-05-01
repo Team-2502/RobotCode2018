@@ -35,16 +35,10 @@ public class PromptCommand extends Command
         boolean getFailure = SmartDashboard.getBoolean("prompt_failure", false);
         if(getSuccess)
         {
-//            reset();
             success = true;
             return true;
         }
-        if(getFailure)
-        {
-//            reset();
-            return true;
-        }
-        return false;
+        return getFailure;
     }
 
     @Override

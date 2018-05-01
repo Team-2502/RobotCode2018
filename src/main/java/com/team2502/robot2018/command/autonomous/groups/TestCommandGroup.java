@@ -19,9 +19,6 @@ public class TestCommandGroup extends CommandGroup
     public TestCommandGroup()
     {
         Robot.writeLog("TestCommand", 200);
-//        testRotateScaleToSwitch();
-//        Robot.resetLocalization();
-//        testPurePursuitForwardBackScaleSwitch();
         testMotionProfiling();
     }
 

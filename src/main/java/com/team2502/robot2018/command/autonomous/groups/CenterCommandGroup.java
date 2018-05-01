@@ -15,9 +15,6 @@ public class CenterCommandGroup extends CommandGroup
 {
     public CenterCommandGroup()
     {
-        // done in autonomousInit()
-//        addSequential(new QuickCommand(Robot.ELEVATOR::calibrateEncoder));
-        // Begin by calibrating the navX
         Robot.NAVX.reset();
 
         // Choose a path to take
@@ -54,34 +51,12 @@ public class CenterCommandGroup extends CommandGroup
     private void goSwitchRight()
     {
         moveElevator();
-//        addSequential(new PurePursuitCommand(PathConfig.Center.rightSwitch, true));
         // Just in case . . .
         addSequential(new SRXProfilingCommand(NO_COMMANDS,
                                               1,
                                               TrajConfig.Center.firstCubeRightSwitch),
                       30);
         emitCubeSwitch();
-//
-////        addParallel(new ToggleIntakeCommand());
-//
-//        addParallel(new ScheduledCommand(1, new ElevatorLowerCommand()));
-//        addSequential(new SRXProfilingCommand(NO_COMMANDS,
-//                                              -1,
-//                                              TrajConfig.Center.firstCubeRightSwitch),
-//                      3);
-//
-//        addParallel(new RunIntakeCommand(2.5, -1));
-//        addSequential(new SRXProfilingCommand(NO_COMMANDS, 1, TrajConfig.Center.Right.forwardToCube));
-//        addSequential(new SRXProfilingCommand(NO_COMMANDS, -1, TrajConfig.Center.Right.forwardToCube));
-//
-//        moveElevator();
-////        addSequential(new PurePursuitCommand(PathConfig.Center.rightSwitch, true));
-//        // Just in case . .
-//        addSequential(new SRXProfilingCommand(NO_COMMANDS,
-//                                              1,
-//                                              TrajConfig.Center.firstCubeRightSwitch),
-//                      3);
-//        emitCubeSwitch();
     }
 
     private void goSwitchRightUnified()
@@ -95,9 +70,7 @@ public class CenterCommandGroup extends CommandGroup
                 new ScheduledCommand(8, new RaiseElevatorSwitch()),
 
 
-                },
-                                              1,
-                                              TrajConfig.Center.twoCubesRightSwitch));
+                }, 1, TrajConfig.Center.twoCubesRightSwitch));
         emitCubeSwitch();
     }
 
@@ -109,9 +82,7 @@ public class CenterCommandGroup extends CommandGroup
 
     private void emitCubeSwitch()
     {
-//        addSequential(new ActiveIntakeRotate(0.4, 0.7));
         addParallel(new RunIntakeCommand(1));
-//        addParallel(new ToggleIntakeCommand());
     }
 
 }

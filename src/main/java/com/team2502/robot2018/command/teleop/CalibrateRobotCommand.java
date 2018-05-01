@@ -25,13 +25,7 @@ public class CalibrateRobotCommand extends Command
     {
         System.out.println("initialized");
         // We are blocking the right wheels
-//        Robot.DRIVE_TRAIN.rightRearTalon.set(ControlMode.Disabled, 0.0F);
-//        Robot.DRIVE_TRAIN.rightFrontTalonEnc.set(ControlMode.Disabled, 0.0F);
-
         initAngle = (float) Robot.NAVX.getAngle();
-
-        // One of the left motors lacks an encoder
-//        Robot.DRIVE_TRAIN.leftFrontTalonEnc.follow(Robot.DRIVE_TRAIN.leftRearTalon);
     }
 
     @Override
@@ -50,17 +44,14 @@ public class CalibrateRobotCommand extends Command
             float error2Avg = 0;
 
             // F ... rpm = 557.6  ... 557.6 * 1/60 * 1/10 * 4096 = 3806.5493333333 ... .0.2687473379
-            for(int i = 0; i < size; i++)
+            for(Float anError2 : error2)
             {
-                error2Avg += error2.get(i) / size;
+                error2Avg += anError2 / size;
             }
-
-//            System.out.println("enabled!" + size);
 
             SmartDashboard.putNumber("enc_error_2", error2Avg);
             SmartDashboard.putNumber("enc_velocity", actualVel);
 
-//            System.out.println("run @ " + velocity);
             Robot.DRIVE_TRAIN.runMotorsRawVelocity((float) velocity, (float) velocity);
         }
     }

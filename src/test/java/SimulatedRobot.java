@@ -10,9 +10,6 @@ public class SimulatedRobot implements ITankRobotBounds
 
     private final float lateralWheelDistance;
 
-    ImmutableVector2f position;
-    float heading;
-
     private float leftMotorPercentVoltage = 0;
     private float rightMotorPercentVoltage = 0;
 
