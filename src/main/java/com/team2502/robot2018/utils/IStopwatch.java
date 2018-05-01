@@ -7,6 +7,7 @@ public interface IStopwatch
 {
     /**
      * Read and reset
+     *
      * @return The value of the stopwatch
      */
     default float pop()
@@ -18,6 +19,7 @@ public interface IStopwatch
 
     /**
      * Read without resetting
+     *
      * @return The value of the stopwatch
      */
     float read();
@@ -28,7 +30,6 @@ public interface IStopwatch
     void reset();
 
     /**
-     *
      * @return If this stopwatch is initialized
      */
     boolean isInit();

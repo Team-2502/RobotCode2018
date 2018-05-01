@@ -16,7 +16,7 @@ public class Point
 
     public Point(float x, float y)
     {
-        this(new ImmutableVector2f(x,y));
+        this(new ImmutableVector2f(x, y));
     }
 
     public ImmutableVector2f getLocation()

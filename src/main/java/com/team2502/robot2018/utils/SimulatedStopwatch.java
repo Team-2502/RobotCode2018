@@ -7,13 +7,12 @@ public class SimulatedStopwatch implements IStopwatch
 {
 
     private final float dt;
+    float count = -1;
 
     public SimulatedStopwatch(float dt)
     {
         this.dt = dt;
     }
-
-    float count = -1;
 
     @Override
     public float read()
@@ -22,7 +21,7 @@ public class SimulatedStopwatch implements IStopwatch
         {
             count = 0;
         }
-        count+=dt;
+        count += dt;
         return count;
     }
 

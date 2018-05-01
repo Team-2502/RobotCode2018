@@ -1,6 +1,5 @@
 package com.team2502.robot2018.pathplanning.purepursuit;
 
-import com.team2502.robot2018.Robot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import org.joml.ImmutableVector2f;
@@ -38,7 +37,7 @@ public class Waypoint extends Point
 
     public Waypoint(float x, float y, float maxSpeed, float maxAccel, float maxDeccel, Command... commands)
     {
-        this(new ImmutableVector2f(x,y),maxSpeed,maxAccel,maxDeccel,commands);
+        this(new ImmutableVector2f(x, y), maxSpeed, maxAccel, maxDeccel, commands);
     }
 
     public float getMaxDeccel()
@@ -85,7 +84,7 @@ public class Waypoint extends Point
     {
         return "Waypoint{" +
                "maxSpeed=" + maxSpeed +
-               ", location=" + getLocation().x  +"," + getLocation().y +
+               ", location=" + getLocation().x + "," + getLocation().y +
                '}';
     }
 

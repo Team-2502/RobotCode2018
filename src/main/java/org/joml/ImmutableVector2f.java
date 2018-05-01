@@ -22,10 +22,10 @@
  */
 package org.joml;
 
-import java.util.Arrays;
-import java.util.Locale;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.Arrays;
+import java.util.Locale;
 
 /**
  * Represents a 2D vector with single-precision.
@@ -35,8 +35,10 @@ import java.text.NumberFormat;
  */
 public class ImmutableVector2f
 {
+    public static final int numberFormatDecimals = Integer.parseInt(System.getProperty("joml.format.decimals", "3"));
+    public static final boolean useNumberFormat = hasOption(System.getProperty("joml.format", "true"));
+    public static final NumberFormat NUMBER_FORMAT = decimalFormat();
     private static final long serialVersionUID = 1L;
-
     /**
      * The x component of the vector.
      */
@@ -66,11 +68,19 @@ public class ImmutableVector2f
     public ImmutableVector2f(float d)
     { this(d, d); }
 
+    /* (non-Javadoc)
+     * @see org.joml.api.ImmutableVector2f#y()
+     */
+
     /**
      * Create a new {@link ImmutableVector2f} and initialize its components to zero.
      */
     public ImmutableVector2f()
     { this(0.0F); }
+
+    /* (non-Javadoc)
+     * @see org.joml.api.ImmutableVector2f#getF(int)
+     */
 
     /**
      * Create a new {@link ImmutableVector2f} and initialize its components to the one of the given vector.
@@ -83,6 +93,57 @@ public class ImmutableVector2f
         y = v.y();
     }
 
+    public static boolean epsilonEquals(final float a, final float b)
+    { return Math.abs(b - a) < 1.0E-5F; }
+
+    private static boolean hasOption(String v)
+    {
+        if(v == null) { return false; }
+        if(v.trim().isEmpty()) { return true; }
+        return Boolean.valueOf(v);
+    }
+
+    private static NumberFormat decimalFormat()
+    {
+        NumberFormat df;
+        if(useNumberFormat)
+        {
+            char[] prec = new char[numberFormatDecimals];
+            Arrays.fill(prec, '0');
+            df = new DecimalFormat(" 0." + new String(prec) + "E0;-");
+        }
+        else
+        {
+            df = NumberFormat.getNumberInstance(Locale.ENGLISH);
+            df.setGroupingUsed(false);
+        }
+        return df;
+    }
+
+    public static String formatNumbers(String str)
+    {
+        StringBuffer res = new StringBuffer();
+        int eIndex = Integer.MIN_VALUE;
+        for(int i = 0; i < str.length(); i++)
+        {
+            char c = str.charAt(i);
+            if(c == 'E') { eIndex = i; }
+            else if(c == ' ' && eIndex == i - 1)
+            {
+                // workaround Java 1.4 DecimalFormat bug
+                res.append('+');
+                continue;
+            }
+            else if(Character.isDigit(c) && eIndex == i - 1) { res.append('+'); }
+            res.append(c);
+        }
+        return res.toString();
+    }
+
+    /* (non-Javadoc)
+     * @see org.joml.api.ImmutableVector2f#dot(org.joml.api.ImmutableVector2f)
+     */
+
     /* (non-Javadoc)
      * @see org.joml.api.ImmutableVector2f#x()
      */
@@ -90,16 +151,16 @@ public class ImmutableVector2f
     { return this.x; }
 
     /* (non-Javadoc)
-     * @see org.joml.api.ImmutableVector2f#y()
+     * @see org.joml.api.ImmutableVector2f#angle(org.joml.api.ImmutableVector2f)
      */
-    
+
     public float y()
     { return this.y; }
 
     /* (non-Javadoc)
-     * @see org.joml.api.ImmutableVector2f#getF(int)
+     * @see org.joml.api.ImmutableVector2f#length()
      */
-    
+
     public float get(int index) throws IndexOutOfBoundsException
     {
         switch(index)
@@ -143,17 +204,9 @@ public class ImmutableVector2f
     public ImmutableVector2f sub(float x, float y)
     { return new ImmutableVector2f(this.x - x, this.y - y); }
 
-    /* (non-Javadoc)
-     * @see org.joml.api.ImmutableVector2f#dot(org.joml.api.ImmutableVector2f)
-     */
-    
     public float dot(ImmutableVector2f v)
     { return x * v.x() + y * v.y(); }
 
-    /* (non-Javadoc)
-     * @see org.joml.api.ImmutableVector2f#angle(org.joml.api.ImmutableVector2f)
-     */
-    
     public float angle(ImmutableVector2f v)
     {
         float dot = x * v.x() + y * v.y();
@@ -161,10 +214,6 @@ public class ImmutableVector2f
         return (float) Math.atan2(det, dot);
     }
 
-    /* (non-Javadoc)
-     * @see org.joml.api.ImmutableVector2f#length()
-     */
-    
     public float length()
     { return (float) Math.sqrt((x * x) + (y * y)); }
 
@@ -173,7 +222,6 @@ public class ImmutableVector2f
      */
     public float lengthSquared()
     { return x * x + y * y; }
-
 
     /* (non-Javadoc)
      * @see org.joml.api.ImmutableVector2f#distance(float, float)
@@ -206,7 +254,6 @@ public class ImmutableVector2f
      */
     public float distanceSquared(ImmutableVector2f v)
     { return distanceSquared(v.x(), v.y()); }
-
 
     /**
      * Normalize this vector.
@@ -290,7 +337,7 @@ public class ImmutableVector2f
      */
     public ImmutableVector2f mul(ImmutableVector2f v)
     { return new ImmutableVector2f(x * v.x(), y * v.y()); }
-    
+
     public ImmutableVector2f div(ImmutableVector2f v)
     { return new ImmutableVector2f(x / v.x(), y / v.y()); }
 
@@ -321,9 +368,6 @@ public class ImmutableVector2f
         return result;
     }
 
-    public static boolean epsilonEquals(final float a, final float b)
-    { return Math.abs(b - a) < 1.0E-5F; }
-
     @Override
     public boolean equals(Object obj)
     {
@@ -334,54 +378,6 @@ public class ImmutableVector2f
         if(!epsilonEquals(x, other.x)) { return false; }
         if(!epsilonEquals(y, other.y)) { return false; }
         return true;
-    }
-
-    private static boolean hasOption(String v)
-    {
-        if(v == null) { return false; }
-        if(v.trim().isEmpty()) { return true; }
-        return Boolean.valueOf(v);
-    }
-
-    public static final int numberFormatDecimals = Integer.parseInt(System.getProperty("joml.format.decimals", "3"));
-    public static final boolean useNumberFormat = hasOption(System.getProperty("joml.format", "true"));
-    public static final NumberFormat NUMBER_FORMAT = decimalFormat();
-
-    private static NumberFormat decimalFormat()
-    {
-        NumberFormat df;
-        if(useNumberFormat)
-        {
-            char[] prec = new char[numberFormatDecimals];
-            Arrays.fill(prec, '0');
-            df = new DecimalFormat(" 0." + new String(prec) + "E0;-");
-        }
-        else
-        {
-            df = NumberFormat.getNumberInstance(Locale.ENGLISH);
-            df.setGroupingUsed(false);
-        }
-        return df;
-    }
-
-    public static String formatNumbers(String str)
-    {
-        StringBuffer res = new StringBuffer();
-        int eIndex = Integer.MIN_VALUE;
-        for(int i = 0; i < str.length(); i++)
-        {
-            char c = str.charAt(i);
-            if(c == 'E') { eIndex = i; }
-            else if(c == ' ' && eIndex == i - 1)
-            {
-                // workaround Java 1.4 DecimalFormat bug
-                res.append('+');
-                continue;
-            }
-            else if(Character.isDigit(c) && eIndex == i - 1) { res.append('+'); }
-            res.append(c);
-        }
-        return res.toString();
     }
 
     /**

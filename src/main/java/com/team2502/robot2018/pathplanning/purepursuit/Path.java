@@ -24,7 +24,7 @@ public class Path
     private ImmutableVector2f closestPoint;
     private ImmutableVector2f robotLocationClosestPoint;
 
-    private Path(){}
+    private Path() {}
 
     public static Path fromSegments(List<PathSegment> pathSegments)
     {
@@ -143,7 +143,6 @@ public class Path
     }
 
     /**
-     *
      * @param maxAheadDistance The distance to look ahead from the last segment
      * @return
      */

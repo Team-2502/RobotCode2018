@@ -5,9 +5,7 @@ import com.kauailabs.navx.frc.AHRS;
 import com.team2502.robot2018.command.autonomous.ingredients.AutonStrategy;
 import com.team2502.robot2018.pathplanning.localization.EncoderDifferentialDriveLocationEstimator;
 import com.team2502.robot2018.pathplanning.localization.NavXLocationEstimator;
-
 import com.team2502.robot2018.pathplanning.srxprofiling.TrajConfig;
-
 import com.team2502.robot2018.sendables.SendableDriveStrategyType;
 import com.team2502.robot2018.sendables.SendableDriveTrain;
 import com.team2502.robot2018.sendables.SendableVersioning;
@@ -181,6 +179,19 @@ public final class Robot extends IterativeRobot
         System.out.println(stringBuilder.toString());
     }
 
+    public static void resetLocalization()
+    {
+        // Initialize Estimators
+        NavXLocationEstimator rotEstimator = new NavXLocationEstimator();
+        EncoderDifferentialDriveLocationEstimator encoderDifferentialDriveLocationEstimator = new EncoderDifferentialDriveLocationEstimator(rotEstimator);
+
+        ROBOT_LOCALIZATION_COMMAND.setLocationEstimator(encoderDifferentialDriveLocationEstimator);
+        ROBOT_LOCALIZATION_COMMAND.setRotEstimator(rotEstimator);
+        ROBOT_LOCALIZATION_COMMAND.setVelocityEstimator(encoderDifferentialDriveLocationEstimator);
+
+        ROBOT_LOCALIZATION_COMMAND.execute();
+    }
+
     /**
      * This method is run when the robot is first started up and should be
      * used for any initialization code.
@@ -287,19 +298,6 @@ public final class Robot extends IterativeRobot
         ROBOT_LOCALIZATION_COMMAND.execute();
 
         Scheduler.getInstance().add(ROBOT_LOCALIZATION_COMMAND);
-    }
-
-    public static void resetLocalization()
-    {
-        // Initialize Estimators
-        NavXLocationEstimator rotEstimator = new NavXLocationEstimator();
-        EncoderDifferentialDriveLocationEstimator encoderDifferentialDriveLocationEstimator = new EncoderDifferentialDriveLocationEstimator(rotEstimator);
-
-        ROBOT_LOCALIZATION_COMMAND.setLocationEstimator(encoderDifferentialDriveLocationEstimator);
-        ROBOT_LOCALIZATION_COMMAND.setRotEstimator(rotEstimator);
-        ROBOT_LOCALIZATION_COMMAND.setVelocityEstimator(encoderDifferentialDriveLocationEstimator);
-
-        ROBOT_LOCALIZATION_COMMAND.execute();
     }
 
     /**

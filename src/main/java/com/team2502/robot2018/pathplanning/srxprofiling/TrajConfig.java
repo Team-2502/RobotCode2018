@@ -25,86 +25,6 @@ public class TrajConfig
                                                       reverseTraj(toTankDrive(new Waypoint(0, 0, 0),
                                                                               new Waypoint(3, 0, 0))));
 
-    public static class Center
-    {
-
-        // It works
-        // pos y = go left, flip x makes it go right
-        public static final Trajectory[] firstCubeRightSwitch = flipX(toTankDrive(new Waypoint(0, 0, 0),
-//                                                                                  new Waypoint(2.45, 2, Math.PI / 4),
-                                                                                  new Waypoint(8.5, 3.5, 0)));
-
-
-        public static final Trajectory[] secondCubeRightSwitch = combineTraj(Right.toSecondCube, Right.forwardToCube, Right.backUpFromCube, Right.backToSwitch);
-
-        public static final Trajectory[] secondCubeLeftSwitch = flipX(secondCubeRightSwitch);
-
-        public static final Trajectory[] firstCubeLeftSwitch = flipX(firstCubeRightSwitch);
-
-        public static final Trajectory[] twoCubesleftSwitch = combineTraj(firstCubeLeftSwitch, secondCubeLeftSwitch);
-
-        public static final Trajectory[] twoCubesRightSwitch = combineTraj(firstCubeRightSwitch, secondCubeRightSwitch);
-
-        public static void init()
-        {
-            System.out.println("secondCubeRightSwitch[0].segments.length = " + (secondCubeRightSwitch[0].segments.length));
-            Right.init();
-        }
-
-        public static class Right
-        {
-            public static final Trajectory[] toSecondCube = reverseTraj(toTankDrive(new Waypoint(0, 0, 0),
-                                                                                    new Waypoint(50D / 12, 26D / 12, Math.PI / 6),
-                                                                                    new Waypoint(75D / 12, 44D / 12, 0)));
-
-            public static final Trajectory[] forwardToCube = toTankDrive(new Waypoint(0, 0, 0),
-                                                                  new Waypoint(3, 0, 0));
-
-            static final Trajectory[] backUpFromCube = reverseTraj(toTankDrive(new Waypoint(0, 0, 0),
-                                                                               new Waypoint(3, 0, 0)));
-
-            static final Trajectory[] backToSwitch = flipX(toTankDrive(new Waypoint(0, 0, 0),
-                                                                       new Waypoint(30D / 12, 26D / 12, Math.PI / 3),
-                                                                       new Waypoint(96D / 12, 46D / 12, 0)));
-            public static Trajectory[] finishDoubleCube = combineTraj(forwardToCube, backUpFromCube, backToSwitch);
-
-            static void init() { }
-
-
-        }
-
-    }
-
-    public static class Left
-    {
-        public static final Trajectory[] twoCube = combineTraj(TwoCube.backUpToCube, TwoCube.forwardToCube, TwoCube.backUpToCube, TwoCube.forwardToScale);
-
-        private static class TwoCube
-        {
-            static final Trajectory[] backUpToCube = reverseTraj(toTankDrive(new Waypoint(0, 0, -Math.PI / 2),
-                                                                             new Waypoint(4.25, -2.5, 0)));
-
-            static final Trajectory[] forwardToCube = toTankDrive(new Waypoint(0, 0, 0),
-                                                                  new Waypoint(3.75, -2.5, -Math.PI));
-
-            static final Trajectory[] backUpToScale = reverseTraj(forwardToCube);
-
-            static final Trajectory[] forwardToScale = reverseTraj(backUpToCube);
-
-            static void init() { }
-
-        }
-
-        public static void init()
-        {
-            System.out.println("twoCube[0].segments.length = " + (twoCube[0].segments.length));
-            TwoCube.init();
-//            Pathfinder.writeToCSV(new File("/home/lvuser/LEFT.csv"), Right.backToSwitch[0]);
-//            Pathfinder.writeToCSV(new File("/home/lvuser/RIGHT.csv"), Right.backToSwitch[1]);
-        }
-
-    }
-
     private static List<Waypoint> flipX(List<Waypoint> waypoints)
     {
         List<Waypoint> result = new ArrayList<>(waypoints.size());
@@ -151,7 +71,6 @@ public class TrajConfig
         return result;
     }
 
-
     private static Trajectory toTrajectory(Waypoint... waypoints)
     {
         return Pathfinder.generate(waypoints, Constants.SRXProfiling.CONFIG_SETTINGS);
@@ -196,7 +115,6 @@ public class TrajConfig
         return ret;
 
     }
-
 
     private static Trajectory[] combineTraj(Trajectory[]... trajs)
     {
@@ -248,6 +166,86 @@ public class TrajConfig
             lastRightPos = leftSegments[currentCountRight - 1].position;
         }
         return new Trajectory[] { new Trajectory(leftSegments), new Trajectory(rightSegments) };
+
+    }
+
+    public static class Center
+    {
+
+        // It works
+        // pos y = go left, flip x makes it go right
+        public static final Trajectory[] firstCubeRightSwitch = flipX(toTankDrive(new Waypoint(0, 0, 0),
+//                                                                                  new Waypoint(2.45, 2, Math.PI / 4),
+                                                                                  new Waypoint(8.5, 3.5, 0)));
+
+
+        public static final Trajectory[] secondCubeRightSwitch = combineTraj(Right.toSecondCube, Right.forwardToCube, Right.backUpFromCube, Right.backToSwitch);
+
+        public static final Trajectory[] secondCubeLeftSwitch = flipX(secondCubeRightSwitch);
+
+        public static final Trajectory[] firstCubeLeftSwitch = flipX(firstCubeRightSwitch);
+
+        public static final Trajectory[] twoCubesleftSwitch = combineTraj(firstCubeLeftSwitch, secondCubeLeftSwitch);
+
+        public static final Trajectory[] twoCubesRightSwitch = combineTraj(firstCubeRightSwitch, secondCubeRightSwitch);
+
+        public static void init()
+        {
+            System.out.println("secondCubeRightSwitch[0].segments.length = " + (secondCubeRightSwitch[0].segments.length));
+            Right.init();
+        }
+
+        public static class Right
+        {
+            public static final Trajectory[] toSecondCube = reverseTraj(toTankDrive(new Waypoint(0, 0, 0),
+                                                                                    new Waypoint(50D / 12, 26D / 12, Math.PI / 6),
+                                                                                    new Waypoint(75D / 12, 44D / 12, 0)));
+
+            public static final Trajectory[] forwardToCube = toTankDrive(new Waypoint(0, 0, 0),
+                                                                         new Waypoint(3, 0, 0));
+
+            static final Trajectory[] backUpFromCube = reverseTraj(toTankDrive(new Waypoint(0, 0, 0),
+                                                                               new Waypoint(3, 0, 0)));
+
+            static final Trajectory[] backToSwitch = flipX(toTankDrive(new Waypoint(0, 0, 0),
+                                                                       new Waypoint(30D / 12, 26D / 12, Math.PI / 3),
+                                                                       new Waypoint(96D / 12, 46D / 12, 0)));
+            public static Trajectory[] finishDoubleCube = combineTraj(forwardToCube, backUpFromCube, backToSwitch);
+
+            static void init() { }
+
+
+        }
+
+    }
+
+    public static class Left
+    {
+        public static final Trajectory[] twoCube = combineTraj(TwoCube.backUpToCube, TwoCube.forwardToCube, TwoCube.backUpToCube, TwoCube.forwardToScale);
+
+        public static void init()
+        {
+            System.out.println("twoCube[0].segments.length = " + (twoCube[0].segments.length));
+            TwoCube.init();
+//            Pathfinder.writeToCSV(new File("/home/lvuser/LEFT.csv"), Right.backToSwitch[0]);
+//            Pathfinder.writeToCSV(new File("/home/lvuser/RIGHT.csv"), Right.backToSwitch[1]);
+        }
+
+        private static class TwoCube
+        {
+            static final Trajectory[] backUpToCube = reverseTraj(toTankDrive(new Waypoint(0, 0, -Math.PI / 2),
+                                                                             new Waypoint(4.25, -2.5, 0)));
+
+            static final Trajectory[] forwardToCube = toTankDrive(new Waypoint(0, 0, 0),
+                                                                  new Waypoint(3.75, -2.5, -Math.PI));
+
+            static final Trajectory[] backUpToScale = reverseTraj(forwardToCube);
+
+            static final Trajectory[] forwardToScale = reverseTraj(backUpToCube);
+
+            static void init() { }
+
+        }
 
     }
 

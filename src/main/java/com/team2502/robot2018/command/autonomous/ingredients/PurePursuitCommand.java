@@ -25,6 +25,7 @@ public class PurePursuitCommand extends Command
     private boolean drift;
     private boolean autoFirstPoint;
     private boolean forward;
+
     /**
      * Given some waypoints, drive through them
      *

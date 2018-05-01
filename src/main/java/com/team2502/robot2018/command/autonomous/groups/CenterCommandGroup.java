@@ -43,9 +43,9 @@ public class CenterCommandGroup extends CommandGroup
         addParallel(new ToggleIntakeCommand());
 
 
-        addSequential(new SRXProfilingCommand(new ScheduledCommand[]{new ScheduledCommand(1, new ElevatorAutonCommand(2, 0)),
-                                                                     new ScheduledCommand(3.5, new RunIntakeCommand(3, -1)),
-                                                                     new ScheduledCommand(7, new RaiseElevatorSwitch()),},
+        addSequential(new SRXProfilingCommand(new ScheduledCommand[] { new ScheduledCommand(1, new ElevatorAutonCommand(2, 0)),
+                                                                       new ScheduledCommand(3.5, new RunIntakeCommand(3, -1)),
+                                                                       new ScheduledCommand(7, new RaiseElevatorSwitch()), },
                                               (double) 1,
                                               TrajConfig.Center.secondCubeLeftSwitch),
                       11);
@@ -86,7 +86,7 @@ public class CenterCommandGroup extends CommandGroup
 
     private void goSwitchRightUnified()
     {
-        addSequential(new SRXProfilingCommand(new ScheduledCommand[]{
+        addSequential(new SRXProfilingCommand(new ScheduledCommand[] {
                 new ScheduledCommand(0, new RaiseElevatorSwitch()),
                 new ScheduledCommand(0, new ActiveIntakeRotate(0.35, 1)),
                 new ScheduledCommand(3, new RunIntakeCommand(1)),
@@ -95,7 +95,7 @@ public class CenterCommandGroup extends CommandGroup
                 new ScheduledCommand(8, new RaiseElevatorSwitch()),
 
 
-        },
+                },
                                               1,
                                               TrajConfig.Center.twoCubesRightSwitch));
         emitCubeSwitch();

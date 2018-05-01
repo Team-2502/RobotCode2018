@@ -15,20 +15,20 @@ import static org.junit.Assert.assertTrue;
 
 public class SimulatorTest
 {
-//    @Test
+    //    @Test
     public void testStraight()
     {
         SimulatedRobot simulatedRobot = new SimulatedRobot(1);
         SimulatorLocationEstimator simulatorLocationEstimator = new SimulatorLocationEstimator(simulatedRobot);
         for(int i = 0; i < 1000; i++)
         {
-            simulatedRobot.runMotorsVel(5,5);
+            simulatedRobot.runMotorsVel(5, 5);
             simulatorLocationEstimator.update();
         }
         ImmutableVector2f estimateLocation = simulatorLocationEstimator.estimateLocation();
         System.out.println("estimateLocation = " + estimateLocation);
-        assertTrue(estimateLocation.y>0);
-        assertEquals(estimateLocation.x,0,1E-6F);
+        assertTrue(estimateLocation.y > 0);
+        assertEquals(estimateLocation.x, 0, 1E-6F);
     }
 
     @Test
@@ -38,7 +38,7 @@ public class SimulatorTest
         SimulatorLocationEstimator simulatorLocationEstimator = new SimulatorLocationEstimator(simulatedRobot);
         for(int i = 0; i < 1000; i++)
         {
-            simulatedRobot.runMotorsVel(0,5);
+            simulatedRobot.runMotorsVel(0, 5);
             simulatorLocationEstimator.update();
         }
         ImmutableVector2f estimateLocation = simulatorLocationEstimator.estimateLocation();
@@ -54,12 +54,12 @@ public class SimulatorTest
         SimulatorLocationEstimator simulatorLocationEstimator = new SimulatorLocationEstimator(simulatedRobot);
         for(int i = 0; i < 1000; i++)
         {
-            simulatedRobot.runMotorsVel(-5,5);
+            simulatedRobot.runMotorsVel(-5, 5);
             simulatorLocationEstimator.update();
         }
         ImmutableVector2f estimateLocation = simulatorLocationEstimator.estimateLocation();
         System.out.println("estimateLocation = " + estimateLocation);
-        assertEquals(estimateLocation,new ImmutableVector2f(0,0));
+        assertEquals(estimateLocation, new ImmutableVector2f(0, 0));
     }
 
     @Test
@@ -74,15 +74,14 @@ public class SimulatorTest
     }
 
 
-
     private void testPath(List<Waypoint> pathToTest)
     {
-        System.out.println("start: "+pathToTest);
+        System.out.println("start: " + pathToTest);
         List<Waypoint> path = new ArrayList<>();
         for(Waypoint waypoint : pathToTest)
         {
             // Strip commands from waypoint because involve wpilib
-            path.add(new Waypoint(waypoint.getLocation(),waypoint.getMaxSpeed(),waypoint.getMaxAccel(),waypoint.getMaxDeccel()));
+            path.add(new Waypoint(waypoint.getLocation(), waypoint.getMaxSpeed(), waypoint.getMaxAccel(), waypoint.getMaxDeccel()));
         }
         SimulatedRobot simulatedRobot = new SimulatedRobot(Constants.PurePursuit.LATERAL_WHEEL_DISTANCE_FT);
         SimulatorLocationEstimator simulatorLocationEstimator = new SimulatorLocationEstimator(simulatedRobot);
@@ -98,10 +97,10 @@ public class SimulatorTest
             }
             purePursuitMovementStrategy.update();
             ImmutableVector2f wheelVels = purePursuitMovementStrategy.getWheelVelocities();
-            simulatedRobot.runMotorsVel(wheelVels.x,wheelVels.y);
+            simulatedRobot.runMotorsVel(wheelVels.x, wheelVels.y);
             simulatorLocationEstimator.update();
         }
-        Assert.assertTrue(isSuccess(simulatorLocationEstimator.estimateLocation(),path));
+        Assert.assertTrue(isSuccess(simulatorLocationEstimator.estimateLocation(), path));
     }
 
     boolean isSuccess(ImmutableVector2f finalLoc, List<Waypoint> path)

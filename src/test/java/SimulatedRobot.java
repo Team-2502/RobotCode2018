@@ -28,6 +28,7 @@ public class SimulatedRobot implements ITankRobotBounds
 
     /**
      * Run motors at a certain velocity
+     *
      * @param leftVel
      * @param rightVel
      */
@@ -38,21 +39,19 @@ public class SimulatedRobot implements ITankRobotBounds
     }
 
     /**
-     *
      * @return Get velocity given current status
      */
     public float getLeftVel()
     {
-        return leftMotorPercentVoltage*MAX_VEL; //TODO
+        return leftMotorPercentVoltage * MAX_VEL; //TODO
     }
 
     /**
-     *
      * @return Get velocity given current status
      */
     public float getRightVel()
     {
-        return rightMotorPercentVoltage*MAX_VEL; //TODO
+        return rightMotorPercentVoltage * MAX_VEL; //TODO
     }
 
     private float runMotorVel(float velocity, float currentVoltage)
@@ -62,7 +61,7 @@ public class SimulatedRobot implements ITankRobotBounds
         {
             percentVoltage = 1;
         }
-        else if (percentVoltage < -1)
+        else if(percentVoltage < -1)
         {
             percentVoltage = -1;
         }
@@ -74,11 +73,11 @@ public class SimulatedRobot implements ITankRobotBounds
         float dif = percentVoltage - currentVoltage;
         if(dif < -VOLTAGE_CHANGE_MAX)
         {
-            percentVoltage= currentVoltage-VOLTAGE_CHANGE_MAX;
+            percentVoltage = currentVoltage - VOLTAGE_CHANGE_MAX;
         }
         else if(dif > VOLTAGE_CHANGE_MAX)
         {
-            percentVoltage=currentVoltage+VOLTAGE_CHANGE_MAX;
+            percentVoltage = currentVoltage + VOLTAGE_CHANGE_MAX;
         }
         return percentVoltage;
     }

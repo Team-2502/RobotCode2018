@@ -28,7 +28,7 @@ public class TestCommandGroup extends CommandGroup
     private void testMotionProfiling()
     {
         addSequential(new SRXProfilingCommand(NO_COMMANDS
-        , 1,
+                , 1,
                                               TrajConfig.testTraj
         ));
     }
@@ -36,13 +36,13 @@ public class TestCommandGroup extends CommandGroup
 
     private void testRotation()
     {
-        addSequential(new FastRotateCommand(0,8,-0.4F)); // rotate 0 degrees (shouldn't move anywhere)
-        addSequential(new FastRotateCommand(90,8,-0.4F)); // rotate 90 degrees clockwise
+        addSequential(new FastRotateCommand(0, 8, -0.4F)); // rotate 0 degrees (shouldn't move anywhere)
+        addSequential(new FastRotateCommand(90, 8, -0.4F)); // rotate 90 degrees clockwise
     }
 
     private void testRotateScaleToSwitch()
     {
-        addSequential(new FastRotateCommand(92,8,-0.4F));
+        addSequential(new FastRotateCommand(92, 8, -0.4F));
     }
 
     // test going forward from scale to switch in auton after a rotation

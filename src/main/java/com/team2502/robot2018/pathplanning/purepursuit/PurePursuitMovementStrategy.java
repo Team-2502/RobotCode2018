@@ -4,9 +4,9 @@ import com.team2502.robot2018.Constants;
 import com.team2502.robot2018.pathplanning.localization.IRotationalLocationEstimator;
 import com.team2502.robot2018.pathplanning.localization.ITranslationalLocationEstimator;
 import com.team2502.robot2018.pathplanning.localization.ITranslationalVelocityEstimator;
+import com.team2502.robot2018.utils.IStopwatch;
 import com.team2502.robot2018.utils.MathUtils;
 import com.team2502.robot2018.utils.PurePursuitUtils;
-import com.team2502.robot2018.utils.IStopwatch;
 import com.team2502.robot2018.utils.RealStopwatch;
 import org.joml.ImmutableVector2f;
 
@@ -229,11 +229,11 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
             // TODO: fix jankiness
             path.moveNextSegment();
             updateForNewSegment();
-            closestPoint  = path.getClosestPoint(usedEstimatedLocation);
+            closestPoint = path.getClosestPoint(usedEstimatedLocation);
         }
         dCP = usedEstimatedLocation.sub(closestPoint).length();
 
-        usedLookahead = PurePursuitUtils.generateLookahead(lookahead,velocityEstimator.estimateSpeed(),dCP);
+        usedLookahead = PurePursuitUtils.generateLookahead(lookahead, velocityEstimator.estimateSpeed(), dCP);
 
         distanceLeft = path.getCurrent().getDistanceLeft(closestPoint);
 
@@ -250,7 +250,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
             }
         }
 
-        speedUsed = PurePursuitUtils.generateSpeedUsed(absDistanceOfClosestPoint,lastWaypointSpeed,stopwatch.read(),path);
+        speedUsed = PurePursuitUtils.generateSpeedUsed(absDistanceOfClosestPoint, lastWaypointSpeed, stopwatch.read(), path);
 
         if(usedLookahead == Float.NaN)
         {
@@ -267,7 +267,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         relativeGoalPoint = MathUtils.LinearAlgebra.absoluteToRelativeCoord(absoluteGoalPoint, usedEstimatedLocation, usedHeading);
 
         usedCurvature = PurePursuitUtils.calculateCurvature(relativeGoalPoint);
-        wheelVelocities = PurePursuitUtils.calculateWheelVelocities(usedCurvature,tankRobot.getLateralWheelDistance(),speedUsed);
+        wheelVelocities = PurePursuitUtils.calculateWheelVelocities(usedCurvature, tankRobot.getLateralWheelDistance(), speedUsed);
 
         if(path.progressIfNeeded(distanceLeft, dCP, usedEstimatedLocation))
         {
@@ -331,7 +331,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
      * @return The radius of the circle that the robot is traveling across. Positive if the robot is turning left, negative if right.
      */
     public float calcMotionRadius()
-    { return MathUtils.epsilonEquals(usedCurvature,0) ? Float.MAX_VALUE : 1/usedCurvature; }
+    { return MathUtils.epsilonEquals(usedCurvature, 0) ? Float.MAX_VALUE : 1 / usedCurvature; }
 
     /**
      * @return The velocities (left,right) of the wheels. If you are setting input as voltage, "velocities" will actually be voltages. Magnitude doesn't matter the most; ratio does.

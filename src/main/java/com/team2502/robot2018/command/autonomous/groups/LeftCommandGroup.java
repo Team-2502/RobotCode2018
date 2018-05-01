@@ -88,7 +88,7 @@ public class LeftCommandGroup extends CommandGroup
      */
     private void goScaleLeft()
     {
-        Robot.writeLog("Going Scale Same Side Left",200);
+        Robot.writeLog("Going Scale Same Side Left", 200);
         addParallel(new RaiseElevatorScale());
         addParallel(new ActiveIntakeLowerCommand());
         addSequential(new GoScaleSameSide(PathConfig.Left.leftScale));
@@ -127,21 +127,21 @@ public class LeftCommandGroup extends CommandGroup
     private void secondCubeLeftPP()
     {
         addParallel(new ElevatorLowerCommand());
-        addSequential(new FastRotateCommand(120,8,-0.4F));
+        addSequential(new FastRotateCommand(120, 8, -0.4F));
 
         addParallel(new ActiveIntakeLowerCommand());
         addParallel(new RunIntakeCommand(4, -0.5));
 
         PurePursuitCommand forward = new PurePursuitCommand.Builder() // (0,0) is replaced with current robot position
-                .addWaypoint(0,0,8,20,-16)
-                .addWaypoint(5,15,0,20,-16)
-                .build();
+                                                                      .addWaypoint(0, 0, 8, 20, -16)
+                                                                      .addWaypoint(5, 15, 0, 20, -16)
+                                                                      .build();
 
         PurePursuitCommand back = new PurePursuitCommand.Builder() // (0,0) is replaced with current robot position
-                                         .addWaypoint(0,0,8,20,-16)
-                                         .addWaypoint(1,20,0,20,-16)
-                                       .setForward(false)
-                                         .build();
+                                                                   .addWaypoint(0, 0, 8, 20, -16)
+                                                                   .addWaypoint(1, 20, 0, 20, -16)
+                                                                   .setForward(false)
+                                                                   .build();
 
         addSequential(forward);
         addSequential(back);

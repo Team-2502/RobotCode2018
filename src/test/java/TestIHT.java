@@ -1,5 +1,4 @@
 import com.team2502.robot2018.utils.InterpolationMap;
-import org.junit.Assert;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -40,10 +39,10 @@ public class TestIHT
         map.put(2D, 1D);
         map.put(3D, 0D);
 
-        assertEquals(0.5,map.integrate(0, 1),1E-6);
-        assertEquals(1.5F,map.integrate(0, 2),1E-6);
-        assertEquals(2F,map.integrate(0, 3),1E-6);
-        assertEquals(2F,map.integrate(0, 10),1E-6);
-        assertEquals(0F,map.integrate(-10, 0),1E-6);
+        assertEquals(0.5, map.integrate(0, 1), 1E-6);
+        assertEquals(1.5F, map.integrate(0, 2), 1E-6);
+        assertEquals(2F, map.integrate(0, 3), 1E-6);
+        assertEquals(2F, map.integrate(0, 10), 1E-6);
+        assertEquals(0F, map.integrate(-10, 0), 1E-6);
     }
 }

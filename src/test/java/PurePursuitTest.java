@@ -74,7 +74,7 @@ public class PurePursuitTest
                 new Waypoint(0, 0, 1, 0.5F, -0.5F),
                 new Waypoint(0, 9.9999F, 1, 0.5F, -0.5F),
                 new Waypoint(0, 10, 0, 0.5F, -0.5F)
-                                   );
+                              );
 
         // deccelerate to 0
         assertEquals(2F, generateSpeedUsed(0, 2, ANY_F, path.clone()), 1E-6);

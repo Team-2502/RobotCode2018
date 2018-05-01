@@ -32,8 +32,7 @@ public class PurePursuitUtils
     }
 
     /**
-     *
-     * @param positionOnPath often the distance along the path the closest point is
+     * @param positionOnPath      often the distance along the path the closest point is
      * @param speedAtLastWaypoint
      * @param cycleTime
      * @param path
@@ -63,7 +62,7 @@ public class PurePursuitUtils
                 // TODO: fix this... kinda jank
                 if(distanceTo < -0.5)
                 {
-                    throw new IllegalArgumentException("Path should have progressed (looking ahead on path), distanceTo: "+distanceTo);
+                    throw new IllegalArgumentException("Path should have progressed (looking ahead on path), distanceTo: " + distanceTo);
                 }
                 else
                 {
@@ -84,12 +83,12 @@ public class PurePursuitUtils
         }
         else if((finalSpeed > 0 && finalSpeed > speedAtLastWaypoint) || (finalSpeed < 0 && finalSpeed < speedAtLastWaypoint))
         {
-            return  MathUtils.minF(finalSpeed, speedAtLastWaypoint + cycleTime * waypointEnd.getMaxAccel());
+            return MathUtils.minF(finalSpeed, speedAtLastWaypoint + cycleTime * waypointEnd.getMaxAccel());
         }
         return speedAtLastWaypoint;
     }
 
-    private static float getMaxSpeed(float initSpeed, float finalSpeed,float distanceLeft, float currentMaxDeccel)
+    private static float getMaxSpeed(float initSpeed, float finalSpeed, float distanceLeft, float currentMaxDeccel)
     {
         float speed;
         float maxVel = (float) Math.sqrt(finalSpeed * finalSpeed - 2 * currentMaxDeccel * distanceLeft);
@@ -127,9 +126,9 @@ public class PurePursuitUtils
             // vl(L+2r) + vr(L-2r) = 0
             // vl(L+2r) = -vr(L-2r)
             // vl/vr = -(L+2r)/(L-2r)
-            float r = 1/curvature;
+            float r = 1 / curvature;
 
-            float velLeftToRightRatio = -(lateralWheelDistance + 2*r)/(lateralWheelDistance - 2*r);
+            float velLeftToRightRatio = -(lateralWheelDistance + 2 * r) / (lateralWheelDistance - 2 * r);
             float velRightToLeftRatio = 1 / velLeftToRightRatio; // invert the ratio
 
             // This first big repetitive section is just finding the largest possible velocities while maintaining a ratio.

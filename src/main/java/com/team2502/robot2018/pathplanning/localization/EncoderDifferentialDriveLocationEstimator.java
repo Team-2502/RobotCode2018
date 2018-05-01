@@ -1,8 +1,8 @@
 package com.team2502.robot2018.pathplanning.localization;
 
 import com.team2502.robot2018.Robot;
-import com.team2502.robot2018.utils.MathUtils;
 import com.team2502.robot2018.utils.IStopwatch;
+import com.team2502.robot2018.utils.MathUtils;
 import com.team2502.robot2018.utils.RealStopwatch;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.joml.ImmutableVector2f;

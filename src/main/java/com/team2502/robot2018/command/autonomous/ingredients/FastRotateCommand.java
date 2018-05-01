@@ -59,7 +59,7 @@ public class FastRotateCommand extends Command
     @Override
     protected boolean isFinished()
     {
-        System.out.println("dAngle: "+dAngle);
+        System.out.println("dAngle: " + dAngle);
         return dAngle <= TOLERANCE_DEG;
     }
 
