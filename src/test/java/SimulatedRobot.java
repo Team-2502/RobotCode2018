@@ -5,7 +5,7 @@ public class SimulatedRobot implements ITankRobotBounds
 {
 
     public static final float MAX_VEL = 16F;
-    public static final float VOLTAGE_CHANGE_MAX = .1F;
+    public static final float VOLTAGE_CHANGE_MAX = .02F;
     public static final float LATERAL_WHEEL_DIST = 2F;
 
     private final float lateralWheelDistance;

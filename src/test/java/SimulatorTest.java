@@ -19,6 +19,7 @@ public class SimulatorTest
 {
 
     private static final int HEADING_DEGREE_TOLERANCE = 50;
+    private static final int TIME_TOLERANCE = 15;
 
     @Test
     public void testStraight()
@@ -71,32 +72,32 @@ public class SimulatorTest
     public void testLeftPaths()
     {
         // CCW degrees where 0 is front of robot
-        testPath(PathConfig.Left.leftScale,332);
-        testPath(PathConfig.Left.rightScale,39);
-        testPath(PathConfig.Left.leftSwitch,0);
-        testPath(PathConfig.Left.leftScaleDeepNullZone,275);
-        testPath(PathConfig.Left.leftScaleToSwitch,332);
-        testPath(PathConfig.Left.leftSwitchToScale,332);
+        testPath(PathConfig.Left.leftScale,332,15);
+        testPath(PathConfig.Left.rightScale,39,15);
+        testPath(PathConfig.Left.leftSwitch,0,15);
+        testPath(PathConfig.Left.leftScaleDeepNullZone,275,15);
+        testPath(PathConfig.Left.leftScaleToSwitch,332,15);
+        testPath(PathConfig.Left.leftSwitchToScale,275,15);
     }
 
     @Test
     public void testRightPaths()
     {
-        testPath(PathConfig.Right.leftScale,321);
-        testPath(PathConfig.Right.rightScale,28);
-        testPath(PathConfig.Right.rightSwitch,0);
-        testPath(PathConfig.Right.rightScaleDeepNullZone,90);
+        testPath(PathConfig.Right.leftScale,321,7.3F);
+        testPath(PathConfig.Right.rightScale,28,3.5F);
+        testPath(PathConfig.Right.rightSwitch,0,3.5F);
+        testPath(PathConfig.Right.rightScaleDeepNullZone,90,15);
     }
 
     @Test
     public void testCenterPaths()
     {
-        testPath(PathConfig.Center.rightSwitch,0);
-        testPath(PathConfig.Center.leftSwitch,0);
+        testPath(PathConfig.Center.rightSwitch,0,15);
+        testPath(PathConfig.Center.leftSwitch,0,15);
     }
 
 
-    private void testPath(List<Waypoint> pathToTest, float desiredHeading)
+    private void testPath(List<Waypoint> pathToTest, float desiredHeading, float desiredTime)
     {
         System.out.println("start: " + pathToTest);
         List<Waypoint> path = new ArrayList<>();
@@ -111,8 +112,11 @@ public class SimulatorTest
                                                                                                   simulatorLocationEstimator, simulatorLocationEstimator, simulatorLocationEstimator, path, Constants.PurePursuit.LOOKAHEAD, false);
 
         simulatorLocationEstimator.setEstimatedLocation(path.get(0).getLocation()); // Fixes paths that do not start at (0,0)
-        purePursuitMovementStrategy.setStopwatch(new SimulatedStopwatch(0.02F));
-        for(int i = 0; i < 1000; i++)
+        float dt = 0.02F;
+        purePursuitMovementStrategy.setStopwatch(new SimulatedStopwatch(dt));
+        int i = 0;
+        System.out.println("time, x, y");
+        for(; i < 1000; i++)
         {
             if(purePursuitMovementStrategy.isFinishedPath())
             {
@@ -121,10 +125,13 @@ public class SimulatorTest
             }
             purePursuitMovementStrategy.update();
             ImmutableVector2f wheelVels = purePursuitMovementStrategy.getWheelVelocities();
+            ImmutableVector2f usedEstimatedLocation = purePursuitMovementStrategy.getUsedEstimatedLocation();
+            System.out.println(i*dt+", "+usedEstimatedLocation.x+", "+usedEstimatedLocation.y);
             simulatedRobot.runMotorsVel(wheelVels.x, wheelVels.y);
             simulatorLocationEstimator.update();
         }
 
+        Assert.assertEquals(desiredTime,dt*i,TIME_TOLERANCE);
         float finalHeading = MathUtils.rad2Deg(simulatorLocationEstimator.estimateHeading());
         if(finalHeading < 0)
         {
