@@ -908,19 +908,19 @@ public final class MathUtils
         /**
          * Given a circle and a line, find where the circle intersects the line
          *
-         * @param a One point on the line
-         * @param b Another point on the line
+         * @param pointA One point on the line
+         * @param pointB Another point on the line
          * @param center The center of the circle
          * @param radius The radius of the circle
          * @return All points on both the line and circle, should they exist.
          */
-        public static ImmutableVector2f[] getCircleLineIntersectionPoint(ImmutableVector2f a, ImmutableVector2f b, ImmutableVector2f center, double radius)
+        public static ImmutableVector2f[] getCircleLineIntersectionPoint(ImmutableVector2f pointA, ImmutableVector2f pointB, ImmutableVector2f center, double radius)
         {
-            float baX = b.get(0) - a.get(0);
-            float baY = b.get(1) - a.get(1);
+            float baX = pointA.get(0) - pointA.get(0);
+            float baY = pointB.get(1) - pointA.get(1);
 
-            float caX = center.get(0) - a.get(0);
-            float caY = center.get(1) - a.get(1);
+            float caX = center.get(0) - pointA.get(0);
+            float caY = center.get(1) - pointA.get(1);
 
             float a = baX * baX + baY * baY;
             float bBy2 = baX * caX + baY * caY;
@@ -935,11 +935,11 @@ public final class MathUtils
             float tmpSqrt = (float) Math.sqrt(disc);
             float abScalingFactor1 = tmpSqrt - pBy2;
 
-            ImmutableVector2f p1 = new ImmutableVector2f(a.get(0) - baX * abScalingFactor1, a.get(1) - baY * abScalingFactor1);
+            ImmutableVector2f p1 = new ImmutableVector2f(pointA.get(0) - baX * abScalingFactor1, pointA.get(1) - baY * abScalingFactor1);
             if(disc == 0) { return new ImmutableVector2f[] { p1 }; }
 
             float abScalingFactor2 = -pBy2 - tmpSqrt;
-            ImmutableVector2f p2 = new ImmutableVector2f(a.get(0) - baX * abScalingFactor2, a.get(1) - baY * abScalingFactor2);
+            ImmutableVector2f p2 = new ImmutableVector2f(pointA.get(0) - baX * abScalingFactor2, pointA.get(1) - baY * abScalingFactor2);
             return new ImmutableVector2f[] { p1, p2 };
         }
 
