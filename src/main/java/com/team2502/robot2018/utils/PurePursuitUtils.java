@@ -40,7 +40,6 @@ public class PurePursuitUtils
      */
     public static float generateSpeedUsed(float positionOnPath, float speedAtLastWaypoint, float cycleTime, Path path)
     {
-        System.out.println("positionOnPath = [" + positionOnPath + "], speedAtLastWaypoint = [" + speedAtLastWaypoint + "], cycleTime = [" + cycleTime + "], path = [" + path + "]");
         float start = path.getCurrent().getAbsoluteDistanceStart();
         if(start > positionOnPath)
         {
