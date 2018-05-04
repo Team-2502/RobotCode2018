@@ -87,6 +87,8 @@ public class SimulatorTest
         SimulatorLocationEstimator simulatorLocationEstimator = new SimulatorLocationEstimator(simulatedRobot);
         PurePursuitMovementStrategy purePursuitMovementStrategy = new PurePursuitMovementStrategy(simulatedRobot,
                                                                                                   simulatorLocationEstimator, simulatorLocationEstimator, simulatorLocationEstimator, path, Constants.PurePursuit.LOOKAHEAD, false);
+
+        simulatorLocationEstimator.setEstimatedLocation(path.get(0).getLocation()); // Fixes paths that do not start at (0,0)
         purePursuitMovementStrategy.setStopwatch(new SimulatedStopwatch(0.02F));
         for(int i = 0; i < 1000; i++)
         {

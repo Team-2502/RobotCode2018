@@ -13,7 +13,7 @@ public class SimulatorLocationEstimator implements ITranslationalLocationEstimat
     private final SimulatedRobot simulatedRobot;
 
     private float heading = 0F;
-    private ImmutableVector2f location = new ImmutableVector2f();
+    private ImmutableVector2f estimatedLocation = new ImmutableVector2f();
     private ImmutableVector2f velocity = new ImmutableVector2f();
     private IStopwatch stopwatch;
 
@@ -21,6 +21,11 @@ public class SimulatorLocationEstimator implements ITranslationalLocationEstimat
     {
         this.simulatedRobot = simulatedRobot;
         this.stopwatch = new SimulatedStopwatch(0.02F); // each 20ms
+    }
+
+    public void setEstimatedLocation(ImmutableVector2f estimatedLocation)
+    {
+        this.estimatedLocation = estimatedLocation;
     }
 
     public void update()
@@ -32,7 +37,7 @@ public class SimulatorLocationEstimator implements ITranslationalLocationEstimat
         float angularVel = MathUtils.Kinematics.getAngularVel(leftVel, rightVel, SimulatedRobot.LATERAL_WHEEL_DIST);
         heading += angularVel * time;
         ImmutableVector2f dPos = MathUtils.Kinematics.getAbsoluteDPosCurve(leftVel, rightVel, simulatedRobot.getLateralWheelDistance(), time, heading);
-        location = location.add(dPos);
+        estimatedLocation = estimatedLocation.add(dPos);
     }
 
     @Override
@@ -44,7 +49,7 @@ public class SimulatorLocationEstimator implements ITranslationalLocationEstimat
     @Override
     public ImmutableVector2f estimateLocation()
     {
-        return location;
+        return estimatedLocation;
     }
 
     @Override
