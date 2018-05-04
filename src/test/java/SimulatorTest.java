@@ -91,8 +91,8 @@ public class SimulatorTest
     @Test
     public void testCenterPaths()
     {
-//        testPath(PathConfig.Center.rightSwitch);
-//        testPath(PathConfig.Center.leftSwitch);
+        testPath(PathConfig.Center.rightSwitch,0);
+        testPath(PathConfig.Center.leftSwitch,0);
     }
 
 
