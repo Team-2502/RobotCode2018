@@ -52,7 +52,7 @@ public class SimulatorTest
     {
         SimulatedRobot simulatedRobot = new SimulatedRobot(1);
         SimulatorLocationEstimator simulatorLocationEstimator = new SimulatorLocationEstimator(simulatedRobot);
-        for(int i = 0; i < 1000; i++)
+        for(int i = 0; i < 2000; i++)
         {
             simulatedRobot.runMotorsVel(-5, 5);
             simulatorLocationEstimator.update();
@@ -63,7 +63,7 @@ public class SimulatorTest
     }
 
     @Test
-    public void testLeft()
+    public void testLeftPaths()
     {
         testPath(PathConfig.Left.leftScale);
         testPath(PathConfig.Left.rightScale);
@@ -71,6 +71,22 @@ public class SimulatorTest
         testPath(PathConfig.Left.leftScaleDeepNullZone);
         testPath(PathConfig.Left.leftScaleToSwitch);
         testPath(PathConfig.Left.leftSwitchToScale);
+    }
+
+    @Test
+    public void testRightPaths()
+    {
+        testPath(PathConfig.Right.leftScale);
+        testPath(PathConfig.Right.rightScale);
+        testPath(PathConfig.Right.rightSwitch);
+        testPath(PathConfig.Right.rightScaleDeepNullZone);
+    }
+
+    @Test
+    public void testCenterPaths()
+    {
+        testPath(PathConfig.Center.rightSwitch);
+        testPath(PathConfig.Center.leftSwitch);
     }
 
 
@@ -102,14 +118,20 @@ public class SimulatorTest
             simulatedRobot.runMotorsVel(wheelVels.x, wheelVels.y);
             simulatorLocationEstimator.update();
         }
-        Assert.assertTrue(isSuccess(simulatorLocationEstimator.estimateLocation(), path));
+        boolean success = isSuccess(simulatorLocationEstimator.estimateLocation(), path);
+        Assert.assertTrue(success);
     }
 
     boolean isSuccess(ImmutableVector2f finalLoc, List<Waypoint> path)
     {
         float distance = finalLoc.distance(path.get(path.size() - 1).getLocation());
         System.out.println("distance = " + distance);
-        return distance < 1F;
+        boolean success = distance < 1F;
+        if(!success)
+        {
+            System.out.println("Not success! finalLoc: "+finalLoc);
+        }
+        return success;
     }
 
 }
