@@ -590,7 +590,7 @@ public final class MathUtils
         }
 
         /**
-         * @return if a <= x <= b or b<= x <= a
+         * @return if a<= x <= b or b <= x <= a
          */
         public static boolean between(final float a, final float x, final float b)
         {
@@ -800,23 +800,71 @@ public final class MathUtils
             return (float) Math.atan2(dy, dx);
         }
 
-        /**
+        public static class ParametricLine
+        {
+
+
+            // (t*dx, t*dy)
+            private final ImmutableVector2f a;
+            private final ImmutableVector2f b;
+            private final float dx;
+            private final float dy;
+
+            public ParametricLine(ImmutableVector2f a, ImmutableVector2f b)
+            {
+                this.a = a;
+                this.b = b;
+                dx = b.x - a.x;
+                dy = b.y - a.y;
+            }
+
+            public ParametricLine(ImmutableVector2f base, float dx, float dy)
+            {
+                this.a = base;
+                this.b = new ImmutableVector2f(dx,dy);
+                this.dx = dx;
+                this.dy = dy;
+            }
+
+            public ParametricLine getPerp(ImmutableVector2f point)
+            {
+                return new ParametricLine(point,-dy,dx);
+            }
+
+            public ImmutableVector2f intersect(ParametricLine other)
+            {
+                // a.x - dx*t =
+                return null;
+            }
+
+            public ImmutableVector2f geta()
+            {
+                return a;
+            }
+
+            public ImmutableVector2f getb()
+            {
+                return b;
+            }
+        }
+
+        /** //TODO: rewrite in parametric.... actually quite horrible
          * Given a line defined by two points, find the point on the line closest to our robot's position
          *
-         * @param linePointA One point on the line
-         * @param linePointB Another point on the line
+         * @param linea One point on the line
+         * @param lineb Another point on the line
          * @param robotPos   The point at which our robot is
          * @return The point on the line closest to the robot
          */
-        public static ImmutableVector2f getClosestPointLineSegments(ImmutableVector2f linePointA, ImmutableVector2f linePointB, ImmutableVector2f robotPos)
+        public static ImmutableVector2f getClosestPointLineSegments(ImmutableVector2f linea, ImmutableVector2f lineb, ImmutableVector2f robotPos)
         {
 
-            double d1 = Math.hypot(linePointA.x - robotPos.x, linePointA.y - robotPos.y);
-            double d2 = Math.hypot(linePointB.x - robotPos.x, linePointB.y - robotPos.y);
+            double d1 = Math.hypot(linea.x - robotPos.x, linea.y - robotPos.y);
+            double d2 = Math.hypot(lineb.x - robotPos.x, lineb.y - robotPos.y);
 
             double dPerp;
 
-            Line lineSegment = new Line(linePointA, linePointB);
+            Line lineSegment = new Line(linea, lineb);
 
             Line linePerp = lineSegment.getPerp(robotPos);
 
@@ -824,13 +872,17 @@ public final class MathUtils
 
             double d3 = Math.hypot(intersect.x - robotPos.x, intersect.y - robotPos.y);
 
+            if(intersect.y == Float.NaN)
+            {
+
+            }
             if(d1 < d2 && d1 < d3)
             {
-                return linePointA;
+                return linea;
             }
             else if(d2 < d1 && d2 < d3)
             {
-                return linePointB;
+                return lineb;
             }
             else
             {
@@ -856,19 +908,19 @@ public final class MathUtils
         /**
          * Given a circle and a line, find where the circle intersects the line
          *
-         * @param pointA One point on the line
-         * @param pointB Another point on the line
+         * @param a One point on the line
+         * @param b Another point on the line
          * @param center The center of the circle
          * @param radius The radius of the circle
          * @return All points on both the line and circle, should they exist.
          */
-        public static ImmutableVector2f[] getCircleLineIntersectionPoint(ImmutableVector2f pointA, ImmutableVector2f pointB, ImmutableVector2f center, double radius)
+        public static ImmutableVector2f[] getCircleLineIntersectionPoint(ImmutableVector2f a, ImmutableVector2f b, ImmutableVector2f center, double radius)
         {
-            float baX = pointB.get(0) - pointA.get(0);
-            float baY = pointB.get(1) - pointA.get(1);
+            float baX = b.get(0) - a.get(0);
+            float baY = b.get(1) - a.get(1);
 
-            float caX = center.get(0) - pointA.get(0);
-            float caY = center.get(1) - pointA.get(1);
+            float caX = center.get(0) - a.get(0);
+            float caY = center.get(1) - a.get(1);
 
             float a = baX * baX + baY * baY;
             float bBy2 = baX * caX + baY * caY;
@@ -883,11 +935,11 @@ public final class MathUtils
             float tmpSqrt = (float) Math.sqrt(disc);
             float abScalingFactor1 = tmpSqrt - pBy2;
 
-            ImmutableVector2f p1 = new ImmutableVector2f(pointA.get(0) - baX * abScalingFactor1, pointA.get(1) - baY * abScalingFactor1);
+            ImmutableVector2f p1 = new ImmutableVector2f(a.get(0) - baX * abScalingFactor1, a.get(1) - baY * abScalingFactor1);
             if(disc == 0) { return new ImmutableVector2f[] { p1 }; }
 
             float abScalingFactor2 = -pBy2 - tmpSqrt;
-            ImmutableVector2f p2 = new ImmutableVector2f(pointA.get(0) - baX * abScalingFactor2, pointA.get(1) - baY * abScalingFactor2);
+            ImmutableVector2f p2 = new ImmutableVector2f(a.get(0) - baX * abScalingFactor2, a.get(1) - baY * abScalingFactor2);
             return new ImmutableVector2f[] { p1, p2 };
         }
 
@@ -918,14 +970,15 @@ public final class MathUtils
                 if(a.x - b.x != 0)
                 {
                     slope = (a.y - b.y) / (a.x - b.x);
-
+                    y_intercept = a.y - slope * a.x;
+                    x_intercept = -y_intercept / slope;
                 }
                 else
                 {
-                    slope = Double.MAX_VALUE;
+                    slope = Double.NaN;
+                    y_intercept = Double.POSITIVE_INFINITY;
+                    x_intercept = a.x;
                 }
-                y_intercept = a.y - slope * a.x;
-                x_intercept = -y_intercept / slope;
             }
 
 
@@ -954,7 +1007,7 @@ public final class MathUtils
             public Line getPerp(ImmutableVector2f point)
             {
                 double perpSlope;
-                if(slope == Double.MAX_VALUE)
+                if(Double.isNaN(slope))
                 {
                     perpSlope = 0;
                 }
@@ -978,6 +1031,15 @@ public final class MathUtils
                         // TODO: is this a good idea to return?
                         return new ImmutableVector2f((float) other.x1, (float) other.y2);
                     }
+                }
+                if(Double.isNaN(slope))
+                {
+                    return new ImmutableVector2f(a.x, (float) other.evaluateY(a.x));
+                }
+
+                if(Double.isNaN(other.slope))
+                {
+                    return new ImmutableVector2f(other.a.x, (float) evaluateY(other.a.x));
                 }
                 // mx + b = cx + d
                 // (m-c) x = d - b

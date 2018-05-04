@@ -147,4 +147,14 @@ public class MathTest
         assertEquals(355, MathUtils.Kinematics.navXBound(-5), 0.001);
     }
 
+    @Test
+    public void testLineIntersections()
+    {
+        MathUtils.Geometry.Line line = new MathUtils.Geometry.Line(new ImmutableVector2f(3.5F, 4F), new ImmutableVector2f(3.5F, 9F));
+        ImmutableVector2f point = new ImmutableVector2f(3.4F, 6F);
+        MathUtils.Geometry.Line perp = line.getPerp(point);
+        ImmutableVector2f intersection = perp.intersection(line);
+        System.out.println(intersection);
+    }
+
 }

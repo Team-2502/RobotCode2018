@@ -22,6 +22,8 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
      */
     private final Path path;
 
+    private int updateCount = 0;
+
     /**
      * Something that knows where we're pointing
      */
@@ -195,11 +197,17 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         stopwatch.reset();
     }
 
+    public int getUpdateCount()
+    {
+        return updateCount;
+    }
+
     /**
      * Recalculates position, heading, and goalpoint.
      */
     public void update()
     {
+        updateCount++;
 
         if(shouldEnd())
         {
@@ -217,10 +225,12 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         ImmutableVector2f closestPoint = path.getClosestPoint(usedEstimatedLocation);
         float absDistanceOfClosestPoint = path.getAbsDistanceOfClosestPoint(closestPoint);
         float distanceTo = path.getCurrent().getAbsoluteDistanceEnd() - absDistanceOfClosestPoint;
-        if(distanceTo < 0)
+        if(distanceTo <= 0)
         {
-            path.moveNextSegment();
-            updateForNewSegment();
+            if(path.moveNextSegment())
+            {
+                updateForNewSegment();
+            }
         }
 
 

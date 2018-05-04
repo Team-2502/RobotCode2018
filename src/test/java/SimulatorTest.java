@@ -15,7 +15,7 @@ import static org.junit.Assert.assertTrue;
 
 public class SimulatorTest
 {
-    //    @Test
+    @Test
     public void testStraight()
     {
         SimulatedRobot simulatedRobot = new SimulatedRobot(1);
@@ -110,7 +110,7 @@ public class SimulatorTest
         {
             if(purePursuitMovementStrategy.isFinishedPath())
             {
-                System.out.println("Finished");
+                System.out.println("Finished @ "+purePursuitMovementStrategy.getUpdateCount());
                 break;
             }
             purePursuitMovementStrategy.update();
