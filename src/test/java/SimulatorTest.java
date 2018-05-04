@@ -2,9 +2,11 @@ import com.team2502.robot2018.Constants;
 import com.team2502.robot2018.command.autonomous.ingredients.PathConfig;
 import com.team2502.robot2018.pathplanning.purepursuit.PurePursuitMovementStrategy;
 import com.team2502.robot2018.pathplanning.purepursuit.Waypoint;
+import com.team2502.robot2018.utils.MathUtils;
 import com.team2502.robot2018.utils.SimulatedStopwatch;
 import org.joml.ImmutableVector2f;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -15,6 +17,9 @@ import static org.junit.Assert.assertTrue;
 
 public class SimulatorTest
 {
+
+    private static final int HEADING_DEGREE_TOLERANCE = 50;
+
     @Test
     public void testStraight()
     {
@@ -65,32 +70,33 @@ public class SimulatorTest
     @Test
     public void testLeftPaths()
     {
-        testPath(PathConfig.Left.leftScale);
-        testPath(PathConfig.Left.rightScale);
-        testPath(PathConfig.Left.leftSwitch);
-        testPath(PathConfig.Left.leftScaleDeepNullZone);
-        testPath(PathConfig.Left.leftScaleToSwitch);
-        testPath(PathConfig.Left.leftSwitchToScale);
+        // CCW degrees where 0 is front of robot
+        testPath(PathConfig.Left.leftScale,332);
+        testPath(PathConfig.Left.rightScale,39);
+        testPath(PathConfig.Left.leftSwitch,0);
+        testPath(PathConfig.Left.leftScaleDeepNullZone,275);
+        testPath(PathConfig.Left.leftScaleToSwitch,332);
+        testPath(PathConfig.Left.leftSwitchToScale,332);
     }
 
     @Test
     public void testRightPaths()
     {
-        testPath(PathConfig.Right.leftScale);
-        testPath(PathConfig.Right.rightScale);
-        testPath(PathConfig.Right.rightSwitch);
-        testPath(PathConfig.Right.rightScaleDeepNullZone);
+        testPath(PathConfig.Right.leftScale,321);
+        testPath(PathConfig.Right.rightScale,28);
+        testPath(PathConfig.Right.rightSwitch,0);
+        testPath(PathConfig.Right.rightScaleDeepNullZone,90);
     }
 
     @Test
     public void testCenterPaths()
     {
-        testPath(PathConfig.Center.rightSwitch);
-        testPath(PathConfig.Center.leftSwitch);
+//        testPath(PathConfig.Center.rightSwitch);
+//        testPath(PathConfig.Center.leftSwitch);
     }
 
 
-    private void testPath(List<Waypoint> pathToTest)
+    private void testPath(List<Waypoint> pathToTest, float desiredHeading)
     {
         System.out.println("start: " + pathToTest);
         List<Waypoint> path = new ArrayList<>();
@@ -118,7 +124,19 @@ public class SimulatorTest
             simulatedRobot.runMotorsVel(wheelVels.x, wheelVels.y);
             simulatorLocationEstimator.update();
         }
-        boolean success = isSuccess(simulatorLocationEstimator.estimateLocation(), path);
+
+        float finalHeading = MathUtils.rad2Deg(simulatorLocationEstimator.estimateHeading());
+        if(finalHeading < 0)
+        {
+            finalHeading = 360 + finalHeading;
+        }
+        float dHeading = Math.abs(desiredHeading - finalHeading) % 360;
+        if(dHeading > 180)
+        {
+            dHeading = 360-dHeading;
+        }
+        System.out.println("Final heading: "+finalHeading+" dHeading: "+dHeading);
+        boolean success = isSuccess(simulatorLocationEstimator.estimateLocation(), path) && Math.abs(dHeading) < HEADING_DEGREE_TOLERANCE;
         Assert.assertTrue(success);
     }
 
