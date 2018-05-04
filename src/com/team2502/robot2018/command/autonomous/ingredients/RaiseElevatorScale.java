@@ -16,7 +16,7 @@ public class RaiseElevatorScale extends CommandGroup
         Robot.writeLog("raising elevator scale", 10);
 //        addSequential(new WaitCommand(timeout));
         addParallel(new ActiveIntakeRotate(1, 0.5));
-        addSequential(new ElevatorAutonCommand(1.7F, 40));
+        addSequential(new ElevatorAutonCommand(1.8F, 40));
         addSequential(new ActiveIntakeRotate(0.7, -1));
 //        addParallel(new WiggleActiveRotate());
 //        addSequential(new ElevatorAutonCommand(3F, Constants.SCALE_ELEV_HEIGHT_FT));

@@ -69,6 +69,8 @@ public final class Robot extends IterativeRobot
     @Override
     public void robotInit()
     {
+        SmartDashboard.putNumber("Side switch tuning: angle", 80);
+        SmartDashboard.putNumber("Side switch distance", 13.5);
         MathUtils.init();
         NAVX = new AHRS(SPI.Port.kMXP);
 //        CameraServer.getInstance().startAutomaticCapture();

@@ -7,6 +7,7 @@ import com.team2502.robot2018.command.teleop.QuickCommand;
 import com.team2502.robot2018.command.teleop.ToggleIntakeCommand;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.command.WaitCommand;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class LeftCommandGroup extends CommandGroup
 {
@@ -125,9 +126,10 @@ public class LeftCommandGroup extends CommandGroup
 
     }
 
+
     private void crossLine()
     {
-        addSequential(new DriveTime(9, 0.5F));
+        addSequential(new DriveTime(7, 0.45F));
     }
 
     private void goSwitch()
@@ -136,7 +138,7 @@ public class LeftCommandGroup extends CommandGroup
 
         addSequential(new PurePursuitCommand(Paths.Left.leftSwitch));
 
-        addSequential(new FastRotateCommand(85, 5, -0.4F));
+        addSequential(new FastRotateCommand(((float) SmartDashboard.getNumber("Side switch tuning: angle", 80)), 5, -0.4F));
 
         addSequential(new DeadreckoningDrive(1.5, 4));
 
@@ -147,11 +149,11 @@ public class LeftCommandGroup extends CommandGroup
     {
         addSequential(new PurePursuitCommand(Paths.Left.leftScale)); //Drive to location and raise elevator
 
-
         emitCube(); // Shoot cube via active spinning wheels, then open up for safety
 
-        addSequential(new DeadreckoningDrive(0.7F, -4F)); // Back up
-        addSequential(new ElevatorAutonCommand(2.5, 0)); // Lower the elevator
+        addParallel(new WaitCommand(3));
+        addParallel(new ElevatorAutonCommand(1.7, 0));
+        addSequential(new DeadreckoningDrive(7.0, -4.0F));
 
     }
 
@@ -182,20 +184,21 @@ public class LeftCommandGroup extends CommandGroup
         addSequential(new PurePursuitCommand(Paths.Left.leftScaleDeepNullZone)); // Drive to deep scale
         emitCube(); // Shoot cube via active spinning wheels, then open up for safety
 
-        addSequential(new DeadreckoningDrive(0.7F, -4F)); // Back up
-        addSequential(new ElevatorAutonCommand(2.5, 0)); // Lower the elevator
+        addParallel(new WaitCommand(3));
+        addParallel(new ElevatorAutonCommand(1.7, 0));
+        addSequential(new DeadreckoningDrive(5.0, -5.0F));
     }
 
     private void goScaleRight()
     {
-//        addParallel(new ActiveIntakeRotate(1F, 0.5));
-        addSequential(new PurePursuitCommand(Paths.Left.rightScale)); // Drive to location and raise elevator
+        addSequential(new PurePursuitCommand(Paths.Left.rightScale));
 
-        emitCube(); // Special cube shooty boi
+        emitCube();
 
-        addSequential(new DeadreckoningDrive(0.7F, -4F)); // Reverse, reverse
-        addSequential(new ElevatorAutonCommand(2.5, 0)); // resetti elevatori
 
+        addParallel(new WaitCommand(3));
+        addParallel(new ElevatorAutonCommand(1.7, 0));
+        addSequential(new DeadreckoningDrive(5.0, -4.0F));
     }
 
     private void emitCube()

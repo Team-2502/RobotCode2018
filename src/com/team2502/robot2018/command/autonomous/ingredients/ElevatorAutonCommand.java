@@ -30,7 +30,8 @@ public class ElevatorAutonCommand extends TimedCommand
     @Override
     protected void initialize()
     {
-        Robot.ELEVATOR.calibrateEncoder();
+        // DO NOT RESET THE DAMN THING, THIS WILL MAKE LOWERING IMPOSSIBLE
+//        Robot.ELEVATOR.calibrateEncoder();
         Robot.writeLog("ElevatorAutonCommand init", 10);
     }
 

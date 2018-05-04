@@ -124,11 +124,13 @@ public class RightCommandGroup extends CommandGroup
 
     private void goScaleLeft()
     {
-        addSequential(new PurePursuitCommand(Paths.Right.leftScale)); // Drive to locatino and raise elevator
-        emitCube(); // Special cube shooty boi
+        addSequential(new PurePursuitCommand(Paths.Right.leftScale));
+        emitCube();
 
-        addSequential(new DeadreckoningDrive(0.7F, -4F)); // Reverse, reverse
-        addSequential(new ElevatorAutonCommand(2.5, 0)); // resetti elevatori
+        addParallel(new WaitCommand(3));
+        addParallel(new ActiveIntakeRotate(1, -1));
+        addParallel(new ElevatorAutonCommand(1.7, 0));
+        addSequential(new DeadreckoningDrive(5.0, -4.0F));
     }
 
     private void goSwitch()
@@ -146,28 +148,28 @@ public class RightCommandGroup extends CommandGroup
 
     private void goScaleRight()
     {
-//        addParallel(new ActiveIntakeRotate(1, 0.5));
         addSequential(new PurePursuitCommand(Paths.Right.rightScale));
 
-        emitCube(); // Special cube shooty boi
+        emitCube();
 
-        addSequential(new DeadreckoningDrive(0.7F, -4F)); // Reverse, reverse
-        addSequential(new ElevatorAutonCommand(2.5, 0)); // resetti elevatori
+        addParallel(new WaitCommand(3));
+        addParallel(new ElevatorAutonCommand(1.7, 0));
+        addSequential(new DeadreckoningDrive(7.0, -4.0F));
     }
 
     private void goDeepScaleRight()
     {
         addParallel(new PurePursuitCommand(Paths.Right.rightScaleDeepNullZone));
-        emitCube(); // Special cube shooty boi
+        emitCube();
 
-        addSequential(new DeadreckoningDrive(0.7F, -4F)); // Reverse, reverse
-        addSequential(new ElevatorAutonCommand(2.5, 0)); // resetti elevatori
+        addParallel(new WaitCommand(3));
+        addParallel(new ElevatorAutonCommand(1.7, 0));
+        addSequential(new DeadreckoningDrive(5.0, -5.0F));
     }
 
     private void crossLine()
     {
-        addSequential(new DriveTime(9, 0.5F));
-
+        addSequential(new DriveTime(7, 0.45F));
     }
 
     private void emitCube()
