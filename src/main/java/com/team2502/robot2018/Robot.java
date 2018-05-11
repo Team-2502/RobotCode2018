@@ -18,10 +18,7 @@ import com.team2502.robot2018.subsystem.solenoid.*;
 import com.team2502.robot2018.utils.Files;
 import com.team2502.robot2018.utils.InterpolationMap;
 import com.team2502.robot2018.utils.MathUtils;
-import edu.wpi.first.wpilibj.Compressor;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.IterativeRobot;
-import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -201,7 +198,7 @@ public final class Robot extends IterativeRobot
         NAVX = new AHRS(SPI.Port.kMXP);
 
         // Start pushing video from the camera to the DS
-//        CameraServer.getInstance().startAutomaticCapture();
+        CameraServer.getInstance().startAutomaticCapture();
 
         // Create the autonomous strategy selector
         autonStrategySelector = new SendableChooser<>();
