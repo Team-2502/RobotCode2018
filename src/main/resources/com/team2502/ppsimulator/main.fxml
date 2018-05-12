@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.Path?>
+<?import javafx.scene.shape.Rectangle?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.team2502.ppsimulator.Controller">
+    <children>
+
+        <Rectangle fx:id="robot" arcHeight="1" arcWidth="1" fill="DODGERBLUE" height="2.416" stroke="BLACK" strokeType="INSIDE" width="3" />
+
+        <Path fx:id="robotPath" layoutX="0" layoutY="0" stroke="#0000003f">
+            <elements>
+                <!--<MoveTo x="100.0" y="150.0" />-->
+                <!--<LineTo x="160.0" y="170.0" />-->
+            </elements>
+        </Path>
+
+        <Path fx:id="waypointPath" layoutX="0" layoutY="0">
+            <elements>
+                <!--<MoveTo x="100.0" y="150.0" />-->
+                <!--<LineTo x="160.0" y="170.0" />-->
+            </elements>
+        </Path>
+
+        <Circle fx:id="lookahead" fill="#ffffff00" radius="10.0" stroke="BLACK" strokeType="INSIDE" />
+    </children>
+</AnchorPane>
