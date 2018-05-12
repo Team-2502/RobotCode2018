@@ -256,7 +256,7 @@ public class Controller implements Initializable
             double gpX = getX(waypoint[5]);
             double gpY = getY(waypoint[6]);
 
-            double circleOnRadius = waypoint[7]*spatialScaleFactor;
+            double circleOnRadius = Math.abs(waypoint[7]*spatialScaleFactor);
             double circleOnX = getX(waypoint[8]);
             double circleOnY = getY(waypoint[9]);
 
@@ -273,7 +273,7 @@ public class Controller implements Initializable
             double lookaheadDist = waypoint[3] * spatialScaleFactor;
 
             // Put all our keyvalues (robot pos, robot angle, lookahead) in a keyframe
-            boolean useLine =false; //circleOnRadius > 10;
+            boolean useLine = circleOnRadius > 10000;
             keyFrames.add(new KeyFrame(Duration.seconds(waypoint[0]), new KeyValue(robot.xProperty(), x),
                                        new KeyValue(robot.yProperty(), y),
                                        new KeyValue(robot.rotateProperty(), targetAngle),
