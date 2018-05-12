@@ -80,8 +80,13 @@ public class Controller implements Initializable
         Map<String, String> settings = new HashMap<>();
         for(int i1 = 0; i1 < settingsFlat.length; i1++)
         {
-            String[] keyValPair = settingsFlat[i1].split("=");
-            settings.put(keyValPair[0], keyValPair[1]);
+            String line = settingsFlat[i1];
+
+            if(line.trim().length() > 0 && line.trim().charAt(0) != '#') // If the line is not commented out
+            {
+                String[] keyValPair = line.split("=");
+                settings.put(keyValPair[0].trim(), keyValPair[1].trim());
+            }
         }
 
         // Set our settings

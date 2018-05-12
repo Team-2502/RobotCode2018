@@ -17,7 +17,7 @@ public class Main extends Application
         // Keep a reference to the window
         window = primaryStage;
 
-        primaryStage.setTitle("Hangman");
+        primaryStage.setTitle("PP Player");
 
         Parent mainRoot = FXMLLoader.load(getClass().getResource("main.fxml"));
 
