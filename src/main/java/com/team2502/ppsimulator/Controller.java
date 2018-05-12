@@ -1,5 +1,6 @@
 package com.team2502.ppsimulator;
 
+import com.team2502.robot2018.utils.MathUtils;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -274,6 +275,29 @@ public class Controller implements Initializable
 
             // Put all our keyvalues (robot pos, robot angle, lookahead) in a keyframe
             boolean useLine = circleOnRadius > 10000;
+            double lineStartX;
+            double lineStartY;
+            double lineEndX;
+            double lineEndY;
+
+            double robotCenterX = x + robot.getWidth() / 2;
+            double robotCenterY = y + robot.getHeight() / 2;
+            double lineDX = robotCenterX - gpX;
+            double lineDY = robotCenterY - gpY;
+            if(lineDX != 0){
+                double slope = lineDY/lineDX;
+                MathUtils.Function line = (inp) -> slope * (inp - robotCenterX) + robotCenterY; // pointslope
+                lineStartX = 0;
+                lineStartY = line.get(lineStartX);
+                lineEndX = backdrop.getWidth();
+                lineEndY = line.get(lineEndX);
+            }
+            else {
+                lineStartX = robotCenterX;
+                lineStartY = 0;
+                lineEndX = robotCenterX;
+                lineEndY = backdrop.getHeight();
+            }
             keyFrames.add(new KeyFrame(Duration.seconds(waypoint[0]), new KeyValue(robot.xProperty(), x),
                                        new KeyValue(robot.yProperty(), y),
                                        new KeyValue(robot.rotateProperty(), targetAngle),
@@ -285,10 +309,10 @@ public class Controller implements Initializable
                                        new KeyValue(constantCurvature.radiusProperty(),circleOnRadius),
                                        new KeyValue(constantCurvature.visibleProperty(), !useLine),
                                        new KeyValue(constantCurvatureLine.visibleProperty(), useLine),
-                                       new KeyValue(constantCurvatureLine.startXProperty(), x+robot.getWidth()/2),
-                                       new KeyValue(constantCurvatureLine.startYProperty(), y+robot.getHeight()/2),
-                                       new KeyValue(constantCurvatureLine.endXProperty(),gpX),
-                                       new KeyValue(constantCurvatureLine.endYProperty(),gpY)
+                                       new KeyValue(constantCurvatureLine.startXProperty(), lineStartX),
+                                       new KeyValue(constantCurvatureLine.startYProperty(), lineStartY),
+                                       new KeyValue(constantCurvatureLine.endXProperty(), lineEndX),
+                                       new KeyValue(constantCurvatureLine.endYProperty(), lineEndY)
             ));
 
             // Add our position information to the translucent grey path that shows where our robot went
@@ -307,6 +331,7 @@ public class Controller implements Initializable
         // Add our keyframes to the animation
         keyFrames.forEach((KeyFrame kf) -> timeline.getKeyFrames().add(kf));
 
+        timeline.setRate(0.1);
         // Play it
         timeline.play();
     }
