@@ -57,7 +57,17 @@ public class FileHandler
      */
     private String readWholeFile(String path) throws IOException
     {
-        FileReader fileReader = new FileReader(path);
+        File file = new File(path);
+FileReader fileReader;
+        try
+        {
+            fileReader = new FileReader(file);
+        }
+        catch(IOException e)
+        {
+            System.out.println("file.getAbsolutePath() = " + file.getAbsolutePath());
+            throw e;
+        }
         BufferedReader bufferedReader = new BufferedReader(fileReader);
         StringBuilder result = new StringBuilder();
         String line;
