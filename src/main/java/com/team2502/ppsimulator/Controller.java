@@ -132,7 +132,7 @@ public class Controller implements Initializable
         int startOfWaypoints = 2;
 
         // Knowing the total amount of rows and rows for PathConfig waypoints, we make a new array for the robot's movement
-        robotTraj = new double[rows.length - startOfWaypoints - numDefinedWaypoints + 1][10];
+        robotTraj = new double[rows.length - startOfWaypoints - numDefinedWaypoints + 1][11];
         int i = startOfWaypoints; // 0th row has num waypoints; 1st has column headers for humans
 
         // Process the PathConfig waypoints
@@ -260,6 +260,8 @@ public class Controller implements Initializable
             double circleOnRadius = Math.abs(waypoint[7]*spatialScaleFactor);
             double circleOnX = getX(waypoint[8]);
             double circleOnY = getY(waypoint[9]);
+
+            int pathOnI = (int) waypoint[10];
 
             double targetAngle = 90-waypoint[4]*180/Math.PI;
 
