@@ -39,6 +39,16 @@ public class PathConfig
         return toReturn;
     }
 
+    public static List<Waypoint> combinePaths(List<Waypoint>... paths)
+    {
+        List<Waypoint> toReturn = new ArrayList<>();
+        for(List<Waypoint> path : paths)
+        {
+            toReturn.addAll(path);
+        }
+        return toReturn;
+    }
+
     /**
      * Hand-made artisan paths for when your robot is placed in the center
      */

@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -80,6 +81,9 @@ public class SimulatorTest
         testPath(PathConfig.Left.leftScaleDeepNullZone, 275, 15, "leftToLeftScaleDeepNullZone");
         testPath(PathConfig.Left.leftScaleToSwitch, 332, 15, "leftScaleToLeftSwitch");
         testPath(PathConfig.Left.leftSwitchToScale, 275, 15, "leftSwitchToLeftScale");
+        testPath(PathConfig.combinePaths(PathConfig.Left.leftScale,
+                                         PathConfig.Left.leftScaleToSwitch,
+                                         PathConfig.Left.leftSwitchToScale), 275, 9.46F, "left2Cube");
     }
 
     @Test

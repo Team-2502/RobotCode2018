@@ -1,10 +1,10 @@
 # The location of the csv with robot data, relative to the project root
 # This should be generated using ./gradlew test
-fileName=outPaths/leftToRightScale.csv
+fileName=outPaths/left2Cube.csv
 
 # How much to scale everything up by (be warned: with spatialScaleFactor = 1, the robot is 2-3 pixels tall)
 spatialScaleFactor=15
 
 # (0, 0) is at the upper left corner by default, so we move the starting pos so we can see what is happening
-originX=100
+originX = 100
 originY=400
