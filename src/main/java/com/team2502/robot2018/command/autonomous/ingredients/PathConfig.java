@@ -94,7 +94,7 @@ public class PathConfig
 
         @Change(reason = "help")
         public static final List<Waypoint> leftScaleToSwitch = Arrays.asList(
-                new Waypoint(new ImmutableVector2f(0F, 20.0F), 8F, 20, -7),
+                new Waypoint(new ImmutableVector2f(1.5F, 19.4F), 8F, 20, -7),
 //                new Waypoint(new ImmutableVector2f(1F, 21.5F), 4F, 20, -9), // max deceleration appears to be -7 ft / s^2
                 new Waypoint(new ImmutableVector2f(4F, 20.0F), 8F, 10, -9, new IntakeAndRaise()),
                 new Waypoint(new ImmutableVector2f(6F, 16F), 8F, 10, -9), // 3rd cube 7 19
@@ -128,7 +128,7 @@ public class PathConfig
                 new Waypoint(new ImmutableVector2f(1.5F, 25.375F), 0F, 20, -7)
                                                                                 );
         public static List<Waypoint> leftSwitchToScale = Arrays.asList(
-                new Waypoint(new ImmutableVector2f(5, 19), 8, 20, -7),
+                new Waypoint(new ImmutableVector2f(3.5F, 19F), 8, 20, -7),
                 new Waypoint(new ImmutableVector2f(2, 20.0F), 8, 20, -7),
                 new Waypoint(new ImmutableVector2f(5, 21F), 0, 20, -7)
                                                                       );

@@ -6,9 +6,11 @@ import javafx.animation.Timeline;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.*;
 import javafx.util.Duration;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
@@ -20,6 +22,9 @@ public class Controller implements Initializable
      */
     @FXML
     Rectangle robot;
+
+    @FXML
+    AnchorPane backdrop;
 
     /**
      * The {@code n x 5} 2D array that represents where the robot went
@@ -58,14 +63,15 @@ public class Controller implements Initializable
      * <p>
      * This way, we can make originY non zero allowing us to actually see the path
      */
-    private final double originX;
-    private final double originY;
+    private double originX;
+    private double originY;
 
     /**
      * By default, the {@link Controller#robot} is 2-3 pixels tall. This is much too small to learn anything.
      * This scales everything up so that everything is still proportional to each other but you can at least see it
      */
-    private final double spatialScaleFactor;
+    private double spatialScaleFactor;
+    private final Map<String, String> settings;
 
     /**
      * Read the points from the CSV and put them into {@link Controller#robotTraj} and {@link Controller#waypoints} as needed
@@ -77,7 +83,7 @@ public class Controller implements Initializable
         // Read the config file in the resources folder and initialize values appropriately
         FileHandler config = new FileHandler("src/main/resources/com/team2502/ppsimulator/config");
         String[] settingsFlat = config.readWholeFile().split("\n");
-        Map<String, String> settings = new HashMap<>();
+        settings = new HashMap<>();
         for(int i1 = 0; i1 < settingsFlat.length; i1++)
         {
             String line = settingsFlat[i1];
@@ -88,16 +94,23 @@ public class Controller implements Initializable
                 settings.put(keyValPair[0].trim(), keyValPair[1].trim());
             }
         }
-
         // Set our settings
-        originX = Double.parseDouble(settings.get("originX"));
-        originY = Double.parseDouble(settings.get("originY"));
-        spatialScaleFactor = Double.parseDouble(settings.get("spatialScaleFactor"));
-
 
         // Load csv
         FileHandler csv = new FileHandler(settings.get("fileName"));
-        String contents = csv.readWholeFile();
+        String contents;
+        try
+        {
+            contents = csv.readWholeFile();
+        }
+        catch(FileNotFoundException e)
+        {
+            System.out.println("Try the following: ");
+            System.out.println("1. Create a directory called outPaths in the root folder of the RobotCode2018 project");
+            System.out.println("2. Run the unit tests for RobotCode2018 on this computer");
+            System.out.println("Then it should work.");
+            throw e;
+        }
         String[] rows = contents.split("\n");
 
         // Find out how many waypoints from PathConfig there are
@@ -145,6 +158,19 @@ public class Controller implements Initializable
     @Override
     public void initialize(URL location, ResourceBundle resources)
     {
+        backdrop.heightProperty().addListener((heightProp, oldHeight, newHeight) -> {
+                                                  spatialScaleFactor = newHeight.doubleValue() / 30.0156D;
+                                                  System.out.println("spatialScaleFactor = " + spatialScaleFactor);
+                                              }
+                                             );
+
+        backdrop.widthProperty().addListener((widthProp, oldWidth, newWidth) -> {
+                                                 originX = StartPos.fromString(settings.get("startPos")).getXPos(newWidth.doubleValue());
+                                                 System.out.println("originX = " + originX);
+                                             }
+                                            );
+
+
         // Make sure the circle always stays with the robot
         robot.xProperty().addListener((propertyX, oldX, newX) -> {
             lookahead.setCenterX(newX.doubleValue() + robot.getWidth() / 2);
@@ -154,13 +180,16 @@ public class Controller implements Initializable
             lookahead.setCenterY(newY.doubleValue() + robot.getHeight() / 2);
         });
 
-        // Start the animation
-        animateSquareKeyframe(null);
+        backdrop.setOnMouseClicked(((e) -> {
+            animateSquareKeyframe(e);
+            backdrop.setOnMouseClicked((j) -> {});
+        }));
     }
 
 
     /**
      * Animate the robot following the path
+     *
      * @param event This exists in case you want to add this as an onClickListener or something like that. Not used.
      */
     @FXML
@@ -174,6 +203,7 @@ public class Controller implements Initializable
         robot.setWidth(robot.getWidth() * spatialScaleFactor);
         robot.setHeight(robot.getHeight() * spatialScaleFactor);
 
+        originY = backdrop.getPrefHeight() - robot.getHeight();
 
 
         // Add our first keyframe
@@ -257,5 +287,47 @@ public class Controller implements Initializable
         {
             System.out.println(row[0] + ", " + row[1] + ", " + row[2]);
         }
+    }
+}
+
+enum StartPos
+{
+    LEFT(38D / 443D),
+    CENTER(206D / 443D),
+    RIGHT(358D / 443D);
+
+    private final double proportion;
+
+    StartPos(double proportion)
+    {
+        this.proportion = proportion;
+    }
+
+    public double getXPos(double windowWidth)
+    {
+        return windowWidth * proportion;
+    }
+
+    /**
+     * Turn a string into a {@link StartPos}
+     *
+     * @param str A string (like "center" or "banana")
+     * @return An instance of startpos if possible (e.g {@link StartPos#CENTER}) or null if not possible (e.g banana becomes null)
+     */
+    public static StartPos fromString(String str)
+    {
+        if(str.trim().equalsIgnoreCase("left"))
+        {
+            return LEFT;
+        }
+        else if(str.trim().equalsIgnoreCase("right"))
+        {
+            return RIGHT;
+        }
+        else if(str.trim().equalsIgnoreCase("center"))
+        {
+            return CENTER;
+        }
+        return null;
     }
 }
