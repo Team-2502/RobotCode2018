@@ -241,8 +241,7 @@ public class Controller implements Initializable
             double dx = nextWaypoint[1] - waypoint[1];
             double dy = nextWaypoint[2] - waypoint[2];
             double targetAngle = 90-waypoint[4]*180/Math.PI;
-
-            System.out.println("tA: "+waypoint[4]);
+            
             // Figure out where our robot belongs
 
             double x = waypoint[1] * spatialScaleFactor + originX;
