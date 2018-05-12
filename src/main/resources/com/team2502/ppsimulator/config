@@ -1,11 +1,11 @@
 # The location of the csv with robot data, relative to the project root
 # This should be generated using ./gradlew test
-fileName=outPaths/leftToLeftScaleDeepNullZone.csv
+fileName=outPaths/centerToLeftSwitch.csv
 
 # (0, 0) is at the upper left corner by default, so we move the starting pos so we can see what is happening
 originX = 100
 
-startPos = left
+startPos = center
 
 # Center pos originX: 206/443
 # Left Pos originX: 38/443

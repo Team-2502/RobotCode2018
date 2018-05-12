@@ -17,6 +17,11 @@ import java.util.*;
 
 public class Controller implements Initializable
 {
+    @FXML
+    public Circle constantCurvature;
+
+    @FXML
+    public Line constantCurvatureLine;
     /**
      * The blue rectangle that represents the robot
      */
@@ -126,7 +131,7 @@ public class Controller implements Initializable
         int startOfWaypoints = 2;
 
         // Knowing the total amount of rows and rows for PathConfig waypoints, we make a new array for the robot's movement
-        robotTraj = new double[rows.length - startOfWaypoints - numDefinedWaypoints + 1][7];
+        robotTraj = new double[rows.length - startOfWaypoints - numDefinedWaypoints + 1][10];
         int i = startOfWaypoints; // 0th row has num waypoints; 1st has column headers for humans
 
         // Process the PathConfig waypoints
@@ -190,6 +195,15 @@ public class Controller implements Initializable
     }
 
 
+    private double getX(double ppX)
+    {
+        return ppX*spatialScaleFactor + originX + robot.getWidth() / 2;
+    }
+
+    private double getY(double ppY)
+    {
+        return -ppY*spatialScaleFactor + originY + robot.getHeight() / 2;
+    }
     /**
      * Animate the robot following the path
      *
@@ -239,8 +253,12 @@ public class Controller implements Initializable
             // Get this waypoint and the next waypoint
             double[] waypoint = robotTraj[i - 1];
 
-            double gpX = waypoint[5]*spatialScaleFactor + originX + pathOffsetX;
-            double gpY = -waypoint[6]*spatialScaleFactor + originY + pathOffsetY;
+            double gpX = getX(waypoint[5]);
+            double gpY = getY(waypoint[6]);
+
+            double circleOnRadius = waypoint[7]*spatialScaleFactor;
+            double circleOnX = getX(waypoint[8]);
+            double circleOnY = getY(waypoint[9]);
 
             double targetAngle = 90-waypoint[4]*180/Math.PI;
 
@@ -255,12 +273,22 @@ public class Controller implements Initializable
             double lookaheadDist = waypoint[3] * spatialScaleFactor;
 
             // Put all our keyvalues (robot pos, robot angle, lookahead) in a keyframe
+            boolean useLine =false; //circleOnRadius > 10;
             keyFrames.add(new KeyFrame(Duration.seconds(waypoint[0]), new KeyValue(robot.xProperty(), x),
                                        new KeyValue(robot.yProperty(), y),
                                        new KeyValue(robot.rotateProperty(), targetAngle),
                                        new KeyValue(lookahead.radiusProperty(), lookaheadDist),
                                        new KeyValue(goalPoint.centerXProperty(),gpX),
-                                       new KeyValue(goalPoint.centerYProperty(),gpY)
+                                       new KeyValue(goalPoint.centerYProperty(),gpY),
+                                       new KeyValue(constantCurvature.centerXProperty(),circleOnX),
+                                       new KeyValue(constantCurvature.centerYProperty(),circleOnY),
+                                       new KeyValue(constantCurvature.radiusProperty(),circleOnRadius),
+                                       new KeyValue(constantCurvature.visibleProperty(), !useLine),
+                                       new KeyValue(constantCurvatureLine.visibleProperty(), useLine),
+                                       new KeyValue(constantCurvatureLine.startXProperty(), x+robot.getWidth()/2),
+                                       new KeyValue(constantCurvatureLine.startYProperty(), y+robot.getHeight()/2),
+                                       new KeyValue(constantCurvatureLine.endXProperty(),gpX),
+                                       new KeyValue(constantCurvatureLine.endYProperty(),gpY)
             ));
 
             // Add our position information to the translucent grey path that shows where our robot went

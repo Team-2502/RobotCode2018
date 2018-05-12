@@ -6,6 +6,7 @@
 <?import javafx.scene.shape.Path?>
 <?import javafx.scene.shape.Rectangle?>
 
+<?import javafx.scene.shape.Line?>
 <AnchorPane fx:id="backdrop" id="backdrop" prefHeight="492.0" prefWidth="443.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.team2502.ppsimulator.Controller">
     <children>
 
@@ -27,6 +28,9 @@
 
         <Circle fx:id="lookahead" fill="#ffffff00" radius="10.0" stroke="black" strokeType="INSIDE" />
         <Circle fx:id="goalPoint" fill="red" radius="3.0" stroke="black" strokeType="INSIDE"/>
+
+        <Circle fx:id="constantCurvature" fill="#ffffff00" radius="3.0" stroke="gold" strokeType="INSIDE"/>
+        <Line fx:id="constantCurvatureLine" stroke="gold" visible="false"/>
 
     </children>
     <stylesheets>
