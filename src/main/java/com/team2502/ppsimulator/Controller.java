@@ -240,9 +240,9 @@ public class Controller implements Initializable
             // Calculate the angle between this and the next waypoint
             double dx = nextWaypoint[1] - waypoint[1];
             double dy = nextWaypoint[2] - waypoint[2];
-            double targetAngle = waypoint[3]*180/Math.PI;
+            double targetAngle = 90-waypoint[4]*180/Math.PI;
 
-            System.out.println("tA: "+waypoint[3]);
+            System.out.println("tA: "+waypoint[4]);
             // Figure out where our robot belongs
 
             double x = waypoint[1] * spatialScaleFactor + originX;
