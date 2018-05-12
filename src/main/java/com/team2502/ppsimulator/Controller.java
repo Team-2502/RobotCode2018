@@ -24,6 +24,9 @@ public class Controller implements Initializable
     Rectangle robot;
 
     @FXML
+    Circle goalPoint;
+
+    @FXML
     AnchorPane backdrop;
 
     /**
@@ -123,7 +126,7 @@ public class Controller implements Initializable
         int startOfWaypoints = 2;
 
         // Knowing the total amount of rows and rows for PathConfig waypoints, we make a new array for the robot's movement
-        robotTraj = new double[rows.length - startOfWaypoints - numDefinedWaypoints + 1][5];
+        robotTraj = new double[rows.length - startOfWaypoints - numDefinedWaypoints + 1][7];
         int i = startOfWaypoints; // 0th row has num waypoints; 1st has column headers for humans
 
         // Process the PathConfig waypoints
@@ -235,13 +238,12 @@ public class Controller implements Initializable
         {
             // Get this waypoint and the next waypoint
             double[] waypoint = robotTraj[i - 1];
-            double[] nextWaypoint = robotTraj[i];
 
-            // Calculate the angle between this and the next waypoint
-            double dx = nextWaypoint[1] - waypoint[1];
-            double dy = nextWaypoint[2] - waypoint[2];
+            double gpX = waypoint[5]*spatialScaleFactor + originX + pathOffsetX;
+            double gpY = -waypoint[6]*spatialScaleFactor + originY + pathOffsetY;
+
             double targetAngle = 90-waypoint[4]*180/Math.PI;
-            
+
             // Figure out where our robot belongs
 
             double x = waypoint[1] * spatialScaleFactor + originX;
@@ -256,7 +258,9 @@ public class Controller implements Initializable
             keyFrames.add(new KeyFrame(Duration.seconds(waypoint[0]), new KeyValue(robot.xProperty(), x),
                                        new KeyValue(robot.yProperty(), y),
                                        new KeyValue(robot.rotateProperty(), targetAngle),
-                                       new KeyValue(lookahead.radiusProperty(), lookaheadDist)
+                                       new KeyValue(lookahead.radiusProperty(), lookaheadDist),
+                                       new KeyValue(goalPoint.centerXProperty(),gpX),
+                                       new KeyValue(goalPoint.centerYProperty(),gpY)
             ));
 
             // Add our position information to the translucent grey path that shows where our robot went

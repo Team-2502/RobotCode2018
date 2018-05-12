@@ -12,7 +12,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -156,7 +155,7 @@ public class SimulatorTest
         int i = 0;
 
 //        System.out.println("time, x, y, lookahead");
-        fileWriter.append("time, x, y, lookahead, heading\n");
+        fileWriter.append("time, x, y, lookahead, heading, goal_point_x, goal_point_y\n");
 
         for(; i < 1000; i++)
         {
@@ -171,7 +170,13 @@ public class SimulatorTest
             double usedLookahead = purePursuitMovementStrategy.getUsedLookahead();
             float usedHeading = purePursuitMovementStrategy.getUsedHeading();
 //            System.out.println(i * dt + ", " + usedEstimatedLocation.x + ", " + usedEstimatedLocation.y + ", " + usedLookahead);
-            fileWriter.append(i * dt + ", " + usedEstimatedLocation.x + ", " + usedEstimatedLocation.y + ", " + (float) usedLookahead + ", "+ simulatorLocationEstimator.estimateHeading()+"\n");
+            ImmutableVector2f goalPoint = purePursuitMovementStrategy.getAbsoluteGoalPoint();
+            if(goalPoint == null)
+            {
+                goalPoint = new ImmutableVector2f(Float.NaN,Float.NaN);
+            }
+            writeCSV(fileWriter, i * dt, usedEstimatedLocation.x, usedEstimatedLocation.y, usedLookahead, simulatorLocationEstimator.estimateHeading(), goalPoint.x, goalPoint.y);
+//            fileWriter.append(i * dt + ", " + usedEstimatedLocation.x + ", " + usedEstimatedLocation.y + ", " + (float) usedLookahead + ", "+ simulatorLocationEstimator.estimateHeading()+"\n");
             simulatedRobot.runMotorsVel(wheelVels.x, wheelVels.y);
             simulatorLocationEstimator.update();
         }
@@ -206,6 +211,24 @@ public class SimulatorTest
             System.out.println("Not success! finalLoc: " + finalLoc);
         }
         return success;
+    }
+
+    private void writeCSV(FileWriter fileWriter, double... vals)
+    {
+        StringBuilder toWrite = new StringBuilder();
+        for(int i = 0; i < vals.length-1; i++)
+        {
+            toWrite.append(vals[i]).append(", ");
+        }
+        toWrite.append(vals[vals.length - 1]).append("\n");
+        try
+        {
+            fileWriter.append(toWrite.toString());
+        }
+        catch(IOException e)
+        {
+            e.printStackTrace();
+        }
     }
 
 }

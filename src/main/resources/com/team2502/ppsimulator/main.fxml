@@ -25,7 +25,9 @@
             </elements>
         </Path>
 
-        <Circle fx:id="lookahead" fill="#ffffff00" radius="10.0" stroke="BLACK" strokeType="INSIDE" />
+        <Circle fx:id="lookahead" fill="#ffffff00" radius="10.0" stroke="black" strokeType="INSIDE" />
+        <Circle fx:id="goalPoint" fill="red" radius="3.0" stroke="black" strokeType="INSIDE"/>
+
     </children>
     <stylesheets>
         <URL value="@application.css" />
