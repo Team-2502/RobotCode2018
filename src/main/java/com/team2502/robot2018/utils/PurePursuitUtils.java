@@ -59,8 +59,8 @@ public class PurePursuitUtils
             float distanceTo = pathSegment.getAbsoluteDistanceEnd() - positionOnPath;
             if(distanceTo < 0)
             {
-                // TODO: fix this... kinda jank
-                if(distanceTo < -0.5)
+                // TODO: fix this... kinda jank ... also should NEVER be negative!!!!!!!!!!!!
+                if(distanceTo < -10)
                 {
                     throw new IllegalArgumentException("Path should have progressed (looking ahead on path), distanceTo: " + distanceTo);
                 }
