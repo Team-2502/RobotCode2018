@@ -155,8 +155,8 @@ public class SimulatorTest
         purePursuitMovementStrategy.setStopwatch(new SimulatedStopwatch(dt));
         int i = 0;
 
-        System.out.println("time, x, y, lookahead");
-        fileWriter.append("time, x, y, lookahead\n");
+//        System.out.println("time, x, y, lookahead");
+        fileWriter.append("time, x, y, lookahead, heading\n");
 
         for(; i < 1000; i++)
         {
@@ -169,9 +169,9 @@ public class SimulatorTest
             ImmutableVector2f wheelVels = purePursuitMovementStrategy.getWheelVelocities();
             ImmutableVector2f usedEstimatedLocation = purePursuitMovementStrategy.getUsedEstimatedLocation();
             double usedLookahead = purePursuitMovementStrategy.getUsedLookahead();
-
-            System.out.println(i * dt + ", " + usedEstimatedLocation.x + ", " + usedEstimatedLocation.y + ", " + usedLookahead);
-            fileWriter.append(i * dt + ", " + usedEstimatedLocation.x + ", " + usedEstimatedLocation.y + ", " + usedLookahead + "\n");
+            float usedHeading = purePursuitMovementStrategy.getUsedHeading();
+//            System.out.println(i * dt + ", " + usedEstimatedLocation.x + ", " + usedEstimatedLocation.y + ", " + usedLookahead);
+            fileWriter.append(i * dt + ", " + usedEstimatedLocation.x + ", " + usedEstimatedLocation.y + ", " + (float) usedLookahead + ", "+ simulatorLocationEstimator.estimateHeading()+"\n");
             simulatedRobot.runMotorsVel(wheelVels.x, wheelVels.y);
             simulatorLocationEstimator.update();
         }

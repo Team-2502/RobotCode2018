@@ -123,7 +123,7 @@ public class Controller implements Initializable
         int startOfWaypoints = 2;
 
         // Knowing the total amount of rows and rows for PathConfig waypoints, we make a new array for the robot's movement
-        robotTraj = new double[rows.length - startOfWaypoints - numDefinedWaypoints + 1][4];
+        robotTraj = new double[rows.length - startOfWaypoints - numDefinedWaypoints + 1][5];
         int i = startOfWaypoints; // 0th row has num waypoints; 1st has column headers for humans
 
         // Process the PathConfig waypoints
@@ -240,8 +240,9 @@ public class Controller implements Initializable
             // Calculate the angle between this and the next waypoint
             double dx = nextWaypoint[1] - waypoint[1];
             double dy = nextWaypoint[2] - waypoint[2];
-            double targetAngle = Math.toDegrees(Math.atan2(-dy, dx));
+            double targetAngle = waypoint[3]*180/Math.PI;
 
+            System.out.println("tA: "+waypoint[3]);
             // Figure out where our robot belongs
 
             double x = waypoint[1] * spatialScaleFactor + originX;
