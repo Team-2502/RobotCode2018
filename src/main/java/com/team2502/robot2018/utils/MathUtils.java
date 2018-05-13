@@ -4,7 +4,9 @@ package com.team2502.robot2018.utils;
 import com.team2502.robot2018.Robot;
 import org.joml.ImmutableVector2f;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -563,7 +565,7 @@ public final class MathUtils
             }
             else if(discriminate == 0)
             {
-                toReturn.add(b * b / (2 * a));
+                toReturn.add(-b / (2 * a));
             }
             else
             {
@@ -867,33 +869,38 @@ public final class MathUtils
          * @param radius The radius of the circle
          * @return All points on both the line and circle, should they exist.
          */
-        public static ImmutableVector2f[] getCircleLineIntersectionPoint(ImmutableVector2f pointA, ImmutableVector2f pointB, ImmutableVector2f center, double radius)
+        public static Set<ImmutableVector2f> getCircleLineIntersectionPoint(ImmutableVector2f pointA, ImmutableVector2f pointB, ImmutableVector2f center, double radius)
         {
-            float baX = pointA.get(0) - pointA.get(0);
+            float baX = pointB.get(0) - pointA.get(0);
             float baY = pointB.get(1) - pointA.get(1);
 
-            float caX = center.get(0) - pointA.get(0);
-            float caY = center.get(1) - pointA.get(1);
+            float caX = pointA.get(0) - center.get(0);
+            float caY = pointA.get(1) - center.get(1);
 
-            float a = baX * baX + baY * baY;
-            float bBy2 = baX * caX + baY * caY;
-            double c = caX * caX + caY * caY - radius * radius;
+            // Look up JIT Inlining.
+            float a = pow2f(baX) + pow2f(baY);
+            float b = 2 * (baX * caX + baY * caY);
+            double c = pow2f(caX) + pow2f(caY) - pow2(radius);
 
-            float pBy2 = bBy2 / a;
-            double q = c / a;
+            List<Float> solutions = new ArrayList<>(Algebra.quadratic(a, b, (float) c));
+            for(int i = 0; i < solutions.size(); i++)
+            {
+                if(! (-0.1 <= solutions.get(i) && solutions.get(i) <= 1.1))
+                {
+                    solutions.remove(i);
+                    i--;
+                }
+            }
 
-            double disc = pBy2 * pBy2 - q;
-            if(disc < 0) { return new ImmutableVector2f[0]; }
-            // if disc == 0 ... dealt with later
-            float tmpSqrt = (float) Math.sqrt(disc);
-            float abScalingFactor1 = tmpSqrt - pBy2;
+            Set<ImmutableVector2f> intersections = new HashSet<>();
+            for(int i = 0; i < solutions.size(); i++)
+            {
+                float x = pointA.x + solutions.get(i) * baX;
+                float y = pointA.y + solutions.get(i) * baY;
 
-            ImmutableVector2f p1 = new ImmutableVector2f(pointA.get(0) - baX * abScalingFactor1, pointA.get(1) - baY * abScalingFactor1);
-            if(disc == 0) { return new ImmutableVector2f[] { p1 }; }
-
-            float abScalingFactor2 = -pBy2 - tmpSqrt;
-            ImmutableVector2f p2 = new ImmutableVector2f(pointA.get(0) - baX * abScalingFactor2, pointA.get(1) - baY * abScalingFactor2);
-            return new ImmutableVector2f[] { p1, p2 };
+                intersections.add(new ImmutableVector2f(x, y));
+            }
+            return intersections;
         }
 
         public static class ParametricLine

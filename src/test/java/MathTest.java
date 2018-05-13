@@ -3,7 +3,12 @@ import org.joml.ImmutableVector2f;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.Arrays;
+import java.util.Set;
+
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class MathTest
 {
@@ -156,5 +161,24 @@ public class MathTest
         ImmutableVector2f intersection = perp.intersection(line);
         System.out.println(intersection);
     }
+
+    @Test
+    public void testCircleLineSegmentIntersection()
+    {
+        ImmutableVector2f origin = new ImmutableVector2f();
+        double r = 1;
+
+        Set<ImmutableVector2f> intersections = MathUtils.Geometry.getCircleLineIntersectionPoint(new ImmutableVector2f(1, 1), new ImmutableVector2f(2, 1), origin, r);
+        System.out.println("intersections = " + intersections);
+        assertEquals(0, intersections.size());
+
+        intersections = MathUtils.Geometry.getCircleLineIntersectionPoint(new ImmutableVector2f(0, 2), new ImmutableVector2f(0, -2), origin, r);
+        System.out.println("intersections = " + intersections);
+        assertEquals(2, intersections.size());
+        assertTrue(intersections.contains(new ImmutableVector2f(0, -1)));
+        assertTrue(intersections.contains(new ImmutableVector2f(0, 1)));
+
+    }
+
 
 }
