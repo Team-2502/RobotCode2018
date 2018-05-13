@@ -7,7 +7,7 @@
 <?import javafx.scene.shape.Rectangle?>
 
 <?import javafx.scene.shape.Line?>
-<AnchorPane fx:id="backdrop" id="backdrop" prefHeight="492.0" prefWidth="443.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.team2502.ppsimulator.Controller">
+<AnchorPane fx:id="backdrop" id="backdrop" minWidth="443" minHeight="492" prefHeight="984.0" prefWidth="886.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.team2502.ppsimulator.Controller">
     <children>
 
         <Line fx:id="currentPathLine" stroke="black" strokeWidth="3.0"/>
