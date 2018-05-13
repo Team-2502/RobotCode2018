@@ -128,91 +128,97 @@ public class SimulatorTest
 
         FileWriter fileWriter = new FileWriter(file);
 
-        System.out.println("start: " + pathToTest);
-        List<Waypoint> path = new ArrayList<>();
-
-        // How many waypoints are there?
-        fileWriter.append(pathToTest.size() + "\n");
-        fileWriter.append("x, y\n");
-
-        for(Waypoint waypoint : pathToTest)
+        try
         {
-            // Strip commands from waypoint because involve wpilib
-            path.add(new Waypoint(waypoint.getLocation(), waypoint.getMaxSpeed(), waypoint.getMaxAccel(), waypoint.getMaxDeccel()));
-            double x = waypoint.getLocation().x;
-            double y = waypoint.getLocation().y;
-            fileWriter.append(x + ", " + y + "\n");
-        }
+            System.out.println("start: " + pathToTest);
+            List<Waypoint> path = new ArrayList<>();
+
+            // How many waypoints are there?
+            fileWriter.append(pathToTest.size() + "\n");
+            fileWriter.append("x, y\n");
+
+            for(Waypoint waypoint : pathToTest)
+            {
+                // Strip commands from waypoint because involve wpilib
+                path.add(new Waypoint(waypoint.getLocation(), waypoint.getMaxSpeed(), waypoint.getMaxAccel(), waypoint.getMaxDeccel()));
+                double x = waypoint.getLocation().x;
+                double y = waypoint.getLocation().y;
+                fileWriter.append(x + ", " + y + "\n");
+            }
 
 
-        SimulatedRobot simulatedRobot = new SimulatedRobot(Constants.PurePursuit.LATERAL_WHEEL_DISTANCE_FT);
-        SimulatorLocationEstimator simulatorLocationEstimator = new SimulatorLocationEstimator(simulatedRobot);
-        PurePursuitMovementStrategy purePursuitMovementStrategy = new PurePursuitMovementStrategy(simulatedRobot,
-                                                                                                  simulatorLocationEstimator, simulatorLocationEstimator, simulatorLocationEstimator, path, Constants.PurePursuit.LOOKAHEAD, false);
+            SimulatedRobot simulatedRobot = new SimulatedRobot(Constants.PurePursuit.LATERAL_WHEEL_DISTANCE_FT);
+            SimulatorLocationEstimator simulatorLocationEstimator = new SimulatorLocationEstimator(simulatedRobot);
+            PurePursuitMovementStrategy purePursuitMovementStrategy = new PurePursuitMovementStrategy(simulatedRobot,
+                    simulatorLocationEstimator, simulatorLocationEstimator, simulatorLocationEstimator, path, Constants.PurePursuit.LOOKAHEAD, false);
 
-        simulatorLocationEstimator.setEstimatedLocation(path.get(0).getLocation()); // Fixes paths that do not start at (0,0)
-        float dt = 0.02F;
-        purePursuitMovementStrategy.setStopwatch(new SimulatedStopwatch(dt));
+            simulatorLocationEstimator.setEstimatedLocation(path.get(0).getLocation()); // Fixes paths that do not start at (0,0)
+            float dt = 0.02F;
+            purePursuitMovementStrategy.setStopwatch(new SimulatedStopwatch(dt));
 
-        Path ppPath = purePursuitMovementStrategy.getPath();
-        int i = 0;
+            Path ppPath = purePursuitMovementStrategy.getPath();
+            int i = 0;
 
 //        System.out.println("time, x, y, lookahead");
-        fileWriter.append("time, x, y, lookahead, heading, goal_point_x, goal_point_y, path_circle_radius, path_circle_x, path_circle_y, path_segment_num, closestPoint_x, closestPoint_y\n");
+            fileWriter.append("time, x, y, lookahead, heading, goal_point_x, goal_point_y, path_circle_radius, path_circle_x, path_circle_y, path_segment_num, closestPoint_x, closestPoint_y\n");
 
-        for(; i < 1000; i++)
-        {
-            if(purePursuitMovementStrategy.isFinishedPath())
+            for(; i < 1000; i++)
             {
-                System.out.println("Finished @ " + purePursuitMovementStrategy.getUpdateCount());
-                break;
-            }
-            purePursuitMovementStrategy.update();
-            ImmutableVector2f wheelVels = purePursuitMovementStrategy.getWheelVelocities();
-            ImmutableVector2f usedEstimatedLocation = purePursuitMovementStrategy.getUsedEstimatedLocation();
-            double usedLookahead = purePursuitMovementStrategy.getUsedLookahead();
-            float usedHeading = purePursuitMovementStrategy.getUsedHeading();
+                if(purePursuitMovementStrategy.isFinishedPath())
+                {
+                    System.out.println("Finished @ " + purePursuitMovementStrategy.getUpdateCount());
+                    break;
+                }
+                purePursuitMovementStrategy.update();
+                ImmutableVector2f wheelVels = purePursuitMovementStrategy.getWheelVelocities();
+                ImmutableVector2f usedEstimatedLocation = purePursuitMovementStrategy.getUsedEstimatedLocation();
+                double usedLookahead = purePursuitMovementStrategy.getUsedLookahead();
+                float usedHeading = purePursuitMovementStrategy.getUsedHeading();
 //            System.out.println(i * dt + ", " + usedEstimatedLocation.x + ", " + usedEstimatedLocation.y + ", " + usedLookahead);
-            ImmutableVector2f goalPoint = purePursuitMovementStrategy.getAbsoluteGoalPoint();
-            if(goalPoint == null)
-            {
-                goalPoint = new ImmutableVector2f(Float.NaN,Float.NaN);
-            }
+                ImmutableVector2f goalPoint = purePursuitMovementStrategy.getAbsoluteGoalPoint();
+                if(goalPoint == null)
+                {
+                    goalPoint = new ImmutableVector2f(Float.NaN, Float.NaN);
+                }
 
 
-            float curvature = purePursuitMovementStrategy.getUsedCurvature();
-            double radius = curvature == 0 ? Double.POSITIVE_INFINITY : 1/curvature;
+                float curvature = purePursuitMovementStrategy.getUsedCurvature();
+                double radius = curvature == 0 ? Double.POSITIVE_INFINITY : 1 / curvature;
 
-            ImmutableVector2f circleCenter = purePursuitMovementStrategy.getCircleCenter();
-            ImmutableVector2f closestPoint = purePursuitMovementStrategy.getClosestPoint();
-            if(closestPoint == null)
-            {
-                closestPoint = new ImmutableVector2f(Float.NaN,Float.NaN);
-            }
-            writeCSV(fileWriter, i * dt, usedEstimatedLocation.x, usedEstimatedLocation.y, usedLookahead, usedHeading, goalPoint.x, goalPoint.y , radius, circleCenter.x , circleCenter.y,ppPath.getSegmentOnI(),closestPoint.x,closestPoint.y);
+                ImmutableVector2f circleCenter = purePursuitMovementStrategy.getCircleCenter();
+                ImmutableVector2f closestPoint = purePursuitMovementStrategy.getClosestPoint();
+                if(closestPoint == null)
+                {
+                    closestPoint = new ImmutableVector2f(Float.NaN, Float.NaN);
+                }
+                writeCSV(fileWriter, i * dt, usedEstimatedLocation.x, usedEstimatedLocation.y, usedLookahead, usedHeading, goalPoint.x, goalPoint.y, radius, circleCenter.x, circleCenter.y, ppPath.getSegmentOnI(), closestPoint.x, closestPoint.y);
 
 //            fileWriter.append(i * dt + ", " + usedEstimatedLocation.x + ", " + usedEstimatedLocation.y + ", " + (float) usedLookahead + ", "+ simulatorLocationEstimator.estimateHeading()+"\n");
-            simulatedRobot.runMotorsVel(wheelVels.x, wheelVels.y);
-            simulatorLocationEstimator.update();
+                simulatedRobot.runMotorsVel(wheelVels.x, wheelVels.y);
+                simulatorLocationEstimator.update();
+            }
+
+            Assert.assertEquals(desiredTime, dt * i, TIME_TOLERANCE);
+            float finalHeading = MathUtils.rad2Deg(simulatorLocationEstimator.estimateHeading());
+            if(finalHeading < 0)
+            {
+                finalHeading = 360 + finalHeading;
+            }
+            float dHeading = Math.abs(desiredHeading - finalHeading) % 360;
+            if(dHeading > 180)
+            {
+                dHeading = 360 - dHeading;
+            }
+            System.out.println("Final heading: " + finalHeading + " dHeading: " + dHeading);
+            boolean success = isSuccess(simulatorLocationEstimator.estimateLocation(), path) && Math.abs(dHeading) < HEADING_DEGREE_TOLERANCE;
+            Assert.assertTrue(success);
+        }
+        finally
+        {
+            fileWriter.flush();
+            fileWriter.close();
         }
 
-        Assert.assertEquals(desiredTime, dt * i, TIME_TOLERANCE);
-        float finalHeading = MathUtils.rad2Deg(simulatorLocationEstimator.estimateHeading());
-        if(finalHeading < 0)
-        {
-            finalHeading = 360 + finalHeading;
-        }
-        float dHeading = Math.abs(desiredHeading - finalHeading) % 360;
-        if(dHeading > 180)
-        {
-            dHeading = 360 - dHeading;
-        }
-        System.out.println("Final heading: " + finalHeading + " dHeading: " + dHeading);
-        boolean success = isSuccess(simulatorLocationEstimator.estimateLocation(), path) && Math.abs(dHeading) < HEADING_DEGREE_TOLERANCE;
-        Assert.assertTrue(success);
-
-        fileWriter.flush();
-        fileWriter.close();
 
     }
 
