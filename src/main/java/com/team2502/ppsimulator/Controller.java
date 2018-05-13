@@ -19,6 +19,48 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
+enum StartPos
+{
+    LEFT(33D / 443D),
+    CENTER(206D / 443D),
+    RIGHT(358D / 443D);
+
+    private final double proportion;
+
+    StartPos(double proportion)
+    {
+        this.proportion = proportion;
+    }
+
+    /**
+     * Turn a string into a {@link StartPos}
+     *
+     * @param str A string (like "center" or "banana")
+     * @return An instance of startpos if possible (e.g {@link StartPos#CENTER}) or null if not possible (e.g banana becomes null)
+     */
+    public static StartPos fromString(String str)
+    {
+        if(str.trim().equalsIgnoreCase("left"))
+        {
+            return LEFT;
+        }
+        else if(str.trim().equalsIgnoreCase("right"))
+        {
+            return RIGHT;
+        }
+        else if(str.trim().equalsIgnoreCase("center"))
+        {
+            return CENTER;
+        }
+        return null;
+    }
+
+    public double getXPos(double windowWidth)
+    {
+        return windowWidth * proportion;
+    }
+}
+
 public class Controller implements Initializable
 {
     private final ConfigManager configManager;
@@ -32,6 +74,9 @@ public class Controller implements Initializable
     public Line currentPathLine;
     @FXML
     public Circle closestPoint;
+
+    @FXML
+    public Circle robotPoint;
     /**
      * The blue rectangle that represents the robot
      */
@@ -155,6 +200,15 @@ public class Controller implements Initializable
         }
     }
 
+    private static void printWaypointsNicely(double[][] waypoints)
+    {
+        System.out.println("time, x, y");
+        for(double[] row : waypoints)
+        {
+            System.out.println(row[0] + ", " + row[1] + ", " + row[2]);
+        }
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources)
     {
@@ -180,11 +234,15 @@ public class Controller implements Initializable
 
         // Make sure the circle always stays with the robot
         robot.xProperty().addListener((propertyX, oldX, newX) -> {
-            lookahead.setCenterX(newX.doubleValue() + robot.getWidth() / 2);
+            double centerX = newX.doubleValue() + robot.getWidth() / 2;
+            robotPoint.setCenterX(centerX);
+            lookahead.setCenterX(centerX);
         });
 
         robot.yProperty().addListener((propertyY, oldY, newY) -> {
-            lookahead.setCenterY(newY.doubleValue() + robot.getHeight() / 2);
+            double centerY = newY.doubleValue() + robot.getHeight() / 2;
+            robotPoint.setCenterY(centerY);
+            lookahead.setCenterY(centerY);
         });
 
         backdrop.setOnMouseClicked(((e) -> {
@@ -192,7 +250,6 @@ public class Controller implements Initializable
             backdrop.setOnMouseClicked((j) -> {});
         }));
     }
-
 
     private double getX(double ppX)
     {
@@ -267,9 +324,9 @@ public class Controller implements Initializable
             int pathOnI = (int) waypoint[10];
 
             double lineSegmentXI = getX(waypoints[pathOnI][0]);
-            double lineSegmentYI  = getY(waypoints[pathOnI][1]);
-            double lineSegmentXF = getX(waypoints[pathOnI+1][0]);
-            double lineSegmentYF  = getY(waypoints[pathOnI+1][1]);
+            double lineSegmentYI = getY(waypoints[pathOnI][1]);
+            double lineSegmentXF = getX(waypoints[pathOnI + 1][0]);
+            double lineSegmentYF = getY(waypoints[pathOnI + 1][1]);
 
 
             double targetAngle = 90 - waypoint[4] * 180 / Math.PI;
@@ -339,13 +396,13 @@ public class Controller implements Initializable
                                        new KeyValue(constantCurvatureLine.endXProperty(), lineEndX),
                                        new KeyValue(constantCurvatureLine.endYProperty(), lineEndY),
 
-                                       new KeyValue(currentPathLine.startXProperty(),lineSegmentXI),
-                                       new KeyValue(currentPathLine.startYProperty(),lineSegmentYI),
-                                       new KeyValue(currentPathLine.endXProperty(),lineSegmentXF),
-                                       new KeyValue(currentPathLine.endYProperty(),lineSegmentYF),
+                                       new KeyValue(currentPathLine.startXProperty(), lineSegmentXI),
+                                       new KeyValue(currentPathLine.startYProperty(), lineSegmentYI),
+                                       new KeyValue(currentPathLine.endXProperty(), lineSegmentXF),
+                                       new KeyValue(currentPathLine.endYProperty(), lineSegmentYF),
 
-                                       new KeyValue(closestPoint.centerXProperty(),closestPointX),
-                                       new KeyValue(closestPoint.centerYProperty(),closestPointY)
+                                       new KeyValue(closestPoint.centerXProperty(), closestPointX),
+                                       new KeyValue(closestPoint.centerYProperty(), closestPointY)
             ));
 
             // Add our position information to the translucent grey path that shows where our robot went
@@ -367,57 +424,5 @@ public class Controller implements Initializable
         timeline.setRate(configManager.getDouble("rate"));
         // Play it
         timeline.play();
-    }
-
-
-    private static void printWaypointsNicely(double[][] waypoints)
-    {
-        System.out.println("time, x, y");
-        for(double[] row : waypoints)
-        {
-            System.out.println(row[0] + ", " + row[1] + ", " + row[2]);
-        }
-    }
-}
-
-enum StartPos
-{
-    LEFT(33D / 443D),
-    CENTER(206D / 443D),
-    RIGHT(358D / 443D);
-
-    private final double proportion;
-
-    StartPos(double proportion)
-    {
-        this.proportion = proportion;
-    }
-
-    public double getXPos(double windowWidth)
-    {
-        return windowWidth * proportion;
-    }
-
-    /**
-     * Turn a string into a {@link StartPos}
-     *
-     * @param str A string (like "center" or "banana")
-     * @return An instance of startpos if possible (e.g {@link StartPos#CENTER}) or null if not possible (e.g banana becomes null)
-     */
-    public static StartPos fromString(String str)
-    {
-        if(str.trim().equalsIgnoreCase("left"))
-        {
-            return LEFT;
-        }
-        else if(str.trim().equalsIgnoreCase("right"))
-        {
-            return RIGHT;
-        }
-        else if(str.trim().equalsIgnoreCase("center"))
-        {
-            return CENTER;
-        }
-        return null;
     }
 }

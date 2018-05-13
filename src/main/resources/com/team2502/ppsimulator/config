@@ -7,7 +7,8 @@ originX = 100
 
 startPos = left
 
-rate = 0.1
+
+rate = 0.2
 
 
 # Center pos originX: 206/443

@@ -21,28 +21,23 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
      * The path that we're driving on
      */
     private final Path path;
-
-    private int updateCount = 0;
-
     /**
      * Something that knows where we're pointing
      */
     private final IRotationalLocationEstimator rotEstimator;
-
     /**
      * Something that can automatically generate a lookahead for us
      */
     private final LookaheadBounds lookahead;
-
     /**
      * Someone who knows how fast we're going
      */
     private final ITranslationalVelocityEstimator velocityEstimator;
-
     /**
      * If the robot should brake at the end or drift at the end
      */
     private final boolean driftAtEnd;
+    private int updateCount = 0;
     private IStopwatch stopwatch;
 
     /**
