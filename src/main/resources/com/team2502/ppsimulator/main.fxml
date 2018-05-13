@@ -10,7 +10,7 @@
 <AnchorPane fx:id="backdrop" id="backdrop" prefHeight="492.0" prefWidth="443.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.team2502.ppsimulator.Controller">
     <children>
 
-        <Line fx:id="currentPathLine" stroke="red" strokeWidth="3.0"/>
+        <Line fx:id="currentPathLine" stroke="black" strokeWidth="3.0"/>
 
         <Rectangle fx:id="robot" arcHeight="1" arcWidth="1" fill="DODGERBLUE" height="2.416" stroke="BLACK" strokeType="INSIDE" width="3" />
 

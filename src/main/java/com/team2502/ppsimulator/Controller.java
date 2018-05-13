@@ -160,7 +160,6 @@ public class Controller implements Initializable
     {
         backdrop.heightProperty().addListener((heightProp, oldHeight, newHeight) -> {
                                                   spatialScaleFactor = newHeight.doubleValue() / 30.0156D;
-                                                  System.out.println("spatialScaleFactor = " + spatialScaleFactor);
                                               }
                                              );
 
@@ -175,7 +174,6 @@ public class Controller implements Initializable
                                                      System.out.println("Check the config file to ensure that the starting position is valid.");
                                                      throw e;
                                                  }
-                                                 System.out.println("originX = " + originX);
                                              }
                                             );
 
@@ -266,9 +264,6 @@ public class Controller implements Initializable
             double closestPointX = getX(waypoint[11]);
             double closestPointY = getY(waypoint[12]);
 
-            System.out.println("test");
-            System.out.println("closestPointX = " + closestPointX);
-            System.out.println("closestPointY = " + closestPointY);
             int pathOnI = (int) waypoint[10];
 
             double lineSegmentXI = getX(waypoints[pathOnI][0]);
