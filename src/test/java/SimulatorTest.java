@@ -184,7 +184,7 @@ public class SimulatorTest
             double radius = curvature == 0 ? Double.POSITIVE_INFINITY : 1/curvature;
 
             ImmutableVector2f circleCenter = purePursuitMovementStrategy.getCircleCenter();
-            writeCSV(fileWriter, i * dt, usedEstimatedLocation.x, usedEstimatedLocation.y, usedLookahead, usedHeading, goalPoint.x, goalPoint.y , radius, circleCenter.x , circleCenter.y,ppPath.getSegmentOnI());
+            writeCSV(fileWriter, i * dt, usedEstimatedLocation.x, usedEstimatedLocation.y, usedLookahead, usedHeading, goalPoint.x, goalPoint.y , radius, circleCenter.x , circleCenter.y, ppPath.getSegmentOnI());
 //            fileWriter.append(i * dt + ", " + usedEstimatedLocation.x + ", " + usedEstimatedLocation.y + ", " + (float) usedLookahead + ", "+ simulatorLocationEstimator.estimateHeading()+"\n");
             simulatedRobot.runMotorsVel(wheelVels.x, wheelVels.y);
             simulatorLocationEstimator.update();

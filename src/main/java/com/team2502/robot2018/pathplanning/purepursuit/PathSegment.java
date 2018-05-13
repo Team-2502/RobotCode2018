@@ -16,6 +16,9 @@ public class PathSegment
     private final float distanceStart;
     private final float distanceEnd;
     private final ImmutableVector2f dPos;
+
+
+
     private final ImmutableVector2f startLocation;
 
     protected PathSegment(Point first, Point last, boolean start, boolean end, float distanceStart, float distanceEnd, float length)
@@ -139,6 +142,11 @@ public class PathSegment
     public float getLength()
     {
         return length;
+    }
+
+    public ImmutableVector2f getdPos()
+    {
+        return dPos;
     }
 
     @Override

@@ -92,14 +92,23 @@ public class Path
         return segmentOnI;
     }
 
+    /**
+     * Calculate the goal point that we should be driving at
+     *
+     * @param distanceLeftCurrentSegment The distance left before we complete our segment
+     * @param lookahead Our current lookahead distance
+     * @return Where we should drive at
+     */
     public ImmutableVector2f getGoalPoint(float distanceLeftCurrentSegment, float lookahead)
     {
         PathSegment current = getCurrent();
+        // If our circle intersects on the same path
         if(lookahead < distanceLeftCurrentSegment || current.isEnd())
         {
             float relativeDistance = current.getLength() - distanceLeftCurrentSegment + lookahead;
             return current.getPoint(relativeDistance);
         }
+        // If our circle intersects other segments
         else
         {
             lookahead -= distanceLeftCurrentSegment;
