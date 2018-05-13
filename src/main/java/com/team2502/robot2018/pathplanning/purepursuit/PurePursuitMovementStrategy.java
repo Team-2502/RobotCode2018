@@ -222,7 +222,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         usedEstimatedLocation = translationalLocationEstimator.estimateLocation();
         usedHeading = rotEstimator.estimateHeading();
 
-        ImmutableVector2f closestPoint = path.getClosestPoint(usedEstimatedLocation);
+        closestPoint = path.getClosestPoint(usedEstimatedLocation);
         float absDistanceOfClosestPoint = path.getAbsDistanceOfClosestPoint(closestPoint);
         float distanceTo = path.getCurrent().getAbsoluteDistanceEnd() - absDistanceOfClosestPoint;
         if(distanceTo <= 0)
@@ -293,6 +293,11 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
     public Path getPath()
     {
         return path;
+    }
+
+    public ImmutableVector2f getClosestPoint()
+    {
+        return closestPoint;
     }
 
     private boolean shouldEnd()

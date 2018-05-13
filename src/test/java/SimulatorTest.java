@@ -158,7 +158,7 @@ public class SimulatorTest
         int i = 0;
 
 //        System.out.println("time, x, y, lookahead");
-        fileWriter.append("time, x, y, lookahead, heading, goal_point_x, goal_point_y, path_circle_radius, path_circle_x, path_circle_y, path_segment_num\n");
+        fileWriter.append("time, x, y, lookahead, heading, goal_point_x, goal_point_y, path_circle_radius, path_circle_x, path_circle_y, path_segment_num, closestPoint_x, closestPoint_y\n");
 
         for(; i < 1000; i++)
         {
@@ -184,7 +184,13 @@ public class SimulatorTest
             double radius = curvature == 0 ? Double.POSITIVE_INFINITY : 1/curvature;
 
             ImmutableVector2f circleCenter = purePursuitMovementStrategy.getCircleCenter();
-            writeCSV(fileWriter, i * dt, usedEstimatedLocation.x, usedEstimatedLocation.y, usedLookahead, usedHeading, goalPoint.x, goalPoint.y , radius, circleCenter.x , circleCenter.y, ppPath.getSegmentOnI());
+            ImmutableVector2f closestPoint = purePursuitMovementStrategy.getClosestPoint();
+            if(closestPoint == null)
+            {
+                closestPoint = new ImmutableVector2f(Float.NaN,Float.NaN);
+            }
+            writeCSV(fileWriter, i * dt, usedEstimatedLocation.x, usedEstimatedLocation.y, usedLookahead, usedHeading, goalPoint.x, goalPoint.y , radius, circleCenter.x , circleCenter.y,ppPath.getSegmentOnI(),closestPoint.x,closestPoint.y);
+
 //            fileWriter.append(i * dt + ", " + usedEstimatedLocation.x + ", " + usedEstimatedLocation.y + ", " + (float) usedLookahead + ", "+ simulatorLocationEstimator.estimateHeading()+"\n");
             simulatedRobot.runMotorsVel(wheelVels.x, wheelVels.y);
             simulatorLocationEstimator.update();

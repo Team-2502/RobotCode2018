@@ -27,6 +27,11 @@ public class Controller implements Initializable
 
     @FXML
     public Line constantCurvatureLine;
+
+    @FXML
+    public Line currentPathLine;
+    @FXML
+    public Circle closestPoint;
     /**
      * The blue rectangle that represents the robot
      */
@@ -110,7 +115,7 @@ public class Controller implements Initializable
             int startOfWaypoints = 2;
 
             // Knowing the total amount of rows and rows for PathConfig waypoints, we make a new array for the robot's movement
-            robotTraj = new double[lines.size() - startOfWaypoints - numDefinedWaypoints + 1][11];
+            robotTraj = new double[lines.size() - startOfWaypoints - numDefinedWaypoints + 1][13];
             int i = startOfWaypoints; // 0th row has num waypoints; 1st has column headers for humans
 
             // Process the PathConfig waypoints
@@ -155,7 +160,6 @@ public class Controller implements Initializable
     {
         backdrop.heightProperty().addListener((heightProp, oldHeight, newHeight) -> {
                                                   spatialScaleFactor = newHeight.doubleValue() / 30.0156D;
-                                                  System.out.println("spatialScaleFactor = " + spatialScaleFactor);
                                               }
                                              );
 
@@ -170,7 +174,6 @@ public class Controller implements Initializable
                                                      System.out.println("Check the config file to ensure that the starting position is valid.");
                                                      throw e;
                                                  }
-                                                 System.out.println("originX = " + originX);
                                              }
                                             );
 
@@ -241,7 +244,8 @@ public class Controller implements Initializable
             // We need this negative since positive y is downwards in JavaFX
             double y = -waypoint[1] * spatialScaleFactor + originY;
 
-            waypointPath.getElements().add(new LineTo(x + pathOffsetX, y + pathOffsetY));
+            LineTo lineTo = new LineTo(x + pathOffsetX, y + pathOffsetY);
+            waypointPath.getElements().add(lineTo);
         }
 
         // Draw our drive path -- where our robot actually went
@@ -257,7 +261,16 @@ public class Controller implements Initializable
             double circleOnX = getX(waypoint[8]);
             double circleOnY = getY(waypoint[9]);
 
+            double closestPointX = getX(waypoint[11]);
+            double closestPointY = getY(waypoint[12]);
+
             int pathOnI = (int) waypoint[10];
+
+            double lineSegmentXI = getX(waypoints[pathOnI][0]);
+            double lineSegmentYI  = getY(waypoints[pathOnI][1]);
+            double lineSegmentXF = getX(waypoints[pathOnI+1][0]);
+            double lineSegmentYF  = getY(waypoints[pathOnI+1][1]);
+
 
             double targetAngle = 90 - waypoint[4] * 180 / Math.PI;
 
@@ -324,7 +337,15 @@ public class Controller implements Initializable
                                        new KeyValue(constantCurvatureLine.startXProperty(), lineStartX),
                                        new KeyValue(constantCurvatureLine.startYProperty(), lineStartY),
                                        new KeyValue(constantCurvatureLine.endXProperty(), lineEndX),
-                                       new KeyValue(constantCurvatureLine.endYProperty(), lineEndY)
+                                       new KeyValue(constantCurvatureLine.endYProperty(), lineEndY),
+
+                                       new KeyValue(currentPathLine.startXProperty(),lineSegmentXI),
+                                       new KeyValue(currentPathLine.startYProperty(),lineSegmentYI),
+                                       new KeyValue(currentPathLine.endXProperty(),lineSegmentXF),
+                                       new KeyValue(currentPathLine.endYProperty(),lineSegmentYF),
+
+                                       new KeyValue(closestPoint.centerXProperty(),closestPointX),
+                                       new KeyValue(closestPoint.centerYProperty(),closestPointY)
             ));
 
             // Add our position information to the translucent grey path that shows where our robot went

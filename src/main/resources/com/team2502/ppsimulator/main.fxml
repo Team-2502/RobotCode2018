@@ -10,6 +10,8 @@
 <AnchorPane fx:id="backdrop" id="backdrop" prefHeight="492.0" prefWidth="443.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.team2502.ppsimulator.Controller">
     <children>
 
+        <Line fx:id="currentPathLine" stroke="black" strokeWidth="3.0"/>
+
         <Rectangle fx:id="robot" arcHeight="1" arcWidth="1" fill="DODGERBLUE" height="2.416" stroke="BLACK" strokeType="INSIDE" width="3" />
 
         <Path fx:id="robotPath" layoutX="0" layoutY="0" stroke="#0000003f">
@@ -28,6 +30,7 @@
 
         <Circle fx:id="lookahead" fill="#ffffff00" radius="10.0" stroke="black" strokeType="INSIDE" />
         <Circle fx:id="goalPoint" fill="red" radius="3.0" stroke="black" strokeType="INSIDE"/>
+        <Circle fx:id="closestPoint" fill="lawngreen" radius="3.0" stroke="black" strokeType="INSIDE"/>
 
         <Circle fx:id="constantCurvature" fill="#ffffff00" radius="3.0" stroke="saddlebrown" strokeType="INSIDE"/>
         <Line fx:id="constantCurvatureLine" stroke="saddlebrown" visible="false"/>
