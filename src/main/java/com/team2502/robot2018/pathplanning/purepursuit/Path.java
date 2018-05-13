@@ -87,6 +87,11 @@ public class Path
         return closestPoint;
     }
 
+    public int getSegmentOnI()
+    {
+        return segmentOnI;
+    }
+
     public ImmutableVector2f getGoalPoint(float distanceLeftCurrentSegment, float lookahead)
     {
         PathSegment current = getCurrent();

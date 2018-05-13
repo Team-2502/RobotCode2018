@@ -290,6 +290,11 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         return usedCurvature;
     }
 
+    public Path getPath()
+    {
+        return path;
+    }
+
     private boolean shouldEnd()
     {
         if(finishedPath)

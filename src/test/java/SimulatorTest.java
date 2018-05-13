@@ -1,5 +1,6 @@
 import com.team2502.robot2018.Constants;
 import com.team2502.robot2018.command.autonomous.ingredients.PathConfig;
+import com.team2502.robot2018.pathplanning.purepursuit.Path;
 import com.team2502.robot2018.pathplanning.purepursuit.PurePursuitMovementStrategy;
 import com.team2502.robot2018.pathplanning.purepursuit.Waypoint;
 import com.team2502.robot2018.utils.MathUtils;
@@ -152,10 +153,12 @@ public class SimulatorTest
         simulatorLocationEstimator.setEstimatedLocation(path.get(0).getLocation()); // Fixes paths that do not start at (0,0)
         float dt = 0.02F;
         purePursuitMovementStrategy.setStopwatch(new SimulatedStopwatch(dt));
+
+        Path ppPath = purePursuitMovementStrategy.getPath();
         int i = 0;
 
 //        System.out.println("time, x, y, lookahead");
-        fileWriter.append("time, x, y, lookahead, heading, goal_point_x, goal_point_y, path_circle_radius, path_circle_x, path_circle_y\n");
+        fileWriter.append("time, x, y, lookahead, heading, goal_point_x, goal_point_y, path_circle_radius, path_circle_x, path_circle_y, path_segment_num\n");
 
         for(; i < 1000; i++)
         {
@@ -181,7 +184,7 @@ public class SimulatorTest
             double radius = curvature == 0 ? Double.POSITIVE_INFINITY : 1/curvature;
 
             ImmutableVector2f circleCenter = purePursuitMovementStrategy.getCircleCenter();
-            writeCSV(fileWriter, i * dt, usedEstimatedLocation.x, usedEstimatedLocation.y, usedLookahead, simulatorLocationEstimator.estimateHeading(), goalPoint.x, goalPoint.y , radius, circleCenter.x , circleCenter.y);
+            writeCSV(fileWriter, i * dt, usedEstimatedLocation.x, usedEstimatedLocation.y, usedLookahead, usedHeading, goalPoint.x, goalPoint.y , radius, circleCenter.x , circleCenter.y,ppPath.getSegmentOnI());
 //            fileWriter.append(i * dt + ", " + usedEstimatedLocation.x + ", " + usedEstimatedLocation.y + ", " + (float) usedLookahead + ", "+ simulatorLocationEstimator.estimateHeading()+"\n");
             simulatedRobot.runMotorsVel(wheelVels.x, wheelVels.y);
             simulatorLocationEstimator.update();
