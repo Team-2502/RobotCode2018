@@ -27,6 +27,9 @@ public class Controller implements Initializable
 
     @FXML
     public Line constantCurvatureLine;
+
+    @FXML
+    public Line currentPathLine;
     /**
      * The blue rectangle that represents the robot
      */
@@ -241,7 +244,8 @@ public class Controller implements Initializable
             // We need this negative since positive y is downwards in JavaFX
             double y = -waypoint[1] * spatialScaleFactor + originY;
 
-            waypointPath.getElements().add(new LineTo(x + pathOffsetX, y + pathOffsetY));
+            LineTo lineTo = new LineTo(x + pathOffsetX, y + pathOffsetY);
+            waypointPath.getElements().add(lineTo);
         }
 
         // Draw our drive path -- where our robot actually went
@@ -258,6 +262,12 @@ public class Controller implements Initializable
             double circleOnY = getY(waypoint[9]);
 
             int pathOnI = (int) waypoint[10];
+
+            double lineSegmentXI = getX(waypoints[pathOnI][0]);
+            double lineSegmentYI  = getY(waypoints[pathOnI][1]);
+            double lineSegmentXF = getX(waypoints[pathOnI+1][0]);
+            double lineSegmentYF  = getY(waypoints[pathOnI+1][1]);
+
 
             double targetAngle = 90 - waypoint[4] * 180 / Math.PI;
 
@@ -324,7 +334,12 @@ public class Controller implements Initializable
                                        new KeyValue(constantCurvatureLine.startXProperty(), lineStartX),
                                        new KeyValue(constantCurvatureLine.startYProperty(), lineStartY),
                                        new KeyValue(constantCurvatureLine.endXProperty(), lineEndX),
-                                       new KeyValue(constantCurvatureLine.endYProperty(), lineEndY)
+                                       new KeyValue(constantCurvatureLine.endYProperty(), lineEndY),
+
+                                       new KeyValue(currentPathLine.startXProperty(),lineSegmentXI),
+                                       new KeyValue(currentPathLine.startYProperty(),lineSegmentYI),
+                                       new KeyValue(currentPathLine.endXProperty(),lineSegmentXF),
+                                       new KeyValue(currentPathLine.endYProperty(),lineSegmentYF)
             ));
 
             // Add our position information to the translucent grey path that shows where our robot went
