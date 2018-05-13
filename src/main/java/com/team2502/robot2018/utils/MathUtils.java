@@ -800,60 +800,13 @@ public final class MathUtils
             return (float) Math.atan2(dy, dx);
         }
 
-        public static class ParametricLine
-        {
-
-
-            // (t*dx, t*dy)
-            private final ImmutableVector2f a;
-            private final ImmutableVector2f b;
-            private final float dx;
-            private final float dy;
-
-            public ParametricLine(ImmutableVector2f a, ImmutableVector2f b)
-            {
-                this.a = a;
-                this.b = b;
-                dx = b.x - a.x;
-                dy = b.y - a.y;
-            }
-
-            public ParametricLine(ImmutableVector2f base, float dx, float dy)
-            {
-                this.a = base;
-                this.b = new ImmutableVector2f(dx,dy);
-                this.dx = dx;
-                this.dy = dy;
-            }
-
-            public ParametricLine getPerp(ImmutableVector2f point)
-            {
-                return new ParametricLine(point,-dy,dx);
-            }
-
-            public ImmutableVector2f intersect(ParametricLine other)
-            {
-                // a.x - dx*t =
-                return null;
-            }
-
-            public ImmutableVector2f geta()
-            {
-                return a;
-            }
-
-            public ImmutableVector2f getb()
-            {
-                return b;
-            }
-        }
-
-        /** //TODO: rewrite in parametric.... actually quite horrible
+        /**
+         * //TODO: rewrite in parametric.... actually quite horrible
          * Given a line defined by two points, find the point on the line closest to our robot's position
          *
-         * @param linea One point on the line
-         * @param lineb Another point on the line
-         * @param robotPos   The point at which our robot is
+         * @param linea    One point on the line
+         * @param lineb    Another point on the line
+         * @param robotPos The point at which our robot is
          * @return The point on the line closest to the robot
          */
         public static ImmutableVector2f getClosestPointLineSegments(ImmutableVector2f linea, ImmutableVector2f lineb, ImmutableVector2f robotPos)
@@ -941,6 +894,54 @@ public final class MathUtils
             float abScalingFactor2 = -pBy2 - tmpSqrt;
             ImmutableVector2f p2 = new ImmutableVector2f(pointA.get(0) - baX * abScalingFactor2, pointA.get(1) - baY * abScalingFactor2);
             return new ImmutableVector2f[] { p1, p2 };
+        }
+
+        public static class ParametricLine
+        {
+
+
+            // (t*dx, t*dy)
+            private final ImmutableVector2f a;
+            private final ImmutableVector2f b;
+            private final float dx;
+            private final float dy;
+
+            public ParametricLine(ImmutableVector2f a, ImmutableVector2f b)
+            {
+                this.a = a;
+                this.b = b;
+                dx = b.x - a.x;
+                dy = b.y - a.y;
+            }
+
+            public ParametricLine(ImmutableVector2f base, float dx, float dy)
+            {
+                this.a = base;
+                this.b = new ImmutableVector2f(dx, dy);
+                this.dx = dx;
+                this.dy = dy;
+            }
+
+            public ParametricLine getPerp(ImmutableVector2f point)
+            {
+                return new ParametricLine(point, -dy, dx);
+            }
+
+            public ImmutableVector2f intersect(ParametricLine other)
+            {
+                // a.x - dx*t =
+                return null;
+            }
+
+            public ImmutableVector2f geta()
+            {
+                return a;
+            }
+
+            public ImmutableVector2f getb()
+            {
+                return b;
+            }
         }
 
         public static class Line implements Integrable
