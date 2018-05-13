@@ -174,7 +174,15 @@ public class Controller implements Initializable
                                              );
 
         backdrop.widthProperty().addListener((widthProp, oldWidth, newWidth) -> {
-                                                 originX = StartPos.fromString(settings.get("startPos")).getXPos(newWidth.doubleValue());
+            try
+            {
+                originX = StartPos.fromString(settings.get("startPos")).getXPos(newWidth.doubleValue());
+            }
+            catch(NullPointerException e)
+            {
+                System.out.println("Check the config file to ensure that the starting position is valid.");
+                throw e;
+            }
                                                  System.out.println("originX = " + originX);
                                              }
                                             );
