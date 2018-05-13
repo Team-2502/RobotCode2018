@@ -42,9 +42,20 @@ public class PathConfig
     public static List<Waypoint> combinePaths(List<Waypoint>... paths)
     {
         List<Waypoint> toReturn = new ArrayList<>();
+        Waypoint lastPoint = null;
         for(List<Waypoint> path : paths)
         {
-            toReturn.addAll(path);
+            for(Waypoint point : path)
+            {
+                // if this is the first point or if the last point is in the same spot
+                if(lastPoint == null || !point.getLocation().equals(lastPoint.getLocation()))
+                {
+                    toReturn.add(point);
+                }
+
+                lastPoint = point;
+
+            }
         }
         return toReturn;
     }

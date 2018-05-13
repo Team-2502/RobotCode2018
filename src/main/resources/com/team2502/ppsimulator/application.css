@@ -1,4 +1,5 @@
 #backdrop {
     -fx-background-image:url('powerUpHalfField.png');
     -fx-background-position: 0 0;
+    -fx-background-repeat: stretch;
 }

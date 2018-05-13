@@ -1,9 +1,11 @@
 import com.team2502.robot2018.pathplanning.purepursuit.Path;
 import com.team2502.robot2018.pathplanning.purepursuit.PathSegment;
 import com.team2502.robot2018.pathplanning.purepursuit.Point;
+import com.team2502.robot2018.pathplanning.purepursuit.Waypoint;
 import org.joml.ImmutableVector2f;
 import org.junit.Test;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.*;

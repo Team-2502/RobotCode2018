@@ -298,17 +298,29 @@ public class Controller implements Initializable
                 lineEndX = robotCenterX;
                 lineEndY = backdrop.getHeight();
             }
-            keyFrames.add(new KeyFrame(Duration.seconds(waypoint[0]), new KeyValue(robot.xProperty(), x),
+            keyFrames.add(new KeyFrame(Duration.seconds(waypoint[0]),
+                                       // Robot position
+                                       new KeyValue(robot.xProperty(), x),
                                        new KeyValue(robot.yProperty(), y),
                                        new KeyValue(robot.rotateProperty(), targetAngle),
+
+                                       // Lookahead radius
                                        new KeyValue(lookahead.radiusProperty(), lookaheadDist),
+
+                                       // Goalpoint position
                                        new KeyValue(goalPoint.centerXProperty(),gpX),
                                        new KeyValue(goalPoint.centerYProperty(),gpY),
+
+                                       // Curvature pos
                                        new KeyValue(constantCurvature.centerXProperty(),circleOnX),
                                        new KeyValue(constantCurvature.centerYProperty(),circleOnY),
                                        new KeyValue(constantCurvature.radiusProperty(),circleOnRadius),
+
+                                       // Whether to use the circle or the line
                                        new KeyValue(constantCurvature.visibleProperty(), !useLine),
                                        new KeyValue(constantCurvatureLine.visibleProperty(), useLine),
+
+                                       // Line position
                                        new KeyValue(constantCurvatureLine.startXProperty(), lineStartX),
                                        new KeyValue(constantCurvatureLine.startYProperty(), lineStartY),
                                        new KeyValue(constantCurvatureLine.endXProperty(), lineEndX),
@@ -331,7 +343,7 @@ public class Controller implements Initializable
         // Add our keyframes to the animation
         keyFrames.forEach((KeyFrame kf) -> timeline.getKeyFrames().add(kf));
 
-        timeline.setRate(0.1);
+//        timeline.setRate(0.1);
         // Play it
         timeline.play();
     }
@@ -349,7 +361,7 @@ public class Controller implements Initializable
 
 enum StartPos
 {
-    LEFT(38D / 443D),
+    LEFT(33D / 443D),
     CENTER(206D / 443D),
     RIGHT(358D / 443D);
 
