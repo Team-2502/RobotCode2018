@@ -4,6 +4,7 @@ plugins {
     id "idea"
     id "jaci.openrio.gradle.GradleRIO" version "2018.03.06"
     id "net.ltgt.apt" version "0.13"
+    id "jacoco"
 }
 
 def TEAM = 2502
@@ -92,3 +93,13 @@ sourceSets {
         resources { srcDirs = ['src/main/resources'] }
     }
 }
+
+
+jacocoTestReport {
+    reports {
+        xml.enabled true
+        csv.enabled false
+    }
+}
+
+check.dependsOn jacocoTestReport
