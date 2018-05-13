@@ -14,10 +14,16 @@ import javafx.util.Duration;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
-import java.util.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.ResourceBundle;
 
 public class Controller implements Initializable
 {
+    private final ConfigManager configManager;
     @FXML
     public Circle constantCurvature;
 
@@ -80,87 +86,69 @@ public class Controller implements Initializable
      * This scales everything up so that everything is still proportional to each other but you can at least see it
      */
     private double spatialScaleFactor;
-    private final Map<String, String> settings;
 
     /**
      * Read the points from the CSV and put them into {@link Controller#robotTraj} and {@link Controller#waypoints} as needed
-     *
-     * @throws IOException In case the file handler cannot reat the file
      */
-    public Controller() throws IOException
+    public Controller()
     {
         // Read the config file in the resources folder and initialize values appropriately
-        FileHandler config = new FileHandler("src/main/resources/com/team2502/ppsimulator/config");
-        String[] settingsFlat = config.readWholeFile().split("\n");
-        settings = new HashMap<>();
-        for(int i1 = 0; i1 < settingsFlat.length; i1++)
-        {
-            String line = settingsFlat[i1];
-
-            if(line.trim().length() > 0 && line.trim().charAt(0) != '#') // If the line is not commented out
-            {
-                String[] keyValPair = line.split("=");
-                settings.put(keyValPair[0].trim(), keyValPair[1].trim());
-            }
-        }
-        // Set our settings
+        configManager = new ConfigManager("src/main/resources/com/team2502/ppsimulator/config");
+        configManager.load();
 
         // Load csv
-        FileHandler csv = new FileHandler(settings.get("fileName"));
-        String contents;
         try
         {
-            contents = csv.readWholeFile();
+            String fileName = configManager.getString("fileName");
+            System.out.println("fileName = " + fileName);
+            List<String> lines = Files.readAllLines(Paths.get(fileName));
+            // Find out how many waypoints from PathConfig there are
+            int numDefinedWaypoints = Integer.valueOf(lines.get(0));
+
+            // Initialize the array for waypoints
+            waypoints = new double[numDefinedWaypoints][2];
+
+            // Remember that the waypoints begin on the row at the second index
+            int startOfWaypoints = 2;
+
+            // Knowing the total amount of rows and rows for PathConfig waypoints, we make a new array for the robot's movement
+            robotTraj = new double[lines.size() - startOfWaypoints - numDefinedWaypoints + 1][11];
+            int i = startOfWaypoints; // 0th row has num waypoints; 1st has column headers for humans
+
+            // Process the PathConfig waypoints
+            for(; i < numDefinedWaypoints + 2; i++)
+            {
+                String row = lines.get(i);
+                String[] data = row.split(", ");
+
+                for(int j = 0; j < data.length; j++)
+                {
+                    waypoints[i - startOfWaypoints][j] = Double.valueOf(data[j]);
+                }
+            }
+
+            // Remember where the robot movement data begins
+            int rowsForRobotMovement = startOfWaypoints + numDefinedWaypoints;
+            i++; // Skip header row
+
+            // Fill robotTraj
+            for(; i < lines.size(); i++)
+            {
+                String row = lines.get(i);
+                String[] data = row.split(", ");
+
+                for(int j = 0; j < data.length; j++)
+                {
+                    robotTraj[i - rowsForRobotMovement][j] = Double.valueOf(data[j]);
+                }
+            }
         }
-        catch(FileNotFoundException e)
+        catch(IOException e1)
         {
             System.out.println("Try the following: ");
             System.out.println("1. Create a directory called outPaths in the root folder of the RobotCode2018 project");
             System.out.println("2. Run the unit tests for RobotCode2018 on this computer");
             System.out.println("Then it should work.");
-            throw e;
-        }
-        String[] rows = contents.split("\n");
-
-        // Find out how many waypoints from PathConfig there are
-        int numDefinedWaypoints = Integer.valueOf(rows[0]);
-
-        // Initialize the array for waypoints
-        waypoints = new double[numDefinedWaypoints][2];
-
-        // Remember that the waypoints begin on the row at the second index
-        int startOfWaypoints = 2;
-
-        // Knowing the total amount of rows and rows for PathConfig waypoints, we make a new array for the robot's movement
-        robotTraj = new double[rows.length - startOfWaypoints - numDefinedWaypoints + 1][11];
-        int i = startOfWaypoints; // 0th row has num waypoints; 1st has column headers for humans
-
-        // Process the PathConfig waypoints
-        for(; i < numDefinedWaypoints + 2; i++)
-        {
-            String row = rows[i];
-            String[] data = row.split(", ");
-
-            for(int j = 0; j < data.length; j++)
-            {
-                waypoints[i - startOfWaypoints][j] = Double.valueOf(data[j]);
-            }
-        }
-
-        // Remember where the robot movement data begins
-        int rowsForRobotMovement = startOfWaypoints + numDefinedWaypoints;
-        i++; // Skip header row
-
-        // Fill robotTraj
-        for(; i < rows.length; i++)
-        {
-            String row = rows[i];
-            String[] data = row.split(", ");
-
-            for(int j = 0; j < data.length; j++)
-            {
-                robotTraj[i - rowsForRobotMovement][j] = Double.valueOf(data[j]);
-            }
         }
     }
 
@@ -174,7 +162,7 @@ public class Controller implements Initializable
                                              );
 
         backdrop.widthProperty().addListener((widthProp, oldWidth, newWidth) -> {
-                                                 originX = StartPos.fromString(settings.get("startPos")).getXPos(newWidth.doubleValue());
+                                                 originX = StartPos.fromString(configManager.getString("startPos")).getXPos(newWidth.doubleValue());
                                                  System.out.println("originX = " + originX);
                                              }
                                             );
@@ -198,13 +186,14 @@ public class Controller implements Initializable
 
     private double getX(double ppX)
     {
-        return ppX*spatialScaleFactor + originX + robot.getWidth() / 2;
+        return ppX * spatialScaleFactor + originX + robot.getWidth() / 2;
     }
 
     private double getY(double ppY)
     {
-        return -ppY*spatialScaleFactor + originY + robot.getHeight() / 2;
+        return -ppY * spatialScaleFactor + originY + robot.getHeight() / 2;
     }
+
     /**
      * Animate the robot following the path
      *
@@ -257,13 +246,13 @@ public class Controller implements Initializable
             double gpX = getX(waypoint[5]);
             double gpY = getY(waypoint[6]);
 
-            double circleOnRadius = Math.abs(waypoint[7]*spatialScaleFactor);
+            double circleOnRadius = Math.abs(waypoint[7] * spatialScaleFactor);
             double circleOnX = getX(waypoint[8]);
             double circleOnY = getY(waypoint[9]);
 
             int pathOnI = (int) waypoint[10];
 
-            double targetAngle = 90-waypoint[4]*180/Math.PI;
+            double targetAngle = 90 - waypoint[4] * 180 / Math.PI;
 
             // Figure out where our robot belongs
 
@@ -286,15 +275,17 @@ public class Controller implements Initializable
             double robotCenterY = y + robot.getHeight() / 2;
             double lineDX = robotCenterX - gpX;
             double lineDY = robotCenterY - gpY;
-            if(lineDX != 0){
-                double slope = lineDY/lineDX;
+            if(lineDX != 0)
+            {
+                double slope = lineDY / lineDX;
                 MathUtils.Function line = (inp) -> slope * (inp - robotCenterX) + robotCenterY; // pointslope
                 lineStartX = 0;
                 lineStartY = line.get(lineStartX);
                 lineEndX = backdrop.getWidth();
                 lineEndY = line.get(lineEndX);
             }
-            else {
+            else
+            {
                 lineStartX = robotCenterX;
                 lineStartY = 0;
                 lineEndX = robotCenterX;
@@ -310,13 +301,13 @@ public class Controller implements Initializable
                                        new KeyValue(lookahead.radiusProperty(), lookaheadDist),
 
                                        // Goalpoint position
-                                       new KeyValue(goalPoint.centerXProperty(),gpX),
-                                       new KeyValue(goalPoint.centerYProperty(),gpY),
+                                       new KeyValue(goalPoint.centerXProperty(), gpX),
+                                       new KeyValue(goalPoint.centerYProperty(), gpY),
 
                                        // Curvature pos
-                                       new KeyValue(constantCurvature.centerXProperty(),circleOnX),
-                                       new KeyValue(constantCurvature.centerYProperty(),circleOnY),
-                                       new KeyValue(constantCurvature.radiusProperty(),circleOnRadius),
+                                       new KeyValue(constantCurvature.centerXProperty(), circleOnX),
+                                       new KeyValue(constantCurvature.centerYProperty(), circleOnY),
+                                       new KeyValue(constantCurvature.radiusProperty(), circleOnRadius),
 
                                        // Whether to use the circle or the line
                                        new KeyValue(constantCurvature.visibleProperty(), !useLine),
@@ -345,7 +336,7 @@ public class Controller implements Initializable
         // Add our keyframes to the animation
         keyFrames.forEach((KeyFrame kf) -> timeline.getKeyFrames().add(kf));
 
-//        timeline.setRate(0.1);
+        timeline.setRate(configManager.getDouble("rate"));
         // Play it
         timeline.play();
     }

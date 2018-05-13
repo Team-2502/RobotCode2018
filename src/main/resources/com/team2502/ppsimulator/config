@@ -5,7 +5,9 @@ fileName=outPaths/left2Cube.csv
 # (0, 0) is at the upper left corner by default, so we move the starting pos so we can see what is happening
 originX = 100
 
-startPos = left2Cube
+startPos = left
+
+rate = 0.1
 
 # Center pos originX: 206/443
 # Left Pos originX: 38/443
