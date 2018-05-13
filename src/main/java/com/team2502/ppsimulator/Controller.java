@@ -11,14 +11,12 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.*;
 import javafx.util.Duration;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.ResourceBundle;
 
 public class Controller implements Initializable
@@ -161,8 +159,17 @@ public class Controller implements Initializable
                                               }
                                              );
 
-        backdrop.widthProperty().addListener((widthProp, oldWidth, newWidth) -> {
-                                                 originX = StartPos.fromString(configManager.getString("startPos")).getXPos(newWidth.doubleValue());
+        backdrop.widthProperty().addListener((widthProp, oldWidth, newWidth) ->
+                                             {
+                                                 try
+                                                 {
+                                                     originX = StartPos.fromString(configManager.getString("startPos")).getXPos(newWidth.doubleValue());
+                                                 }
+                                                 catch(NullPointerException e)
+                                                 {
+                                                     System.out.println("Check the config file to ensure that the starting position is valid.");
+                                                     throw e;
+                                                 }
                                                  System.out.println("originX = " + originX);
                                              }
                                             );
