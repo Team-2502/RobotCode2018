@@ -4,7 +4,10 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
+
+import java.awt.*;
 
 public class Main extends Application
 {
@@ -16,6 +19,10 @@ public class Main extends Application
     {
         // Keep a reference to the window
         window = primaryStage;
+
+        com.apple.eawt.Application application = com.apple.eawt.Application.getApplication();
+        java.awt.Image image = Toolkit.getDefaultToolkit().getImage(getClass().getResource("icon.png"));
+        application.setDockIconImage(image);
 
         primaryStage.setTitle("PP Player");
 
