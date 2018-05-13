@@ -1,6 +1,7 @@
 package com.team2502.ppsimulator;
 
 import com.team2502.robot2018.utils.MathUtils;
+import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -368,41 +369,51 @@ public class Controller implements Initializable
                 lineEndX = robotCenterX;
                 lineEndY = backdrop.getHeight();
             }
+            Interpolator interpolator;
+            if(configManager.getDouble("rate") < 3D/5D) // if we'll be playing at less than 30 fps
+            {
+                interpolator = Interpolator.EASE_BOTH;
+            }
+            else
+            {
+                interpolator = Interpolator.DISCRETE;
+            }
+
             keyFrames.add(new KeyFrame(Duration.seconds(waypoint[0]),
                                        // Robot position
-                                       new KeyValue(robot.xProperty(), x),
-                                       new KeyValue(robot.yProperty(), y),
-                                       new KeyValue(robot.rotateProperty(), targetAngle),
+                                       new KeyValue(robot.xProperty(), x, interpolator),
+                                       new KeyValue(robot.yProperty(), y, interpolator),
+                                       new KeyValue(robot.rotateProperty(), targetAngle, interpolator),
 
                                        // Lookahead radius
-                                       new KeyValue(lookahead.radiusProperty(), lookaheadDist),
+                                       new KeyValue(lookahead.radiusProperty(), lookaheadDist, interpolator),
 
                                        // Goalpoint position
-                                       new KeyValue(goalPoint.centerXProperty(), gpX),
-                                       new KeyValue(goalPoint.centerYProperty(), gpY),
+                                       new KeyValue(goalPoint.centerXProperty(), gpX, interpolator),
+                                       new KeyValue(goalPoint.centerYProperty(), gpY, interpolator),
 
                                        // Curvature pos
-                                       new KeyValue(constantCurvature.centerXProperty(), circleOnX),
-                                       new KeyValue(constantCurvature.centerYProperty(), circleOnY),
-                                       new KeyValue(constantCurvature.radiusProperty(), circleOnRadius),
+                                       new KeyValue(constantCurvature.centerXProperty(), circleOnX, interpolator),
+                                       new KeyValue(constantCurvature.centerYProperty(), circleOnY, interpolator),
+                                       new KeyValue(constantCurvature.radiusProperty(), circleOnRadius, interpolator),
 
                                        // Whether to use the circle or the line
-                                       new KeyValue(constantCurvature.visibleProperty(), !useLine),
-                                       new KeyValue(constantCurvatureLine.visibleProperty(), useLine),
+                                       new KeyValue(constantCurvature.visibleProperty(), !useLine, interpolator),
+                                       new KeyValue(constantCurvatureLine.visibleProperty(), useLine, interpolator),
 
                                        // Line position
-                                       new KeyValue(constantCurvatureLine.startXProperty(), lineStartX),
-                                       new KeyValue(constantCurvatureLine.startYProperty(), lineStartY),
-                                       new KeyValue(constantCurvatureLine.endXProperty(), lineEndX),
-                                       new KeyValue(constantCurvatureLine.endYProperty(), lineEndY),
+                                       new KeyValue(constantCurvatureLine.startXProperty(), lineStartX, interpolator),
+                                       new KeyValue(constantCurvatureLine.startYProperty(), lineStartY, interpolator),
+                                       new KeyValue(constantCurvatureLine.endXProperty(), lineEndX, interpolator),
+                                       new KeyValue(constantCurvatureLine.endYProperty(), lineEndY, interpolator),
 
-                                       new KeyValue(currentPathLine.startXProperty(), lineSegmentXI),
-                                       new KeyValue(currentPathLine.startYProperty(), lineSegmentYI),
-                                       new KeyValue(currentPathLine.endXProperty(), lineSegmentXF),
-                                       new KeyValue(currentPathLine.endYProperty(), lineSegmentYF),
+                                       new KeyValue(currentPathLine.startXProperty(), lineSegmentXI, interpolator),
+                                       new KeyValue(currentPathLine.startYProperty(), lineSegmentYI, interpolator),
+                                       new KeyValue(currentPathLine.endXProperty(), lineSegmentXF, interpolator),
+                                       new KeyValue(currentPathLine.endYProperty(), lineSegmentYF, interpolator),
 
-                                       new KeyValue(closestPoint.centerXProperty(), closestPointX),
-                                       new KeyValue(closestPoint.centerYProperty(), closestPointY)
+                                       new KeyValue(closestPoint.centerXProperty(), closestPointX, interpolator),
+                                       new KeyValue(closestPoint.centerYProperty(), closestPointY, interpolator)
             ));
 
             // Add our position information to the translucent grey path that shows where our robot went
