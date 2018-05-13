@@ -32,6 +32,9 @@ public class Controller implements Initializable
     public Line currentPathLine;
     @FXML
     public Circle closestPoint;
+
+    @FXML
+    public Circle robotPoint;
     /**
      * The blue rectangle that represents the robot
      */
@@ -180,11 +183,15 @@ public class Controller implements Initializable
 
         // Make sure the circle always stays with the robot
         robot.xProperty().addListener((propertyX, oldX, newX) -> {
-            lookahead.setCenterX(newX.doubleValue() + robot.getWidth() / 2);
+            double centerX = newX.doubleValue() + robot.getWidth() / 2;
+            robotPoint.setCenterX(centerX);
+            lookahead.setCenterX(centerX);
         });
 
         robot.yProperty().addListener((propertyY, oldY, newY) -> {
-            lookahead.setCenterY(newY.doubleValue() + robot.getHeight() / 2);
+            double centerY = newY.doubleValue() + robot.getHeight() / 2;
+            robotPoint.setCenterY(centerY);
+            lookahead.setCenterY(centerY);
         });
 
         backdrop.setOnMouseClicked(((e) -> {
