@@ -30,6 +30,7 @@
 
         <Circle fx:id="lookahead" fill="#ffffff00" radius="10.0" stroke="black" strokeType="INSIDE" />
         <Circle fx:id="goalPoint" fill="red" radius="3.0" stroke="black" strokeType="INSIDE"/>
+        <Circle fx:id="closestPoint" fill="lawngreen" radius="3.0" stroke="black" strokeType="INSIDE"/>
 
         <Circle fx:id="constantCurvature" fill="#ffffff00" radius="3.0" stroke="saddlebrown" strokeType="INSIDE"/>
         <Line fx:id="constantCurvatureLine" stroke="saddlebrown" visible="false"/>

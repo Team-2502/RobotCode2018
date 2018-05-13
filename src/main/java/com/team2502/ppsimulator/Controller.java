@@ -30,6 +30,8 @@ public class Controller implements Initializable
 
     @FXML
     public Line currentPathLine;
+    @FXML
+    public Circle closestPoint;
     /**
      * The blue rectangle that represents the robot
      */
@@ -113,7 +115,7 @@ public class Controller implements Initializable
             int startOfWaypoints = 2;
 
             // Knowing the total amount of rows and rows for PathConfig waypoints, we make a new array for the robot's movement
-            robotTraj = new double[lines.size() - startOfWaypoints - numDefinedWaypoints + 1][11];
+            robotTraj = new double[lines.size() - startOfWaypoints - numDefinedWaypoints + 1][13];
             int i = startOfWaypoints; // 0th row has num waypoints; 1st has column headers for humans
 
             // Process the PathConfig waypoints
@@ -261,6 +263,12 @@ public class Controller implements Initializable
             double circleOnX = getX(waypoint[8]);
             double circleOnY = getY(waypoint[9]);
 
+            double closestPointX = getX(waypoint[11]);
+            double closestPointY = getY(waypoint[12]);
+
+            System.out.println("test");
+            System.out.println("closestPointX = " + closestPointX);
+            System.out.println("closestPointY = " + closestPointY);
             int pathOnI = (int) waypoint[10];
 
             double lineSegmentXI = getX(waypoints[pathOnI][0]);
@@ -339,7 +347,10 @@ public class Controller implements Initializable
                                        new KeyValue(currentPathLine.startXProperty(),lineSegmentXI),
                                        new KeyValue(currentPathLine.startYProperty(),lineSegmentYI),
                                        new KeyValue(currentPathLine.endXProperty(),lineSegmentXF),
-                                       new KeyValue(currentPathLine.endYProperty(),lineSegmentYF)
+                                       new KeyValue(currentPathLine.endYProperty(),lineSegmentYF),
+
+                                       new KeyValue(closestPoint.centerXProperty(),closestPointX),
+                                       new KeyValue(closestPoint.centerYProperty(),closestPointY)
             ));
 
             // Add our position information to the translucent grey path that shows where our robot went
