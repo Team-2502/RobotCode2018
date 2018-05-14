@@ -89,7 +89,10 @@ public class Controller implements Initializable
     public Circle closestPoint;
 
     @FXML
-    public Circle robotPoint;
+    private Circle robotPoint;
+
+    @FXML
+    private Label dCP;
 
     @FXML
     private Label lookahead;
@@ -222,6 +225,7 @@ public class Controller implements Initializable
             try
             {
                 loadCSV(newSelected);
+                animateSquareKeyframe(null);
             }
             catch(IOException e1)
             {
@@ -237,6 +241,7 @@ public class Controller implements Initializable
         posChooser.getItems().addAll(StartPos.values());
         posChooser.valueProperty().addListener((selectedProp, oldSelected, newSelected) -> {
             originX = posChooser.getValue().getXPos(backdrop.getWidth());
+            animateSquareKeyframe(null);
         });
 
 
@@ -409,7 +414,8 @@ public class Controller implements Initializable
 
                     new KeyValue(closestPoint.centerXProperty(), closestPointX, interpolator),
                     new KeyValue(closestPoint.centerYProperty(), closestPointY, interpolator),
-                    new KeyValue(timeElapsed.textProperty(), String.format("%.02f seconds", waypoint[0]))
+                    new KeyValue(timeElapsed.textProperty(), String.format("%.02f seconds", waypoint[0])),
+                                       new KeyValue(dCP.textProperty(), String.format("%.02f feet", waypoint[13]))
             ));
 
             // Add our position information to the translucent grey path that shows where our robot went
@@ -468,7 +474,7 @@ public class Controller implements Initializable
         int startOfWaypoints = 2;
 
         // Knowing the total amount of rows and rows for PathConfig waypoints, we make a new array for the robot's movement
-        robotTraj = new double[lines.size() - startOfWaypoints - numDefinedWaypoints + 1][13];
+        robotTraj = new double[lines.size() - startOfWaypoints - numDefinedWaypoints + 1][lines.get(lines.size() - 1).split(", ").length];
         int i = startOfWaypoints; // 0th row has num waypoints; 1st has column headers for humans
 
         // Process the PathConfig waypoints
