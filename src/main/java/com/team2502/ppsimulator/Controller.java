@@ -92,6 +92,9 @@ public class Controller implements Initializable
     public Circle robotPoint;
 
     @FXML
+    private Label lookahead;
+
+    @FXML
     private Slider rateSlider;
 
     @FXML
@@ -139,13 +142,6 @@ public class Controller implements Initializable
      */
     @FXML
     private Path waypointPath;
-
-    /**
-     * This is the lookahead circle. It is centered on the {@link Controller#robot}'s center and its diameter
-     * is the lookahead distance PP decided we should use
-     */
-    @FXML
-    private Circle lookahead;
 
     /**
      * The coordinate (0, 0) is in the top left corner of the screen. Since driving forwards = up, this is bad.
@@ -211,13 +207,11 @@ public class Controller implements Initializable
         robot.xProperty().addListener((propertyX, oldX, newX) -> {
             double centerX = newX.doubleValue() + robot.getWidth() / 2;
             robotPoint.setCenterX(centerX);
-            lookahead.setCenterX(centerX);
         });
 
         robot.yProperty().addListener((propertyY, oldY, newY) -> {
             double centerY = newY.doubleValue() + robot.getHeight() / 2;
             robotPoint.setCenterY(centerY);
-            lookahead.setCenterY(centerY);
         });
 
         backdrop.setOnMouseClicked(((e) -> {
@@ -347,9 +341,6 @@ public class Controller implements Initializable
             // We need this negative since positive y is downwards in JavaFX
             double y = -waypoint[2] * spatialScaleFactor + originY;
 
-            // Get our lookahead
-            double lookaheadDist = waypoint[3] * spatialScaleFactor;
-
             // Put all our keyvalues (robot pos, robot angle, lookahead) in a keyframe
             boolean useLine = circleOnRadius > 10000;
             double lineStartX;
@@ -393,12 +384,12 @@ public class Controller implements Initializable
                     new KeyValue(robot.yProperty(), y, interpolator),
                     new KeyValue(robot.rotateProperty(), targetAngle, interpolator),
 
-                    // Lookahead radius
-                    new KeyValue(lookahead.radiusProperty(), lookaheadDist, interpolator),
-
                     // Goalpoint position
                     new KeyValue(goalPoint.centerXProperty(), gpX, interpolator),
                     new KeyValue(goalPoint.centerYProperty(), gpY, interpolator),
+
+                    // Lookahead text
+                    new KeyValue(lookahead.textProperty(), String.format("%.02f feet", waypoint[3])),
 
                     // Curvature pos
                     new KeyValue(constantCurvature.centerXProperty(), circleOnX, interpolator),
