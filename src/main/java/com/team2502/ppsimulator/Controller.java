@@ -157,7 +157,9 @@ public class Controller implements Initializable
      * This scales everything up so that everything is still proportional to each other but you can at least see it
      */
     private double spatialScaleFactor;
-    private boolean animatedOnce = false;
+
+    private double initRobotHeight;
+    private double initRobotWidth;
 
     /**
      * Read the points from the CSV and put them into {@link Controller#robotTraj} and {@link Controller#waypoints} as needed
@@ -186,6 +188,7 @@ public class Controller implements Initializable
     {
         backdrop.heightProperty().addListener((heightProp, oldHeight, newHeight) -> {
                     spatialScaleFactor = newHeight.doubleValue() / 30.0156D;
+            System.out.println("spatialScaleFactor = " + spatialScaleFactor);
                 }
         );
 
@@ -204,15 +207,8 @@ public class Controller implements Initializable
 
 
         // Make sure the circle always stays with the robot
-        robot.xProperty().addListener((propertyX, oldX, newX) -> {
-            double centerX = newX.doubleValue() + robot.getWidth() / 2;
-            robotPoint.setCenterX(centerX);
-        });
-
-        robot.yProperty().addListener((propertyY, oldY, newY) -> {
-            double centerY = newY.doubleValue() + robot.getHeight() / 2;
-            robotPoint.setCenterY(centerY);
-        });
+        robotPoint.centerXProperty().bind(robot.xProperty().add(robot.widthProperty().divide(2)));
+        robotPoint.centerYProperty().bind(robot.yProperty().add(robot.heightProperty().divide(2)));
 
         backdrop.setOnMouseClicked(((e) -> {
             animateSquareKeyframe(e);
@@ -243,6 +239,9 @@ public class Controller implements Initializable
             originX = posChooser.getValue().getXPos(backdrop.getWidth());
         });
 
+
+        initRobotWidth = robot.getWidth();
+        initRobotHeight = robot.getHeight();
     }
 
     private double getX(double ppX)
@@ -273,14 +272,11 @@ public class Controller implements Initializable
         List<KeyFrame> keyFrames = new ArrayList<>();
 
         // Scale our robot appropriately
-        if(!animatedOnce)
-        {
-            robot.setWidth(robot.getWidth() * spatialScaleFactor);
-            robot.setHeight(robot.getHeight() * spatialScaleFactor);
-            animatedOnce = true;
-        }
+        robot.setWidth(initRobotWidth * spatialScaleFactor);
+        robot.setHeight(initRobotHeight * spatialScaleFactor);
 
-        originY = backdrop.getPrefHeight() - robot.getHeight();
+
+        originY = backdrop.getHeight() - robot.getHeight();
 
 
         // Add our first keyframe
