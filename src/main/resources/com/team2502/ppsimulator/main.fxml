@@ -1,43 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import java.net.URL?>
+<?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.Line?>
 <?import javafx.scene.shape.Path?>
 <?import javafx.scene.shape.Rectangle?>
 
-<?import javafx.scene.shape.Line?>
-<AnchorPane fx:id="backdrop" id="backdrop" minWidth="443" minHeight="492" prefHeight="984.0" prefWidth="886.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.team2502.ppsimulator.Controller">
-    <children>
+<SplitPane dividerPositions="0.33333" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.team2502.ppsimulator.Controller">
+    <GridPane minHeight="492" minWidth="221.5" prefHeight="984.0" prefWidth="443.0">
 
-        <Line fx:id="currentPathLine" stroke="black" strokeWidth="3.0"/>
+    </GridPane>
+    <AnchorPane id="backdrop" fx:id="backdrop" minHeight="492" minWidth="443" prefHeight="984.0" prefWidth="886.0">
+        <children>
 
-        <Rectangle fx:id="robot" arcHeight="1" arcWidth="1" fill="DODGERBLUE" height="2.416" stroke="BLACK" strokeType="INSIDE" width="3" />
+            <Line fx:id="currentPathLine" stroke="black" strokeWidth="3.0" />
 
-        <Path fx:id="robotPath" layoutX="0" layoutY="0" stroke="#0000003f">
-            <elements>
-                <!--<MoveTo x="100.0" y="150.0" />-->
-                <!--<LineTo x="160.0" y="170.0" />-->
-            </elements>
-        </Path>
+            <Rectangle fx:id="robot" arcHeight="1" arcWidth="1" fill="DODGERBLUE" height="2.416" stroke="BLACK" strokeType="INSIDE" width="3" />
 
-        <Path fx:id="waypointPath" layoutX="0" layoutY="0">
-            <elements>
-                <!--<MoveTo x="100.0" y="150.0" />-->
-                <!--<LineTo x="160.0" y="170.0" />-->
-            </elements>
-        </Path>
+            <Path fx:id="robotPath" layoutX="0" layoutY="0" stroke="#0000003f">
+                <elements>
+                    <!--<MoveTo x="100.0" y="150.0" />-->
+                    <!--<LineTo x="160.0" y="170.0" />-->
+                </elements>
+            </Path>
 
-        <Circle fx:id="lookahead" fill="#ffffff00" radius="10.0" stroke="black" strokeType="INSIDE" />
-        <Circle fx:id="goalPoint" fill="red" radius="3.0" stroke="black" strokeType="INSIDE"/>
-        <Circle fx:id="robotPoint" fill="white" radius="3.0" stroke="black" strokeType="INSIDE"/>
-        <Circle fx:id="closestPoint" fill="lawngreen" radius="3.0" stroke="black" strokeType="INSIDE"/>
+            <Path fx:id="waypointPath" layoutX="0" layoutY="0">
+                <elements>
+                    <!--<MoveTo x="100.0" y="150.0" />-->
+                    <!--<LineTo x="160.0" y="170.0" />-->
+                </elements>
+            </Path>
 
-        <Circle fx:id="constantCurvature" fill="#ffffff00" radius="3.0" stroke="saddlebrown" strokeType="INSIDE"/>
-        <Line fx:id="constantCurvatureLine" stroke="saddlebrown" visible="false"/>
+            <Circle fx:id="lookahead" fill="#ffffff00" radius="10.0" stroke="black" strokeType="INSIDE" />
+            <Circle fx:id="goalPoint" fill="red" radius="3.0" stroke="black" strokeType="INSIDE" />
+            <Circle fx:id="robotPoint" fill="white" radius="3.0" stroke="black" strokeType="INSIDE" />
+            <Circle fx:id="closestPoint" fill="lawngreen" radius="3.0" stroke="black" strokeType="INSIDE" />
 
-    </children>
-    <stylesheets>
-        <URL value="@application.css" />
-    </stylesheets>
-</AnchorPane>
+            <Circle fx:id="constantCurvature" fill="#ffffff00" radius="3.0" stroke="saddlebrown" strokeType="INSIDE" />
+            <Line fx:id="constantCurvatureLine" stroke="saddlebrown" visible="false" />
+
+        </children>
+        <stylesheets>
+            <URL value="@application.css" />
+        </stylesheets>
+    </AnchorPane>
+</SplitPane>
