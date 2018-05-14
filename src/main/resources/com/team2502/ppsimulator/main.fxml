@@ -17,7 +17,7 @@
 <?import javafx.scene.shape.Rectangle?>
 
 <SplitPane dividerPositions="0.33333" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.team2502.ppsimulator.Controller">
-    <GridPane minHeight="492" prefHeight="984.0" maxHeight="984"  minWidth="443.0" prefWidth="443.0" maxWidth="443.0">
+    <GridPane minHeight="492" prefHeight="492.0" maxHeight="984"  minWidth="443.0" prefWidth="443.0" maxWidth="443.0">
       <columnConstraints>
          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" />
           <ColumnConstraints halignment="CENTER" />
@@ -57,7 +57,7 @@
 
 
       </children></GridPane>
-    <AnchorPane id="backdrop" fx:id="backdrop" minHeight="492" prefHeight="984.0" maxHeight="984.0"  minWidth="443" prefWidth="886.0" maxWidth="886.0">
+    <AnchorPane id="backdrop" fx:id="backdrop" minHeight="492" prefHeight="492.0" maxHeight="984.0"  minWidth="443" prefWidth="443.0" maxWidth="886.0">
         <children>
 
             <Line fx:id="currentPathLine" stroke="black" strokeWidth="3.0" />
