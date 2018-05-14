@@ -8,16 +8,21 @@ import javafx.animation.Timeline;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.*;
 import javafx.util.Duration;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 enum StartPos
@@ -37,6 +42,7 @@ enum StartPos
      * Turn a string into a {@link StartPos}
      *
      * @param str A string (like "center" or "banana")
+     *
      * @return An instance of startpos if possible (e.g {@link StartPos#CENTER}) or null if not possible (e.g banana becomes null)
      */
     public static StartPos fromString(String str)
@@ -60,6 +66,12 @@ enum StartPos
     {
         return windowWidth * proportion;
     }
+
+    @Override
+    public String toString()
+    {
+        return this.name();
+    }
 }
 
 public class Controller implements Initializable
@@ -78,6 +90,20 @@ public class Controller implements Initializable
 
     @FXML
     public Circle robotPoint;
+
+    @FXML
+    private Slider rateSlider;
+
+    @FXML
+    private Label timeElapsed;
+
+    @FXML
+    private ChoiceBox<StartPos> posChooser;
+
+    @FXML
+    private ChoiceBox<File> fileChooser;
+
+
     /**
      * The blue rectangle that represents the robot
      */
@@ -135,6 +161,7 @@ public class Controller implements Initializable
      * This scales everything up so that everything is still proportional to each other but you can at least see it
      */
     private double spatialScaleFactor;
+    private boolean animatedOnce = false;
 
     /**
      * Read the points from the CSV and put them into {@link Controller#robotTraj} and {@link Controller#waypoints} as needed
@@ -146,59 +173,7 @@ public class Controller implements Initializable
         configManager.load();
 
         // Load csv
-        try
-        {
-            String fileName = configManager.getString("fileName");
-            System.out.println("fileName = " + fileName);
-            List<String> lines = Files.readAllLines(Paths.get(fileName));
-            // Find out how many waypoints from PathConfig there are
-            int numDefinedWaypoints = Integer.valueOf(lines.get(0));
-
-            // Initialize the array for waypoints
-            waypoints = new double[numDefinedWaypoints][2];
-
-            // Remember that the waypoints begin on the row at the second index
-            int startOfWaypoints = 2;
-
-            // Knowing the total amount of rows and rows for PathConfig waypoints, we make a new array for the robot's movement
-            robotTraj = new double[lines.size() - startOfWaypoints - numDefinedWaypoints + 1][13];
-            int i = startOfWaypoints; // 0th row has num waypoints; 1st has column headers for humans
-
-            // Process the PathConfig waypoints
-            for(; i < numDefinedWaypoints + 2; i++)
-            {
-                String row = lines.get(i);
-                String[] data = row.split(", ");
-
-                for(int j = 0; j < data.length; j++)
-                {
-                    waypoints[i - startOfWaypoints][j] = Double.valueOf(data[j]);
-                }
-            }
-
-            // Remember where the robot movement data begins
-            int rowsForRobotMovement = startOfWaypoints + numDefinedWaypoints;
-            i++; // Skip header row
-
-            // Fill robotTraj
-            for(; i < lines.size(); i++)
-            {
-                String row = lines.get(i);
-                String[] data = row.split(", ");
-
-                for(int j = 0; j < data.length; j++)
-                {
-                    robotTraj[i - rowsForRobotMovement][j] = Double.valueOf(data[j]);
-                }
-            }
-        }
-        catch(IOException e1)
-        {
-            System.out.println("Try the following: ");
-            System.out.println("1. Create a directory called outPaths in the root folder of the RobotCode2018 project");
-            System.out.println("2. Run the unit tests for RobotCode2018 on this computer");
-            System.out.println("Then it should work.");
-        }
+//
     }
 
     private static void printWaypointsNicely(double[][] waypoints)
@@ -214,23 +189,22 @@ public class Controller implements Initializable
     public void initialize(URL location, ResourceBundle resources)
     {
         backdrop.heightProperty().addListener((heightProp, oldHeight, newHeight) -> {
-                                                  spatialScaleFactor = newHeight.doubleValue() / 30.0156D;
-                                              }
-                                             );
+                    spatialScaleFactor = newHeight.doubleValue() / 30.0156D;
+                }
+        );
 
         backdrop.widthProperty().addListener((widthProp, oldWidth, newWidth) ->
-                                             {
-                                                 try
-                                                 {
-                                                     originX = StartPos.fromString(configManager.getString("startPos")).getXPos(newWidth.doubleValue());
-                                                 }
-                                                 catch(NullPointerException e)
-                                                 {
-                                                     System.out.println("Check the config file to ensure that the starting position is valid.");
-                                                     throw e;
-                                                 }
-                                             }
-                                            );
+                {
+                    try
+                    {
+                        originX = posChooser.getValue().getXPos(newWidth.doubleValue());
+                    }
+                    catch(NullPointerException e)
+                    {
+                        // this is ok
+                    }
+                }
+        );
 
 
         // Make sure the circle always stays with the robot
@@ -250,6 +224,31 @@ public class Controller implements Initializable
             animateSquareKeyframe(e);
             backdrop.setOnMouseClicked((j) -> {});
         }));
+
+        List<File> listOfCSVs = getAllFilesInDirectory(configManager.getString("csvPath"));
+
+        fileChooser.getItems().addAll(listOfCSVs);
+        fileChooser.valueProperty().addListener((selectedProp, oldSelected, newSelected) -> {
+            try
+            {
+                loadCSV(newSelected);
+            }
+            catch(IOException e1)
+            {
+                System.out.println("Try the following: ");
+                System.out.println("1. Create a directory called outPaths in the root folder of the RobotCode2018 project");
+                System.out.println("2. Run the unit tests for RobotCode2018 on this computer");
+                System.out.println("Then it should work.");
+            }
+
+        });
+
+
+        posChooser.getItems().addAll(StartPos.values());
+        posChooser.valueProperty().addListener((selectedProp, oldSelected, newSelected) -> {
+            originX = posChooser.getValue().getXPos(backdrop.getWidth());
+        });
+
     }
 
     private double getX(double ppX)
@@ -270,20 +269,29 @@ public class Controller implements Initializable
     @FXML
     private void animateSquareKeyframe(Event event)
     {
+        if(fileChooser.getValue() == null || posChooser.getValue() == null){
+            System.out.println("Please select a file and position!");
+            return;
+        }
+        clear();
         // Animation works by interpolating key values between key frames
         // We store all our keyframes in this handy dandy list
         List<KeyFrame> keyFrames = new ArrayList<>();
 
         // Scale our robot appropriately
-        robot.setWidth(robot.getWidth() * spatialScaleFactor);
-        robot.setHeight(robot.getHeight() * spatialScaleFactor);
+        if(!animatedOnce)
+        {
+            robot.setWidth(robot.getWidth() * spatialScaleFactor);
+            robot.setHeight(robot.getHeight() * spatialScaleFactor);
+            animatedOnce = true;
+        }
 
         originY = backdrop.getPrefHeight() - robot.getHeight();
 
 
         // Add our first keyframe
         keyFrames.add(new KeyFrame(Duration.ZERO, new KeyValue(robot.xProperty(), originX),
-                                   new KeyValue(robot.yProperty(), originY)));
+                new KeyValue(robot.yProperty(), originY)));
 
         // Center the path on the robot
         double pathOffsetX = robot.getWidth() / 2;
@@ -370,7 +378,7 @@ public class Controller implements Initializable
                 lineEndY = backdrop.getHeight();
             }
             Interpolator interpolator;
-            if(configManager.getDouble("rate") < 3D/5D) // if we'll be playing at less than 30 fps
+            if(configManager.getDouble("rate") < 3D / 5D) // if we'll be playing at less than 30 fps
             {
                 interpolator = Interpolator.EASE_BOTH;
             }
@@ -380,40 +388,41 @@ public class Controller implements Initializable
             }
 
             keyFrames.add(new KeyFrame(Duration.seconds(waypoint[0]),
-                                       // Robot position
-                                       new KeyValue(robot.xProperty(), x, interpolator),
-                                       new KeyValue(robot.yProperty(), y, interpolator),
-                                       new KeyValue(robot.rotateProperty(), targetAngle, interpolator),
+                    // Robot position
+                    new KeyValue(robot.xProperty(), x, interpolator),
+                    new KeyValue(robot.yProperty(), y, interpolator),
+                    new KeyValue(robot.rotateProperty(), targetAngle, interpolator),
 
-                                       // Lookahead radius
-                                       new KeyValue(lookahead.radiusProperty(), lookaheadDist, interpolator),
+                    // Lookahead radius
+                    new KeyValue(lookahead.radiusProperty(), lookaheadDist, interpolator),
 
-                                       // Goalpoint position
-                                       new KeyValue(goalPoint.centerXProperty(), gpX, interpolator),
-                                       new KeyValue(goalPoint.centerYProperty(), gpY, interpolator),
+                    // Goalpoint position
+                    new KeyValue(goalPoint.centerXProperty(), gpX, interpolator),
+                    new KeyValue(goalPoint.centerYProperty(), gpY, interpolator),
 
-                                       // Curvature pos
-                                       new KeyValue(constantCurvature.centerXProperty(), circleOnX, interpolator),
-                                       new KeyValue(constantCurvature.centerYProperty(), circleOnY, interpolator),
-                                       new KeyValue(constantCurvature.radiusProperty(), circleOnRadius, interpolator),
+                    // Curvature pos
+                    new KeyValue(constantCurvature.centerXProperty(), circleOnX, interpolator),
+                    new KeyValue(constantCurvature.centerYProperty(), circleOnY, interpolator),
+                    new KeyValue(constantCurvature.radiusProperty(), circleOnRadius, interpolator),
 
-                                       // Whether to use the circle or the line
-                                       new KeyValue(constantCurvature.visibleProperty(), !useLine, interpolator),
-                                       new KeyValue(constantCurvatureLine.visibleProperty(), useLine, interpolator),
+                    // Whether to use the circle or the line
+                    new KeyValue(constantCurvature.visibleProperty(), !useLine, interpolator),
+                    new KeyValue(constantCurvatureLine.visibleProperty(), useLine, interpolator),
 
-                                       // Line position
-                                       new KeyValue(constantCurvatureLine.startXProperty(), lineStartX, interpolator),
-                                       new KeyValue(constantCurvatureLine.startYProperty(), lineStartY, interpolator),
-                                       new KeyValue(constantCurvatureLine.endXProperty(), lineEndX, interpolator),
-                                       new KeyValue(constantCurvatureLine.endYProperty(), lineEndY, interpolator),
+                    // Line position
+                    new KeyValue(constantCurvatureLine.startXProperty(), lineStartX, interpolator),
+                    new KeyValue(constantCurvatureLine.startYProperty(), lineStartY, interpolator),
+                    new KeyValue(constantCurvatureLine.endXProperty(), lineEndX, interpolator),
+                    new KeyValue(constantCurvatureLine.endYProperty(), lineEndY, interpolator),
 
-                                       new KeyValue(currentPathLine.startXProperty(), lineSegmentXI, interpolator),
-                                       new KeyValue(currentPathLine.startYProperty(), lineSegmentYI, interpolator),
-                                       new KeyValue(currentPathLine.endXProperty(), lineSegmentXF, interpolator),
-                                       new KeyValue(currentPathLine.endYProperty(), lineSegmentYF, interpolator),
+                    new KeyValue(currentPathLine.startXProperty(), lineSegmentXI, interpolator),
+                    new KeyValue(currentPathLine.startYProperty(), lineSegmentYI, interpolator),
+                    new KeyValue(currentPathLine.endXProperty(), lineSegmentXF, interpolator),
+                    new KeyValue(currentPathLine.endYProperty(), lineSegmentYF, interpolator),
 
-                                       new KeyValue(closestPoint.centerXProperty(), closestPointX, interpolator),
-                                       new KeyValue(closestPoint.centerYProperty(), closestPointY, interpolator)
+                    new KeyValue(closestPoint.centerXProperty(), closestPointX, interpolator),
+                    new KeyValue(closestPoint.centerYProperty(), closestPointY, interpolator),
+                    new KeyValue(timeElapsed.textProperty(), String.format("%.02f seconds", waypoint[0]))
             ));
 
             // Add our position information to the translucent grey path that shows where our robot went
@@ -432,8 +441,75 @@ public class Controller implements Initializable
         // Add our keyframes to the animation
         keyFrames.forEach((KeyFrame kf) -> timeline.getKeyFrames().add(kf));
 
-        timeline.setRate(configManager.getDouble("rate"));
+        timeline.rateProperty().bind(rateSlider.valueProperty());
         // Play it
         timeline.play();
+    }
+
+    private void clear()
+    {
+        robotPath.getElements().clear();
+        waypointPath.getElements().clear();
+    }
+
+    private static List<File> getAllFilesInDirectory(String dir)
+    {
+        List<File> files = new ArrayList<>();
+        File folder = new File(dir);
+        File[] listOfFiles = folder.listFiles();
+
+        for(int i = 0; i < Objects.requireNonNull(listOfFiles).length; i++)
+        {
+            if(listOfFiles[i].isFile())
+            {
+                files.add(listOfFiles[i]);
+            }
+        }
+        return files;
+    }
+
+    private void loadCSV(File file) throws IOException
+    {
+        List<String> lines = Files.readAllLines(file.toPath());
+        // Find out how many waypoints from PathConfig there are
+        int numDefinedWaypoints = Integer.valueOf(lines.get(0));
+
+        // Initialize the array for waypoints
+        waypoints = new double[numDefinedWaypoints][2];
+
+        // Remember that the waypoints begin on the row at the second index
+        int startOfWaypoints = 2;
+
+        // Knowing the total amount of rows and rows for PathConfig waypoints, we make a new array for the robot's movement
+        robotTraj = new double[lines.size() - startOfWaypoints - numDefinedWaypoints + 1][13];
+        int i = startOfWaypoints; // 0th row has num waypoints; 1st has column headers for humans
+
+        // Process the PathConfig waypoints
+        for(; i < numDefinedWaypoints + 2; i++)
+        {
+            String row = lines.get(i);
+            String[] data = row.split(", ");
+
+            for(int j = 0; j < data.length; j++)
+            {
+                waypoints[i - startOfWaypoints][j] = Double.valueOf(data[j]);
+            }
+        }
+
+        // Remember where the robot movement data begins
+        int rowsForRobotMovement = startOfWaypoints + numDefinedWaypoints;
+        i++; // Skip header row
+
+        // Fill robotTraj
+        for(; i < lines.size(); i++)
+        {
+            String row = lines.get(i);
+            String[] data = row.split(", ");
+
+            for(int j = 0; j < data.length; j++)
+            {
+                robotTraj[i - rowsForRobotMovement][j] = Double.valueOf(data[j]);
+            }
+        }
     }
 }
