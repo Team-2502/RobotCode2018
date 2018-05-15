@@ -885,7 +885,7 @@ public final class MathUtils
             List<Float> solutions = new ArrayList<>(Algebra.quadratic(a, b, (float) c));
             for(int i = 0; i < solutions.size(); i++)
             {
-                if(! (-0.1 <= solutions.get(i) && solutions.get(i) <= 1.1))
+                if(!(-0.1 <= solutions.get(i) && solutions.get(i) <= 1.1))
                 {
                     solutions.remove(i);
                     i--;

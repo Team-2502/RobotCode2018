@@ -18,7 +18,6 @@ public class PathSegment
     private final ImmutableVector2f dPos;
 
 
-
     private final ImmutableVector2f startLocation;
 
     protected PathSegment(Point first, Point last, boolean start, boolean end, float distanceStart, float distanceEnd, float length)

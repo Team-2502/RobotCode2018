@@ -10,13 +10,12 @@ import javafx.stage.Stage;
 
 public class Main extends Application
 {
-    private Stage window;
-    private Scene mainScene;
-
     private static final double IMGWIDTH = 443;
     private static final double IMGHEIGHT = 492;
-    private static final double W_TO__H_RATIO = IMGWIDTH/IMGHEIGHT;
-    private static final double H_TO_W_RATIO = 1/W_TO__H_RATIO;
+    private static final double W_TO__H_RATIO = IMGWIDTH / IMGHEIGHT;
+    private static final double H_TO_W_RATIO = 1 / W_TO__H_RATIO;
+    private Stage window;
+    private Scene mainScene;
 
     @Override
     public void start(Stage primaryStage) throws Exception

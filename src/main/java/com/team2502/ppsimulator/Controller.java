@@ -19,7 +19,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -42,7 +41,6 @@ enum StartPos
      * Turn a string into a {@link StartPos}
      *
      * @param str A string (like "center" or "banana")
-     *
      * @return An instance of startpos if possible (e.g {@link StartPos#CENTER}) or null if not possible (e.g banana becomes null)
      */
     public static StartPos fromString(String str)
@@ -87,41 +85,29 @@ public class Controller implements Initializable
     public Line currentPathLine;
     @FXML
     public Circle closestPoint;
-
-    @FXML
-    private Circle robotPoint;
-
-    @FXML
-    private Label dCP;
-
-    @FXML
-    private Label lookahead;
-
-    @FXML
-    private Slider rateSlider;
-
-    @FXML
-    private Label timeElapsed;
-
-    @FXML
-    private ChoiceBox<StartPos> posChooser;
-
-    @FXML
-    private ChoiceBox<File> fileChooser;
-
-
     /**
      * The blue rectangle that represents the robot
      */
     @FXML
     Rectangle robot;
-
     @FXML
     Circle goalPoint;
-
     @FXML
     AnchorPane backdrop;
-
+    @FXML
+    private Circle robotPoint;
+    @FXML
+    private Label dCP;
+    @FXML
+    private Label lookahead;
+    @FXML
+    private Slider rateSlider;
+    @FXML
+    private Label timeElapsed;
+    @FXML
+    private ChoiceBox<StartPos> posChooser;
+    @FXML
+    private ChoiceBox<File> fileChooser;
     /**
      * The {@code n x 5} 2D array that represents where the robot went
      */
@@ -186,27 +172,43 @@ public class Controller implements Initializable
         }
     }
 
+    private static List<File> getAllFilesInDirectory(String dir)
+    {
+        List<File> files = new ArrayList<>();
+        File folder = new File(dir);
+        File[] listOfFiles = folder.listFiles();
+
+        for(int i = 0; i < Objects.requireNonNull(listOfFiles).length; i++)
+        {
+            if(listOfFiles[i].isFile())
+            {
+                files.add(listOfFiles[i]);
+            }
+        }
+        return files;
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources)
     {
         backdrop.heightProperty().addListener((heightProp, oldHeight, newHeight) -> {
-                    spatialScaleFactor = newHeight.doubleValue() / 30.0156D;
-            System.out.println("spatialScaleFactor = " + spatialScaleFactor);
-                }
-        );
+                                                  spatialScaleFactor = newHeight.doubleValue() / 30.0156D;
+                                                  System.out.println("spatialScaleFactor = " + spatialScaleFactor);
+                                              }
+                                             );
 
         backdrop.widthProperty().addListener((widthProp, oldWidth, newWidth) ->
-                {
-                    try
-                    {
-                        originX = posChooser.getValue().getXPos(newWidth.doubleValue());
-                    }
-                    catch(NullPointerException e)
-                    {
-                        // this is ok
-                    }
-                }
-        );
+                                             {
+                                                 try
+                                                 {
+                                                     originX = posChooser.getValue().getXPos(newWidth.doubleValue());
+                                                 }
+                                                 catch(NullPointerException e)
+                                                 {
+                                                     // this is ok
+                                                 }
+                                             }
+                                            );
 
 
         // Make sure the circle always stays with the robot
@@ -267,7 +269,8 @@ public class Controller implements Initializable
     @FXML
     private void animateSquareKeyframe(Event event)
     {
-        if(fileChooser.getValue() == null || posChooser.getValue() == null){
+        if(fileChooser.getValue() == null || posChooser.getValue() == null)
+        {
             System.out.println("Please select a file and position!");
             return;
         }
@@ -286,7 +289,7 @@ public class Controller implements Initializable
 
         // Add our first keyframe
         keyFrames.add(new KeyFrame(Duration.ZERO, new KeyValue(robot.xProperty(), originX),
-                new KeyValue(robot.yProperty(), originY)));
+                                   new KeyValue(robot.yProperty(), originY)));
 
         // Center the path on the robot
         double pathOffsetX = robot.getWidth() / 2;
@@ -380,41 +383,41 @@ public class Controller implements Initializable
             }
 
             keyFrames.add(new KeyFrame(Duration.seconds(waypoint[0]),
-                    // Robot position
-                    new KeyValue(robot.xProperty(), x, interpolator),
-                    new KeyValue(robot.yProperty(), y, interpolator),
-                    new KeyValue(robot.rotateProperty(), targetAngle, interpolator),
+                                       // Robot position
+                                       new KeyValue(robot.xProperty(), x, interpolator),
+                                       new KeyValue(robot.yProperty(), y, interpolator),
+                                       new KeyValue(robot.rotateProperty(), targetAngle, interpolator),
 
-                    // Goalpoint position
-                    new KeyValue(goalPoint.centerXProperty(), gpX, interpolator),
-                    new KeyValue(goalPoint.centerYProperty(), gpY, interpolator),
+                                       // Goalpoint position
+                                       new KeyValue(goalPoint.centerXProperty(), gpX, interpolator),
+                                       new KeyValue(goalPoint.centerYProperty(), gpY, interpolator),
 
-                    // Lookahead text
-                    new KeyValue(lookahead.textProperty(), String.format("%.02f feet", waypoint[3])),
+                                       // Lookahead text
+                                       new KeyValue(lookahead.textProperty(), String.format("%.02f feet", waypoint[3])),
 
-                    // Curvature pos
-                    new KeyValue(constantCurvature.centerXProperty(), circleOnX, interpolator),
-                    new KeyValue(constantCurvature.centerYProperty(), circleOnY, interpolator),
-                    new KeyValue(constantCurvature.radiusProperty(), circleOnRadius, interpolator),
+                                       // Curvature pos
+                                       new KeyValue(constantCurvature.centerXProperty(), circleOnX, interpolator),
+                                       new KeyValue(constantCurvature.centerYProperty(), circleOnY, interpolator),
+                                       new KeyValue(constantCurvature.radiusProperty(), circleOnRadius, interpolator),
 
-                    // Whether to use the circle or the line
-                    new KeyValue(constantCurvature.visibleProperty(), !useLine, interpolator),
-                    new KeyValue(constantCurvatureLine.visibleProperty(), useLine, interpolator),
+                                       // Whether to use the circle or the line
+                                       new KeyValue(constantCurvature.visibleProperty(), !useLine, interpolator),
+                                       new KeyValue(constantCurvatureLine.visibleProperty(), useLine, interpolator),
 
-                    // Line position
-                    new KeyValue(constantCurvatureLine.startXProperty(), lineStartX, interpolator),
-                    new KeyValue(constantCurvatureLine.startYProperty(), lineStartY, interpolator),
-                    new KeyValue(constantCurvatureLine.endXProperty(), lineEndX, interpolator),
-                    new KeyValue(constantCurvatureLine.endYProperty(), lineEndY, interpolator),
+                                       // Line position
+                                       new KeyValue(constantCurvatureLine.startXProperty(), lineStartX, interpolator),
+                                       new KeyValue(constantCurvatureLine.startYProperty(), lineStartY, interpolator),
+                                       new KeyValue(constantCurvatureLine.endXProperty(), lineEndX, interpolator),
+                                       new KeyValue(constantCurvatureLine.endYProperty(), lineEndY, interpolator),
 
-                    new KeyValue(currentPathLine.startXProperty(), lineSegmentXI, interpolator),
-                    new KeyValue(currentPathLine.startYProperty(), lineSegmentYI, interpolator),
-                    new KeyValue(currentPathLine.endXProperty(), lineSegmentXF, interpolator),
-                    new KeyValue(currentPathLine.endYProperty(), lineSegmentYF, interpolator),
+                                       new KeyValue(currentPathLine.startXProperty(), lineSegmentXI, interpolator),
+                                       new KeyValue(currentPathLine.startYProperty(), lineSegmentYI, interpolator),
+                                       new KeyValue(currentPathLine.endXProperty(), lineSegmentXF, interpolator),
+                                       new KeyValue(currentPathLine.endYProperty(), lineSegmentYF, interpolator),
 
-                    new KeyValue(closestPoint.centerXProperty(), closestPointX, interpolator),
-                    new KeyValue(closestPoint.centerYProperty(), closestPointY, interpolator),
-                    new KeyValue(timeElapsed.textProperty(), String.format("%.02f seconds", waypoint[0])),
+                                       new KeyValue(closestPoint.centerXProperty(), closestPointX, interpolator),
+                                       new KeyValue(closestPoint.centerYProperty(), closestPointY, interpolator),
+                                       new KeyValue(timeElapsed.textProperty(), String.format("%.02f seconds", waypoint[0])),
                                        new KeyValue(dCP.textProperty(), String.format("%.02f feet", waypoint[13]))
             ));
 
@@ -443,22 +446,6 @@ public class Controller implements Initializable
     {
         robotPath.getElements().clear();
         waypointPath.getElements().clear();
-    }
-
-    private static List<File> getAllFilesInDirectory(String dir)
-    {
-        List<File> files = new ArrayList<>();
-        File folder = new File(dir);
-        File[] listOfFiles = folder.listFiles();
-
-        for(int i = 0; i < Objects.requireNonNull(listOfFiles).length; i++)
-        {
-            if(listOfFiles[i].isFile())
-            {
-                files.add(listOfFiles[i]);
-            }
-        }
-        return files;
     }
 
     private void loadCSV(File file) throws IOException

@@ -96,7 +96,7 @@ public class Path
      * Calculate the goal point that we should be driving at
      *
      * @param distanceLeftCurrentSegment The distance left before we complete our segment
-     * @param lookahead Our current lookahead distance
+     * @param lookahead                  Our current lookahead distance
      * @return Where we should drive at
      */
     public ImmutableVector2f getGoalPoint(float distanceLeftCurrentSegment, float lookahead)
