@@ -1,5 +1,6 @@
 package com.team2502.ppsimulator;
 
+import com.team2502.robot2018.pathplanning.purepursuit.Waypoint;
 import com.team2502.robot2018.utils.MathUtils;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
@@ -295,14 +296,26 @@ public class Controller implements Initializable
         double pathOffsetX = robot.getWidth() / 2;
         double pathOffsetY = robot.getHeight() / 2;
 
+        double[] waypointInit = waypoints[0];
+
+        double initX =  waypointInit[0] * spatialScaleFactor + originX;
+        double initY =  -waypointInit[1] * spatialScaleFactor + originY;
+
         MoveTo initialOffset = new MoveTo(originX + pathOffsetX, originY + pathOffsetY);
 
         robotPath.getElements().add(initialOffset);
-        waypointPath.getElements().add(initialOffset);
+//        waypointPath.getElements().add(initialOffset);
+
+        waypointPath.getElements().add(new MoveTo(initX + pathOffsetX,initY + pathOffsetX));
 
         // Draw the path -- where our robot was told to go
-        for(double[] waypoint : waypoints)
+        for(int i = 0; i < waypoints.length; i++)
         {
+            if(i == 0)
+            {
+                continue;
+            }
+            double[] waypoint = waypoints[i];
             double x = waypoint[0] * spatialScaleFactor + originX;
 
             // We need this negative since positive y is downwards in JavaFX
