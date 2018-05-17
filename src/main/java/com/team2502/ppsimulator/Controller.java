@@ -1,11 +1,11 @@
 package com.team2502.ppsimulator;
 
-import com.team2502.robot2018.pathplanning.purepursuit.Waypoint;
 import com.team2502.robot2018.utils.MathUtils;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.beans.value.ChangeListener;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -150,6 +150,8 @@ public class Controller implements Initializable
 
     private double initRobotHeight;
     private double initRobotWidth;
+    private Timeline timeline;
+    private ChangeListener<Number> listener;
 
     /**
      * Read the points from the CSV and put them into {@link Controller#robotTraj} and {@link Controller#waypoints} as needed
@@ -159,9 +161,6 @@ public class Controller implements Initializable
         // Read the config file in the resources folder and initialize values appropriately
         configManager = new ConfigManager("src/main/resources/com/team2502/ppsimulator/config");
         configManager.load();
-
-        // Load csv
-//
     }
 
     private static void printWaypointsNicely(double[][] waypoints)
@@ -194,7 +193,6 @@ public class Controller implements Initializable
     {
         backdrop.heightProperty().addListener((heightProp, oldHeight, newHeight) -> {
                                                   spatialScaleFactor = newHeight.doubleValue() / 30.0156D;
-                                                  System.out.println("spatialScaleFactor = " + spatialScaleFactor);
                                               }
                                              );
 
@@ -298,15 +296,14 @@ public class Controller implements Initializable
 
         double[] waypointInit = waypoints[0];
 
-        double initX =  waypointInit[0] * spatialScaleFactor + originX;
-        double initY =  -waypointInit[1] * spatialScaleFactor + originY;
+        double initX = waypointInit[0] * spatialScaleFactor + originX;
+        double initY = -waypointInit[1] * spatialScaleFactor + originY;
 
         MoveTo initialOffset = new MoveTo(originX + pathOffsetX, originY + pathOffsetY);
 
         robotPath.getElements().add(initialOffset);
-//        waypointPath.getElements().add(initialOffset);
 
-        waypointPath.getElements().add(new MoveTo(initX + pathOffsetX,initY + pathOffsetX));
+        waypointPath.getElements().add(new MoveTo(initX + pathOffsetX, initY + pathOffsetX));
 
         // Draw the path -- where our robot was told to go
         for(int i = 0; i < waypoints.length; i++)
@@ -439,7 +436,25 @@ public class Controller implements Initializable
         }
 
         // Create the animation
-        final Timeline timeline = new Timeline();
+
+        if(listener != null)
+        {
+            rateSlider.valueProperty().removeListener(listener);
+        }
+
+        if(timeline != null)
+        {
+            timeline.pause();
+        }
+
+        timeline = new Timeline();
+
+        listener = (observable, oldValue, newValue) -> {
+            double value = newValue.doubleValue();
+            actOnTimeline(timeline, value);
+        };
+
+        rateSlider.valueProperty().addListener(listener);
 
         // Loop it forever
         timeline.setCycleCount(Timeline.INDEFINITE);
@@ -450,9 +465,25 @@ public class Controller implements Initializable
         // Add our keyframes to the animation
         keyFrames.forEach((KeyFrame kf) -> timeline.getKeyFrames().add(kf));
 
-        timeline.rateProperty().bind(rateSlider.valueProperty());
         // Play it
-        timeline.play();
+        timeline.playFromStart();
+        actOnTimeline(timeline,rateSlider.valueProperty().doubleValue());
+    }
+
+    private void actOnTimeline(Timeline timeline, double value)
+    {
+        if(MathUtils.epsilonEquals(0, value))
+        {
+            timeline.pause();
+//            timeline.setRate(1);
+            System.out.println("pause");
+        }
+        else
+        {
+            timeline.play();
+            timeline.setRate(value);
+        }
+        System.out.println("rate: "+value);
     }
 
     private void clear()
