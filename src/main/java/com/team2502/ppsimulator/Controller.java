@@ -475,15 +475,12 @@ public class Controller implements Initializable
         if(MathUtils.epsilonEquals(0, value))
         {
             timeline.pause();
-//            timeline.setRate(1);
-            System.out.println("pause");
         }
         else
         {
             timeline.play();
             timeline.setRate(value);
         }
-        System.out.println("rate: "+value);
     }
 
     private void clear()
