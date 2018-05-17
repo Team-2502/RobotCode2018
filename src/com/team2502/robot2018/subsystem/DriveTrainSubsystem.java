@@ -70,7 +70,7 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         setTeleopSettings();
         DashboardData.addUpdater(this);
 
-        final double secondsFromNeutralToFull = 0.4;
+        final double secondsFromNeutralToFull = 0;
         leftFrontTalonEnc.configOpenloopRamp(secondsFromNeutralToFull, Constants.INIT_TIMEOUT);
         leftRearTalon.configOpenloopRamp(secondsFromNeutralToFull, Constants.INIT_TIMEOUT);
         rightFrontTalonEnc.configOpenloopRamp(secondsFromNeutralToFull, Constants.INIT_TIMEOUT);

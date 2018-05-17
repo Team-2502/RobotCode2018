@@ -73,7 +73,7 @@ public final class Robot extends IterativeRobot
         SmartDashboard.putNumber("Side switch distance", 13.5);
         MathUtils.init();
         NAVX = new AHRS(SPI.Port.kMXP);
-//        CameraServer.getInstance().startAutomaticCapture();
+        CameraServer.getInstance().startAutomaticCapture();
         autonStrategySelector = new SendableChooser<>();
         AutonStrategy[] values = AutonStrategy.values();
         for(int i = 0; i < values.length; i++)
