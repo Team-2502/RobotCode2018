@@ -12,6 +12,7 @@ import static org.junit.Assert.assertTrue;
 
 public class MathTest
 {
+    private static final double DELTA = 1E-5;
     private ImmutableVector2f e1 = new ImmutableVector2f(1, 0);
 
     @Test
@@ -178,6 +179,56 @@ public class MathTest
         assertTrue(intersections.contains(new ImmutableVector2f(0, -1)));
         assertTrue(intersections.contains(new ImmutableVector2f(0, 1)));
 
+    }
+
+    @Test
+    public void testParametricLineDist()
+    {
+        MathUtils.ParametricFunction diagonal = new MathUtils.Geometry.ParametricLine(new ImmutableVector2f(0, 0),
+                                                                                      new ImmutableVector2f(1, 1));
+
+        assertEquals(new ImmutableVector2f(1, 1), MathUtils.Geometry.getClosestPointParametricFunc(diagonal, new ImmutableVector2f(2, 1)));
+
+        MathUtils.ParametricFunction circle = new MathUtils.ParametricFunction() {
+            @Override
+            public double getX(double t)
+            {
+                return Math.cos(t) + 3;
+            }
+
+            @Override
+            public double getY(double t)
+            {
+                return Math.sin(t);
+            }
+        };
+
+        assertEquals(new ImmutableVector2f((float) Math.cos(Math.PI / 4) + 3, (float) Math.sin(Math.PI / 4)), MathUtils.Geometry.getClosestPointParametricFunc(circle, new ImmutableVector2f(3.5F, 0.5F)));
+    }
+
+    @Test
+    public void testParametricArcLength()
+    {
+        MathUtils.ParametricFunction diagonal = new MathUtils.Geometry.ParametricLine(new ImmutableVector2f(0, 0),
+                                                                                      new ImmutableVector2f(1, 1));
+
+        assertEquals(MathUtils.ROOT_2, diagonal.getArcLength(0, 1), DELTA);
+
+        MathUtils.ParametricFunction unitCircle = new MathUtils.ParametricFunction() {
+            @Override
+            public double getX(double t)
+            {
+                return Math.cos(t);
+            }
+
+            @Override
+            public double getY(double t)
+            {
+                return Math.sin(t);
+            }
+        };
+
+        assertEquals(MathUtils.TAU, unitCircle.getArcLength(0, MathUtils.TAU), 1E-3);
     }
 
 

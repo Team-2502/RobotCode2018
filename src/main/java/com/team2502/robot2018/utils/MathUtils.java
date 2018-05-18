@@ -1,6 +1,7 @@
 package com.team2502.robot2018.utils;
 
 
+import com.sun.javafx.tools.packager.Param;
 import com.team2502.robot2018.Robot;
 import org.joml.ImmutableVector2f;
 
@@ -515,6 +516,78 @@ public final class MathUtils
         double get(double x);
     }
 
+    public interface ParametricFunction
+    {
+        final static double DELTA = 1E-4;
+        double getX(double t);
+
+        double getY(double t);
+
+        default ImmutableVector2f get(double t)
+        {
+            return new ImmutableVector2f((float) getX(t), (float) getY(t));
+        }
+
+        default double getArcLength(double lowerBound, double upperBound)
+        {
+            return getArcLength(lowerBound, upperBound, DELTA);
+        }
+
+        default double getArcLength(double lowerBound, double upperBound, double delta)
+        {
+            double resultLength = 0;
+            double lastX = getX(lowerBound);
+            double lastY = getY(lowerBound);
+            for(double t = lowerBound + delta; t <= upperBound; t += delta)
+            {
+                double x = getX(t);
+                double y = getY(t);
+                resultLength += Math.hypot(x - lastX, y - lastY);
+                lastX = x;
+                lastY = y;
+            }
+            return resultLength;
+        }
+
+        default double getT(ImmutableVector2f point, double lowerBound, double upperBound)
+        {
+            for(double t = lowerBound; t <= upperBound; t += DELTA)
+            {
+                if(get(t).equals(point))
+                    return t;
+            }
+            return Double.NaN;
+        }
+
+        default ImmutableVector2f fromArcLength(double arcLength)
+        {
+            return fromArcLength(0, arcLength, DELTA);
+        }
+        default ImmutableVector2f fromArcLength(double lowerBound, double arcLength)
+        {
+            return fromArcLength(lowerBound, arcLength, DELTA);
+        }
+
+        default ImmutableVector2f fromArcLength(double lowerBound, double arcLength, double delta)
+        {
+            double lastX = getX(lowerBound);
+            double lastY = getY(lowerBound);
+            double resultT = lowerBound;
+            for(double t = lowerBound + delta; arcLength >= 0; t += delta)
+            {
+                double x = getX(t);
+                double y = getY(t);
+                arcLength -= Math.hypot(x - lastX, y - lastY);
+                lastX = x;
+                lastY = y;
+                resultT = t;
+            }
+            return get(resultT);
+        }
+
+
+    }
+
     /**
      * A class containing methods pertaining to vector manipulation
      */
@@ -621,6 +694,8 @@ public final class MathUtils
         {
             return a >= 0 && b >= 0 || a < 0 && b < 0;
         }
+
+
     }
 
     /**
@@ -717,14 +792,12 @@ public final class MathUtils
 
         /**
          * turn an angle without bounds (-inf,inf) to [0,360)
+         * <p>
+         * <<<<<<< HEAD
          *
-<<<<<<< HEAD
          * @param angle Whatever the navX is reading
-         * @return An angle between 0 and 360, in degrees
-=======
          * @param angle
-         * @return
->>>>>>> feature-pp-record
+         * @return >>>>>>> feature-pp-record
          */
         public static float navXBound(float angle)
         {
@@ -854,6 +927,26 @@ public final class MathUtils
             }
         }
 
+        public static ImmutableVector2f getClosestPointParametricFunc(ParametricFunction func, ImmutableVector2f robotPos)
+        {
+            Function distFunc = (t) -> Math.sqrt(pow2(func.getX(t) - robotPos.x) + pow2(func.getY(t) - robotPos.y));
+            // Those splines are defined for 0 <= t <= 1
+
+            //
+            double minT = 0;
+            double minDist = distFunc.get(0);
+            for(double t = 0 + ParametricFunction.DELTA; t <= 1; t += ParametricFunction.DELTA)
+            {
+                if(distFunc.get(t) < minDist)
+                {
+                    minDist = distFunc.get(t);
+                    minT = t;
+                }
+            }
+
+            return func.get(minT);
+        }
+
         /**
          * @param speed Vector's magnitude
          * @param angle Angle at which it is at
@@ -908,7 +1001,7 @@ public final class MathUtils
             return intersections;
         }
 
-        public static class ParametricLine
+        public static class ParametricLine implements ParametricFunction
         {
 
 
@@ -953,6 +1046,18 @@ public final class MathUtils
             public ImmutableVector2f getb()
             {
                 return b;
+            }
+
+            @Override
+            public double getX(double t)
+            {
+                return a.x + t * (b.x - a.x);
+            }
+
+            @Override
+            public double getY(double t)
+            {
+                return a.y + t * (b.y - a.y);
             }
         }
 

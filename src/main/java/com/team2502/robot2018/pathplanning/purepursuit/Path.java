@@ -17,14 +17,14 @@ import java.util.List;
  */
 public class Path
 {
-    private List<PathSegment> pathSegments;
+    protected List<PathSegment> pathSegments;
 
     private int segmentOnI = -1;
     private PathSegment segmentOn;
     private ImmutableVector2f closestPoint;
     private ImmutableVector2f robotLocationClosestPoint;
 
-    private Path() {}
+    protected Path() {}
 
     public static Path fromSegments(List<PathSegment> pathSegments)
     {

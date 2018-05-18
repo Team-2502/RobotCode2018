@@ -40,7 +40,7 @@ public class PurePursuitTest
         Path path = Path.fromPoints(
                 new Waypoint(0, 0, 0, 0.5F, -0.5F),
                 new Waypoint(0, 10, 1, 0.5F, -0.5F)
-                                   );
+                                             );
 
         // acceleration from 0
         assertEquals(0.5F, generateSpeedUsed(0, 0, 1, path.clone()), 1E-6);
@@ -60,7 +60,7 @@ public class PurePursuitTest
         Path path = Path.fromPoints(
                 new Waypoint(0, 0, 1, 0.5F, -0.5F),
                 new Waypoint(0, 10, 0, 0.5F, -0.5F)
-                                   );
+                                             );
 
         // deccelerate to 0
         assertEquals(2F, generateSpeedUsed(0, 2, ANY_F, path.clone()), 1E-6);
@@ -89,7 +89,7 @@ public class PurePursuitTest
         Path path = Path.fromPoints(
                 new Waypoint(0, 0, 1, 0.5F, -0.5F),
                 new Waypoint(0, 10, 0, 0.5F, -0.5F)
-                                   );
+                                             );
         assertEquals(0F, generateSpeedUsed(14, 2, ANY_F, path.clone()), 1E-6);
     }
 

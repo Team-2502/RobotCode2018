@@ -10,7 +10,7 @@ public class PathSegment
 {
     private final Point first;
     private final Point last;
-    private final float length;
+    protected float length;
     private final boolean end;
     private final boolean start;
     private final float distanceStart;
@@ -41,19 +41,6 @@ public class PathSegment
     public ImmutableVector2f getPoint(float relativeDistance)
     {
         return dPos.mul(relativeDistance / length).add(startLocation);
-    }
-
-    /**
-     * Get the "distance" left in an efficient manner
-     * Instead of calculating sqrt(dx^2 + dy^2) we simply calculate dx + dy
-     *
-     * @param point a close point
-     * @return
-     */
-    public float getDistanceLeftEff(ImmutableVector2f point)
-    {
-        ImmutableVector2f lastLocation = last.getLocation();
-        return Math.abs(point.x - lastLocation.x) + Math.abs(point.y - lastLocation.y);
     }
 
     /**
@@ -108,21 +95,33 @@ public class PathSegment
         return pastX && pastY;
     }
 
+    /**
+     * @return How far along the entire path that the first point is
+     */
     public float getAbsoluteDistanceStart()
     {
         return distanceStart;
     }
 
+    /**
+     * @return How far along the entire path that the end point is
+     */
     public float getAbsoluteDistanceEnd()
     {
         return distanceEnd;
     }
 
+    /**
+     * @return If this segment is the last segment in the path
+     */
     public boolean isEnd()
     {
         return end;
     }
 
+    /**
+     * @return If this segment is the first segment in the path
+     */
     public boolean isStart()
     {
         return start;

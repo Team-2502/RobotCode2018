@@ -1,11 +1,7 @@
-import com.team2502.robot2018.pathplanning.purepursuit.Path;
-import com.team2502.robot2018.pathplanning.purepursuit.PathSegment;
-import com.team2502.robot2018.pathplanning.purepursuit.Point;
-import com.team2502.robot2018.pathplanning.purepursuit.Waypoint;
+import com.team2502.robot2018.pathplanning.purepursuit.*;
 import org.joml.ImmutableVector2f;
 import org.junit.Test;
 
-import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -16,7 +12,7 @@ public class PathTest
             new Point(0, 0),
             new Point(2, 2),
             new Point(4, 2)
-                                           );
+                                                     );
 
     @Test
     public void testClosestPoint()
@@ -109,9 +105,34 @@ public class PathTest
         assertEquals(new Point(5, 5), pathSegments.get(2).getFirst());
     }
 
+    @Test
     public void testPathProgression()
     {
         // TODO
+    }
+
+    @Test
+    public void testSplineSegment()
+    {
+        SplinePathSegment test = new SplinePathSegment(
+                new Point(0, 0),
+                new Point(2, 2),
+                new Point(30, 0),
+                new Point(30, 0),
+                false,
+                false,
+                0,
+                0,
+                0
+        );
+
+        System.out.println("x, y");
+        for(double t = 0; t <= 1; t += 1E-2)
+        {
+            System.out.println(test.getX(t) + ", " + test.getY(t));
+        }
+
+
     }
 
     private Path clonePath()
