@@ -6,6 +6,8 @@ import com.team2502.robot2018.pathplanning.purepursuit.ITankRobotBounds;
 import com.team2502.robot2018.pathplanning.purepursuit.LookaheadBounds;
 import com.team2502.robot2018.pathplanning.purepursuit.PurePursuitMovementStrategy;
 import com.team2502.robot2018.pathplanning.purepursuit.Waypoint;
+import com.team2502.robot2018.trajectory.record.PurePursuitFrame;
+import com.team2502.robot2018.trajectory.record.SQLite;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.joml.ImmutableVector2f;
@@ -108,11 +110,6 @@ public class PurePursuitCommand extends Command
         SmartDashboard.putNumber("PPwheelL", wheelVelocities.get(0));
         SmartDashboard.putNumber("PPwheelR", wheelVelocities.get(1));
 
-//        ImmutableVector2f gp = purePursuitMovementStrategy.getAbsoluteGoalPoint();
-//        Robot.writeLog("loc: %.2f, %.2f", 200, usedEstimatedLocation.x, usedEstimatedLocation.y);
-//        Robot.writeLog("goal point: %.2f, %.2f", 200, gp.x, gp.y);
-//        Robot.writeLog("running wheels: %.2f, %.2f", 200, wheelL, wheelR);
-
         if(forward)
         {
             Robot.DRIVE_TRAIN.runMotorsVelocity(wheelL, wheelR);
@@ -120,6 +117,20 @@ public class PurePursuitCommand extends Command
         else
         {
             Robot.DRIVE_TRAIN.runMotorsVelocity(-wheelR, -wheelL);
+        }
+        PurePursuitFrame purePursuitFrame = new PurePursuitFrame(waypoints, usedEstimatedLocation.x,
+                                                                 usedEstimatedLocation.y, purePursuitMovementStrategy.getUsedLookahead(),
+                                                                 purePursuitMovementStrategy.getUsedCurvature(), purePursuitMovementStrategy.getSpeedUsed(),
+                                                                 purePursuitMovementStrategy.getTangentialSpeed(), purePursuitMovementStrategy.getUsedHeading(),
+                                                                 System.currentTimeMillis());
+
+        try
+        {
+            SQLite.getInstance().addFrame(purePursuitFrame);
+        }
+        catch(SQLite.RecordingNotStartedException e)
+        {
+            e.printStackTrace();
         }
     }
 

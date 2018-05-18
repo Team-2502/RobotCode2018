@@ -62,6 +62,5 @@ public class TestCommandGroup extends CommandGroup
 
         // move forward
         addSequential(forward);
-
     }
 }

@@ -151,6 +151,11 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         stopwatch = new RealStopwatch();
     }
 
+    public float getSpeedUsed()
+    {
+        return speedUsed;
+    }
+
     public void setStopwatch(IStopwatch stopwatch)
     {
         this.stopwatch = stopwatch;

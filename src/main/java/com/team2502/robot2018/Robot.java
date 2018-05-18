@@ -13,6 +13,7 @@ import com.team2502.robot2018.subsystem.ActiveIntakeSubsystem;
 import com.team2502.robot2018.subsystem.DriveTrainSubsystem;
 import com.team2502.robot2018.subsystem.ElevatorSubsystem;
 import com.team2502.robot2018.subsystem.solenoid.*;
+import com.team2502.robot2018.trajectory.record.SQLite;
 import com.team2502.robot2018.utils.Files;
 import com.team2502.robot2018.utils.InterpolationMap;
 import com.team2502.robot2018.utils.MathUtils;
@@ -25,6 +26,7 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -38,6 +40,7 @@ public final class Robot extends IterativeRobot
 {
     public static double CAL_VELOCITY = 0D;
     public static String GAME_DATA = "...";
+    public static File SAVE_DIR = new File("/media/sda2/roborio");
 
     /**
      * One and only instance of DriveTrainSubsystem. The transmission is in its own class.
@@ -204,6 +207,7 @@ public final class Robot extends IterativeRobot
         // initialize sin lookup table
         MathUtils.init();
 
+
         String fileName = "/home/lvuser/FILES";
         Files.setFileName(fileName);
         Files.newFile(fileName);
@@ -231,9 +235,6 @@ public final class Robot extends IterativeRobot
         }
 
         SmartDashboard.putData("auto_strategy", autonStrategySelector);
-
-        // Make Donovan's logger
-//        Log.createLogger(true);
 
         // Initialize all subsystems
         TRANSMISSION_SOLENOID = new TransmissionSolenoid();
@@ -318,6 +319,7 @@ public final class Robot extends IterativeRobot
         Robot.logPop();
         // Print out the logs we saved up
 
+        SQLite.getInstance().close();
     }
 
     /**
@@ -344,6 +346,15 @@ public final class Robot extends IterativeRobot
      */
     public void autonomousInit()
     {
+        try
+        {
+            SQLite.getInstance().addEventMarker("Autonomous Init");
+        }
+        catch(SQLite.RecordingNotStartedException e)
+        {
+            e.printStackTrace();
+        }
+
         NAVX.reset();
         startLocalization();
 
@@ -367,6 +378,8 @@ public final class Robot extends IterativeRobot
         Scheduler.getInstance().add(AutoStartLocationSwitcher.getAutoInstance());
     }
 
+
+
     /**
      * This method is called periodically during autonomous
      */
@@ -382,6 +395,16 @@ public final class Robot extends IterativeRobot
      */
     public void teleopInit()
     {
+
+        try
+        {
+            SQLite.getInstance().addEventMarker("Teleop Init");
+        }
+        catch(SQLite.RecordingNotStartedException e)
+        {
+            e.printStackTrace();
+        }
+
         DRIVE_TRAIN.setTeleopSettings();
         ELEVATOR.calibrateEncoder();
     }

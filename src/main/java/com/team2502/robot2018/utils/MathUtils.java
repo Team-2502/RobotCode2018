@@ -718,8 +718,13 @@ public final class MathUtils
         /**
          * turn an angle without bounds (-inf,inf) to [0,360)
          *
+<<<<<<< HEAD
          * @param angle Whatever the navX is reading
          * @return An angle between 0 and 360, in degrees
+=======
+         * @param angle
+         * @return
+>>>>>>> feature-pp-record
          */
         public static float navXBound(float angle)
         {
