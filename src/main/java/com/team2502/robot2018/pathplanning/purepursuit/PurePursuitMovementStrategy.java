@@ -4,6 +4,7 @@ import com.team2502.robot2018.Constants;
 import com.team2502.robot2018.pathplanning.localization.IRotationalLocationEstimator;
 import com.team2502.robot2018.pathplanning.localization.ITranslationalLocationEstimator;
 import com.team2502.robot2018.pathplanning.localization.ITranslationalVelocityEstimator;
+import com.team2502.robot2018.trajectory.record.PurePursuitFrame;
 import com.team2502.robot2018.utils.IStopwatch;
 import com.team2502.robot2018.utils.MathUtils;
 import com.team2502.robot2018.utils.PurePursuitUtils;
@@ -416,4 +417,24 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
      */
     public float getdThetaToRotate()
     { return dThetaToRotate; }
+
+    public PurePursuitFrame getFrame(double timeSinceInitialized)
+    {
+        ImmutableVector2f goalPoint = absoluteGoalPoint;
+        if(goalPoint == null)
+        {
+            goalPoint = new ImmutableVector2f(Float.NaN, Float.NaN);
+        }
+
+        double radius = usedCurvature == 0 ? Double.POSITIVE_INFINITY : 1 / usedCurvature;
+
+        ImmutableVector2f circleCenter = getCircleCenter();
+        ImmutableVector2f closestPoint = this.closestPoint;
+        if(closestPoint == null)
+        {
+            closestPoint = new ImmutableVector2f(Float.NaN, Float.NaN);
+        }
+
+        return new PurePursuitFrame(timeSinceInitialized, usedEstimatedLocation, usedLookahead, usedHeading, goalPoint, radius, circleCenter, path.getSegmentOnI(), closestPoint);
+    }
 }

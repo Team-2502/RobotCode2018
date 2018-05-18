@@ -1,38 +1,50 @@
 package com.team2502.robot2018.trajectory.record;
 
-import com.team2502.robot2018.pathplanning.purepursuit.Waypoint;
+import com.team2502.robot2018.utils.CSVAble;
+import org.joml.ImmutableVector2f;
 
-import java.util.List;
-
-public class PurePursuitFrame
+public class PurePursuitFrame implements CSVAble
 {
-    private final List<Waypoint> waypoints;
 
-    private final float robotX, robotY, lookahead, curvature, speedUsed, actualSpeed;
-    private final long time;
-    private final float robotHeading;
 
-    public PurePursuitFrame(List<Waypoint> waypoints, float robotX, float robotY, float lookahead, float curvature, float speedUsed, float actualSpeed,  float robotHeading, long time)
+    private final double timeElapsedSeconds;
+    private final float robotX;
+    private final float robotY;
+    private final double usedLookahead;
+    private final float usedHeading;
+    private final float goalPointX;
+    private final float goalPointY;
+    private final double radius;
+
+    private final float circleCenterX;
+    private final float circleCenterY;
+    private final int currentSegmentIndex;
+    private final float closestPointX;
+    private final float closestPointY;
+    private final float dCP;
+
+    public PurePursuitFrame(double timeElapsedSeconds, ImmutableVector2f robotPos, double usedLookahead, float usedHeading, ImmutableVector2f goalPoint, double radius, ImmutableVector2f circleCenter, int currentSegmentIndex, ImmutableVector2f closestPoint)
     {
-        this.waypoints = waypoints;
-        this.robotX = robotX;
-        this.robotY = robotY;
-        this.lookahead = lookahead;
-        this.curvature = curvature;
-        this.speedUsed = speedUsed;
-        this.actualSpeed = actualSpeed;
-        this.time = time;
-        this.robotHeading = robotHeading;
+
+        this.timeElapsedSeconds = timeElapsedSeconds;
+        this.robotX = robotPos.x;
+        this.robotY = robotPos.y;
+        this.usedLookahead = usedLookahead;
+        this.usedHeading = usedHeading;
+        this.goalPointX = goalPoint.x;
+        this.goalPointY = goalPoint.y;
+        this.radius = radius;
+        this.circleCenterX = circleCenter.x;
+        this.circleCenterY = circleCenter.y;
+        this.currentSegmentIndex = currentSegmentIndex;
+        this.closestPointX = closestPoint.x;
+        this.closestPointY = closestPoint.y;
+        this.dCP = robotPos.distance(closestPoint);
     }
 
-    public float getRobotHeading()
+    public double getTimeElapsedSeconds()
     {
-        return robotHeading;
-    }
-
-    public List<Waypoint> getWaypoints()
-    {
-        return waypoints;
+        return timeElapsedSeconds;
     }
 
     public float getRobotX()
@@ -45,28 +57,65 @@ public class PurePursuitFrame
         return robotY;
     }
 
-    public float getLookahead()
+    public double getUsedLookahead()
     {
-        return lookahead;
+        return usedLookahead;
     }
 
-    public float getCurvature()
+    public float getUsedHeading()
     {
-        return curvature;
+        return usedHeading;
     }
 
-    public float getSpeedUsed()
+    public float getGoalPointX()
     {
-        return speedUsed;
+        return goalPointX;
     }
 
-    public float getActualSpeed()
+    public float getGoalPointY()
     {
-        return actualSpeed;
+        return goalPointY;
     }
 
-    public long getTime()
+    public double getRadius()
     {
-        return time;
+        return radius;
+    }
+
+    public float getCircleCenterX()
+    {
+        return circleCenterX;
+    }
+
+    public float getCircleCenterY()
+    {
+        return circleCenterY;
+    }
+
+    public int getCurrentSegmentIndex()
+    {
+        return currentSegmentIndex;
+    }
+
+    public float getClosestPointX()
+    {
+        return closestPointX;
+    }
+
+    public float getClosestPointY()
+    {
+        return closestPointY;
+    }
+
+    public float getdCP()
+    {
+        return dCP;
+    }
+
+
+    public String toCSV()
+    {
+        return timeElapsedSeconds + ", " +  robotX + ", " +  robotY + ", " + usedLookahead + ", " + usedHeading + ", " + goalPointX + ", " + goalPointY + ", " + radius + ", " + circleCenterX + ", " + circleCenterY + ", " + currentSegmentIndex + ", " + closestPointX + ", " + closestPointY + ", " + dCP;
+
     }
 }

@@ -6,8 +6,7 @@ import com.team2502.robot2018.pathplanning.purepursuit.ITankRobotBounds;
 import com.team2502.robot2018.pathplanning.purepursuit.LookaheadBounds;
 import com.team2502.robot2018.pathplanning.purepursuit.PurePursuitMovementStrategy;
 import com.team2502.robot2018.pathplanning.purepursuit.Waypoint;
-import com.team2502.robot2018.trajectory.record.PurePursuitFrame;
-import com.team2502.robot2018.trajectory.record.SQLite;
+import com.team2502.robot2018.trajectory.record.PurePursuitCSVWriter;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.joml.ImmutableVector2f;
@@ -27,6 +26,7 @@ public class PurePursuitCommand extends Command
     private boolean drift;
     private boolean autoFirstPoint;
     private boolean forward;
+    private final PurePursuitCSVWriter purePursuitCsvWriter = new PurePursuitCSVWriter();
 
     /**
      * Given some waypoints, drive through them
@@ -79,6 +79,7 @@ public class PurePursuitCommand extends Command
     @Override
     protected void initialize()
     {
+        purePursuitCsvWriter.addWaypoints(waypoints);
         // set location to first robot point TODO: make better... this way of doing it is crap
         waypoints.get(0).setLocation(Robot.ROBOT_LOCALIZATION_COMMAND.estimateLocation());
         Robot.writeLog("init PP", 80);
@@ -118,20 +119,8 @@ public class PurePursuitCommand extends Command
         {
             Robot.DRIVE_TRAIN.runMotorsVelocity(-wheelR, -wheelL);
         }
-        PurePursuitFrame purePursuitFrame = new PurePursuitFrame(waypoints, usedEstimatedLocation.x,
-                                                                 usedEstimatedLocation.y, purePursuitMovementStrategy.getUsedLookahead(),
-                                                                 purePursuitMovementStrategy.getUsedCurvature(), purePursuitMovementStrategy.getSpeedUsed(),
-                                                                 purePursuitMovementStrategy.getTangentialSpeed(), purePursuitMovementStrategy.getUsedHeading(),
-                                                                 System.currentTimeMillis());
 
-        try
-        {
-            SQLite.getInstance().addFrame(purePursuitFrame);
-        }
-        catch(SQLite.RecordingNotStartedException e)
-        {
-            e.printStackTrace();
-        }
+        purePursuitCsvWriter.addFrame(purePursuitMovementStrategy.getFrame(timeSinceInitialized()));
     }
 
     @Override

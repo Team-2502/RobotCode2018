@@ -49,13 +49,6 @@ public final class DashboardData
 
     }
 
-//    /**
-//     * Dashboard widget used to enable and disable Pure Pursuit Record function.
-//     */
-//    private static void ppRecord(){
-//        SQLite.setEnabled(SmartDashboard.getBoolean("", false));
-//        SmartDashboard.putBoolean("", SQLite.isStorage());
-//    }
 
     /**
      * An interface to allow you to automatically update stuff on the Smart Dashboard.

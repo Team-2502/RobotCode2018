@@ -13,7 +13,6 @@ import com.team2502.robot2018.subsystem.ActiveIntakeSubsystem;
 import com.team2502.robot2018.subsystem.DriveTrainSubsystem;
 import com.team2502.robot2018.subsystem.ElevatorSubsystem;
 import com.team2502.robot2018.subsystem.solenoid.*;
-import com.team2502.robot2018.trajectory.record.SQLite;
 import com.team2502.robot2018.utils.Files;
 import com.team2502.robot2018.utils.InterpolationMap;
 import com.team2502.robot2018.utils.MathUtils;
@@ -317,9 +316,6 @@ public final class Robot extends IterativeRobot
         Robot.CLIMBER_SOLENOID.lockElevator();
 
         Robot.logPop();
-        // Print out the logs we saved up
-
-        SQLite.getInstance().close();
     }
 
     /**
@@ -346,14 +342,6 @@ public final class Robot extends IterativeRobot
      */
     public void autonomousInit()
     {
-        try
-        {
-            SQLite.getInstance().addEventMarker("Autonomous Init");
-        }
-        catch(SQLite.RecordingNotStartedException e)
-        {
-            e.printStackTrace();
-        }
 
         NAVX.reset();
         startLocalization();
@@ -395,15 +383,6 @@ public final class Robot extends IterativeRobot
      */
     public void teleopInit()
     {
-
-        try
-        {
-            SQLite.getInstance().addEventMarker("Teleop Init");
-        }
-        catch(SQLite.RecordingNotStartedException e)
-        {
-            e.printStackTrace();
-        }
 
         DRIVE_TRAIN.setTeleopSettings();
         ELEVATOR.calibrateEncoder();

@@ -3,13 +3,13 @@ import com.team2502.robot2018.command.autonomous.ingredients.PathConfig;
 import com.team2502.robot2018.pathplanning.purepursuit.Path;
 import com.team2502.robot2018.pathplanning.purepursuit.PurePursuitMovementStrategy;
 import com.team2502.robot2018.pathplanning.purepursuit.Waypoint;
+import com.team2502.robot2018.trajectory.record.PurePursuitCSVWriter;
 import com.team2502.robot2018.utils.MathUtils;
 import com.team2502.robot2018.utils.SimulatedStopwatch;
 import org.joml.ImmutableVector2f;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -105,17 +105,15 @@ public class SimulatorTest
 
     private void testPath(List<Waypoint> pathToTest, float desiredHeading, float desiredTime, String fileName) throws IOException
     {
-        File file = null;
+        PurePursuitCSVWriter manager = null;
         try{
-            file = new File("outPaths/" + fileName + ".csv");
-            file.createNewFile();
+          manager  = new PurePursuitCSVWriter("outPaths/" + fileName + ".csv", false);
         }
         catch(IOException e1)
         {
             try
             {
-                file = new File("../../outPaths/" + fileName + ".csv");
-                file.createNewFile();
+                manager  = new PurePursuitCSVWriter("../../outPaths/" + fileName + ".csv", false);
             }
             catch(IOException e2)
             {
@@ -123,29 +121,18 @@ public class SimulatorTest
             }
         }
 
-
-        System.out.println("file.getAbsolutePath() = " + file.getAbsolutePath());
-
-        FileWriter fileWriter = new FileWriter(file);
-
         try
         {
             System.out.println("start: " + pathToTest);
             List<Waypoint> path = new ArrayList<>();
 
-            // How many waypoints are there?
-            fileWriter.append(pathToTest.size() + "\n");
-            fileWriter.append("x, y\n");
-
             for(Waypoint waypoint : pathToTest)
             {
                 // Strip commands from waypoint because involve wpilib
                 path.add(new Waypoint(waypoint.getLocation(), waypoint.getMaxSpeed(), waypoint.getMaxAccel(), waypoint.getMaxDeccel()));
-                double x = waypoint.getLocation().x;
-                double y = waypoint.getLocation().y;
-                fileWriter.append(x + ", " + y + "\n");
             }
 
+            manager.addWaypoints(path);
 
             SimulatedRobot simulatedRobot = new SimulatedRobot(Constants.PurePursuit.LATERAL_WHEEL_DISTANCE_FT);
             SimulatorLocationEstimator simulatorLocationEstimator = new SimulatorLocationEstimator(simulatedRobot);
@@ -159,8 +146,8 @@ public class SimulatorTest
             Path ppPath = purePursuitMovementStrategy.getPath();
             int i = 0;
 
-//        System.out.println("time, x, y, lookahead");
-            fileWriter.append("time, x, y, lookahead, heading, goal_point_x, goal_point_y, path_circle_radius, path_circle_x, path_circle_y, path_segment_num, closestPoint_x, closestPoint_y, dCP\n");
+
+            // Check PurePursuitFrame for header rows
 
             for(; i < 1000; i++)
             {
@@ -191,7 +178,8 @@ public class SimulatorTest
                 {
                     closestPoint = new ImmutableVector2f(Float.NaN, Float.NaN);
                 }
-                writeCSV(fileWriter, i * dt, usedEstimatedLocation.x, usedEstimatedLocation.y, usedLookahead, usedHeading, goalPoint.x, goalPoint.y, radius, circleCenter.x, circleCenter.y, ppPath.getSegmentOnI(), closestPoint.x, closestPoint.y, usedEstimatedLocation.distance(closestPoint));
+
+                manager.addFrame(purePursuitMovementStrategy.getFrame(i * dt));
 
 //            fileWriter.append(i * dt + ", " + usedEstimatedLocation.x + ", " + usedEstimatedLocation.y + ", " + (float) usedLookahead + ", "+ simulatorLocationEstimator.estimateHeading()+"\n");
                 simulatedRobot.runMotorsVel(wheelVels.x, wheelVels.y);
@@ -215,8 +203,8 @@ public class SimulatorTest
         }
         finally
         {
-            fileWriter.flush();
-            fileWriter.close();
+            manager.flush();
+            manager.close();
         }
 
 

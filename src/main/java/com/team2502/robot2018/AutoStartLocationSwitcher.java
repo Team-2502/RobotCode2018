@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 /**
  * Select where we start the robot so it knows where it is on the field, resulting in a successful autonomous routine.
  */
-class AutoStartLocationSwitcher
+public class AutoStartLocationSwitcher
 {
     /**
      * The actual sendable containing the autonomi
@@ -46,6 +46,7 @@ class AutoStartLocationSwitcher
      */
     static Command getAutoInstance() { return autoChooser.getSelected().getInstance(); }
 
+    public static AutoMode getSelectedPosition() { return autoChooser.getSelected(); }
     /**
      * An enum containing all the autonomi the drivers can select from
      */
