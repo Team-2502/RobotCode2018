@@ -221,6 +221,10 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         }
 
         usedEstimatedLocation = translationalLocationEstimator.estimateLocation();
+        if(Double.isNaN(usedEstimatedLocation.x) || Double.isNaN(usedEstimatedLocation.y))
+        {
+            throw new NullPointerException("Estimated location is NaN!");
+        }
         usedHeading = rotEstimator.estimateHeading();
 
         closestPoint = path.getClosestPoint(usedEstimatedLocation);
@@ -279,6 +283,11 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
 
         usedCurvature = PurePursuitUtils.calculateCurvature(relativeGoalPoint);
         wheelVelocities = PurePursuitUtils.calculateWheelVelocities(usedCurvature, tankRobot.getLateralWheelDistance(), speedUsed);
+
+        if(wheelVelocities.x < 0 && wheelVelocities.y < 0)
+        {
+            System.err.println("Robot is going backwards! Iteration #" + updateCount);
+        }
 
         if(path.progressIfNeeded(distanceLeft, dCP, usedEstimatedLocation))
         {

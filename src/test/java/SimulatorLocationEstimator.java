@@ -37,6 +37,10 @@ public class SimulatorLocationEstimator implements ITranslationalLocationEstimat
         float angularVel = MathUtils.Kinematics.getAngularVel(leftVel, rightVel, SimulatedRobot.LATERAL_WHEEL_DIST);
         heading += angularVel * time;
         ImmutableVector2f dPos = MathUtils.Kinematics.getAbsoluteDPosCurve(leftVel, rightVel, simulatedRobot.getLateralWheelDistance(), time, heading);
+        if(Double.isNaN(dPos.x) || Double.isNaN(dPos.y))
+        {
+            throw new NullPointerException("dPos is NaN!");
+        }
         estimatedLocation = estimatedLocation.add(dPos);
     }
 

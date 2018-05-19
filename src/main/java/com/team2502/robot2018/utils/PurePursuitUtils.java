@@ -59,7 +59,10 @@ public class PurePursuitUtils
             float distanceTo = pathSegment.getAbsoluteDistanceEnd() - positionOnPath;
             if(distanceTo < 0)
             {
-                throw new IllegalArgumentException("Path should have progressed (looking ahead on path), distanceTo: " + distanceTo);
+//                if(distanceTo < -0.5)
+                    throw new IllegalArgumentException("Path should have progressed (looking ahead on path), distanceTo: " + distanceTo);
+//                else
+//                    distanceTo = 0;
             }
             float maxSpeed = getMaxSpeed(speedAtLastWaypoint, last.getMaxSpeed(), distanceTo, waypointEnd.getMaxDeccel());
 
@@ -97,6 +100,7 @@ public class PurePursuitUtils
         float v_rMax = speedUsed;
         float v_lMin = -speedUsed;
         float v_rMin = -speedUsed;
+
 
         if(Math.abs(curvature) < THRESHOLD_CURVATURE) // if we are a straight line ish (lines are not curvy -> low curvature)
         {
@@ -166,10 +170,18 @@ public class PurePursuitUtils
                 }
             }
 
+
+            if(bestVector.x < 0 && bestVector.y < 0)
+            {
+                System.err.println("Robot is going backwards!");
+            }
+
             if(bestVector == null)
             {
                 throw new NullPointerException("bestVector is null!");
             }
+
+
 
 //            rotVelocity = (bestVector.get(1) - bestVector.get(0)) / tankRobot.getLateralWheelDistance();
 //            motionRadius = 1 / curvature;

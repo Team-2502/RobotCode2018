@@ -107,10 +107,9 @@ public class SimulatorTest
     public void testSplinePath() throws IOException
     {
         Path splinePath = Path.fromSplinePoints(
-                new SplineWaypoint(new ImmutableVector2f(0, 0), 0, 1, 10, -10),
-                new SplineWaypoint(new ImmutableVector2f(2F, 2.45F), -Math.PI / 4, 16, 10, -10),
-                new SplineWaypoint(new ImmutableVector2f(3.5F, 4F), 0, 16, 10, -10),
-                new SplineWaypoint(new ImmutableVector2f(3.5F, 9F), 0, 1F, 10, -10) // if this doesn't work, PP is broken or field is off.
+                new SplineWaypoint(new ImmutableVector2f(0, 0), 0, 10, 10, -10),
+                new SplineWaypoint(new ImmutableVector2f(3.5F, 4.5F), 0, 10F, 10, -10), // if this doesn't work, PP is broken or field is off.
+                new SplineWaypoint(new ImmutableVector2f(3.5F, 9F), 0, 10F, 10, -10) // if this doesn't work, PP is broken or field is off.
                                                );
         testPath(splinePath.getWaypoints(), 90, 15, "centerSplinePathA");
     }
@@ -172,30 +171,9 @@ public class SimulatorTest
                 }
                 purePursuitMovementStrategy.update();
                 ImmutableVector2f wheelVels = purePursuitMovementStrategy.getWheelVelocities();
-                ImmutableVector2f usedEstimatedLocation = purePursuitMovementStrategy.getUsedEstimatedLocation();
-                double usedLookahead = purePursuitMovementStrategy.getUsedLookahead();
-                float usedHeading = purePursuitMovementStrategy.getUsedHeading();
-//            System.out.println(i * dt + ", " + usedEstimatedLocation.x + ", " + usedEstimatedLocation.y + ", " + usedLookahead);
-                ImmutableVector2f goalPoint = purePursuitMovementStrategy.getAbsoluteGoalPoint();
-                if(goalPoint == null)
-                {
-                    goalPoint = new ImmutableVector2f(Float.NaN, Float.NaN);
-                }
-
-
-                float curvature = purePursuitMovementStrategy.getUsedCurvature();
-                double radius = curvature == 0 ? Double.POSITIVE_INFINITY : 1 / curvature;
-
-                ImmutableVector2f circleCenter = purePursuitMovementStrategy.getCircleCenter();
-                ImmutableVector2f closestPoint = purePursuitMovementStrategy.getClosestPoint();
-                if(closestPoint == null)
-                {
-                    closestPoint = new ImmutableVector2f(Float.NaN, Float.NaN);
-                }
 
                 manager.addFrame(purePursuitMovementStrategy.getFrame(i * dt));
 
-//            fileWriter.append(i * dt + ", " + usedEstimatedLocation.x + ", " + usedEstimatedLocation.y + ", " + (float) usedLookahead + ", "+ simulatorLocationEstimator.estimateHeading()+"\n");
                 simulatedRobot.runMotorsVel(wheelVels.x, wheelVels.y);
                 simulatorLocationEstimator.update();
             }

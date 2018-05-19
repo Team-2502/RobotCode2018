@@ -19,7 +19,7 @@ import java.util.List;
 public class Path
 {
 
-    private static final double SEGMENTS_PER_UNIT = 100;
+    private static final double SEGMENTS_PER_UNIT = 2; // 2 segments per foot -> 6 inches per segment. Pretty reasonable resolution for a 2 foot long robot.
     protected List<PathSegment> pathSegments;
 
     protected int segmentOnI = -1;
@@ -70,19 +70,29 @@ public class Path
             int interpolatedSegNum = (int) (SEGMENTS_PER_UNIT * pathSegment.getLength());
 
             InterpolationMap maxVel = new InterpolationMap(0D, (double) waypoint1.getMaxSpeed());
-            maxVel.put(1D, (double) waypoint2.getMaxSpeed());
+            final float maxSpeedWaypoint2 = waypoint2.getMaxSpeed();
+            if(maxSpeedWaypoint2 < 0)
+            {
+                throw new IllegalArgumentException("Somehow, maxSpeed is less than 0 for this waypoint: " + waypoint2.toString());
+            }
+            maxVel.put(1D, (double) maxSpeedWaypoint2);
 
             InterpolationMap maxAccel = new InterpolationMap(0D, (double) waypoint1.getMaxAccel());
-            maxVel.put(1D, (double) waypoint2.getMaxAccel());
+            maxAccel.put(1D, (double) waypoint2.getMaxAccel());
 
             InterpolationMap maxDecel = new InterpolationMap(0D, (double) waypoint1.getMaxDeccel());
-            maxVel.put(1D, (double) waypoint2.getMaxDeccel());
+            maxDecel.put(1D, (double) waypoint2.getMaxDeccel());
 
-            for(int j = 0; j <= interpolatedSegNum; j++)
+            for(int j = 0; j < interpolatedSegNum; j++)
             {
                 double t = (double) j / interpolatedSegNum;
                 ImmutableVector2f loc = pathSegment.get(t);
-                Waypoint waypoint = new Waypoint(loc, maxVel.get(t).floatValue(), maxAccel.get(t).floatValue(), maxDecel.get(t).floatValue(), j == 0 ? waypoint1.getCommands() : null);
+                final float maxSpeed = maxVel.get(t).floatValue();
+                if(maxSpeed < 0)
+                {
+                    throw new IllegalArgumentException("Max speed is negative!");
+                }
+                Waypoint waypoint = new Waypoint(loc, maxSpeed, maxAccel.get(t).floatValue(), maxDecel.get(t).floatValue(), j == 0 ? waypoint1.getCommands() : null);
                 interpolatedWaypoints.add(waypoint);
             }
         }
