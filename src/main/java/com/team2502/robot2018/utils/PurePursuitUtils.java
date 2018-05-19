@@ -59,15 +59,7 @@ public class PurePursuitUtils
             float distanceTo = pathSegment.getAbsoluteDistanceEnd() - positionOnPath;
             if(distanceTo < 0)
             {
-                distanceTo = 0;
-//                if(distanceTo < -0.5)
-//                {
-//                    throw new IllegalArgumentException("Path should have progressed (looking ahead on path), distanceTo: " + distanceTo);
-//                }
-//                else
-//                {
-//
-//                }
+                throw new IllegalArgumentException("Path should have progressed (looking ahead on path), distanceTo: " + distanceTo);
             }
             float maxSpeed = getMaxSpeed(speedAtLastWaypoint, last.getMaxSpeed(), distanceTo, waypointEnd.getMaxDeccel());
 
