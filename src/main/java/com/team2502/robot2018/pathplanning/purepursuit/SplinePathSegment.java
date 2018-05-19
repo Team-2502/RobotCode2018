@@ -103,12 +103,22 @@ public class SplinePathSegment extends PathSegment implements ParametricFunction
                '}';
     }
 
+    /**
+     *
+     * @param t:[0,1]
+     * @return
+     */
     @Override
     public double getX(double t)
     {
         return MathUtils.pow3f((float) t) * a.x + MathUtils.pow2f((float) t) * b.x + t * c.x + d.x;
     }
 
+    /**
+     *
+     * @param t:[0,1]
+     * @return
+     */
     @Override
     public double getY(double t)
     {

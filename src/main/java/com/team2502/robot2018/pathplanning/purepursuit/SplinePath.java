@@ -38,5 +38,4 @@ public class SplinePath extends Path
         }
         return splineFromSegments(pathSegments);
     }
-    // getArcLength(first, last, firstSlope, lastSlope)
 }

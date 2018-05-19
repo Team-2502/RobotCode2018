@@ -17,6 +17,8 @@ import java.util.List;
  */
 public class Path
 {
+
+    private static final double SEGMENTS_PER_UNIT = 100;
     protected List<PathSegment> pathSegments;
 
     private int segmentOnI = -1;
@@ -47,6 +49,34 @@ public class Path
             pathSegments.add(pathSegment);
         }
         return fromSegments(pathSegments);
+    }
+
+    public static Path fromSplinePoint(List<SplineWaypoint> waypointList)
+    {
+        List<Waypoint> interpolatedWaypoints = new ArrayList<>();
+        float distance = 0;
+        for(int i = 0; i < waypointList.size() - 1; i++)
+        {
+            SplineWaypoint waypoint1 = waypointList.get(i);
+            Point waypoint1Slope = waypointList.get(i).getSlopeVec();
+
+            SplineWaypoint waypoint2 = waypointList.get(i + 1);
+            Point waypoint2Slope = waypointList.get(i).getSlopeVec();
+
+            float length = (float) SplinePathSegment.getArcLength(waypoint1, waypoint2, waypoint1Slope, waypoint2Slope, 0, 1);
+
+            SplinePathSegment pathSegment = new SplinePathSegment(waypoint1, waypoint2, waypoint1Slope, waypoint2Slope,i == 0, i == waypointList.size() - 2, distance, distance += length, length);
+            int interpolatedSegNum = (int) (SEGMENTS_PER_UNIT / pathSegment.getLength());
+
+            for(int j = 0; j < interpolatedSegNum; j++)
+            {
+                double t = (double) j / interpolatedSegNum;
+                ImmutableVector2f loc = new ImmutableVector2f((float) pathSegment.getX(t), (float)pathSegment.getY(t));
+                Waypoint waypoint = new Waypoint(loc, waypoint1.getMaxSpeed(), waypoint1.getMaxAccel(), waypoint1.getMaxDeccel(), waypoint1.getCommands());
+                interpolatedWaypoints.add(waypoint);
+            }
+        }
+        return fromPoints(interpolatedWaypoints);
     }
 
     public static Path fromPoints(Point... points)

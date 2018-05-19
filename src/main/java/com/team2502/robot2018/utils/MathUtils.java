@@ -517,7 +517,7 @@ public final class MathUtils
 
     public interface ParametricFunction
     {
-        final static double DELTA = 1E-4;
+        double DELTA = 1E-4;
         double getX(double t);
 
         double getY(double t);
@@ -927,7 +927,7 @@ public final class MathUtils
          * @param b
          * @return The hypotenuse squared
          */
-        public double hypot2(double a, double b)
+        public static double hypot2(double a, double b)
         {
             return a*a + b*b;
         }
