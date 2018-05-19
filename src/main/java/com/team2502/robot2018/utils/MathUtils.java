@@ -934,7 +934,7 @@ public final class MathUtils
 
         public static ImmutableVector2f getClosestPointParametricFunc(ParametricFunction func, ImmutableVector2f robotPos)
         {
-            Function dist2Func = (t) -> hypot2(func.getX(t) - robotPos.x,func.getY(t) - robotPos.y)
+            Function dist2Func = (t) -> hypot2(func.getX(t) - robotPos.x,func.getY(t) - robotPos.y);
             // Those splines are defined for 0 <= t <= 1
 
             //
