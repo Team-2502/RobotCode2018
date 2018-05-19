@@ -2,6 +2,7 @@ import com.team2502.robot2018.Constants;
 import com.team2502.robot2018.command.autonomous.ingredients.PathConfig;
 import com.team2502.robot2018.pathplanning.purepursuit.Path;
 import com.team2502.robot2018.pathplanning.purepursuit.PurePursuitMovementStrategy;
+import com.team2502.robot2018.pathplanning.purepursuit.SplineWaypoint;
 import com.team2502.robot2018.pathplanning.purepursuit.Waypoint;
 import com.team2502.robot2018.trajectory.record.PurePursuitCSVWriter;
 import com.team2502.robot2018.utils.MathUtils;
@@ -101,6 +102,19 @@ public class SimulatorTest
         testPath(PathConfig.Center.rightSwitch, 0, 15, "centerToRightSwitch");
         testPath(PathConfig.Center.leftSwitch, 0, 15, "centerToLeftSwitch");
     }
+
+    @Test
+    public void testSplinePath() throws IOException
+    {
+        Path splinePath = Path.fromSplinePoints(
+                new SplineWaypoint(new ImmutableVector2f(0, 0), 0, 1, 10, -10),
+                new SplineWaypoint(new ImmutableVector2f(2F, 2.45F), -Math.PI / 4, 16, 10, -10),
+                new SplineWaypoint(new ImmutableVector2f(3.5F, 4F), 0, 16, 10, -10),
+                new SplineWaypoint(new ImmutableVector2f(3.5F, 9F), 0, 1F, 10, -10) // if this doesn't work, PP is broken or field is off.
+                                               );
+        testPath(splinePath.getWaypoints(), 90, 15, "centerSplinePathA");
+    }
+
 
 
     private void testPath(List<Waypoint> pathToTest, float desiredHeading, float desiredTime, String fileName) throws IOException

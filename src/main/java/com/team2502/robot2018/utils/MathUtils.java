@@ -34,6 +34,11 @@ public final class MathUtils
 
     public static final float PI_F = (float) Math.PI;
 
+    /**
+     * e_2
+     *
+     * Robot starts pointing in this direction
+     */
     public static final ImmutableVector2f VECTOR_STRAIGHT = new ImmutableVector2f(0, 1);
 
     /**
@@ -959,7 +964,7 @@ public final class MathUtils
          */
         public static ImmutableVector2f getVector(float speed, float angle)
         {
-            return MathUtils.LinearAlgebra.rotate2D(VECTOR_STRAIGHT, angle);
+            return MathUtils.LinearAlgebra.rotate2D(VECTOR_STRAIGHT, angle).mul(speed);
         }
 
         /**

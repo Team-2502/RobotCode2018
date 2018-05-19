@@ -38,8 +38,14 @@ public class SplinePathSegment extends PathSegment implements ParametricFunction
 
         // 2p_0 - 2p_1 + p'_0 + p'_1
         a = first.getLocation().mul(2).sub(last.getLocation().mul(2)).add(firstSlope.getLocation()).add(lastSlope.getLocation());
+
+        // -3p_0 + 3p_1 - 2p'_0 - p_1
         b = first.getLocation().mul(-3).add(last.getLocation().mul(3)).sub(firstSlope.getLocation().mul(2)).sub(lastSlope.getLocation());
+
+        // p'_0
         c = firstSlope.getLocation();
+
+        // p_0
         d = first.getLocation();
 
     }
@@ -66,24 +72,6 @@ public class SplinePathSegment extends PathSegment implements ParametricFunction
     public float getDistanceLeft(ImmutableVector2f point)
     {
         return (float) (getArcLength(0, 1) - getArcLength(0, getT(point, 0 , 1)));
-    }
-
-    @Override
-    public boolean isPast(ImmutableVector2f point)
-    {
-        return super.isPast(point);
-    }
-
-    @Override
-    public float getAbsoluteDistanceStart()
-    {
-        return super.getAbsoluteDistanceStart();
-    }
-
-    @Override
-    public float getAbsoluteDistanceEnd()
-    {
-        return super.getAbsoluteDistanceEnd();
     }
 
     @Override
@@ -133,7 +121,6 @@ public class SplinePathSegment extends PathSegment implements ParametricFunction
         ImmutableVector2f d = first.getLocation();
 
         ParametricFunction spline = new ParametricFunction() {
-
             @Override
             public double getX(double t)
             {
@@ -147,5 +134,15 @@ public class SplinePathSegment extends PathSegment implements ParametricFunction
             }
         };
         return spline.getArcLength(lowerBound, upperBound);
+    }
+
+    public Point getLastSlope()
+    {
+        return lastSlope;
+    }
+
+    public Point getFirstSlope()
+    {
+        return firstSlope;
     }
 }

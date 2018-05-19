@@ -6,13 +6,12 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
-public class PathTest
+public class SplinePathTest
 {
-    private Path basePath = Path.fromPoints(
-            new Point(0, 0),
-            new Point(2, 2),
-            new Point(4, 2)
-                                                     );
+    private Path basePath =  Path.fromSplinePoints(
+            new SplineWaypoint(0, 0, 0, 1, 1, -1),
+            new SplineWaypoint(1, 1, -Math.PI / 2, 10, 1, -1)
+                                                  );
 
     @Test
     public void testClosestPoint()
@@ -22,8 +21,8 @@ public class PathTest
         assertTrue(path.exists());
 
         ImmutableVector2f closestPoint = path.getClosestPoint(new ImmutableVector2f(1, 1));
-        assertEquals(closestPoint.x, 1, 1E-6);
-        assertEquals(closestPoint.y, 1, 1E-6);
+        assertEquals(path.getCurrent().getLast().getLocation().x, closestPoint.x, 1E-6);
+        assertEquals(path.getCurrent().getLast().getLocation().y, closestPoint.y, 1E-6);
 
         closestPoint = path.getClosestPoint(new ImmutableVector2f(0, 1));
         assertEquals(closestPoint.x, 0.5F, 1E-6);
@@ -40,8 +39,8 @@ public class PathTest
         assertEquals(start.getLocation().y, 0F, 1E-6);
 
         Point end = path.getEnd();
-        assertEquals(4F, end.getLocation().x, 1E-6);
-        assertEquals(2F, end.getLocation().y, 1E-6);
+        assertEquals(1F, end.getLocation().x, 1E-6);
+        assertEquals(1F, end.getLocation().y, 1E-6);
     }
 
     @Test
@@ -56,8 +55,12 @@ public class PathTest
     {
         Path toIterate = clonePath();
 
-        toIterate.moveNextSegment();
-        assertEquals(new Point(2, 2), toIterate.getCurrent().getFirst());
+        boolean seenEndPoint = false;
+        while(toIterate.moveNextSegment())
+        {
+            seenEndPoint = seenEndPoint || toIterate.getCurrent().getLast().getLocation().equals(new ImmutableVector2f(1, 1));
+        }
+        assertTrue(seenEndPoint);
         assertFalse(toIterate.moveNextSegment());
     }
 
@@ -109,6 +112,55 @@ public class PathTest
     public void testPathProgression()
     {
         // TODO
+    }
+
+    @Test
+    public void testSplineSegment()
+    {
+        final Point first = new Point(0, 0);
+        final Point last = new Point(1, 1);
+        final Point firstSlope = new Point(0, 1);
+        final Point lastSlope = new Point(10, 0);
+        SplinePathSegment test = new SplinePathSegment(
+                first,
+                last,
+                firstSlope,
+                lastSlope,
+                false,
+                false,
+                0,
+                0,
+                0
+        );
+
+        System.out.println("x, y");
+        for(double t = 0; t <= 1; t += 1E-4)
+        {
+            ImmutableVector2f point = test.get(t);
+            System.out.println(test.getX(t) + ", " + test.getY(t));
+        }
+        assertEquals(lastSlope, test.getLastSlope());
+        assertEquals(firstSlope, test.getFirstSlope());
+
+        assertEquals(first.getLocation(), test.get(0));
+        assertEquals(last.getLocation(), test.get(1));
+    }
+
+    @Test
+    public void testSplineFromPoints()
+    {
+        Path somepath = basePath.clone();
+
+        System.out.println("x, y");
+
+        for(PathSegment segment : somepath.getPathSegments())
+        {
+            System.out.print(segment.getFirst().getLocation().get(0));
+            System.out.print(", ");
+            System.out.println(segment.getFirst().getLocation().get(1));
+        }
+
+        assertEquals(new ImmutableVector2f(), basePath.getStart().getLocation());
     }
 
     private Path clonePath()

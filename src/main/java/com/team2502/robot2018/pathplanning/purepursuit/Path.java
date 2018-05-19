@@ -2,6 +2,7 @@ package com.team2502.robot2018.pathplanning.purepursuit;
 
 import com.team2502.robot2018.Constants;
 import com.team2502.robot2018.Robot;
+import com.team2502.robot2018.utils.InterpolationMap;
 import com.team2502.robot2018.utils.MathUtils;
 import org.joml.ImmutableVector2f;
 
@@ -21,10 +22,10 @@ public class Path
     private static final double SEGMENTS_PER_UNIT = 100;
     protected List<PathSegment> pathSegments;
 
-    private int segmentOnI = -1;
-    private PathSegment segmentOn;
-    private ImmutableVector2f closestPoint;
-    private ImmutableVector2f robotLocationClosestPoint;
+    protected int segmentOnI = -1;
+    protected PathSegment segmentOn;
+    protected ImmutableVector2f closestPoint;
+    protected ImmutableVector2f robotLocationClosestPoint;
 
     protected Path() {}
 
@@ -51,7 +52,7 @@ public class Path
         return fromSegments(pathSegments);
     }
 
-    public static Path fromSplinePoint(List<SplineWaypoint> waypointList)
+    public static Path fromSplinePoints(List<SplineWaypoint> waypointList)
     {
         List<Waypoint> interpolatedWaypoints = new ArrayList<>();
         float distance = 0;
@@ -61,18 +62,27 @@ public class Path
             Point waypoint1Slope = waypointList.get(i).getSlopeVec();
 
             SplineWaypoint waypoint2 = waypointList.get(i + 1);
-            Point waypoint2Slope = waypointList.get(i).getSlopeVec();
+            Point waypoint2Slope = waypointList.get(i + 1).getSlopeVec();
 
             float length = (float) SplinePathSegment.getArcLength(waypoint1, waypoint2, waypoint1Slope, waypoint2Slope, 0, 1);
 
             SplinePathSegment pathSegment = new SplinePathSegment(waypoint1, waypoint2, waypoint1Slope, waypoint2Slope,i == 0, i == waypointList.size() - 2, distance, distance += length, length);
-            int interpolatedSegNum = (int) (SEGMENTS_PER_UNIT / pathSegment.getLength());
+            int interpolatedSegNum = (int) (SEGMENTS_PER_UNIT * pathSegment.getLength());
 
-            for(int j = 0; j < interpolatedSegNum; j++)
+            InterpolationMap maxVel = new InterpolationMap(0D, (double) waypoint1.getMaxSpeed());
+            maxVel.put(1D, (double) waypoint2.getMaxSpeed());
+
+            InterpolationMap maxAccel = new InterpolationMap(0D, (double) waypoint1.getMaxAccel());
+            maxVel.put(1D, (double) waypoint2.getMaxAccel());
+
+            InterpolationMap maxDecel = new InterpolationMap(0D, (double) waypoint1.getMaxDeccel());
+            maxVel.put(1D, (double) waypoint2.getMaxDeccel());
+
+            for(int j = 0; j <= interpolatedSegNum; j++)
             {
                 double t = (double) j / interpolatedSegNum;
-                ImmutableVector2f loc = new ImmutableVector2f((float) pathSegment.getX(t), (float)pathSegment.getY(t));
-                Waypoint waypoint = new Waypoint(loc, waypoint1.getMaxSpeed(), waypoint1.getMaxAccel(), waypoint1.getMaxDeccel(), waypoint1.getCommands());
+                ImmutableVector2f loc = pathSegment.get(t);
+                Waypoint waypoint = new Waypoint(loc, maxVel.get(t).floatValue(), maxAccel.get(t).floatValue(), maxDecel.get(t).floatValue(), j == 0 ? waypoint1.getCommands() : null);
                 interpolatedWaypoints.add(waypoint);
             }
         }
@@ -82,6 +92,11 @@ public class Path
     public static Path fromPoints(Point... points)
     {
         return fromPoints(Arrays.asList(points));
+    }
+
+    public static Path fromSplinePoints(SplineWaypoint... points)
+    {
+        return fromSplinePoints(Arrays.asList(points));
     }
 
     /**
@@ -237,6 +252,11 @@ public class Path
         return pathSegments.get(pathSegments.size() - 1).getLast();
     }
 
+    public List<PathSegment> getPathSegments()
+    {
+        return pathSegments;
+    }
+
     @Override
     public Path clone()
     {
@@ -247,5 +267,23 @@ public class Path
         path.closestPoint = closestPoint;
         path.robotLocationClosestPoint = robotLocationClosestPoint;
         return path;
+    }
+
+    public List<Waypoint> getWaypoints()
+    {
+        List<Waypoint> ret = new ArrayList<>();
+        for(PathSegment segment : pathSegments)
+        {
+            if(segment.getFirst().getClass().equals(Waypoint.class))
+            {
+                ret.add((Waypoint) segment.getFirst());
+            }
+        }
+
+        if(pathSegments.get(pathSegments.size() - 1).getLast().getClass().equals(Waypoint.class))
+        {
+            ret.add((Waypoint) pathSegments.get(pathSegments.size() - 1).getLast());
+        }
+        return ret;
     }
 }
