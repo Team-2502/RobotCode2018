@@ -791,12 +791,7 @@ public final class MathUtils
 
         /**
          * turn an angle without bounds (-inf,inf) to [0,360)
-         * <p>
-         * <<<<<<< HEAD
-         *
-         * @param angle Whatever the navX is reading
          * @param angle
-         * @return >>>>>>> feature-pp-record
          */
         public static float navXBound(float angle)
         {
@@ -926,23 +921,33 @@ public final class MathUtils
             }
         }
 
+        /**
+         *
+         * @param a
+         * @param b
+         * @return The hypotenuse squared
+         */
+        public double hypot2(double a, double b)
+        {
+            return a*a + b*b;
+        }
+
         public static ImmutableVector2f getClosestPointParametricFunc(ParametricFunction func, ImmutableVector2f robotPos)
         {
-            Function distFunc = (t) -> Math.sqrt(pow2(func.getX(t) - robotPos.x) + pow2(func.getY(t) - robotPos.y));
+            Function dist2Func = (t) -> hypot2(func.getX(t) - robotPos.x,func.getY(t) - robotPos.y)
             // Those splines are defined for 0 <= t <= 1
 
             //
             double minT = 0;
-            double minDist = distFunc.get(0);
+            double minDist = dist2Func.get(0);
             for(double t = 0 + ParametricFunction.DELTA; t <= 1; t += ParametricFunction.DELTA)
             {
-                if(distFunc.get(t) < minDist)
+                if(dist2Func.get(t) < minDist)
                 {
-                    minDist = distFunc.get(t);
+                    minDist = dist2Func.get(t);
                     minT = t;
                 }
             }
-
             return func.get(minT);
         }
 

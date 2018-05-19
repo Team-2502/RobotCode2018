@@ -347,17 +347,11 @@ public final class Robot extends IterativeRobot
         startLocalization();
 
         TRANSMISSION_SOLENOID.setHighGear(true);
-//
-//        String fileName = "/home/lvuser/FILES";
-//        Files.setFileName(fileName);
-//        Files.newFile(fileName);
 
         // Ensure that the motors are in slave mode like they should be
         DRIVE_TRAIN.setAutonSettings();
 
         ELEVATOR.calibrateEncoder();
-
-//        ROBOT_LOCALIZATION_THREAD.start();
 
         // 144 inches front = 12 ft
         // 53 inches left/right = 4.42 ft
@@ -410,12 +404,5 @@ public final class Robot extends IterativeRobot
     {
         String fileName = "/home/lvuser/FILES";
         Files.setFileName(fileName);
-
-//        if((System.currentTimeMillis() % 10000) == 0) { Files.newFile(fileName); }
-
-//        Files.setNameAndValue("Right Pos", DRIVE_TRAIN.getRightPos());
-//        Files.setNameAndValue("Left Pos", DRIVE_TRAIN.getLeftPos());
-//        Files.writeToFile();
-//        Files.s
     }
 }
