@@ -8,6 +8,7 @@ import org.joml.ImmutableVector2f;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -185,22 +186,58 @@ public class Path
         return null;
     }
 
-    public boolean progressIfNeeded(float distanceLeftSegment, float closestPointDist, ImmutableVector2f robotPos)
+    /**
+     *
+     * @param distanceLeftSegment
+     * @param closestPointDist
+     * @param robotPos
+     * @return The PathSegments progressed
+     */
+    public List<PathSegment> progressIfNeeded(float distanceLeftSegment, float closestPointDist, ImmutableVector2f robotPos)
     {
-        PathSegment nextSegment = getNext();
-        if(nextSegment == null) // we are on the last segment... we cannot progress
+
+        if(distanceLeftSegment < Constants.PurePursuit.DISTANCE_COMPLETE_SEGMENT_TOLERANCE)
+        {
+            if(moveNextSegment())
+            {
+                return Collections.singletonList(pathSegments.get(segmentOnI - 1));
+            }
+        }
+
+        // path segments 2 ft ahead
+        List<PathSegment> pathSegments = nextSegmentsInclusive(2);
+        int i = segmentOnI;
+        int j = 0;
+        for(PathSegment pathSegment : pathSegments)
+        {
+            if(shouldProgress(pathSegment,robotPos,closestPointDist))
+            {
+                moveSegment(i,pathSegment);
+                return pathSegments.subList(0,j+1);
+            }
+            i++;
+            j++;
+        }
+        return Collections.emptyList();
+    }
+
+    public void moveSegment(int segmentOnI, PathSegment segmentOn)
+    {
+        this.segmentOnI = segmentOnI;
+        this.segmentOn = segmentOn;
+    }
+
+    public boolean shouldProgress(PathSegment segment, ImmutableVector2f robotPos, float currentSegmentCPDist)
+    {
+        if(segment == null) // we are on the last segment... we cannot progress
         {
             return false;
         }
 
-        ImmutableVector2f closestPointNext = nextSegment.getClosestPoint(robotPos);
-        float nextClosestPointDistance = closestPointNext.distance(robotPos);
+        ImmutableVector2f closestPoint = segment.getClosestPoint(robotPos);
+        float nextClosestPointDistance = closestPoint.distance(robotPos);
         // TODO: add 0.5 as constant
-        if((distanceLeftSegment < Constants.PurePursuit.DISTANCE_COMPLETE_SEGMENT_TOLERANCE) || closestPointDist > nextClosestPointDistance + 0.5F)
-        {
-            return moveNextSegment();
-        }
-        return false;
+        return currentSegmentCPDist > nextClosestPointDistance + 0.5F;
     }
 
 
