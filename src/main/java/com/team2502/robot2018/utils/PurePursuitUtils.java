@@ -57,10 +57,10 @@ public class PurePursuitUtils
         {
             Waypoint last = (Waypoint) pathSegment.getLast();
             float distanceTo = pathSegment.getAbsoluteDistanceEnd() - positionOnPath;
-            if(distanceTo < 0)
+            if(distanceTo < -0.1) //TODO: Very jank, please uncomment
             {
 //                if(distanceTo < -0.5)
-                    throw new IllegalArgumentException("Path should have progressed (looking ahead on path), distanceTo: " + distanceTo);
+//                    throw new IllegalArgumentException("Path should have progressed (looking ahead on path), distanceTo: " + distanceTo);
 //                else
 //                    distanceTo = 0;
             }

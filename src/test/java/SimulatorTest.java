@@ -104,14 +104,41 @@ public class SimulatorTest
     }
 
     @Test
-    public void testSplinePath() throws IOException
+    public void testSplinePathCenterRight() throws IOException
     {
-        Path splinePath = Path.fromSplinePoints(
+        Path splinePathRight = Path.fromSplinePoints(
+                new SplineWaypoint(new ImmutableVector2f(0, 0), 0, 10, 10, -10),
+                new SplineWaypoint(new ImmutableVector2f(-4.5F, 4.5F), 0, 10F, 10, -10), // if this doesn't work, PP is broken or field is off.
+                new SplineWaypoint(new ImmutableVector2f(-4.5F, 10F), 0, 10F, 10, -10) // if this doesn't work, PP is broken or field is off.
+                                               );
+        testPath(splinePathRight.getWaypoints(), 90, 15, "centerSplinePathRight");
+    }
+
+    @Test
+    public void testSplinePathCenterLeft() throws IOException
+    {
+        Path splinePathLeft = Path.fromSplinePoints(
                 new SplineWaypoint(new ImmutableVector2f(0, 0), 0, 10, 10, -10),
                 new SplineWaypoint(new ImmutableVector2f(3.5F, 4.5F), 0, 10F, 10, -10), // if this doesn't work, PP is broken or field is off.
-                new SplineWaypoint(new ImmutableVector2f(3.5F, 9F), 0, 10F, 10, -10) // if this doesn't work, PP is broken or field is off.
-                                               );
-        testPath(splinePath.getWaypoints(), 90, 15, "centerSplinePathA");
+                new SplineWaypoint(new ImmutableVector2f(3.5F, 10F), 0, 10F, 10, -10) // if this doesn't work, PP is broken or field is off.
+                                                   );
+        testPath(splinePathLeft.getWaypoints(), 90, 15, "centerSplinePathLeft");
+    }
+
+
+    @Test
+    public void testSplinePathLeftToRightScale() throws IOException
+    {
+        final ImmutableVector2f lastSlopeVec = new ImmutableVector2f(MathUtils.cos(3 * MathUtils.PI_F / 4), MathUtils.sin(3 * MathUtils.PI_F / 4)).mul(10);
+        Path splinePathLeft = Path.fromSplinePoints(
+                new SplineWaypoint(new ImmutableVector2f(0, 0),0,  0, 20, -10),
+                new SplineWaypoint(new ImmutableVector2f(0F, 15),0,  25F, 20, -10),
+                new SplineWaypoint(new ImmutableVector2f(15.0F, 17.5F),new ImmutableVector2f(25, 0),  10F, 20, -5),
+                new SplineWaypoint(new ImmutableVector2f(16.833F, 22F), lastSlopeVec, 10F, 10, -5),
+                new SplineWaypoint(new ImmutableVector2f(14.49F, 24.66F), lastSlopeVec, 2, 10, -5)
+
+                                                   );
+        testPath(splinePathLeft.getWaypoints(), -45, 15, "leftSplineToRight");
     }
 
 

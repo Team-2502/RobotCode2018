@@ -15,6 +15,13 @@ public class SplineWaypoint extends Waypoint
         slopeVec = new Point(MathUtils.Geometry.getVector(maxSpeed, (float) angle));
     }
 
+    public SplineWaypoint(ImmutableVector2f location, ImmutableVector2f knotVec, float maxSpeed, float maxAccel, float maxDeccel, Command... commands)
+    {
+        super(location, maxSpeed, maxAccel, maxDeccel, commands);
+        // TODO: Is this what we want? Scaling the tangent vector based on maxSpeed?
+        slopeVec = new Point(knotVec);
+    }
+
     public SplineWaypoint(float x, float y, double angle, float maxSpeed, float maxAccel, float maxDeccel, Command... commands)
     {
         this(new ImmutableVector2f(x, y), angle, maxSpeed, maxAccel, maxDeccel, commands);
