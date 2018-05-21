@@ -16,6 +16,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -43,9 +44,6 @@ public class Controller implements Initializable
     public XYChart.Series<Float, Float> splinePoints = new XYChart.Series<>();
 
     public ObservableList<SplinePathSegment> segments = FXCollections.observableArrayList();
-
-    public Button btnAddRow;
-    public Button btnClearAll;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle)
@@ -91,6 +89,17 @@ public class Controller implements Initializable
         segments.add(new SplinePathSegment(waypoints.get(waypoints.size() - 2), waypoints.get(waypoints.size() - 1), false, false, 1, 1, 1));
 
         splinePoints.getData().clear();
+        updateSplineGraph();
+
+        txtPosX.clear();
+        txtPosY.clear();
+        txtTanX.clear();
+        txtTanY.clear();
+    }
+
+    private void updateSplineGraph()
+    {
+        splinePoints.getData().clear();
         for(SplinePathSegment segment : segments)
         {
             for(double t = 0; t < 1; t += 1E-2)
@@ -99,11 +108,6 @@ public class Controller implements Initializable
                 splinePoints.getData().add(toAdd);
             }
         }
-
-        txtPosX.clear();
-        txtPosY.clear();
-        txtTanX.clear();
-        txtTanY.clear();
     }
 
     public void clearAll(Event e)
@@ -113,8 +117,17 @@ public class Controller implements Initializable
         splinePoints.getData().remove(1, splinePoints.getData().size());
     }
 
-    private static Circle getCircle(double x, double y)
+    public void deleteSelected(Event e)
     {
-        return new Circle(x, y, 4, Color.CHARTREUSE);
+        ObservableList<SplinePoint> selectedItems = tableControlPoints.getSelectionModel().getSelectedItems();
+        waypoints.removeAll(selectedItems);
+        segments.clear();
+
+        for(int i = 1; i < waypoints.size(); i++)
+        {
+            segments.add(new SplinePathSegment(waypoints.get(i - 1), waypoints.get(i), false, false, 1, 1, 1));
+        }
+
+        updateSplineGraph();
     }
 }
