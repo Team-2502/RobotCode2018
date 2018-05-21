@@ -111,7 +111,7 @@ public class SimulatorTest
                 new SplineWaypoint(new ImmutableVector2f(-4.5F, 4.5F), 0, 10F, 10, -10), // if this doesn't work, PP is broken or field is off.
                 new SplineWaypoint(new ImmutableVector2f(-4.5F, 10F), 0, 10F, 10, -10) // if this doesn't work, PP is broken or field is off.
                                                );
-        testPath(splinePathRight.getWaypoints(), 0, 15, "centerSplinePathRight");
+        testPath(splinePathRight.getWaypoints(), 90, 15, "centerSplinePathRight");
     }
 
     @Test
@@ -122,7 +122,7 @@ public class SimulatorTest
                 new SplineWaypoint(new ImmutableVector2f(3.5F, 4.5F), 0, 10F, 10, -10), // if this doesn't work, PP is broken or field is off.
                 new SplineWaypoint(new ImmutableVector2f(3.5F, 10F), 0, 10F, 10, -10) // if this doesn't work, PP is broken or field is off.
                                                    );
-        testPath(splinePathLeft.getWaypoints(), 0, 15, "centerSplinePathLeft");
+        testPath(splinePathLeft.getWaypoints(), 90, 15, "centerSplinePathLeft");
     }
 
 
@@ -138,7 +138,7 @@ public class SimulatorTest
                 new SplineWaypoint(new ImmutableVector2f(14.49F, 24.66F), lastSlopeVec, 2, 10, -5)
 
                                                    );
-        testPath(splinePathLeft.getWaypoints(), 45, 15, "leftSplineToRight");
+        testPath(splinePathLeft.getWaypoints(), -45, 15, "leftSplineToRight");
     }
 
 
