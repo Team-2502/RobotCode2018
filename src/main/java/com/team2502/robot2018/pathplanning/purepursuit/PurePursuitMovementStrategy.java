@@ -289,7 +289,7 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
             System.err.println("Robot is going backwards! Iteration #" + updateCount);
         }
 
-        if(path.progressIfNeeded(distanceLeft, dCP, usedEstimatedLocation))
+        for(PathSegment pathSegment : path.progressIfNeeded(distanceLeft, dCP, usedEstimatedLocation))
         {
             updateForNewSegment();
         }

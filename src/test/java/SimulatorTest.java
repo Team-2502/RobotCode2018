@@ -132,13 +132,13 @@ public class SimulatorTest
         final ImmutableVector2f lastSlopeVec = new ImmutableVector2f(MathUtils.cos(3 * MathUtils.PI_F / 4), MathUtils.sin(3 * MathUtils.PI_F / 4)).mul(10);
         Path splinePathLeft = Path.fromSplinePoints(
                 new SplineWaypoint(new ImmutableVector2f(0, 0),0,  0, 20, -10),
-                new SplineWaypoint(new ImmutableVector2f(0F, 15),0,  25F, 20, -10),
-                new SplineWaypoint(new ImmutableVector2f(15.0F, 17.5F),new ImmutableVector2f(25, 0),  10F, 20, -5),
+                new SplineWaypoint(new ImmutableVector2f(0F, 12),0,  25F, 20, -10),
+                new SplineWaypoint(new ImmutableVector2f(15.0F, 19.5F),new ImmutableVector2f(25, 0),  10F, 20, -5),
                 new SplineWaypoint(new ImmutableVector2f(16.833F, 22F), lastSlopeVec, 10F, 10, -5),
                 new SplineWaypoint(new ImmutableVector2f(14.49F, 24.66F), lastSlopeVec, 2, 10, -5)
 
                                                    );
-        testPath(splinePathLeft.getWaypoints(), -45, 15, "leftSplineToRight");
+        testPath(splinePathLeft.getWaypoints(), 36, 15, "leftSplineToRight");
     }
 
 

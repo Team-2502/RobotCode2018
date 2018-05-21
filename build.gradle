@@ -41,6 +41,14 @@ dependencies {
     testCompile 'junit:junit:4.12'
 }
 
+task ppviz(dependsOn: 'test', type: JavaExec) {
+    ignoreFailure = true
+    main = 'com.team2502.ppsimulator.Main'
+    classpath = sourceSets.main.runtimeClasspath
+    args 'gradle'
+//    systemProperty 'simple.message', 'Hello '
+}
+
 def branch() {
     def branch = "DRIVER STATION"
     def proc = "git rev-parse --abbrev-ref HEAD".execute()

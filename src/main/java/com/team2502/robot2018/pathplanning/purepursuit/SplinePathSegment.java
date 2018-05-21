@@ -2,6 +2,7 @@ package com.team2502.robot2018.pathplanning.purepursuit;
 
 import com.team2502.robot2018.utils.MathUtils;
 import com.team2502.robot2018.utils.MathUtils.ParametricFunction;
+import com.team2502.splineviz.SplinePoint;
 import org.joml.ImmutableVector2f;
 
 public class SplinePathSegment extends PathSegment implements ParametricFunction
@@ -44,6 +45,26 @@ public class SplinePathSegment extends PathSegment implements ParametricFunction
 
         // p'_0
         c = firstSlope.getLocation();
+
+        // p_0
+        d = first.getLocation();
+
+    }
+
+    public SplinePathSegment(SplinePoint first, SplinePoint last, boolean start, boolean end, float distanceStart, float distanceEnd, float length)
+    {
+        super(first, last, start, end, distanceStart, distanceEnd, length);
+        this.firstSlope = new Point(first.getTangentVec());
+        this.lastSlope = new Point(last.getTangentVec());
+
+        // 2p_0 - 2p_1 + p'_0 + p'_1
+        a = first.getLocation().mul(2).sub(last.getLocation().mul(2)).add(first.getTangentVec()).add(last.getTangentVec());
+
+        // -3p_0 + 3p_1 - 2p'_0 - p_1
+        b = first.getLocation().mul(-3).add(last.getLocation().mul(3)).sub(first.getTangentVec().mul(2)).sub(last.getTangentVec());
+
+        // p'_0
+        c = first.getTangentVec();
 
         // p_0
         d = first.getLocation();
