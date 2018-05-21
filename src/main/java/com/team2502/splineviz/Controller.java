@@ -110,7 +110,7 @@ public class Controller implements Initializable
     {
         segments.clear();
         waypoints.remove(1, waypoints.size());
-
+        splinePoints.getData().remove(1, splinePoints.getData().size());
     }
 
     private static Circle getCircle(double x, double y)

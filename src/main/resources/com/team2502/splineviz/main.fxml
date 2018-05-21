@@ -72,7 +72,7 @@
                   </tooltip></Label>
                <TextField fx:id="txtTanY" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                <Button fx:id="btnAddRow" mnemonicParsing="false" onMouseClicked="#addRow" text="Add Row" textAlignment="CENTER" GridPane.rowIndex="4" />
-               <Button fx:id="btnClearAll" mnemonicParsing="false" text="Clear All" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+               <Button fx:id="btnClearAll" mnemonicParsing="false" text="Clear All" GridPane.columnIndex="1" GridPane.rowIndex="4" onMouseClicked="#clearAll"/>
             </children>
          </GridPane>
       </children>
