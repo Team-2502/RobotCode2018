@@ -1,4 +1,4 @@
-package com.team2502.splineviz;
+package com.team2502.guitools.splineviz;
 
 import com.team2502.robot2018.pathplanning.purepursuit.Point;
 import javafx.beans.property.SimpleFloatProperty;

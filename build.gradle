@@ -43,7 +43,7 @@ dependencies {
 
 task ppviz(dependsOn: 'test', type: JavaExec) {
     ignoreFailure = true
-    main = 'com.team2502.ppsimulator.Main'
+    main = 'com.team2502.guitools.ppsimulator.Main'
     classpath = sourceSets.main.runtimeClasspath
     args 'gradle'
 //    systemProperty 'simple.message', 'Hello '

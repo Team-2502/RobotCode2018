@@ -1,4 +1,4 @@
-package com.team2502.ppsimulator;
+package com.team2502.guitools.ppsimulator;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;

@@ -1,31 +1,19 @@
-package com.team2502.splineviz;
+package com.team2502.guitools.splineviz;
 
 import com.team2502.robot2018.pathplanning.purepursuit.SplinePathSegment;
-import com.team2502.robot2018.pathplanning.purepursuit.SplineWaypoint;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.fxml.Initializable;
-import javafx.scene.chart.LineChart;
 import javafx.scene.chart.ScatterChart;
 import javafx.scene.chart.XYChart;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Region;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import org.joml.ImmutableVector2f;
 
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.ResourceBundle;
 
 
@@ -44,6 +32,8 @@ public class Controller implements Initializable
     public XYChart.Series<Float, Float> splinePoints = new XYChart.Series<>();
 
     public ObservableList<SplinePathSegment> segments = FXCollections.observableArrayList();
+
+    public ChoiceBox startPositionChooser;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle)

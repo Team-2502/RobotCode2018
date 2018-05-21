@@ -2,7 +2,7 @@ package com.team2502.robot2018.pathplanning.purepursuit;
 
 import com.team2502.robot2018.utils.MathUtils;
 import com.team2502.robot2018.utils.MathUtils.ParametricFunction;
-import com.team2502.splineviz.SplinePoint;
+import com.team2502.guitools.splineviz.SplinePoint;
 import org.joml.ImmutableVector2f;
 
 public class SplinePathSegment extends PathSegment implements ParametricFunction
