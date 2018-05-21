@@ -2,7 +2,6 @@ package com.team2502.guitools.splineviz;
 
 import com.team2502.guitools.StartPos;
 import com.team2502.robot2018.pathplanning.purepursuit.SplinePathSegment;
-import com.team2502.robot2018.pathplanning.purepursuit.Waypoint;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
@@ -22,6 +21,7 @@ import java.util.ResourceBundle;
 
 public class Controller implements Initializable
 {
+    public static final double HALF_ROBOT_WIDTH = 16F / 12F;
     public TableView<SplinePoint> tableControlPoints;
 
     public TableColumn<SplinePoint, ImmutableVector2f> colPosX, colPosY, colTanX, colTanY;
@@ -38,6 +38,7 @@ public class Controller implements Initializable
 
     public ChoiceBox<StartPos> posChooser;
     public NumberAxis xAxis;
+    public Button btnPrintWaypoints;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle)
@@ -48,16 +49,16 @@ public class Controller implements Initializable
 
         colPosX.setCellValueFactory(
                 new PropertyValueFactory<>("posX")
-        );
+                                   );
         colPosY.setCellValueFactory(
                 new PropertyValueFactory<>("posY")
-        );
+                                   );
         colTanX.setCellValueFactory(
                 new PropertyValueFactory<>("tanX")
-        );
+                                   );
         colTanY.setCellValueFactory(
                 new PropertyValueFactory<>("tanY")
-        );
+                                   );
 
         Rectangle rect = new Rectangle(0, 0);
         rect.setVisible(false);
@@ -73,17 +74,18 @@ public class Controller implements Initializable
 
         posChooser.valueProperty().addListener((selectedProp, oldSelected, newSelected) -> {
             double offset = newSelected.getXPos(27);
-            xAxis.setLowerBound(-offset);
-            xAxis.setUpperBound(27 - offset);
+            xAxis.setLowerBound(-offset - HALF_ROBOT_WIDTH);
+            xAxis.setUpperBound(27 - offset - HALF_ROBOT_WIDTH);
         });
 
-        waypoints.add(new SplinePoint(0, 0, 1,  1));
+        waypoints.add(new SplinePoint(0, 0, 1, 1));
 
         posChooser.setValue(StartPos.LEFT);
     }
 
     public void addRow(Event e)
     {
+        e.consume();
         float posX = Float.valueOf(txtPosX.getCharacters().toString());
         float posY = Float.valueOf(txtPosY.getCharacters().toString());
         float tanX = Float.valueOf(txtTanX.getCharacters().toString());
@@ -116,6 +118,7 @@ public class Controller implements Initializable
 
     public void clearAll(Event e)
     {
+        e.consume();
         segments.clear();
         waypoints.remove(1, waypoints.size());
         splinePoints.getData().remove(1, splinePoints.getData().size());
@@ -123,6 +126,7 @@ public class Controller implements Initializable
 
     public void deleteSelected(Event e)
     {
+        e.consume();
         ObservableList<SplinePoint> selectedItems = tableControlPoints.getSelectionModel().getSelectedItems();
         waypoints.removeAll(selectedItems);
         segments.clear();
@@ -139,5 +143,50 @@ public class Controller implements Initializable
         {
             segments.add(new SplinePathSegment(waypoints.get(i - 1), waypoints.get(i), false, false, 1, 1, 1));
         }
+    }
+
+    public void printWaypointsToConsole(Event e)
+    {
+        e.consume();
+
+        System.out.println(wayPointsToCode());
+
+    }
+
+    private String wayPointsToCode()
+    {
+        String indent = "                ";
+        StringBuilder ret = new StringBuilder();
+        ret.append("public static final List<SplineWaypoint> mySplinePath = Arrays.asList(\n");
+        for(int i = 0; i < waypoints.size(); i++)
+        {
+            ret.append(indent);
+            SplinePoint curPoint = waypoints.get(i);
+            ret.append(newWaypoint(curPoint.getPosX(), curPoint.getPosY(), curPoint.getTanX(), curPoint.getTanY()));
+            if(i != waypoints.size() - 1)
+            {
+                ret.append(",");
+            }
+            ret.append("\n");
+        }
+        ret.append("                                                                            );");
+        return ret.toString();
+    }
+
+    private String newWaypoint(double posX, double posY, double tanX, double tanY)
+    {
+        String velAccDecPlaceholder = "maxVel, maxAccel, maxDecel";
+        return "new Waypoint(" +
+               newImmutableVector2f(posX, posY) +
+               ", " +
+               newImmutableVector2f(tanX, tanY) +
+               ", " +
+               velAccDecPlaceholder +
+               ")";
+    }
+
+    private String newImmutableVector2f(double x, double y)
+    {
+        return String.format("new ImmutableVector2f(%.03fF, %.03fF)", x, y);
     }
 }

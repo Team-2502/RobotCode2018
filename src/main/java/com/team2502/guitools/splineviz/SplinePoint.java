@@ -124,8 +124,8 @@ public class SplinePoint extends Point
     public String toString()
     {
         return "SplinePoint{" +
-                "location=" + getLocation() +
-                ", tangent=" + tangentVec +
-                '}';
+               "location=" + getLocation() +
+               ", tangent=" + tangentVec +
+               '}';
     }
 }
