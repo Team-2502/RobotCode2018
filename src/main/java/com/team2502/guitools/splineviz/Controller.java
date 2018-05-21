@@ -1,10 +1,13 @@
 package com.team2502.guitools.splineviz;
 
+import com.team2502.guitools.StartPos;
 import com.team2502.robot2018.pathplanning.purepursuit.SplinePathSegment;
+import com.team2502.robot2018.pathplanning.purepursuit.Waypoint;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.fxml.Initializable;
+import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.ScatterChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
@@ -33,7 +36,8 @@ public class Controller implements Initializable
 
     public ObservableList<SplinePathSegment> segments = FXCollections.observableArrayList();
 
-    public ChoiceBox startPositionChooser;
+    public ChoiceBox<StartPos> posChooser;
+    public NumberAxis xAxis;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle)
@@ -65,7 +69,17 @@ public class Controller implements Initializable
 
         graph.setData(FXCollections.observableArrayList(splinePoints));
 
+        posChooser.getItems().addAll(StartPos.values());
+
+        posChooser.valueProperty().addListener((selectedProp, oldSelected, newSelected) -> {
+            double offset = newSelected.getXPos(27);
+            xAxis.setLowerBound(-offset);
+            xAxis.setUpperBound(27 - offset);
+        });
+
         waypoints.add(new SplinePoint(0, 0, 1,  1));
+
+        posChooser.setValue(StartPos.LEFT);
     }
 
     public void addRow(Event e)
@@ -113,11 +127,17 @@ public class Controller implements Initializable
         waypoints.removeAll(selectedItems);
         segments.clear();
 
+        updateSegments();
+
+        updateSplineGraph();
+    }
+
+    private void updateSegments()
+    {
+        segments.clear();
         for(int i = 1; i < waypoints.size(); i++)
         {
             segments.add(new SplinePathSegment(waypoints.get(i - 1), waypoints.get(i), false, false, 1, 1, 1));
         }
-
-        updateSplineGraph();
     }
 }

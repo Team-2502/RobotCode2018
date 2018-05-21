@@ -79,13 +79,13 @@
                 <Button mnemonicParsing="false" onMouseClicked="#deleteSelected" prefHeight="55.0" prefWidth="55.0" text="Delete Selected" textAlignment="CENTER" textOverrun="CLIP" wrapText="true" GridPane.columnIndex="2" GridPane.rowIndex="4" />
             </children>
          </GridPane>
-         <ChoiceBox fx:id="startPositionChooser" prefWidth="150.0" GridPane.columnIndex="1" />
+         <ChoiceBox fx:id="posChooser" prefWidth="150.0" GridPane.columnIndex="1" />
          <Label text="Select Start Position" />
       </children>
     </GridPane>
    <ScatterChart id="graph" fx:id="graph" alternativeRowFillVisible="false" horizontalGridLinesVisible="false" maxHeight="984.0" maxWidth="886.0" minHeight="492" minWidth="443" prefHeight="492.0" prefWidth="443.0" verticalGridLinesVisible="false">
      <xAxis>
-       <NumberAxis autoRanging="false" lowerBound="0" side="BOTTOM" upperBound="27" />
+       <NumberAxis fx:id="xAxis" autoRanging="false" lowerBound="0" side="BOTTOM" upperBound="27" />
      </xAxis>
      <yAxis>
        <NumberAxis autoRanging="false" lowerBound="0" side="LEFT" upperBound="30.0156D" />
