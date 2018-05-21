@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import java.net.URL?>
-<?import javafx.scene.chart.CategoryAxis?>
-<?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.chart.ScatterChart?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
@@ -25,10 +26,10 @@
             <RowConstraints valignment="CENTER" vgrow="SOMETIMES" />
         </rowConstraints>
       <children>
-         <TableView fx:id="tableControlPoints" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="2" editable="true">
+         <TableView fx:id="tableControlPoints" editable="true" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="2">
            <columns>
              <TableColumn fx:id="colPosX" prefWidth="75.0" text="LocX" />
-             <TableColumn fx:id="colPosY" prefWidth="75.0" text="LocY" />
+             <TableColumn fx:id="colPosY" prefWidth="75.0" sortable="false" text="LocY" />
                <TableColumn fx:id="colTanX" prefWidth="75.0" text="TanX" />
                <TableColumn fx:id="colTanY" prefWidth="75.0" text="TanY" />
            </columns>
@@ -36,6 +37,7 @@
          <GridPane GridPane.columnIndex="1" GridPane.rowIndex="2">
            <columnConstraints>
              <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+               <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
            </columnConstraints>
            <rowConstraints>
              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -45,55 +47,44 @@
                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
            </rowConstraints>
             <children>
-               <TextField fx:id="txtPosX" />
-               <TextField fx:id="txtPosY" GridPane.rowIndex="1" />
-               <TextField fx:id="txtTanX" GridPane.rowIndex="2" />
-               <TextField fx:id="txtTanY" GridPane.rowIndex="3" />
-               <Button mnemonicParsing="false" text="Add Row" textAlignment="CENTER" GridPane.rowIndex="4" />
+
+                <Label text="Pos X">
+                  <tooltip>
+                     <Tooltip text="This is the x-component of your position vector. This impacts where your waypoint is" />
+                  </tooltip></Label>
+               <TextField fx:id="txtPosX" GridPane.columnIndex="1" />
+
+                <Label text="Pos Y" GridPane.rowIndex="1">
+                  <tooltip>
+                     <Tooltip text="This is the y-component of your position vector. This impacts where your waypoint is" />
+                  </tooltip></Label>
+               <TextField fx:id="txtPosY" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+                <Label text="Tan X" GridPane.rowIndex="2">
+                  <tooltip>
+                     <Tooltip text="This is the x-component of your tangent vector. This impacts the shape of the spline around your waypoint" />
+                  </tooltip></Label>
+               <TextField fx:id="txtTanX" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+                <Label text="Tan Y" GridPane.rowIndex="3">
+                  <tooltip>
+                     <Tooltip text="This is the y-component of your position vector. This impacts where your waypoint is" />
+                  </tooltip></Label>
+               <TextField fx:id="txtTanY" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+               <Button fx:id="btnAddRow" mnemonicParsing="false" onMouseClicked="#addRow" text="Add Row" textAlignment="CENTER" GridPane.rowIndex="4" />
+               <Button fx:id="btnClearAll" mnemonicParsing="false" text="Clear All" GridPane.columnIndex="1" GridPane.rowIndex="4" />
             </children>
          </GridPane>
       </children>
     </GridPane>
-    <!--<AnchorPane>-->
-        <!--<children>-->
-
-            <!--<Line fx:id="currentPathLine" stroke="black" strokeWidth="3.0" />-->
-
-            <!--<Rectangle fx:id="robot" arcHeight="1" arcWidth="1" fill="DODGERBLUE" height="2.416" stroke="BLACK" strokeType="INSIDE" width="3" />-->
-
-            <!--<Path fx:id="robotPath" layoutX="0" layoutY="0" stroke="#0000003f">-->
-                <!--<elements>-->
-                    <!--&lt;!&ndash;<MoveTo x="100.0" y="150.0" />&ndash;&gt;-->
-                    <!--&lt;!&ndash;<LineTo x="160.0" y="170.0" />&ndash;&gt;-->
-                <!--</elements>-->
-            <!--</Path>-->
-
-            <!--<Path fx:id="waypointPath" layoutX="0" layoutY="0">-->
-                <!--<elements>-->
-                    <!--&lt;!&ndash;<MoveTo x="100.0" y="150.0" />&ndash;&gt;-->
-                    <!--&lt;!&ndash;<LineTo x="160.0" y="170.0" />&ndash;&gt;-->
-                <!--</elements>-->
-            <!--</Path>-->
-
-            <!--&lt;!&ndash;<Circle fx:id="lookahead" fill="#ffffff00" radius="10.0" stroke="black" strokeType="INSIDE" />&ndash;&gt;-->
-            <!--<Circle fx:id="goalPoint" fill="red" radius="3.0" stroke="black" strokeType="INSIDE" />-->
-            <!--<Circle fx:id="robotPoint" fill="white" radius="3.0" stroke="black" strokeType="INSIDE" />-->
-            <!--<Circle fx:id="closestPoint" fill="lawngreen" radius="3.0" stroke="black" strokeType="INSIDE" />-->
-
-            <!--<Circle fx:id="constantCurvature" fill="#ffffff00" radius="3.0" stroke="saddlebrown" strokeType="INSIDE" />-->
-            <!--<Line fx:id="constantCurvatureLine" stroke="saddlebrown" visible="false" />-->
-
-        <!--</children>-->
-        <!---->
-    <!--</AnchorPane >-->
-   <LineChart id="graph" fx:id="graph" alternativeRowFillVisible="false" horizontalGridLinesVisible="false" maxHeight="984.0" maxWidth="886.0" minHeight="492" minWidth="443" prefHeight="492.0" prefWidth="443.0" verticalGridLinesVisible="false">
+   <ScatterChart id="graph" fx:id="graph" alternativeRowFillVisible="false" horizontalGridLinesVisible="false" maxHeight="984.0" maxWidth="886.0" minHeight="492" minWidth="443" prefHeight="492.0" prefWidth="443.0" verticalGridLinesVisible="false">
      <xAxis>
-       <CategoryAxis side="BOTTOM" />
+       <NumberAxis autoRanging="false" lowerBound="0" side="BOTTOM" upperBound="27" />
      </xAxis>
      <yAxis>
-       <NumberAxis side="LEFT" />
+       <NumberAxis autoRanging="false" lowerBound="0" side="LEFT" upperBound="30.0156D" />
      </yAxis>
-   </LineChart>
+   </ScatterChart>
     <stylesheets>
         <URL value="@application.css" />
     </stylesheets>

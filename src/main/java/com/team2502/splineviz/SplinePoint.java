@@ -10,10 +10,10 @@ public class SplinePoint extends Point
 {
     private ImmutableVector2f tangentVec;
 
-    public SimpleFloatProperty posX = new SimpleFloatProperty();
-    public SimpleFloatProperty posY = new SimpleFloatProperty();
-    public SimpleFloatProperty tanX = new SimpleFloatProperty();
-    public SimpleFloatProperty tanY = new SimpleFloatProperty();
+    private SimpleFloatProperty posX = new SimpleFloatProperty();
+    private SimpleFloatProperty posY = new SimpleFloatProperty();
+    private SimpleFloatProperty tanX = new SimpleFloatProperty();
+    private SimpleFloatProperty tanY = new SimpleFloatProperty();
 
     public SplinePoint(float x, float y, float tanX, float tanY)
     {
@@ -53,6 +53,45 @@ public class SplinePoint extends Point
         this.tanY.set(getTangentVec().y);
     }
 
+    public float getPosX()
+    {
+        return posX.get();
+    }
+
+    public SimpleFloatProperty posXProperty()
+    {
+        return posX;
+    }
+
+    public float getPosY()
+    {
+        return posY.get();
+    }
+
+    public SimpleFloatProperty posYProperty()
+    {
+        return posY;
+    }
+
+    public float getTanX()
+    {
+        return tanX.get();
+    }
+
+    public SimpleFloatProperty tanXProperty()
+    {
+        return tanX;
+    }
+
+    public float getTanY()
+    {
+        return tanY.get();
+    }
+
+    public SimpleFloatProperty tanYProperty()
+    {
+        return tanY;
+    }
 
     @Override
     public void setLocation(ImmutableVector2f location)
