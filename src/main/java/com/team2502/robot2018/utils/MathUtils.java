@@ -4,10 +4,7 @@ package com.team2502.robot2018.utils;
 import com.team2502.robot2018.Robot;
 import org.joml.ImmutableVector2f;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * A class containing very many useful mathematical constants and operations
@@ -559,6 +556,65 @@ public final class MathUtils
             {
                 if(get(t).equals(point))
                     return t;
+            }
+            return Double.NaN;
+        }
+
+        /**
+         * Derivative of x function with respect to t
+         * @param t At what t?
+         * @return dx/dt at t
+         */
+        default double getDXDT(double t)
+        {
+            return (getX(t + 1E-9) - getX(t)) / 1E-9;
+        }
+
+        /**
+         * Derivative of y function with respect to t
+         * @param t At what t?
+         * @return dy/dt at t
+         */
+        default double getDYDT(double t)
+        {
+            return (getY(t + 1E-9) - getY(t)) / 1E-9;
+        }
+
+        default double getDYDX(double t)
+        {
+            return getDYDT(t) / getDXDT(t);
+        }
+
+        default ImmutableVector2f getTanVec(double t)
+        {
+            return new ImmutableVector2f((float) getDXDT(t), (float) getDYDT(t));
+        }
+
+        default ParametricFunction getDerivative()
+        {
+            return new ParametricFunction() {
+                @Override
+                public double getX(double t)
+                {
+                    return getDXDT(t);
+                }
+
+                @Override
+                public double getY(double t)
+                {
+                    return getDYDT(t);
+                }
+            };
+        }
+
+        default double tFromPoint(ImmutableVector2f point, double lowerBound, double upperBound)
+        {
+            for(double t = lowerBound; t <= upperBound; t+=DELTA)
+            {
+                if(epsilonEquals(getX(t), point.x) && epsilonEquals(getY(t), point.y))
+                {
+                    return t;
+                }
             }
             return Double.NaN;
         }

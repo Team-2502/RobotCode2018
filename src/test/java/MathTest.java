@@ -229,5 +229,29 @@ public class MathTest
         assertEquals(MathUtils.TAU, unitCircle.getArcLength(0, MathUtils.TAU), 1E-3);
     }
 
+    @Test
+    public void testParametricDifferentiation()
+    {
+        MathUtils.ParametricFunction func = new MathUtils.ParametricFunction() {
+            @Override
+            public double getX(double t)
+            {
+                return t * t;
+            }
+
+            @Override
+            public double getY(double t)
+            {
+                return t * t * t;
+            }
+        };
+
+        for(int i = 0; i < 20; i++)
+        {
+            assertEquals(2 * i,func.getDXDT(i), 1E-3);
+            assertEquals(3 * i * i,func.getDYDT(i), 1E-3);
+        }
+
+    }
 
 }
