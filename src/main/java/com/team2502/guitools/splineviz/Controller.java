@@ -2,6 +2,7 @@ package com.team2502.guitools.splineviz;
 
 import com.team2502.guitools.StartPos;
 import com.team2502.robot2018.pathplanning.purepursuit.SplinePathSegment;
+import com.team2502.robot2018.utils.MathUtils;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
@@ -16,6 +17,7 @@ import org.joml.ImmutableVector2f;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 
@@ -36,6 +38,8 @@ public class Controller implements Initializable
 
     public ObservableList<SplinePathSegment> segments = FXCollections.observableArrayList();
 
+    private List<MathUtils.ParametricFunction> functionsToGraph = new ArrayList<>();
+
     public ChoiceBox<StartPos> posChooser;
     public NumberAxis xAxis;
     public Button btnPrintWaypoints;
@@ -43,8 +47,6 @@ public class Controller implements Initializable
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle)
     {
-
-
         graph.setOnMouseClicked(this::addRow);
 
         colPosX.setCellValueFactory(
@@ -81,6 +83,26 @@ public class Controller implements Initializable
         waypoints.add(new SplinePoint(0, 0, 1, 1));
 
         posChooser.setValue(StartPos.LEFT);
+
+        final MathUtils.ParametricFunction aSplineCurve = new MathUtils.ParametricFunction()
+        {
+            @Override
+            public double getX(double t)
+            {
+                return -20 * t * t * t + 30 * t * t;
+            }
+
+            @Override
+            public double getY(double t)
+            {
+                return 40 * t * t * t - 60 * t * t + 35 * t;
+            }
+        };
+        functionsToGraph.add(aSplineCurve);
+
+        functionsToGraph.add(aSplineCurve.offsetBy(-5));
+        functionsToGraph.add(aSplineCurve.offsetBy(1));
+        graphSomeRandomFunctions();
     }
 
     public void addRow(Event e)
@@ -188,5 +210,23 @@ public class Controller implements Initializable
     private String newImmutableVector2f(double x, double y)
     {
         return String.format("new ImmutableVector2f(%.03fF, %.03fF)", x, y);
+    }
+
+    public void graphSomeRandomFunctions()
+    {
+
+        for(MathUtils.ParametricFunction func : functionsToGraph)
+        {
+            final XYChart.Series<Float, Float> series = new XYChart.Series<>();
+
+            for(double t = 0; t <= 1; t += 1E-2)
+            {
+                series.getData().add(new XYChart.Data<>((float) func.getX(t), (float) func.getY(t)));
+            }
+
+            graph.getData().add(series);
+        }
+
+
     }
 }

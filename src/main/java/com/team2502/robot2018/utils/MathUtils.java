@@ -645,6 +645,23 @@ public final class MathUtils
             return get(resultT);
         }
 
+        default ParametricFunction offsetBy(double x)
+        {
+            final ParametricFunction superSpline = this;
+            return new MathUtils.ParametricFunction(){
+                @Override
+                public double getX(double t)
+                {
+                    return superSpline.getX(t) + (x * superSpline.getDYDT(t))/superSpline.getTanVec(t).length();
+                }
+
+                @Override
+                public double getY(double t)
+                {
+                    return superSpline.getY(t) - (x * superSpline.getDXDT(t))/superSpline.getTanVec(t).length();
+                }
+            };
+        }
 
     }
 
