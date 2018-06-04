@@ -20,14 +20,18 @@ public class MotionProfilingPipeline implements Iterator<MotionProfilingPipeline
 
     public static class SegmentPair
     {
-        public SegmentPair(TrajectoryPoint LEFT, TrajectoryPoint RIGHT)
+        public SegmentPair(TrajectoryPoint LEFT, TrajectoryPoint RIGHT, double expectedRatio)
         {
             this.LEFT = LEFT;
             this.RIGHT = RIGHT;
+            this.expectedRatio = expectedRatio;
+            this.velocities = new ImmutableVector2f((float) LEFT.velocity, (float) RIGHT.velocity);
         }
 
         public final TrajectoryPoint LEFT;
         public final TrajectoryPoint RIGHT;
+        public final double expectedRatio;
+        public final ImmutableVector2f velocities;
 
         @Override
         public String toString()
@@ -43,7 +47,7 @@ public class MotionProfilingPipeline implements Iterator<MotionProfilingPipeline
     private final double tF;
 
     private static final double DELTA_PARAM = 1E-4;
-    private static final double DELTA_TIME = 0.01;
+    public static final double DELTA_TIME = 0.01;
     private static final TrajectoryPoint.TrajectoryDuration TIMEDUR = TrajectoryPoint.TrajectoryDuration.Trajectory_Duration_10ms;
 
     private double timeelapsed = 0;
@@ -51,9 +55,12 @@ public class MotionProfilingPipeline implements Iterator<MotionProfilingPipeline
     private double accruedLengthLeft = 0;
     private double accruedLengthRight = 0;
     private double curveparam = 0;
-
+    public final SplineWaypoint a;
+    public final SplineWaypoint b;
     public MotionProfilingPipeline(SplineWaypoint a, SplineWaypoint b)
     {
+        this.a = a;
+        this.b = b;
         float centerLength = (float) SplinePathSegment.getArcLength(a, b, a.getSlopeVec(), b.getSlopeVec(), 0, 1);
         pathCenter = new SplinePathSegment(a, b, a.getSlopeVec(), b.getSlopeVec(), true, true, 0, centerLength, centerLength);
         final double offsetBy = 1;
@@ -142,7 +149,7 @@ public class MotionProfilingPipeline implements Iterator<MotionProfilingPipeline
         }
 
 
-        return new SegmentPair(leftTrajPoint, rightTrajPoint);
+        return new SegmentPair(leftTrajPoint, rightTrajPoint, wheelratio);
     }
 
     public ImmutableVector2f calculateWheelVelocities(double velLeftToRightRatio)
@@ -169,7 +176,12 @@ public class MotionProfilingPipeline implements Iterator<MotionProfilingPipeline
 //        mp.printManyPairs();
         while(mp.hasNext())
         {
-            System.out.println(mp.next());
+            SegmentPair pair = mp.next();
+            System.out.print(pair.velocities.x);
+            System.out.print(", ");
+            System.out.print(pair.velocities.y);
+            System.out.print(", ");
+            System.out.println(pair.expectedRatio);
         }
 
 
