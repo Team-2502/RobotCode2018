@@ -507,7 +507,7 @@ public final class MathUtils
 
     public interface Integrable
     {
-        double integrate(double a, double b);
+        double integrate(double from, double to);
 
     }
 
@@ -1229,16 +1229,16 @@ public final class MathUtils
                 return slope * x + y_intercept;
             }
 
-            public double integrate(double a, double b)
+            public double integrate(double from, double to)
             {
                 // integral of y = mx + b is
                 // mx^2/2 + bx + c
                 // at start of integration bound it should be 0
-                double c = -(a * a / 2 + b * a);
+                double c = -(from * from / 2 + to * from);
 
                 Function indefiniteIntegral = (x) -> slope * x * x / 2 + y_intercept * x + c;
 
-                return indefiniteIntegral.get(b) - indefiniteIntegral.get(a);
+                return indefiniteIntegral.get(to) - indefiniteIntegral.get(from);
             }
 
             public double integrate()

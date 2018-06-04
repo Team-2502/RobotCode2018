@@ -262,7 +262,7 @@ public class SimulatorTest
 
         try
         {
-            manager.addWaypoints(Path.fromSplinePoints(pipeline.a, pipeline.b).getWaypoints());
+            manager.addWaypoints(Path.fromSplinePoints(pipeline.from, pipeline.to).getWaypoints());
 
             SimulatedRobot simulatedRobot = new SimulatedRobot(Constants.PurePursuit.LATERAL_WHEEL_DISTANCE_FT);
 

@@ -239,12 +239,12 @@ public class InterpolationMap implements Map<Double, Double>, MathUtils.Integrab
      * <p>
      * Ensure a < b.
      *
-     * @param a Beginning of integration range
-     * @param b End of integration range
+     * @param from Beginning of integration range
+     * @param to End of integration range
      * @return Area under the "curve"
      */
     @Override
-    public double integrate(double a, double b)
+    public double integrate(double from, double to)
     {
         List<MathUtils.Geometry.Line> lines = new ArrayList<>();
         double integralTotal = 0;
@@ -255,8 +255,8 @@ public class InterpolationMap implements Map<Double, Double>, MathUtils.Integrab
 
         if(significantPoints.size() == 1)
         {
-            lines.add(new MathUtils.Geometry.Line(new ImmutableVector2f((float) a, (float) get(a)),
-                                                  new ImmutableVector2f((float) b, (float) get(b))));
+            lines.add(new MathUtils.Geometry.Line(new ImmutableVector2f((float) from, (float) get(from)),
+                                                  new ImmutableVector2f((float) to, (float) get(to))));
         }
         else
         {
@@ -268,10 +268,10 @@ public class InterpolationMap implements Map<Double, Double>, MathUtils.Integrab
                 x2 = significantPoints.get(i);
 
                 // front of line within range or back of line within range
-                if(x1 < b && x2 > a)
+                if(x1 < to && x2 > from)
                 {
-                    x1 = Math.max(a, x1);
-                    x2 = Math.min(b, x2);
+                    x1 = Math.max(from, x1);
+                    x2 = Math.min(to, x2);
 
                     // use "entire" line
                     lines.add(new MathUtils.Geometry.Line(new ImmutableVector2f((float) x1, (float) get(x1)),
