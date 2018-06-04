@@ -1,10 +1,12 @@
 import com.team2502.robot2018.Constants;
 import com.team2502.robot2018.command.autonomous.ingredients.PathConfig;
+import com.team2502.robot2018.pathplanning.customprofiling.MotionProfilingPipeline;
 import com.team2502.robot2018.pathplanning.purepursuit.Path;
 import com.team2502.robot2018.pathplanning.purepursuit.PurePursuitMovementStrategy;
 import com.team2502.robot2018.pathplanning.purepursuit.SplineWaypoint;
 import com.team2502.robot2018.pathplanning.purepursuit.Waypoint;
 import com.team2502.robot2018.trajectory.record.PurePursuitCSVWriter;
+import com.team2502.robot2018.trajectory.record.PurePursuitFrame;
 import com.team2502.robot2018.utils.MathUtils;
 import com.team2502.robot2018.utils.SimulatedStopwatch;
 import org.joml.ImmutableVector2f;
@@ -141,6 +143,16 @@ public class SimulatorTest
         testPath(splinePathLeft.getWaypoints(), 36, 15, "leftSplineToRight");
     }
 
+    @Test
+    public void testCustomImplementationOfMotionProfiling() throws IOException
+    {
+        MotionProfilingPipeline mp = new MotionProfilingPipeline(new SplineWaypoint(new ImmutableVector2f(0, 0), new ImmutableVector2f(0, 10), 0, 0, 0),
+                                                                 new SplineWaypoint(new ImmutableVector2f(7, 11), new ImmutableVector2f(0, 10), 100, 50, -80));
+
+        testMotionProfiling(mp, "inauguralMPTest");
+
+    }
+
 
     private void testPath(List<Waypoint> pathToTest, float desiredHeading, float desiredTime, String fileName) throws IOException
     {
@@ -218,6 +230,80 @@ public class SimulatorTest
             System.out.println("Final heading: " + finalHeading + " dHeading: " + dHeading);
             boolean success = isSuccess(simulatorLocationEstimator.estimateLocation(), path) && Math.abs(dHeading) < HEADING_DEGREE_TOLERANCE;
             Assert.assertTrue(success);
+        }
+        finally
+        {
+            manager.flush();
+            manager.close();
+        }
+
+
+    }
+
+
+    private void testMotionProfiling(MotionProfilingPipeline pipeline, String fileName) throws IOException
+    {
+        PurePursuitCSVWriter manager = null;
+
+        try{
+            manager  = new PurePursuitCSVWriter("outPaths/" + fileName + ".csv", false);
+        }
+        catch(IOException e1)
+        {
+            try
+            {
+                manager  = new PurePursuitCSVWriter("../../outPaths/" + fileName + ".csv", false);
+            }
+            catch(IOException e2)
+            {
+                e2.printStackTrace();
+            }
+        }
+
+        try
+        {
+            manager.addWaypoints(Path.fromSplinePoints(pipeline.a, pipeline.b).getWaypoints());
+
+            SimulatedRobot simulatedRobot = new SimulatedRobot(Constants.PurePursuit.LATERAL_WHEEL_DISTANCE_FT);
+            SimulatorLocationEstimator simulatorLocationEstimator = new SimulatorLocationEstimator(simulatedRobot);
+
+            simulatorLocationEstimator.setEstimatedLocation(new ImmutableVector2f(0, 0));
+            float dt = (float) MotionProfilingPipeline.DELTA_TIME;
+            int i = 0;
+
+
+            // Check PurePursuitFrame for header rows
+            while(pipeline.hasNext())
+            {
+                final MotionProfilingPipeline.SegmentPair segmentPair = pipeline.next();
+                ImmutableVector2f wheelVels = segmentPair.velocities;
+
+                PurePursuitFrame currentRobotState = new PurePursuitFrame(i * dt, simulatorLocationEstimator.estimateLocation(), 0, simulatorLocationEstimator.estimateHeading(),new ImmutableVector2f(), 0, new ImmutableVector2f(), 0, new ImmutableVector2f());
+                manager.addFrame(currentRobotState);
+
+                simulatedRobot.runMotorsVel(wheelVels.x, wheelVels.y);
+                simulatorLocationEstimator.update();
+
+                if(i++ > 1000)
+                {
+                    break;
+                }
+            }
+
+//            Assert.assertEquals(desiredTime, dt * i, TIME_TOLERANCE);
+            float finalHeading = MathUtils.rad2Deg(simulatorLocationEstimator.estimateHeading());
+            if(finalHeading < 0)
+            {
+                finalHeading = 360 + finalHeading;
+            }
+//            float dHeading = Math.abs(desiredHeading - finalHeading) % 360;
+//            if(dHeading > 180)
+//            {
+//                dHeading = 360 - dHeading;
+//            }
+//            System.out.println("Final heading: " + finalHeading + " dHeading: " + dHeading);
+//            boolean success = isSuccess(simulatorLocationEstimator.estimateLocation(), path) && Math.abs(dHeading) < HEADING_DEGREE_TOLERANCE;
+//            Assert.assertTrue(success);
         }
         finally
         {
