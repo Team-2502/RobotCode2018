@@ -11,7 +11,7 @@ import java.util.*;
  * You put in (x, f(x)) pairs of the function that you know for sure,
  * and linear regression is used to find the pairs you didn't explicitly put in.
  */
-public class InterpolationMap implements Map<Double, Double>, MathUtils.Integrable
+public class InterpolationMap implements Map<Double, Double>, MathUtils.Integrable, MathUtils.Function
 {
 
     /**
@@ -97,6 +97,12 @@ public class InterpolationMap implements Map<Double, Double>, MathUtils.Integrab
             return this.get((Double) key);
         }
         throw new IllegalArgumentException("The key was not an instance of the Double class");
+    }
+
+    @Override
+    public double get(double x)
+    {
+        return this.get(new Double(x));
     }
 
     /**
@@ -249,8 +255,8 @@ public class InterpolationMap implements Map<Double, Double>, MathUtils.Integrab
 
         if(significantPoints.size() == 1)
         {
-            lines.add(new MathUtils.Geometry.Line(new ImmutableVector2f((float) a, get(a).floatValue()),
-                                                  new ImmutableVector2f((float) b, get(b).floatValue())));
+            lines.add(new MathUtils.Geometry.Line(new ImmutableVector2f((float) a, (float) get(a)),
+                                                  new ImmutableVector2f((float) b, (float) get(b))));
         }
         else
         {
@@ -268,8 +274,8 @@ public class InterpolationMap implements Map<Double, Double>, MathUtils.Integrab
                     x2 = Math.min(b, x2);
 
                     // use "entire" line
-                    lines.add(new MathUtils.Geometry.Line(new ImmutableVector2f((float) x1, get(x1).floatValue()),
-                                                          new ImmutableVector2f((float) x2, get(x2).floatValue())));
+                    lines.add(new MathUtils.Geometry.Line(new ImmutableVector2f((float) x1, (float) get(x1)),
+                                                          new ImmutableVector2f((float) x2, (float) get(x2))));
                 }
             }
 

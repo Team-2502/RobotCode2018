@@ -111,7 +111,7 @@ public final class MathUtils
      * @param x Vector to check
      * @param c Upper/Lower bound
      * @return Returns true if x's x-component is in between that of a and c AND if x's y component is in between that of a and c.
-     * @see MathUtils.Algebra#between(float, float, float)
+     * @see MathUtils.Algebra#between(double, double, double)
      */
     public static boolean between(final ImmutableVector2f a, final ImmutableVector2f x, final ImmutableVector2f c)
     {
@@ -539,7 +539,7 @@ public final class MathUtils
             double resultLength = 0;
             double lastX = getX(lowerBound);
             double lastY = getY(lowerBound);
-            for(double t = lowerBound + delta; t <= upperBound; t += delta)
+            for(double t = lowerBound + delta; t < upperBound; t += delta)
             {
                 double x = getX(t);
                 double y = getY(t);
@@ -580,16 +580,30 @@ public final class MathUtils
             return (getY(t + 1E-9) - getY(t)) / 1E-9;
         }
 
+        /**
+         * Slope of this curve at some curve param t
+         * @param t Some param in Reals
+         * @return slope
+         */
         default double getDYDX(double t)
         {
             return getDYDT(t) / getDXDT(t);
         }
 
+        /**
+         * Get the tangential vector at some parameter t
+         * @param t some parameter in Reals
+         * @return Tangential vector
+         */
         default ImmutableVector2f getTanVec(double t)
         {
             return new ImmutableVector2f((float) getDXDT(t), (float) getDYDT(t));
         }
 
+        /**
+         * Get the derivative of this function
+         * @return the derivative
+         */
         default ParametricFunction getDerivative()
         {
             return new ParametricFunction() {
@@ -607,6 +621,13 @@ public final class MathUtils
             };
         }
 
+        /**
+         * Given a point on the curve, find the curve parameter to reach it
+         * @param point The point
+         * @param lowerBound The lower bound of our search
+         * @param upperBound The upper bound of our search
+         * @return
+         */
         default double tFromPoint(ImmutableVector2f point, double lowerBound, double upperBound)
         {
             for(double t = lowerBound; t <= upperBound; t+=DELTA)
@@ -619,15 +640,31 @@ public final class MathUtils
             return Double.NaN;
         }
 
+        /**
+         * @param arcLength How far along the curve to go from t = 0(distance)
+         * @return A point on the curve
+         */
         default ImmutableVector2f fromArcLength(double arcLength)
         {
             return fromArcLength(0, arcLength, DELTA);
         }
+
+        /**
+         * @param lowerBound Where to start calculating arc length (curve param)
+         * @param arcLength How far along the curve to go (distance)
+         * @return A point on the curve
+         */
         default ImmutableVector2f fromArcLength(double lowerBound, double arcLength)
         {
             return fromArcLength(lowerBound, arcLength, DELTA);
         }
 
+        /**
+         * @param lowerBound Where to start calculating arc length (curve param)
+         * @param arcLength How far along the curve to go (distance)
+         * @param delta Width of rectangle for riemann sum (usually 10e-4 or so)
+         * @return A point on the curve
+         */
         default ImmutableVector2f fromArcLength(double lowerBound, double arcLength, double delta)
         {
             double lastX = getX(lowerBound);
@@ -645,20 +682,25 @@ public final class MathUtils
             return get(resultT);
         }
 
-        default ParametricFunction offsetBy(double x)
+        /**
+         * Returns a curve parallel to this curve
+         * @param k Distance to this curve
+         * @return A parallel curve k distance away
+         */
+        default ParametricFunction offsetBy(double k)
         {
             final ParametricFunction superSpline = this;
             return new MathUtils.ParametricFunction(){
                 @Override
                 public double getX(double t)
                 {
-                    return superSpline.getX(t) + (x * superSpline.getDYDT(t))/superSpline.getTanVec(t).length();
+                    return superSpline.getX(t) + (k * superSpline.getDYDT(t))/Math.hypot(superSpline.getDXDT(t), superSpline.getDYDT(t));
                 }
 
                 @Override
                 public double getY(double t)
                 {
-                    return superSpline.getY(t) - (x * superSpline.getDXDT(t))/superSpline.getTanVec(t).length();
+                    return superSpline.getY(t) - (k * superSpline.getDXDT(t))/Math.hypot(superSpline.getDXDT(t), superSpline.getDYDT(t));
                 }
             };
         }
@@ -744,7 +786,7 @@ public final class MathUtils
         /**
          * @return if a<= x <= b or b <= x <= a
          */
-        public static boolean between(final float a, final float x, final float b)
+        public static boolean between(final double a, final double x, final double b)
         {
             return bounded(a, x, b) || bounded(b, x, a);
         }
@@ -756,7 +798,7 @@ public final class MathUtils
          * @param b upper bound
          * @return if x is between lower and upper bound
          */
-        public static boolean bounded(final float a, final float x, final float b)
+        public static boolean bounded(final double a, final double x, final double b)
         {
             return a <= x && x <= b;
         }

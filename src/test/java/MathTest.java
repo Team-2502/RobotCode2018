@@ -1,3 +1,5 @@
+import com.team2502.robot2018.pathplanning.purepursuit.SplinePathSegment;
+import com.team2502.robot2018.pathplanning.purepursuit.SplineWaypoint;
 import com.team2502.robot2018.utils.MathUtils;
 import org.joml.ImmutableVector2f;
 import org.junit.Assert;
@@ -187,7 +189,8 @@ public class MathTest
 
         assertEquals(new ImmutableVector2f(1, 1), MathUtils.Geometry.getClosestPointParametricFunc(diagonal, new ImmutableVector2f(2, 1)));
 
-        MathUtils.ParametricFunction circle = new MathUtils.ParametricFunction() {
+        MathUtils.ParametricFunction circle = new MathUtils.ParametricFunction()
+        {
             @Override
             public double getX(double t)
             {
@@ -212,7 +215,8 @@ public class MathTest
 
         assertEquals(MathUtils.ROOT_2, diagonal.getArcLength(0, 1), DELTA);
 
-        MathUtils.ParametricFunction unitCircle = new MathUtils.ParametricFunction() {
+        MathUtils.ParametricFunction unitCircle = new MathUtils.ParametricFunction()
+        {
             @Override
             public double getX(double t)
             {
@@ -227,12 +231,43 @@ public class MathTest
         };
 
         assertEquals(MathUtils.TAU, unitCircle.getArcLength(0, MathUtils.TAU), 1E-3);
+
+        // adding 3 to radius of 1 means radius is 4
+        // mind blown
+        assertEquals(4 * MathUtils.TAU, unitCircle.offsetBy(3).getArcLength(0, MathUtils.TAU), 1E-3);
+
+        MathUtils.ParametricFunction alsoDiagonal = diagonal.offsetBy(1);
+
+        assertEquals(MathUtils.ROOT_2, alsoDiagonal.getArcLength(0, 1), DELTA);
+    }
+
+    @Test
+    public void testParallelCurves()
+    {
+        SplineWaypoint a = new SplineWaypoint(new ImmutableVector2f(0, 0), new ImmutableVector2f(0, 10), 0, 0, 0);
+        SplineWaypoint b = new SplineWaypoint(new ImmutableVector2f(7, 11), new ImmutableVector2f(0, 10), 10, 5, -8);
+        float dist = (float) SplinePathSegment.getArcLength(a, b, a.getSlopeVec(), b.getSlopeVec(), 0, 1);
+        MathUtils.ParametricFunction spline = new SplinePathSegment(a, b, a.getSlopeVec(), b.getSlopeVec(), true, true, 0, dist, dist);
+
+        final double offsetDist = 1.1;
+        MathUtils.ParametricFunction splineOffToSide = spline.offsetBy(offsetDist);
+
+        for(double t = 0; t <= 1; t += 1E-3)
+        {
+            assertEquals(offsetDist, splineOffToSide.get(t).distance(spline.get(t)), DELTA);
+        }
+
+
+        //TODO: These 2 values should be near each other but aren't
+        System.out.println(spline.getArcLength(0, 1, 0.002));
+        System.out.println(splineOffToSide.getArcLength(0, 1, 0.02));
     }
 
     @Test
     public void testParametricDifferentiation()
     {
-        MathUtils.ParametricFunction func = new MathUtils.ParametricFunction() {
+        MathUtils.ParametricFunction func = new MathUtils.ParametricFunction()
+        {
             @Override
             public double getX(double t)
             {
@@ -248,8 +283,8 @@ public class MathTest
 
         for(int i = 0; i < 20; i++)
         {
-            assertEquals(2 * i,func.getDXDT(i), 1E-3);
-            assertEquals(3 * i * i,func.getDYDT(i), 1E-3);
+            assertEquals(2 * i, func.getDXDT(i), 1E-3);
+            assertEquals(3 * i * i, func.getDYDT(i), 1E-3);
         }
 
     }

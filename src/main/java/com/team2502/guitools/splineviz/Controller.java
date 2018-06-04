@@ -2,6 +2,7 @@ package com.team2502.guitools.splineviz;
 
 import com.team2502.guitools.StartPos;
 import com.team2502.robot2018.pathplanning.purepursuit.SplinePathSegment;
+import com.team2502.robot2018.pathplanning.purepursuit.SplineWaypoint;
 import com.team2502.robot2018.utils.MathUtils;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -84,20 +85,11 @@ public class Controller implements Initializable
 
         posChooser.setValue(StartPos.LEFT);
 
-        final MathUtils.ParametricFunction aSplineCurve = new MathUtils.ParametricFunction()
-        {
-            @Override
-            public double getX(double t)
-            {
-                return -20 * t * t * t + 30 * t * t;
-            }
+        SplineWaypoint a = new SplineWaypoint(new ImmutableVector2f(0, 0), new ImmutableVector2f(0, 10), 0, 0, 0);
+        SplineWaypoint b= new SplineWaypoint(new ImmutableVector2f(7, 11), new ImmutableVector2f(0, 10), 10, 5, -8);
+        float dist = (float) SplinePathSegment.getArcLength(a, b, a.getSlopeVec(), b.getSlopeVec(),0,1);
+        final MathUtils.ParametricFunction aSplineCurve = new SplinePathSegment(a, b, a.getSlopeVec(), b.getSlopeVec(), true, true, 0, dist, dist);
 
-            @Override
-            public double getY(double t)
-            {
-                return 40 * t * t * t - 60 * t * t + 35 * t;
-            }
-        };
         functionsToGraph.add(aSplineCurve);
 
         functionsToGraph.add(aSplineCurve.offsetBy(-5));

@@ -67,7 +67,7 @@ public class Path
 
             float length = (float) SplinePathSegment.getArcLength(waypoint1, waypoint2, waypoint1Slope, waypoint2Slope, 0, 1);
 
-            SplinePathSegment pathSegment = new SplinePathSegment(waypoint1, waypoint2, waypoint1Slope, waypoint2Slope,i == 0, i == waypointList.size() - 2, distance, distance += length, length);
+            SplinePathSegment pathSegment = new SplinePathSegment(waypoint1, waypoint2, waypoint1Slope, waypoint2Slope, i == 0, i == waypointList.size() - 2, distance, distance += length, length);
             int interpolatedSegNum = (int) (SEGMENTS_PER_UNIT * pathSegment.getLength());
 
             InterpolationMap maxVel = new InterpolationMap(0D, (double) waypoint1.getMaxSpeed());
@@ -88,12 +88,12 @@ public class Path
             {
                 double t = (double) j / interpolatedSegNum;
                 ImmutableVector2f loc = pathSegment.get(t);
-                final float maxSpeed = maxVel.get(t).floatValue();
+                final float maxSpeed = (float) maxVel.get(t);
                 if(maxSpeed < 0)
                 {
                     throw new IllegalArgumentException("Max speed is negative!");
                 }
-                Waypoint waypoint = new Waypoint(loc, maxSpeed, maxAccel.get(t).floatValue(), maxDecel.get(t).floatValue(), j == 0 ? waypoint1.getCommands() : null);
+                Waypoint waypoint = new Waypoint(loc, maxSpeed, (float) maxAccel.get(t), (float) maxDecel.get(t), j == 0 ? waypoint1.getCommands() : null);
                 interpolatedWaypoints.add(waypoint);
             }
         }
@@ -187,7 +187,6 @@ public class Path
     }
 
     /**
-     *
      * @param distanceLeftSegment
      * @param closestPointDist
      * @param robotPos
@@ -210,10 +209,10 @@ public class Path
         int j = 0;
         for(PathSegment pathSegment : pathSegments)
         {
-            if(shouldProgress(pathSegment,robotPos,closestPointDist))
+            if(shouldProgress(pathSegment, robotPos, closestPointDist))
             {
-                moveSegment(i,pathSegment);
-                return pathSegments.subList(0,j+1);
+                moveSegment(i, pathSegment);
+                return pathSegments.subList(0, j + 1);
             }
             i++;
             j++;

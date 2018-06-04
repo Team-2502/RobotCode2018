@@ -142,7 +142,6 @@ public class SimulatorTest
     }
 
 
-
     private void testPath(List<Waypoint> pathToTest, float desiredHeading, float desiredTime, String fileName) throws IOException
     {
         PurePursuitCSVWriter manager = null;

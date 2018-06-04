@@ -112,7 +112,7 @@ public class Controller implements Initializable
     public Controller()
     {
         // Read the config file in the resources folder and initialize values appropriately
-        configManager = new ConfigManager("src/main/resources/com/team2502/ppsimulator/config");
+        configManager = new ConfigManager("src/main/resources/com/team2502/guitools/ppsimulator/config");
         configManager.load();
     }
 
