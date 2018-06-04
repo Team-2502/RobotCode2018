@@ -23,6 +23,12 @@ public class SimulatorLocationEstimator implements ITranslationalLocationEstimat
         this.stopwatch = new SimulatedStopwatch(0.02F); // each 20ms
     }
 
+    public SimulatorLocationEstimator(SimulatedRobot simulatedRobot, float dt)
+    {
+        this.simulatedRobot = simulatedRobot;
+        this.stopwatch = new SimulatedStopwatch(dt); // each 20ms
+    }
+
     public void setEstimatedLocation(ImmutableVector2f estimatedLocation)
     {
         this.estimatedLocation = estimatedLocation;

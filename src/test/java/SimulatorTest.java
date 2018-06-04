@@ -265,10 +265,11 @@ public class SimulatorTest
             manager.addWaypoints(Path.fromSplinePoints(pipeline.a, pipeline.b).getWaypoints());
 
             SimulatedRobot simulatedRobot = new SimulatedRobot(Constants.PurePursuit.LATERAL_WHEEL_DISTANCE_FT);
-            SimulatorLocationEstimator simulatorLocationEstimator = new SimulatorLocationEstimator(simulatedRobot);
+
+            float dt = (float) MotionProfilingPipeline.DELTA_TIME;
+            SimulatorLocationEstimator simulatorLocationEstimator = new SimulatorLocationEstimator(simulatedRobot, dt);
 
             simulatorLocationEstimator.setEstimatedLocation(new ImmutableVector2f(0, 0));
-            float dt = (float) MotionProfilingPipeline.DELTA_TIME;
             int i = 0;
 
 
