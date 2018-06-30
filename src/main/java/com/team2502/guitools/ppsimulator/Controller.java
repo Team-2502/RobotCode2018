@@ -112,7 +112,7 @@ public class Controller implements Initializable
     public Controller()
     {
         // Read the config file in the resources folder and initialize values appropriately
-        configManager = new ConfigManager("src/main/resources/com/team2502/ppsimulator/config");
+        configManager = new ConfigManager("src/main/resources/com/team2502/guitools/ppsimulator/config");
         configManager.load();
     }
 
@@ -144,9 +144,7 @@ public class Controller implements Initializable
     @Override
     public void initialize(URL location, ResourceBundle resources)
     {
-        backdrop.heightProperty().addListener((heightProp, oldHeight, newHeight) -> {
-                                                  spatialScaleFactor = newHeight.doubleValue() / 30.0156D;
-                                              }
+        backdrop.heightProperty().addListener((heightProp, oldHeight, newHeight) -> spatialScaleFactor = newHeight.doubleValue() / 30.0156D
                                              );
 
         backdrop.widthProperty().addListener((widthProp, oldWidth, newWidth) ->

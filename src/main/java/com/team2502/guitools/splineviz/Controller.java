@@ -176,7 +176,7 @@ public class Controller implements Initializable
     private String newWaypoint(double posX, double posY, double tanX, double tanY)
     {
         String velAccDecPlaceholder = "maxVel, maxAccel, maxDecel";
-        return "new Waypoint(" +
+        return "new SplineWaypoint(" +
                newImmutableVector2f(posX, posY) +
                ", " +
                newImmutableVector2f(tanX, tanY) +
