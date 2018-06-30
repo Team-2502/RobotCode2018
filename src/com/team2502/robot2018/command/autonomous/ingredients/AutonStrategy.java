@@ -4,6 +4,7 @@ public enum AutonStrategy
 {
     SWITCH("Switch"),
     SCALE("Scale"),
+    SCALE_WAIT("Delayed Scale"),
     SWITCH_SCALE("Switch then Scale"),
     STRAIGHT("Straight"),
     DEEP_SCALE("Far Scale"),

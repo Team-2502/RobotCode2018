@@ -38,22 +38,21 @@ public class Paths
          * Move from the center of the starting wall to the right side of the switch
          */
         public static final List<Waypoint> rightSwitch = Arrays.asList(
-                new Waypoint(new ImmutableVector2f(0, 0), 0, 10, -10),
-                new Waypoint(new ImmutableVector2f(2F, 2.45F), 6, 10, -10),
-                new Waypoint(new ImmutableVector2f(4F, 4F), 6, 10, -10),
-                new Waypoint(new ImmutableVector2f(4F, 9.5F), 1F, 10, -10)
+                new Waypoint(new ImmutableVector2f(0, 0), 0, 8, -5),
+                new Waypoint(new ImmutableVector2f(2F, 2.45F), 8, 8, -5),
+                new Waypoint(new ImmutableVector2f(4F, 4F), 8, 8, -5),
+                new Waypoint(new ImmutableVector2f(4F, 9.5F), 1F, 8, -2)
                                                                       );
 
         /**
          * Move from the center of the starting wall to the left side of the switch
          */
         public static final List<Waypoint> leftSwitch = Arrays.asList(
-                new Waypoint(new ImmutableVector2f(0, 0), 0, 5, -5),
-                new Waypoint(new ImmutableVector2f(0, 2F), 6, 5, -5),
-                new Waypoint(new ImmutableVector2f(-4.5F, 4), 6, 5, -5),
-                new Waypoint(new ImmutableVector2f(-4.5F, 10), 1F, 5, -5)
-                                                                     );
-    }
+                new Waypoint(new ImmutableVector2f(0, 0), 0, 8, -5),
+                new Waypoint(new ImmutableVector2f(0, 2F), 8, 8, -5),
+                new Waypoint(new ImmutableVector2f(-4.5F, 4), 8, 8, -5),
+                new Waypoint(new ImmutableVector2f(-4.5F, 10.5F), 1F, 8, -2)
+                                                                     );    }
 
     /**
      * Organic gluten-free paths for when your robot is placed on the left

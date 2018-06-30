@@ -37,6 +37,10 @@ public class RightCommandGroup extends CommandGroup
                         case ONLY_SAME_SIDE:
                             crossLine();
                             break;
+                        case SCALE_WAIT:
+                            addSequential(new WaitCommand(3));
+                            goScaleLeft();
+                            break;
                         default:
                             crossLine();
                             break;
@@ -55,6 +59,9 @@ public class RightCommandGroup extends CommandGroup
                             break;
 
                         case ONLY_SAME_SIDE:
+                            goScaleRight();
+                            break;
+                        case SCALE_WAIT:
                             goScaleRight();
                             break;
                         default:
@@ -79,6 +86,10 @@ public class RightCommandGroup extends CommandGroup
                         case SWITCH:
                             goSwitch();
                             break;
+                        case SCALE_WAIT:
+                            addSequential(new WaitCommand(3));
+                            goScaleLeft();
+                            break;
                         default:
                             crossLine();
                             break;
@@ -102,6 +113,9 @@ public class RightCommandGroup extends CommandGroup
                             goDeepScaleRight();
                             break;
                         case ONLY_SAME_SIDE:
+                            goScaleRight();
+                            break;
+                        case SCALE_WAIT:
                             goScaleRight();
                             break;
                         default:
@@ -169,14 +183,14 @@ public class RightCommandGroup extends CommandGroup
 
     private void crossLine()
     {
-        addSequential(new DriveTime(7, 0.45F));
+        addSequential(new DriveTime(2.7F, 0.45F));
     }
 
     private void emitCube()
     {
         addSequential(new ActiveIntakeRotate(0.4, 1));
 
-        addParallel(new ShootCubeCommand(3));
+        addParallel(new ShootCubeCommand(3, 0.3F));
         addSequential(new WaitCommand(1));
         addSequential(new ToggleIntakeCommand());
     }

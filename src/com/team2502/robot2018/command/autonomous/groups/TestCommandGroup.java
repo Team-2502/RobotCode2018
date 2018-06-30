@@ -18,10 +18,7 @@ public class TestCommandGroup extends CommandGroup
 {
     public TestCommandGroup()
     {
-        addSequential(new RaiseElevatorScale());
-        addParallel(new WaitCommand(3));
-        addParallel(new ElevatorAutonCommand(1.7, 0));
-        addSequential(new DeadreckoningDrive(5.0, -5.0F));
+        addSequential(new ShootCubeCommand(3, 0.3F));
     }
 
     private void testElevatorScale()

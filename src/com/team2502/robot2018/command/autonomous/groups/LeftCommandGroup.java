@@ -51,6 +51,9 @@ public class LeftCommandGroup extends CommandGroup
                             goScaleLeft();
                             break;
                         }
+                        case SCALE_WAIT:
+                            goScaleLeft();
+                            break;
                         default:
                             crossLine();
                             break;
@@ -74,10 +77,16 @@ public class LeftCommandGroup extends CommandGroup
                         case SWITCH:
                             goSwitch();
                             break;
+
+                        case SCALE_WAIT:
+                            addSequential(new WaitCommand(3));
+                            goScaleRight();
+                            break;
                         default:
                             crossLine();
                             break;
                     }
+                    break;
 
 
                 case "RL":
@@ -94,12 +103,14 @@ public class LeftCommandGroup extends CommandGroup
                         case ONLY_SAME_SIDE:
                             goScaleLeft();
                             break;
+                        case SCALE_WAIT:
+                            goScaleLeft();
+                            break;
                         default:
                             crossLine();
                             break;
-
-
                     }
+                    break;
 
                 case "RR":
 //                    System.out.println("Going cross country!");
@@ -115,11 +126,16 @@ public class LeftCommandGroup extends CommandGroup
                         case ONLY_SAME_SIDE:
                             crossLine();
                             break;
+                        case SCALE_WAIT:
+                            addSequential(new WaitCommand(3));
+                            goScaleRight();
+                            break;
 
                         default:
                             crossLine();
                             break;
                     }
+                    break;
             }
         }
 
@@ -129,7 +145,7 @@ public class LeftCommandGroup extends CommandGroup
 
     private void crossLine()
     {
-        addSequential(new DriveTime(7, 0.45F));
+        addSequential(new DriveTime(2.7F, 0.45F));
     }
 
     private void goSwitch()
@@ -205,7 +221,7 @@ public class LeftCommandGroup extends CommandGroup
     {
         addSequential(new ActiveIntakeRotate(0.4, 1));
 
-        addParallel(new ShootCubeCommand(3));
+        addParallel(new ShootCubeCommand(3, 0.3F));
         addSequential(new WaitCommand(1));
         addSequential(new ToggleIntakeCommand());
     }
