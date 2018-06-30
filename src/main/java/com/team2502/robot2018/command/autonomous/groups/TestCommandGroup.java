@@ -4,9 +4,16 @@ package com.team2502.robot2018.command.autonomous.groups;
 import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.command.autonomous.ingredients.FastRotateCommand;
 import com.team2502.robot2018.command.autonomous.ingredients.PurePursuitCommand;
+import com.team2502.robot2018.pathplanning.purepursuit.Path;
+import com.team2502.robot2018.pathplanning.purepursuit.SplineWaypoint;
+import com.team2502.robot2018.pathplanning.purepursuit.Waypoint;
 import com.team2502.robot2018.pathplanning.srxprofiling.SRXProfilingCommand;
 import com.team2502.robot2018.pathplanning.srxprofiling.TrajConfig;
 import edu.wpi.first.wpilibj.command.CommandGroup;
+import org.joml.ImmutableVector2f;
+
+import java.util.Arrays;
+import java.util.List;
 
 import static com.team2502.robot2018.Constants.SRXProfiling.NO_COMMANDS;
 
@@ -19,7 +26,7 @@ public class TestCommandGroup extends CommandGroup
     public TestCommandGroup()
     {
         Robot.writeLog("TestCommand", 200);
-        testMotionProfiling();
+        testPurePursuitSpline();
     }
 
     private void testMotionProfiling()
@@ -62,5 +69,22 @@ public class TestCommandGroup extends CommandGroup
 
         // move forward
         addSequential(forward);
+    }
+
+    private void testPurePursuitSpline()
+    {
+        // First attempt
+
+        final List<SplineWaypoint> mySplinePoints = Arrays.asList(
+                new SplineWaypoint(new ImmutableVector2f(0.000F, 0.000F), new ImmutableVector2f(1.000F, 1.000F), 0, 20, -10),
+                new SplineWaypoint(new ImmutableVector2f(5.000F, 5.000F), new ImmutableVector2f(5.000F, 0.000F), 5, 20, -10),
+                new SplineWaypoint(new ImmutableVector2f(10.000F, 0.000F), new ImmutableVector2f(0.000F, -10.000F), 0, 20, -10)
+        );
+
+        Path mySplinePath = Path.fromSplinePoints(mySplinePoints);
+
+        List<Waypoint> linearlyInterpolatedWaypoints = mySplinePath.getWaypoints();
+
+        addSequential(new PurePursuitCommand(linearlyInterpolatedWaypoints, false));
     }
 }
