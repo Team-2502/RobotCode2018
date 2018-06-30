@@ -284,6 +284,9 @@ public class PurePursuitMovementStrategy implements ITankMovementStrategy
         {
             updateForNewSegment();
         }
+
+        System.out.printf("heading: %.2f, estimatedLocation: (%.2f, %.2f) leftVel: %.2f, rightVel: %.2f\n",
+                          usedHeading, usedEstimatedLocation.x,usedEstimatedLocation.y,velocityEstimator.getLeftWheelSpeed(), velocityEstimator.getRightWheelSpeed());
     }
 
     public float getUsedCurvature()

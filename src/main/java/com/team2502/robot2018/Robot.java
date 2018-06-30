@@ -5,6 +5,7 @@ import com.kauailabs.navx.frc.AHRS;
 import com.team2502.robot2018.command.autonomous.ingredients.AutonStrategy;
 import com.team2502.robot2018.pathplanning.localization.EncoderDifferentialDriveLocationEstimator;
 import com.team2502.robot2018.pathplanning.localization.NavXLocationEstimator;
+import com.team2502.robot2018.pathplanning.localization.PlsWorkLocalizer2;
 import com.team2502.robot2018.pathplanning.srxprofiling.TrajConfig;
 import com.team2502.robot2018.sendables.SendableDriveStrategyType;
 import com.team2502.robot2018.sendables.SendableDriveTrain;
@@ -131,7 +132,7 @@ public final class Robot extends IterativeRobot
      * @see Robot#autonomousInit()
      * @see RobotLocalizationCommand
      */
-    public static RobotLocalizationCommand ROBOT_LOCALIZATION_COMMAND;
+    public static PlsWorkLocalizer2 ROBOT_LOCALIZATION_COMMAND;
 
     /**
      * A list of logPop messages that will evaluateY printed out once the robot is disabled
@@ -187,9 +188,9 @@ public final class Robot extends IterativeRobot
         NavXLocationEstimator rotEstimator = new NavXLocationEstimator();
         EncoderDifferentialDriveLocationEstimator encoderDifferentialDriveLocationEstimator = new EncoderDifferentialDriveLocationEstimator(rotEstimator);
 
-        ROBOT_LOCALIZATION_COMMAND.setLocationEstimator(encoderDifferentialDriveLocationEstimator);
-        ROBOT_LOCALIZATION_COMMAND.setRotEstimator(rotEstimator);
-        ROBOT_LOCALIZATION_COMMAND.setVelocityEstimator(encoderDifferentialDriveLocationEstimator);
+//        ROBOT_LOCALIZATION_COMMAND.setLocationEstimator(encoderDifferentialDriveLocationEstimator);
+//        ROBOT_LOCALIZATION_COMMAND.setRotEstimator(rotEstimator);
+//        ROBOT_LOCALIZATION_COMMAND.setVelocityEstimator(encoderDifferentialDriveLocationEstimator);
 
         ROBOT_LOCALIZATION_COMMAND.execute();
     }
@@ -289,11 +290,11 @@ public final class Robot extends IterativeRobot
     public void startLocalization()
     {
         // Initialize Estimators
-        NavXLocationEstimator rotEstimator = new NavXLocationEstimator();
-        EncoderDifferentialDriveLocationEstimator encoderDifferentialDriveLocationEstimator = new EncoderDifferentialDriveLocationEstimator(rotEstimator);
+//        NavXLocationEstimator rotEstimator = new NavXLocationEstimator();
+//        EncoderDifferentialDriveLocationEstimator encoderDifferentialDriveLocationEstimator = new ;
 
         // Begin running the localization routine
-        ROBOT_LOCALIZATION_COMMAND = new RobotLocalizationCommand(rotEstimator, encoderDifferentialDriveLocationEstimator, encoderDifferentialDriveLocationEstimator);
+        ROBOT_LOCALIZATION_COMMAND = new PlsWorkLocalizer2();
 
         ROBOT_LOCALIZATION_COMMAND.execute();
 
@@ -383,9 +384,11 @@ public final class Robot extends IterativeRobot
      */
     public void teleopInit()
     {
+        TRANSMISSION_SOLENOID.setHighGear(true);
 
         DRIVE_TRAIN.setTeleopSettings();
         ELEVATOR.calibrateEncoder();
+        startLocalization();
     }
 
     /**
@@ -393,6 +396,7 @@ public final class Robot extends IterativeRobot
      */
     public void teleopPeriodic()
     {
+
         Scheduler.getInstance().run();
         DashboardData.update();
     }

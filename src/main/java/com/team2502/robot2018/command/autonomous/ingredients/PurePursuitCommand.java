@@ -89,8 +89,16 @@ public class PurePursuitCommand extends Command
         }
         else
         {
-            purePursuitMovementStrategy = new PurePursuitMovementStrategy(tankRobot, Robot.ROBOT_LOCALIZATION_COMMAND.getInverse(), Robot.ROBOT_LOCALIZATION_COMMAND.getInverse(), Robot.ROBOT_LOCALIZATION_COMMAND.getInverse(), waypoints, lookahead, true);
+            throw new RuntimeException("ur dum");
+//            purePursuitMovementStrategy = new PurePursuitMovementStrategy(tankRobot, Robot.ROBOT_LOCALIZATION_COMMAND.getInverse(), Robot.ROBOT_LOCALIZATION_COMMAND.getInverse(), Robot.ROBOT_LOCALIZATION_COMMAND.getInverse(), waypoints, lookahead, true);
         }
+    }
+
+    @Override
+    protected void end()
+    {
+        purePursuitCsvWriter.flush();
+        purePursuitCsvWriter.close();
     }
 
     @Override
