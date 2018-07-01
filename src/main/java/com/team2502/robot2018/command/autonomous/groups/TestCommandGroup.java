@@ -50,9 +50,6 @@ public class TestCommandGroup extends CommandGroup
     private void testEzAuton()
     {
 
-        TalonSRX leftTalon = Robot.DRIVE_TRAIN.getLeftFrontTalonEnc();
-        TalonSRX rightTalon = Robot.DRIVE_TRAIN.getRightFrontTalonEnc();
-
         PPWaypoint waypoint1 = PPWaypoint.simple2D(0, 0, 0, 3, -3);
         PPWaypoint waypoint2 = PPWaypoint.simple2D(0, 6, 5, 3, -3);
         PPWaypoint waypoint3 = PPWaypoint.simple2D(0, 12, 0, 3, -3);
@@ -65,37 +62,46 @@ public class TestCommandGroup extends CommandGroup
         IVelocityMotor leftMotor = velocity -> Robot.DRIVE_TRAIN.runLeftVel((float) velocity);
         IVelocityMotor rightMotor = velocity -> Robot.DRIVE_TRAIN.runRightVel((float) velocity);
 
-        IEncoder leftEncoder = Encoders.fromTalon(leftTalon, Encoders.CTRE_MAG_ENCODER);
-        EncoderWheel leftEncoderWheel = new EncoderWheel(leftEncoder, 3);
-
-        Command command = new ICommand()
-        {
-            int counter = 0;
-
+        IEncoder leftEncoder = new IEncoder() {
             @Override
-            public void execute()
+            public double getPosition()
             {
-                leftMotor.runVelocity(16);
-                rightMotor.runVelocity(16);
+                return Robot.DRIVE_TRAIN.getLeftPos();
             }
 
             @Override
-            public boolean isFinished()
+            public double getVelocity()
             {
-                return counter++ > 100;
+                return Robot.DRIVE_TRAIN.getLeftVel();
             }
-        }.build();
-//        IEncoder rightEncoder = Encoders.fromTalon(rightTalon, Encoders.CTRE_MAG_ENCODER);
-//        EncoderWheel rightEncoderWheel = new EncoderWheel(rightEncoder, 3);
+        };
+
+        IEncoder rightEncoder = new IEncoder() {
+            @Override
+            public double getPosition()
+            {
+                return Robot.DRIVE_TRAIN.getRightPos();
+            }
+
+            @Override
+            public double getVelocity()
+            {
+                return Robot.DRIVE_TRAIN.getRightVel();
+            }
+        };
+
+        EncoderWheel leftEncoderWheel = new EncoderWheel(leftEncoder, 0.25);
+
+        EncoderWheel rightEncoderWheel = new EncoderWheel(rightEncoder, 0.25);
+
+        ITankRobotConstants constants = () -> 3;
 //
-//        ITankRobotConstants constants = () -> 20;
+        TankRobotEncoderRotationEstimator locEstimator = new TankRobotEncoderRotationEstimator(leftEncoderWheel, rightEncoderWheel, constants);
 //
-//        TankRobotEncoderRotationEstimator locEstimator = new TankRobotEncoderRotationEstimator(leftEncoderWheel, rightEncoderWheel, constants);
+        ILookahead lookahead = new LookaheadBounds(1, 5, 2, 10, locEstimator);
 //
-//        ILookahead lookahead = new LookaheadBounds(1, 5, 2, 10, locEstimator);
-//
-//        TankRobotTransLocDriveable tankRobotTransLocDriveable = new TankRobotTransLocDriveable(leftMotor, rightMotor, locEstimator, locEstimator, constants);
-//        Command commmand = new PPCommand(ppMoveStrat, locEstimator, lookahead, tankRobotTransLocDriveable).build();
+        TankRobotTransLocDriveable tankRobotTransLocDriveable = new TankRobotTransLocDriveable(leftMotor, rightMotor, locEstimator, locEstimator, constants);
+        Command command = new PPCommand(ppMoveStrat, locEstimator, lookahead, tankRobotTransLocDriveable).build();
         addSequential(command);
     }
 
