@@ -101,6 +101,26 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         rightRearTalon.configOpenloopRamp(secondsFromNeutralToFull, Constants.INIT_TIMEOUT);
     }
 
+    public WPI_TalonSRX getLeftFrontTalonEnc()
+    {
+        return leftFrontTalonEnc;
+    }
+
+    public WPI_TalonSRX getLeftRearTalon()
+    {
+        return leftRearTalon;
+    }
+
+    public WPI_TalonSRX getRightFrontTalonEnc()
+    {
+        return rightFrontTalonEnc;
+    }
+
+    public WPI_TalonSRX getRightRearTalon()
+    {
+        return rightRearTalon;
+    }
+
     @Override
     protected void initDefaultCommand()
     {
@@ -355,11 +375,22 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     private void runMotors(ControlMode controlMode, float leftWheel, float rightWheel) // double z
     {
         // setting slaves as the talons w/ encoders is the only way it works ¯\_(ツ)_/¯
+        runMotorsLeft(controlMode,leftWheel);
+        runMotorsRight(controlMode,rightWheel);
+    }
+
+    public void runMotorsLeft(ControlMode controlMode, float left)
+    {
         leftRearTalon.follow(leftFrontTalonEnc);
+
+        leftFrontTalonEnc.set(controlMode, left);
+    }
+
+    public void runMotorsRight(ControlMode controlMode, float right)
+    {
         rightRearTalon.follow(rightFrontTalonEnc);
 
-        leftFrontTalonEnc.set(controlMode, leftWheel);
-        rightFrontTalonEnc.set(controlMode, rightWheel);
+        rightFrontTalonEnc.set(controlMode, right);
     }
 
     /**
@@ -387,6 +418,18 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         float right = fakeToRealEncUnits(rightWheel * Constants.Physical.DriveTrain.FPS_TO_EVEL_DT);
         Robot.writeLog("left: %.2f, right: %.2f", 1, left, right);
         runMotors(ControlMode.Velocity, left, right);
+    }
+
+    public void runLeftVel(float leftWheel)
+    {
+        float left = fakeToRealEncUnits(leftWheel * Constants.Physical.DriveTrain.FPS_TO_EVEL_DT);
+        runMotorsLeft(ControlMode.Velocity, left);
+    }
+
+    public void runRightVel(float rightWheel)
+    {
+        float right = fakeToRealEncUnits(rightWheel * Constants.Physical.DriveTrain.FPS_TO_EVEL_DT);
+        runMotorsRight(ControlMode.Velocity, right);
     }
 
     /**
