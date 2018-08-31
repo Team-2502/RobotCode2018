@@ -54,5 +54,7 @@ public class ActiveIntakeSubsystem extends Subsystem
 
     @Override
     protected void initDefaultCommand()
-    { setDefaultCommand(new ActiveRotationCommand()); }
+    {
+//        setDefaultCommand(new ActiveRotationCommand());
+    }
 }

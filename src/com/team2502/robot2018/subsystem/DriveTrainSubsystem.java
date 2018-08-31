@@ -36,6 +36,7 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     private float lastLeft;
     //    private boolean negative;
     private float lastRight;
+    public boolean kidMode = false;
 
     public DriveTrainSubsystem()
     {
@@ -263,9 +264,29 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
 
     }
 
+    private FloatPair getSpeedArcade()
+    {
+        float x = (float) OI.JOYSTICK_DRIVE_RIGHT.getX();
+        float y = (float) OI.JOYSTICK_DRIVE_RIGHT.getY();
+
+        SPEED_CONTAINER.left = y - x;
+        SPEED_CONTAINER.right = y + x;
+
+
+        // Sets the speed to 0 if the speed is less than 0.05 and larger than -0.05
+        if(Math.abs(SPEED_CONTAINER.left) < 0.05F) { SPEED_CONTAINER.left = 0.0F; }
+        if(Math.abs(SPEED_CONTAINER.right) < 0.05F) { SPEED_CONTAINER.right = 0.0F; }
+
+        return SPEED_CONTAINER;
+    }
+
     public void drive()
     {
-        FloatPair speed = getSpeedTank();
+//        FloatPair speed = getSpeedTank();
+        FloatPair speed = getSpeedArcade();
+        if(this.kidMode) {
+            speed.scale(0.5);
+        }
         SmartDashboard.putNumber("speedL", -speed.left);
         SmartDashboard.putNumber("speedR", -speed.right);
         runMotorsTankDrive(-speed.left, -speed.right);
