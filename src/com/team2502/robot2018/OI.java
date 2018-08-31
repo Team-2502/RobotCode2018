@@ -37,8 +37,10 @@ public final class OI
 
     private static final Button TOGGLE_CARRIAGE_BRAKE = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.TOGGLE_CARRIAGE_BRAKE);
 
+    private static final Button TOGGLE_KID_MODE = new JoystickButton(JOYSTICK_DRIVE_LEFT, 1);
     static
     {
+        TOGGLE_KID_MODE.whenPressed(new QuickCommand(() -> Robot.DRIVE_TRAIN.kidMode = ! Robot.DRIVE_TRAIN.kidMode));
         // Elevator buttons
         ELEV_UP.whileHeld(new ElevatorCommand(1.0));
         ELEV_DOWN.whileHeld(new ElevatorCommand(-0.5));
