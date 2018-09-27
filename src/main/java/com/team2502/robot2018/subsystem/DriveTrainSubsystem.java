@@ -34,6 +34,7 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     private final WPI_TalonSRX leftRearTalon;
     private final WPI_TalonSRX rightFrontTalonEnc;
     private final WPI_TalonSRX rightRearTalon;
+
     /**
      * Represents our drivetrain
      */
@@ -93,11 +94,11 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         setTeleopSettings();
         DashboardData.addUpdater(this);
 
-        final double secondsFromNeutralToFull = 0.4;
-        leftFrontTalonEnc.configOpenloopRamp(secondsFromNeutralToFull, Constants.INIT_TIMEOUT);
-        leftRearTalon.configOpenloopRamp(secondsFromNeutralToFull, Constants.INIT_TIMEOUT);
-        rightFrontTalonEnc.configOpenloopRamp(secondsFromNeutralToFull, Constants.INIT_TIMEOUT);
-        rightRearTalon.configOpenloopRamp(secondsFromNeutralToFull, Constants.INIT_TIMEOUT);
+
+        leftFrontTalonEnc.configOpenloopRamp(Constants.Physical.DriveTrain.SECONDS_FROM_NEUTRAL_TO_FULL, Constants.INIT_TIMEOUT);
+        leftRearTalon.configOpenloopRamp(Constants.Physical.DriveTrain.SECONDS_FROM_NEUTRAL_TO_FULL, Constants.INIT_TIMEOUT);
+        rightFrontTalonEnc.configOpenloopRamp(Constants.Physical.DriveTrain.SECONDS_FROM_NEUTRAL_TO_FULL, Constants.INIT_TIMEOUT);
+        rightRearTalon.configOpenloopRamp(Constants.Physical.DriveTrain.SECONDS_FROM_NEUTRAL_TO_FULL, Constants.INIT_TIMEOUT);
     }
 
     @Override
@@ -111,23 +112,8 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
      */
     public void stop() { drive.stopMotor(); }
 
-    /**
-     * Prepare the talon for driving in teleop
-     *
-     * @param talon the talon in question
-     */
-    private void setTeleopSettings(WPI_TalonSRX talon)
-    {
-        talon.set(ControlMode.PercentOutput, 0.0F);
-        talon.configNominalOutputForward(0.0D, Constants.INIT_TIMEOUT);
-        talon.configNominalOutputReverse(0.0D, Constants.INIT_TIMEOUT);
 
-        talon.configPeakOutputForward(1.0D, Constants.INIT_TIMEOUT);
-        talon.configPeakOutputReverse(-1.0D, Constants.INIT_TIMEOUT);
-
-        talon.setInverted(true);
-    }
-
+    // *** Begin motion profiling methods *** //
 
     /**
      * Load purepursuit points into the talons, where purepursuit points are in feet
@@ -255,6 +241,37 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     }
 
     /**
+     * Enable, disable, or hold a motion profiling position
+     *
+     * @param motionProfilingState Something from the enum {@link SetValueMotionProfile}
+     */
+    public void setMotionProfilingState(SetValueMotionProfile motionProfilingState)
+    {
+        runMotors(ControlMode.MotionProfile, motionProfilingState.value, motionProfilingState.value);
+    }
+
+    // *** End Motion Profiling methods ** //
+
+    // *** Begin methods pertaining to switching into/out of teleop/auton *** //
+
+    /**
+     * Prepare the talon for driving in teleop
+     *
+     * @param talon the talon in question
+     */
+    private void setTeleopSettings(WPI_TalonSRX talon)
+    {
+        talon.set(ControlMode.PercentOutput, 0.0F);
+        talon.configNominalOutputForward(0.0D, Constants.INIT_TIMEOUT);
+        talon.configNominalOutputReverse(0.0D, Constants.INIT_TIMEOUT);
+
+        talon.configPeakOutputForward(1.0D, Constants.INIT_TIMEOUT);
+        talon.configPeakOutputReverse(-1.0D, Constants.INIT_TIMEOUT);
+
+        talon.setInverted(true);
+    }
+
+    /**
      * This class sets the correct nominal/peak values for the talon and also sets the correct inversion settings on the encoders.
      */
     public void setTeleopSettings()
@@ -293,37 +310,9 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         // Set high gear
     }
 
-    /**
-     * Update the PID
-     */
-    @Override
-    public void setPID()
-    {
-        setPID(kP, kI, kD);
-    }
+    // *** End settings-related methods *** //
 
-    /**
-     * Sets the PID for left AND right motors. If the descriptions below confuse you, go look up a better
-     * explanation of PID.
-     *
-     * @param kP Proportional constant. Makes the motor go faster proportional to the error.
-     * @param kI Integral constant. Makes the motor go faster proportional to the integral of the error.
-     * @param kD Derivative constant. Makes the motor go faster proportional to the derivative of the error.
-     */
-    public void setPID(double kP, double kI, double kD)
-    {
-        this.kP = kP;
-        this.kI = kI;
-        this.kD = kD;
 
-        leftFrontTalonEnc.config_kP(0, kP, Constants.INIT_TIMEOUT);
-        leftFrontTalonEnc.config_kI(0, kI, Constants.INIT_TIMEOUT);
-        leftFrontTalonEnc.config_kD(0, kD, Constants.INIT_TIMEOUT);
-
-        rightFrontTalonEnc.config_kP(0, kP, Constants.INIT_TIMEOUT);
-        rightFrontTalonEnc.config_kI(0, kI, Constants.INIT_TIMEOUT);
-        rightFrontTalonEnc.config_kD(0, kD, Constants.INIT_TIMEOUT);
-    }
 
     /**
      * Sets the PID for left AND right motors. If the descriptions below confuse you, go look up a better
@@ -550,6 +539,9 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         return (leftFrontTalonEnc.getClosedLoopError(0) + rightFrontTalonEnc.getClosedLoopError(0)) / 2D;
     }
 
+
+    // *** Begin unit conversion methods *** //
+
     public float encUnitsToFeet(float encUnits)
     {
         // Convert enc units to enc rotations
@@ -569,6 +561,20 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
 
         return (float) encUnits;
     }
+
+    /**
+     * @param inches A distance in inches
+     * @return The value the encoder will read when the robot has travelled that many inches
+     */
+    public float inchesToEncUnits(float inches)
+    {
+        float feet = inches / 12;
+
+        return feetToEncUnits(feet);
+    }
+
+    // *** End unit conversion methods *** //
+
 
     /**
      * @return Velocity as read by right encoder in ft/s
@@ -615,16 +621,7 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
      */
     public float getRightPosRaw() { return rightFrontTalonEnc.getSelectedSensorPosition(0);}
 
-    /**
-     * @param inches A distance in inches
-     * @return The value the encoder will read when the robot has travelled that many inches
-     */
-    public float inchesToEncUnits(float inches)
-    {
-        float feet = inches / 12;
 
-        return feetToEncUnits(feet);
-    }
 
 
     @Override
@@ -638,6 +635,41 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
 
 
         pidTuner.updateDashboard();
+    }
+
+
+    // *** Begin PID mutators *** //
+
+    /**
+     * Update the PID
+     */
+    @Override
+    public void setPID()
+    {
+        setPID(kP, kI, kD);
+    }
+
+    /**
+     * Sets the PID for left AND right motors. If the descriptions below confuse you, go look up a better
+     * explanation of PID.
+     *
+     * @param kP Proportional constant. Makes the motor go faster proportional to the error.
+     * @param kI Integral constant. Makes the motor go faster proportional to the integral of the error.
+     * @param kD Derivative constant. Makes the motor go faster proportional to the derivative of the error.
+     */
+    public void setPID(double kP, double kI, double kD)
+    {
+        this.kP = kP;
+        this.kI = kI;
+        this.kD = kD;
+
+        leftFrontTalonEnc.config_kP(0, kP, Constants.INIT_TIMEOUT);
+        leftFrontTalonEnc.config_kI(0, kI, Constants.INIT_TIMEOUT);
+        leftFrontTalonEnc.config_kD(0, kD, Constants.INIT_TIMEOUT);
+
+        rightFrontTalonEnc.config_kP(0, kP, Constants.INIT_TIMEOUT);
+        rightFrontTalonEnc.config_kI(0, kI, Constants.INIT_TIMEOUT);
+        rightFrontTalonEnc.config_kD(0, kD, Constants.INIT_TIMEOUT);
     }
 
     @Override
@@ -694,15 +726,7 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         rightFrontTalonEnc.config_kF(0, kF, Constants.INIT_TIMEOUT);
     }
 
-    /**
-     * Enable, disable, or hold a motion profiling position
-     *
-     * @param motionProfilingState Something from the enum {@link SetValueMotionProfile}
-     */
-    public void setMotionProfilingState(SetValueMotionProfile motionProfilingState)
-    {
-        runMotors(ControlMode.MotionProfile, motionProfilingState.value, motionProfilingState.value);
-    }
+    // *** End PID Mutators *** //
 
     /**
      * Drive strategies that may be used

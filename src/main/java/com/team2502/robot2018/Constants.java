@@ -182,6 +182,11 @@ public class Constants
              */
             public static final double ALLOWABLE_POS_ERROR_EPOS = 300;
 
+            /**
+             * Used for smoother acceleration when controlling the robot via voltage (usually teleop)
+             */
+            public static final double SECONDS_FROM_NEUTRAL_TO_FULL = 0.4;
+
             private DriveTrain() { }
         }
 
