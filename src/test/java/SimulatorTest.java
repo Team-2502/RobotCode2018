@@ -14,6 +14,7 @@ import org.junit.Test;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -108,9 +109,9 @@ public class SimulatorTest
     {
         Path splinePathRight = Path.fromSplinePoints(
                 new SplineWaypoint(new ImmutableVector2f(0, 0), 0, 10, 10, -10),
-                new SplineWaypoint(new ImmutableVector2f(-4.5F, 4.5F), 0, 10F, 10, -10), // if this doesn't work, PP is broken or field is off.
-                new SplineWaypoint(new ImmutableVector2f(-4.5F, 10F), 0, 10F, 10, -10) // if this doesn't work, PP is broken or field is off.
-                                               );
+//                new SplineWaypoint(new ImmutableVector2f(3.5F, 4.5F), 0, 10F, 10, -10), // if this doesn't work, PP is broken or field is off.
+                new SplineWaypoint(new ImmutableVector2f(3.5F, 10F), 0, 10F, 10, -10) // if this doesn't work, PP is broken or field is off.
+                                                    );
         testPath(splinePathRight.getWaypoints(), 90, 15, "centerSplinePathRight");
     }
 
@@ -119,8 +120,8 @@ public class SimulatorTest
     {
         Path splinePathLeft = Path.fromSplinePoints(
                 new SplineWaypoint(new ImmutableVector2f(0, 0), 0, 10, 10, -10),
-                new SplineWaypoint(new ImmutableVector2f(3.5F, 4.5F), 0, 10F, 10, -10), // if this doesn't work, PP is broken or field is off.
-                new SplineWaypoint(new ImmutableVector2f(3.5F, 10F), 0, 10F, 10, -10) // if this doesn't work, PP is broken or field is off.
+//                new SplineWaypoint(new ImmutableVector2f(-4.5F, 4.5F), 0, 10F, 10, -10), // if this doesn't work, PP is broken or field is off.
+                new SplineWaypoint(new ImmutableVector2f(-4.5F, 10F), 0, 10F, 10, -10) // if this doesn't work, PP is broken or field is off.
                                                    );
         testPath(splinePathLeft.getWaypoints(), 90, 15, "centerSplinePathLeft");
     }
@@ -130,30 +131,35 @@ public class SimulatorTest
     public void testSplinePathLeftToRightScale() throws IOException
     {
         final ImmutableVector2f lastSlopeVec = new ImmutableVector2f(MathUtils.cos(3 * MathUtils.PI_F / 4), MathUtils.sin(3 * MathUtils.PI_F / 4)).mul(10);
-        Path splinePathLeft = Path.fromSplinePoints(
-                new SplineWaypoint(new ImmutableVector2f(0, 0),0,  0, 20, -10),
-                new SplineWaypoint(new ImmutableVector2f(0F, 12),0,  25F, 20, -10),
-                new SplineWaypoint(new ImmutableVector2f(15.0F, 19.5F),new ImmutableVector2f(25, 0),  10F, 20, -5),
-                new SplineWaypoint(new ImmutableVector2f(16.833F, 22F), lastSlopeVec, 10F, 10, -5),
-                new SplineWaypoint(new ImmutableVector2f(14.49F, 24.66F), lastSlopeVec, 2, 10, -5)
 
+        final List<SplineWaypoint> mySplinePath = Arrays.asList(
+                new SplineWaypoint(new ImmutableVector2f(0.000F, 0.000F), new ImmutableVector2f(0.000F, 0.000F), 0, 20, -10),
+                new SplineWaypoint(new ImmutableVector2f(0.000F, 12.000F), new ImmutableVector2f(0.000F, 25.000F), 25, 20, -10),
+                new SplineWaypoint(new ImmutableVector2f(15.000F, 19.500F), new ImmutableVector2f(25.000F, 0.000F), 10, 20, -5),
+                new SplineWaypoint(new ImmutableVector2f(19.000F, 26.500F), new ImmutableVector2f(-8.000F, 0.000F), 2, 10, -5)
+                                                               );
+
+        Path splinePathLeft = Path.fromSplinePoints(
+                mySplinePath
                                                    );
+
+
         testPath(splinePathLeft.getWaypoints(), 36, 15, "leftSplineToRight");
     }
-
 
 
     private void testPath(List<Waypoint> pathToTest, float desiredHeading, float desiredTime, String fileName) throws IOException
     {
         PurePursuitCSVWriter manager = null;
-        try{
-          manager  = new PurePursuitCSVWriter("outPaths/" + fileName + ".csv", false);
+        try
+        {
+            manager = new PurePursuitCSVWriter("outPaths/" + fileName + ".csv", false);
         }
         catch(IOException e1)
         {
             try
             {
-                manager  = new PurePursuitCSVWriter("../../outPaths/" + fileName + ".csv", false);
+                manager = new PurePursuitCSVWriter("../../outPaths/" + fileName + ".csv", false);
             }
             catch(IOException e2)
             {
@@ -177,7 +183,7 @@ public class SimulatorTest
             SimulatedRobot simulatedRobot = new SimulatedRobot(Constants.PurePursuit.LATERAL_WHEEL_DISTANCE_FT);
             SimulatorLocationEstimator simulatorLocationEstimator = new SimulatorLocationEstimator(simulatedRobot);
             PurePursuitMovementStrategy purePursuitMovementStrategy = new PurePursuitMovementStrategy(simulatedRobot,
-                    simulatorLocationEstimator, simulatorLocationEstimator, simulatorLocationEstimator, path, Constants.PurePursuit.LOOKAHEAD, false);
+                                                                                                      simulatorLocationEstimator, simulatorLocationEstimator, simulatorLocationEstimator, path, Constants.PurePursuit.LOOKAHEAD, false);
 
             simulatorLocationEstimator.setEstimatedLocation(path.get(0).getLocation()); // Fixes paths that do not start at (0,0)
             float dt = 0.02F;
@@ -244,7 +250,7 @@ public class SimulatorTest
     private void writeCSV(FileWriter fileWriter, double... vals)
     {
         StringBuilder toWrite = new StringBuilder();
-        for(int i = 0; i < vals.length-1; i++)
+        for(int i = 0; i < vals.length - 1; i++)
         {
             toWrite.append(vals[i]).append(", ");
         }
