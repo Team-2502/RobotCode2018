@@ -40,6 +40,11 @@ public class Controller implements Initializable
     public NumberAxis xAxis;
     public Button btnPrintWaypoints;
 
+    public Button editSave;
+    public Button addNewRow;
+    public Button emptyTable;
+    public Button delSelected;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle)
     {
@@ -183,6 +188,61 @@ public class Controller implements Initializable
                ", " +
                velAccDecPlaceholder +
                ")";
+    }
+
+    public void editSelectedRow(Event e)
+    {
+        e.consume();
+        SplinePoint selectedItem = tableControlPoints.getSelectionModel().getSelectedItem();
+
+        txtPosX.setText(String.valueOf(selectedItem.getPosX()));
+        txtPosY.setText(String.valueOf(selectedItem.getPosY()));
+        txtTanX.setText(String.valueOf(selectedItem.getTanX()));
+        txtTanY.setText(String.valueOf(selectedItem.getTanY()));
+
+        updateSegments();
+        updateSplineGraph();
+
+        editSave.setText("Save");
+        editSave.setOnMouseClicked(this::saveSelectedRow);
+
+        delSelected.setDisable(true);
+        emptyTable.setDisable(true);
+        addNewRow.setDisable(true);
+    }
+
+    public void saveSelectedRow(Event e)
+    {
+        e.consume();
+        SplinePoint selectedItem = tableControlPoints.getSelectionModel().getSelectedItem();
+
+        int index = waypoints.indexOf(selectedItem);
+
+        System.out.println("waypoints.contains(selectedItem) = " + waypoints.contains(selectedItem));
+
+        float posX = Float.valueOf(txtPosX.getCharacters().toString());
+        float posY = Float.valueOf(txtPosY.getCharacters().toString());
+        float tanX = Float.valueOf(txtTanX.getCharacters().toString());
+        float tanY = Float.valueOf(txtTanY.getCharacters().toString());
+
+        waypoints.remove(selectedItem);
+
+        waypoints.add(index, new SplinePoint(posX, posY, tanX, tanY));
+        updateSegments();
+        updateSplineGraph();
+
+        txtPosX.clear();
+        txtPosY.clear();
+        txtTanX.clear();
+        txtTanY.clear();
+
+        editSave.setText("Edit");
+        editSave.setOnMouseClicked(this::editSelectedRow);
+
+        delSelected.setDisable(false);
+        emptyTable.setDisable(false);
+        addNewRow.setDisable(false);
+
     }
 
     private String newImmutableVector2f(double x, double y)

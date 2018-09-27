@@ -33,7 +33,7 @@
              <children>
                  <ChoiceBox fx:id="posChooser" prefWidth="150.0" GridPane.columnIndex="1" />
                  <Label text="Select Start Position" />
-                  <Button fx:id="btnPrintWaypoints" onMouseClicked="#printWaypointsToConsole" mnemonicParsing="false" text="Print Waypoint Code to Console" GridPane.columnSpan="2" GridPane.rowIndex="1" />
+                  <Button fx:id="btnPrintWaypoints" mnemonicParsing="false" onMouseClicked="#printWaypointsToConsole" text="Print Waypoint Code to Console" GridPane.columnSpan="2" GridPane.rowIndex="1" />
              </children>
          </GridPane>
        </Tab>
@@ -61,8 +61,10 @@
                      <GridPane GridPane.rowIndex="1">
                        <columnConstraints>
                          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="147.0" />
-                           <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="147.0" />
-                           <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="50.0" />
+                           <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="140.0" minWidth="10.0" prefWidth="101.0" />
+                           <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="106.0" minWidth="10.0" prefWidth="103.0" />
+                           <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                           <ColumnConstraints />
                        </columnConstraints>
                        <rowConstraints>
                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -100,9 +102,10 @@
                               </tooltip>
                            </Label>
                            <TextField fx:id="txtTanY" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="3" />
-                           <Button mnemonicParsing="false" onMouseClicked="#addRow" prefHeight="55.0" prefWidth="75.0" text="Add Row" textAlignment="CENTER" textOverrun="CLIP" wrapText="true" GridPane.rowIndex="4" />
-                           <Button mnemonicParsing="false" onMouseClicked="#clearAll" prefHeight="55.0" prefWidth="75.0" text="Clear All" textAlignment="CENTER" textOverrun="CLIP" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                            <Button mnemonicParsing="false" onMouseClicked="#deleteSelected" prefHeight="55.0" prefWidth="75.0" text="Delete Selected" textAlignment="CENTER" textOverrun="CLIP" wrapText="true" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+                           <Button fx:id="addNewRow" mnemonicParsing="false" onMouseClicked="#addRow" prefHeight="55.0" prefWidth="75.0" text="Add Row" textAlignment="CENTER" textOverrun="CLIP" wrapText="true" GridPane.rowIndex="4" />
+                           <Button fx:id="emptyTable" mnemonicParsing="false" onMouseClicked="#clearAll" prefHeight="55.0" prefWidth="75.0" text="Clear All" textAlignment="CENTER" textOverrun="CLIP" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                            <Button fx:id="delSelected" mnemonicParsing="false" onMouseClicked="#deleteSelected" prefHeight="55.0" prefWidth="75.0" text="Delete Selected" textAlignment="CENTER" textOverrun="CLIP" wrapText="true" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+                           <Button fx:id="editSave" mnemonicParsing="false" text="Edit" prefHeight="55.0" prefWidth="75.0" GridPane.columnIndex="3" GridPane.rowIndex="4" onMouseClicked="#editSelectedRow"/>
                         </children>
                      </GridPane>
                   </children>
