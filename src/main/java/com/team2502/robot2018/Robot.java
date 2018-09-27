@@ -286,20 +286,6 @@ public final class Robot extends IterativeRobot
         TrajConfig.Center.init();
     }
 
-    public void startLocalization()
-    {
-        // Initialize Estimators
-        NavXLocationEstimator rotEstimator = new NavXLocationEstimator();
-        EncoderDifferentialDriveLocationEstimator encoderDifferentialDriveLocationEstimator = new EncoderDifferentialDriveLocationEstimator(rotEstimator);
-
-        // Begin running the localization routine
-        ROBOT_LOCALIZATION_COMMAND = new RobotLocalizationCommand(rotEstimator, encoderDifferentialDriveLocationEstimator, encoderDifferentialDriveLocationEstimator);
-
-        ROBOT_LOCALIZATION_COMMAND.execute();
-
-        Scheduler.getInstance().add(ROBOT_LOCALIZATION_COMMAND);
-    }
-
     /**
      * This method is called once each time the robot enters Disabled mode.
      * You can use it to reset any subsystem information you want to clear when
@@ -329,7 +315,19 @@ public final class Robot extends IterativeRobot
         if(GAME_DATA == null) { GAME_DATA = "___"; }
     }
 
-    /**
+    public void startLocalization()
+    {
+        // Initialize Estimators
+        NavXLocationEstimator rotEstimator = new NavXLocationEstimator();
+        EncoderDifferentialDriveLocationEstimator encoderDifferentialDriveLocationEstimator = new EncoderDifferentialDriveLocationEstimator(rotEstimator);
+
+        // Begin running the localization routine
+        ROBOT_LOCALIZATION_COMMAND = new RobotLocalizationCommand(rotEstimator, encoderDifferentialDriveLocationEstimator, encoderDifferentialDriveLocationEstimator);
+
+        Scheduler.getInstance().add(ROBOT_LOCALIZATION_COMMAND);
+    }
+
+    /**teleop
      * This autonomous (along with the chooser code above) shows how to select
      * between different autonomous modes using the dashboard. The sendable
      * chooser code works with the Java SmartDashboard. If you prefer the

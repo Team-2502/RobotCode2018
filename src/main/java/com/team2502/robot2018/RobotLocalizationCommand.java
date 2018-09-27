@@ -53,8 +53,6 @@ public class RobotLocalizationCommand extends Command implements ITranslationalL
     public RobotLocalizationCommand(IRotationalLocationEstimator rotEstimator,
                                     ITranslationalVelocityEstimator velocityEstimator, ITranslationalLocationEstimator locationEstimator)
     {
-        setRunWhenDisabled(true);
-        setInterruptible(true);
         this.rotEstimator = rotEstimator;
         this.velocityEstimator = velocityEstimator;
         this.locationEstimator = locationEstimator;
@@ -79,7 +77,7 @@ public class RobotLocalizationCommand extends Command implements ITranslationalL
     @Override
     protected void initialize()
     {
-        DriverStation.getInstance().reportWarning("Initializing the localizer", false);
+        DriverStation.reportWarning("Initializing the localizer", false);
     }
 
     /**
