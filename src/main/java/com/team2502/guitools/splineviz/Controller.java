@@ -157,7 +157,7 @@ public class Controller implements Initializable
     {
         String indent = "                ";
         StringBuilder ret = new StringBuilder();
-        ret.append("public static final List<SplineWaypoint> mySplinePath = Arrays.asList(\n");
+        ret.append("final List<SplineWaypoint> mySplinePath = Arrays.asList(\n");
         for(int i = 0; i < waypoints.size(); i++)
         {
             ret.append(indent);
