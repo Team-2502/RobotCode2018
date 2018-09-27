@@ -12,6 +12,7 @@ import com.team2502.robot2018.sendables.Nameable;
 import com.team2502.robot2018.sendables.PIDTunable;
 import com.team2502.robot2018.sendables.SendableDriveStrategyType;
 import com.team2502.robot2018.sendables.SendablePIDTuner;
+import com.team2502.robot2018.utils.UnitUtils;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -20,8 +21,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import jaci.pathfinder.Pathfinder;
 import jaci.pathfinder.Trajectory;
 
-import static com.team2502.robot2018.Constants.Physical.DriveTrain.FEET_TO_EPOS_DT;
-import static com.team2502.robot2018.Constants.Physical.DriveTrain.FPS_TO_EVEL_DT;
 
 /**
  * Example Implementation, Many changes needed.
@@ -185,9 +184,9 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     }
 
     /**
-     * Load some purepursuit points into a particular talon
+     * Load some motion profiling points into a particular talon
      *
-     * @param traj  The purepursuit points in question, with points in feet
+     * @param traj  The motion profiling points in question, with points in feet
      * @param talon The talon in question
      */
     private void loadTrajectoryPoints(Trajectory traj, WPI_TalonSRX talon, double dir)
@@ -211,8 +210,8 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
             point.timeDur = Constants.SRXProfiling.PERIOD;
 
             //todo: shift by current pos
-            point.position = fakeToRealEncUnits((float) segment.position * FEET_TO_EPOS_DT) * dir + talon.getSelectedSensorPosition(0);
-            point.velocity = fakeToRealEncUnits((float) segment.velocity * FPS_TO_EVEL_DT) * dir;
+            point.position = feetToEncUnits((float) segment.position) * dir + talon.getSelectedSensorPosition(0);
+            point.velocity = feetToEncUnits((float) segment.velocity) * dir / 10;
 
             point.zeroPos = Constants.SRXProfiling.USE_RELATIVE_COORDS && i == 0;
 
@@ -383,8 +382,10 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
      */
     public void runMotorsVelocity(float leftWheel, float rightWheel)
     {
-        float left = fakeToRealEncUnits(leftWheel * Constants.Physical.DriveTrain.FPS_TO_EVEL_DT);
-        float right = fakeToRealEncUnits(rightWheel * Constants.Physical.DriveTrain.FPS_TO_EVEL_DT);
+        // Must divide by 10 to convert from enc units per second to enc units per 100 ms
+        float left = feetToEncUnits(leftWheel) / 10;
+        float right = feetToEncUnits(rightWheel) / 10;
+
         Robot.writeLog("left: %.2f, right: %.2f", 1, left, right);
         runMotors(ControlMode.Velocity, left, right);
     }
@@ -411,8 +412,8 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
      */
     public void runMotorsPosition(float leftWheel, float rightWheel)
     {
-        float left = fakeToRealEncUnits(leftWheel * Constants.Physical.DriveTrain.FEET_TO_EPOS_DT);
-        float right = fakeToRealEncUnits(rightWheel * Constants.Physical.DriveTrain.FEET_TO_EPOS_DT);
+        float left = feetToEncUnits(leftWheel);
+        float right = feetToEncUnits(rightWheel);
         runMotors(ControlMode.Position, left, right);
     }
 
@@ -531,7 +532,13 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
      * @return Velocity as read by left encoder in Feet per Second
      */
     public float getLeftVel()
-    { return fakeToRealWheelRev(getLeftRawVel() * Constants.Physical.DriveTrain.FAKE_EVEL_TO_FPS_DT); }
+    {
+        float encUnitsPer100ms = getLeftRawVel();
+        float feetPer100ms = encUnitsToFeet(encUnitsPer100ms);
+        float feetPerSec = feetPer100ms * 10;
+
+        return feetPerSec;
+    }
 
     /**
      * Assuming we are in a PID loop, return the average error for the 2 sides of the drivetrain
@@ -540,30 +547,39 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
      */
     public double getAvgEncLoopError()
     {
-        return (leftFrontTalonEnc.getClosedLoopError(0) + rightFrontTalonEnc.getClosedLoopError(0)) / 2;
+        return (leftFrontTalonEnc.getClosedLoopError(0) + rightFrontTalonEnc.getClosedLoopError(0)) / 2D;
     }
 
-    /**
-     * @return Turns "fake" units into real wheel revolutions
-     */
-    public float fakeToRealWheelRev(float wheelRev)
+    public float encUnitsToFeet(float encUnits)
     {
-        if(Robot.TRANSMISSION_SOLENOID.isHigh()) { return wheelRev / Constants.Physical.DriveTrain.WHEEL_REV_TO_ENC_REV_HIGH; }
-        else { return wheelRev / Constants.Physical.DriveTrain.WHEEL_REV_TO_ENC_REV_LOW; }
+        // Convert enc units to enc rotations
+        double encoderRotations = encUnits / UnitUtils.Rotations.ENC_UNITS;
+        double wheelRotations = encoderRotations / UnitUtils.Rotations.ENC_ROTATIONS;
+        double distanceFt = wheelRotations * Constants.Physical.DriveTrain.WHEEL_DIAMETER_FT * Math.PI; // circumfrence is d * pi
+
+        return (float) distanceFt;
     }
 
-    /**
-     * @return Turns "fake" units into real encoder units
-     */
-    public float fakeToRealEncUnits(float rawUnits)
+    public float feetToEncUnits(float feet)
     {
-        return Robot.TRANSMISSION_SOLENOID.isHigh() ? rawUnits * Constants.Physical.DriveTrain.WHEEL_REV_TO_ENC_REV_HIGH : rawUnits * Constants.Physical.DriveTrain.WHEEL_REV_TO_ENC_REV_LOW;
+        // Convert enc units to enc rotations
+        double wheelRotations = feet / (Constants.Physical.DriveTrain.WHEEL_DIAMETER_FT * Math.PI); // divide by feet per wheel rotation
+        double encoderRotations = wheelRotations * UnitUtils.Rotations.ENC_ROTATIONS;
+        double encUnits = encoderRotations * UnitUtils.Rotations.ENC_UNITS;
+
+        return (float) encUnits;
     }
 
     /**
      * @return Velocity as read by right encoder in ft/s
      */
-    public float getRightVel() { return fakeToRealWheelRev(getRightRawVel() * Constants.Physical.DriveTrain.FAKE_EVEL_TO_FPS_DT); }
+    public float getRightVel() {
+        float encUnitsPer100ms = getRightRawVel();
+        float feetPer100ms = encUnitsToFeet(encUnitsPer100ms);
+        float feetPerSec = feetPer100ms * 10;
+
+        return feetPerSec;
+    }
 
     /**
      * @return Right side velocity in enc units / 100 ms
@@ -576,14 +592,18 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     public int getLeftRawVel() { return leftFrontTalonEnc.getSelectedSensorVelocity(0); }
 
     /**
-     * @return Position as read by right encoder in Feet per Second
+     * @return Position as read by right encoder in Feet
      */
-    public float getRightPos() { return fakeToRealWheelRev(getRightPosRaw() * Constants.Physical.DriveTrain.EPOS_TO_FEET_DT); }
+    public float getRightPos() {
+        return encUnitsToFeet(getRightPosRaw());
+    }
 
     /**
-     * @return Position as read by left encoder in Feet per Second
+     * @return Position as read by left encoder in Feet
      */
-    public float getLeftPos() { return fakeToRealWheelRev(getLeftPosRaw() * Constants.Physical.DriveTrain.EPOS_TO_FEET_DT); }
+    public float getLeftPos() {
+        return encUnitsToFeet(getLeftPosRaw());
+    }
 
     /**
      * @return Left side position in enc units
@@ -596,17 +616,14 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     public float getRightPosRaw() { return rightFrontTalonEnc.getSelectedSensorPosition(0);}
 
     /**
-     * @param inches
-     * @return
-     * @deprecated think this is wrong
+     * @param inches A distance in inches
+     * @return The value the encoder will read when the robot has travelled that many inches
      */
     public float inchesToEncUnits(float inches)
     {
         float feet = inches / 12;
 
-        // TODO: is this right???
-        return fakeToRealEncUnits(feet * Constants.Physical.DriveTrain.FEET_TO_EPOS_DT);
-//        return -99;
+        return feetToEncUnits(feet);
     }
 
 

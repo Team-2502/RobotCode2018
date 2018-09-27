@@ -122,11 +122,11 @@ public class Constants
         {
 
             public static final float WHEEL_DIAMETER_INCH = 6F; // 3.6944444443F;
-
-
             public static final float WHEEL_DIAMETER_FT = WHEEL_DIAMETER_INCH / 12F;
+
             public static final float WHEEL_REV_TO_ENC_REV_LOW = 4.285F;
             public static final float WHEEL_REV_TO_ENC_REV_HIGH = 2.083F;
+
             public static final float MAX_FPS_SPEED = 18.0F;
 
             // For autoshifting, which is unimplemented on Daedalus because it is not needed.
@@ -136,13 +136,44 @@ public class Constants
             public static final double SHIFT_DOWN_THRESHOLD = RobotMap.UNDEFINED;
 
             /* Drivetrain */
+
+            /**
+             * Unsafe to use.
+             * @deprecated Use {@link com.team2502.robot2018.subsystem.DriveTrainSubsystem#encUnitsToFeet(float)}
+             */
             public static final float EPOS_TO_FEET_DT = (WHEEL_DIAMETER_FT * (float) Math.PI) / Encoder.ENC_RES;
+
+            /**
+             * Unsafe to use.
+             * @deprecated Use {@link com.team2502.robot2018.subsystem.DriveTrainSubsystem#feetToEncUnits(float)} (float)}
+             */
             public static final float FEET_TO_EPOS_DT = 1 / EPOS_TO_FEET_DT;
+
+            /**
+             * Safe to use. Converts wheel rpm to wheel fps.
+             */
             public static final float RPM_TO_FPS_DT = (WHEEL_DIAMETER_FT * (float) Math.PI) / 60F;
-            //TODO: change bad name
-            public static final float FAKE_EVEL_TO_FPS_DT = Encoder.EVEL_TO_RPM * RPM_TO_FPS_DT;
+
+            /**
+             * Safe to use. Converts wheel FPS to Wheel RPM.
+             */
             public static final float FPS_TO_RPM_DT = 60F / (WHEEL_DIAMETER_FT * (float) Math.PI);
+
+            /**
+             * Unsafe to use.
+             *
+             * @deprecated Use a combination of {@link Constants.Physical.DriveTrain#RPM_TO_FPS_DT}
+             * and {@link com.team2502.robot2018.subsystem.DriveTrainSubsystem#feetToEncUnits(float)} (float)}.
+             * Make sure to divide by 10 to convert seconds to 100 ms.
+             */
             public static final float RPM_TO_EVEL_DT = Encoder.ENC_RES / 600F;
+
+            /**
+             * Unsafe to use.
+             *
+             * @deprecated Use {@link com.team2502.robot2018.subsystem.DriveTrainSubsystem#feetToEncUnits(float)}.
+             * Make sure to divide by 10 to convert seconds to 100 ms.
+             */
             public static final float FPS_TO_EVEL_DT = FPS_TO_RPM_DT * RPM_TO_EVEL_DT;
 
             /**
