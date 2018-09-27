@@ -66,7 +66,7 @@ public class LeftCommandGroup extends CommandGroup
 
     private void crossLine()
     {
-        addSequential(new DriveTime(5, 0.4F));
+        addSequential(new CrossLine());
     }
 
     /**

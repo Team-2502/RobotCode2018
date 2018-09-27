@@ -33,8 +33,6 @@ public class RightCommandGroup extends CommandGroup
                             goScaleRight();
                             break;
                     }
-
-
             }
         }
     }
@@ -71,7 +69,7 @@ public class RightCommandGroup extends CommandGroup
 
     private void crossLine()
     {
-        addSequential(new DriveTime(7, 0.4F));
+        addSequential(new CrossLine());
     }
 
     private void emitCube()
