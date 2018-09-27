@@ -37,12 +37,12 @@ public class CenterCommandGroup extends CommandGroup
         addSequential(new PurePursuitCommand(PathConfig.Center.leftSwitch, true));
         emitCubeSwitch();
 
-        addSequential(new SRXProfilingCommand(new ScheduledCommand[] { new ScheduledCommand(1, new ElevatorAutonCommand(2, 0)),
-                                                                       new ScheduledCommand(3.5, new RunIntakeCommand(3, -1)),
-                                                                       new ScheduledCommand(7, new RaiseElevatorSwitch()), },
-                                              (double) 1,
-                                              TrajConfig.Center.secondCubeLeftSwitch),
-                      11);
+//        addSequential(new SRXProfilingCommand(new ScheduledCommand[] { new ScheduledCommand(1, new ElevatorAutonCommand(2, 0)),
+//                                                                       new ScheduledCommand(3.5, new RunIntakeCommand(3, -1)),
+//                                                                       new ScheduledCommand(7, new RaiseElevatorSwitch()), },
+//                                              (double) 1,
+//                                              TrajConfig.Center.secondCubeLeftSwitch),
+//                      11);
     }
 
     private void goSwitchRight()
