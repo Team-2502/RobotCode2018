@@ -51,6 +51,8 @@ public final class Robot extends IterativeRobot
     private static List<String> logLines = new ArrayList<>();
     private static int LEVEL = 40;
 
+
+
     public static void write(String string)
     { LOG_OUTPUT.println(string); }
 
@@ -69,6 +71,7 @@ public final class Robot extends IterativeRobot
     @Override
     public void robotInit()
     {
+        CameraServer.getInstance().startAutomaticCapture();
         SmartDashboard.putNumber("Side switch tuning: angle", 80);
         SmartDashboard.putNumber("Side switch distance", 13.5);
         MathUtils.init();

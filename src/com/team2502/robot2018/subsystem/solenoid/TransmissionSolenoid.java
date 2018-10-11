@@ -1,10 +1,13 @@
 package com.team2502.robot2018.subsystem.solenoid;
 
+import com.team2502.robot2018.DashboardData;
+import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.RobotMap;
 import com.team2502.robot2018.utils.NonDefaultSubsystem;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class TransmissionSolenoid extends NonDefaultSubsystem
+public class TransmissionSolenoid extends NonDefaultSubsystem implements DashboardData.DashboardUpdater
 {
     private final Solenoid transmission;
     public boolean disabledAutoShifting = true;
@@ -15,6 +18,7 @@ public class TransmissionSolenoid extends NonDefaultSubsystem
         transmission = new Solenoid(RobotMap.Solenoid.TRANSMISSION_SWITCH);
         lowGear = false;
         transmission.set(false);
+        DashboardData.addUpdater(this);
     }
 
     /**
@@ -36,4 +40,10 @@ public class TransmissionSolenoid extends NonDefaultSubsystem
      */
     public void setLowGear(boolean lowGear)
     { transmission.set(this.lowGear = !lowGear); }
+
+    @Override
+    public void updateDashboard()
+    {
+        SmartDashboard.putBoolean("High Gear", isHigh());
+    }
 }

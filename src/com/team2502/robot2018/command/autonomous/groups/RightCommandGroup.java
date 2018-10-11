@@ -183,7 +183,7 @@ public class RightCommandGroup extends CommandGroup
 
     private void crossLine()
     {
-        addSequential(new DriveTime(2.7F, 0.45F));
+        addSequential(new DriveTime(2F, 0.45F));
     }
 
     private void emitCube()

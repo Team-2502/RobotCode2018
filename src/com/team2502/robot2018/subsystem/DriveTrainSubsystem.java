@@ -36,7 +36,8 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
     private float lastLeft;
     //    private boolean negative;
     private float lastRight;
-    public boolean kidMode = false;
+
+    public boolean usingTank = true;
 
     public DriveTrainSubsystem()
     {
@@ -282,10 +283,14 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
 
     public void drive()
     {
-//        FloatPair speed = getSpeedTank();
-        FloatPair speed = getSpeedArcade();
-        if(this.kidMode) {
-            speed.scale(0.5);
+        FloatPair speed;
+        if (usingTank)
+        {
+            speed = getSpeedTank();
+        }
+        else
+        {
+            speed = getSpeedArcade();
         }
         SmartDashboard.putNumber("speedL", -speed.left);
         SmartDashboard.putNumber("speedR", -speed.right);

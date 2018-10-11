@@ -5,9 +5,11 @@ import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
 import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.team2502.robot2018.Constants;
+import com.team2502.robot2018.DashboardData;
 import com.team2502.robot2018.RobotMap;
 import com.team2502.robot2018.command.teleop.ActiveRotationCommand;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 public class ActiveIntakeSubsystem extends Subsystem
@@ -55,6 +57,6 @@ public class ActiveIntakeSubsystem extends Subsystem
     @Override
     protected void initDefaultCommand()
     {
-//        setDefaultCommand(new ActiveRotationCommand());
+        setDefaultCommand(new ActiveRotationCommand());
     }
 }
