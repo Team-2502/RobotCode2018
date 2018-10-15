@@ -5,6 +5,7 @@ import com.team2502.robot2018.command.autonomous.ingredients.*;
 import com.team2502.robot2018.pathplanning.srxprofiling.SRXProfilingCommand;
 import com.team2502.robot2018.pathplanning.srxprofiling.TrajConfig;
 import edu.wpi.first.wpilibj.command.CommandGroup;
+import edu.wpi.first.wpilibj.command.WaitCommand;
 
 import static com.team2502.robot2018.Constants.SRXProfiling.NO_COMMANDS;
 
@@ -24,38 +25,78 @@ public class LeftCommandGroup extends CommandGroup
             {
                 // Left scale -- second letter is L
                 case "RL":
+                    switch(Robot.autonStrategySelector.getSelected())
+                    {
+                        case SCALE_WAIT:
+                        case ONLY_SAME_SIDE:
+                        case SCALE:
+                            goScaleLeft();
+                            break;
+                        case DEEP_SCALE:
+                            goDeepScaleLeft();
+                            break;
+                        default:
+                            crossLine();
+                            break;
+                    }
+                    break;
+                    
                 case "LL":
                     switch(Robot.autonStrategySelector.getSelected())
                     {
-                        case FCC:
-                        {
-                            goScaleRight();
-                            break;
-                        }
                         case SCALE:
-                        {
+                        case ONLY_SAME_SIDE:
+                        case SCALE_WAIT:
                             goScaleLeft();
                             break;
-                        }
                         case SWITCH:
-                        {
                             goSwitch();
                             break;
-                        }
-                        case SCALE_TWICE:
-                        {
-                            goScaleLeft();
-                            secondCubeLeft();
+                        case DEEP_SCALE:
+                            goDeepScaleLeft();
                             break;
-                        }
+                        default:
+                            crossLine();
+                            break;
                     }
                     break;
-
                 // Right scale - 2nd letter is R
                 case "LR":
+                    switch(Robot.autonStrategySelector.getSelected())
+                    {
+
+                        case SCALE_WAIT:
+                            addSequential(new WaitCommand(3));
+                        case SCALE:
+                        case DEEP_SCALE:
+                            goScaleRight();
+                            break;
+
+                        case SWITCH:
+                            goSwitch();
+                            break;
+
+                        case ONLY_SAME_SIDE:
+                        default:
+                            crossLine();
+                            break;
+                    }
+                    break;
                 case "RR":
-                    System.out.println("Going cross country!");
-                    goScaleRight();
+                    switch(Robot.autonStrategySelector.getSelected())
+                    {
+                        case SCALE_WAIT:
+                            addSequential(new WaitCommand(3));
+                        case SCALE:
+                            goScaleRight();
+                            break;
+
+                        case ONLY_SAME_SIDE: // opposite side
+                        case SWITCH: // also opposite side
+                        default:
+                            crossLine();
+                            break;
+                    }
                     break;
             }
         }
@@ -108,6 +149,9 @@ public class LeftCommandGroup extends CommandGroup
                                               TrajConfig.Left.twoCube));
     }
 
+    /**
+     * Second cube left scale
+     */
     private void secondCubeLeftDeadReckoning()
     {
         addSequential(new NavXRotateCommand(150, 3));
@@ -153,7 +197,18 @@ public class LeftCommandGroup extends CommandGroup
      */
     private void goScaleRight()
     {
+        System.out.println("Going cross country!");
         addSequential(new GoScaleCrossCountry(PathConfig.Left.rightScale));
+    }
+
+    private void goDeepScaleLeft()
+    {
+        addSequential(new PurePursuitCommand(PathConfig.Left.leftScaleDeepNullZone, false)); // Drive to deep scale
+        emitCube(); // Shoot cube via active spinning wheels, then open up for safety
+
+        addParallel(new WaitCommand(3)); // lower elevator and back up
+        addParallel(new ElevatorAutonCommand(1.7, 0));
+        addSequential(new DeadreckoningDrive(5.0, -5.0F));
     }
 
     private void emitCube()

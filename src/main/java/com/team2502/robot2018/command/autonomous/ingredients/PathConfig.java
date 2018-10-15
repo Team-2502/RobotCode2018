@@ -116,9 +116,8 @@ public class PathConfig
 
         public static final List<Waypoint> leftSwitch = Arrays.asList(
                 new Waypoint(new ImmutableVector2f(0, 0), 0, 5, -5),
-                new Waypoint(new ImmutableVector2f(0, 2.454F), 9F, 5, -5),
-                new Waypoint(new ImmutableVector2f(0, 9), 6F, 5, -5),
-                new Waypoint(new ImmutableVector2f(3.82006F, 12.5F), 2F, 5, -5) // TODO: add ability to coast at end
+                new Waypoint(new ImmutableVector2f(-2, 13.5F), 10F, 5, -5),
+                new Waypoint(new ImmutableVector2f(4, 13.5F), 4F, 5, -5)
                                                                      );
 
         public static final List<Waypoint> rightScale = Arrays.asList(
@@ -147,7 +146,7 @@ public class PathConfig
     }
 
     /**
-     * GMO-free soy-based paths for when your robot is placed on the right (Ritik)
+     * Ethically-raised free-range GMO-free soy-based paths for when your robot is placed on the right (Ritik)
      * <p>
      * These seem pretty processed to me... (Isaac)
      */

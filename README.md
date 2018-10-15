@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/Team-2502/RobotCode2018.svg?branch=master)](https://travis-ci.org/Team-2502/RobotCode2018)
 # Talon Robotics 2018 Robot Code
 ## Features
 - Custom-made Pure Pursuit path-tracking 
@@ -8,7 +9,7 @@
 - Distance-based motion-profiling
   - Sets current velocity to highest possible given cruising velocity and distance from end of path
 - Encoder-gyro localization
-- Unit testing
+- Unit testing for autonomous
 ## Special Thanks To
 ![Image YourKit](https://jitsi.org/wp-content/uploads/2017/01/logo-yourkit.png)
 

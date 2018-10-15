@@ -7,15 +7,17 @@ package com.team2502.robot2018.command.autonomous.ingredients;
  */
 public enum AutonStrategy
 {
+    STRAIGHT("Straight"),
     SWITCH("Switch"),
-//    VAULT_2_SWITCH("Vault-Switch-Switch"),
-    SWITCH_TWICE("Switch-Switch"), // Used for center
     SCALE("Scale"),
+    DEEP_SCALE("Scale via Null Zone"),
+    SCALE_WAIT("Delayed Scale"),
+    SWITCH_TWICE("Switch x2 (Center)"), // Used for center
     SCALE_TWICE("Scale x2"),
     SCALE_SWITCH("Scale + Switch"),
-    STRAIGHT("Straight"),
-    FCC("Force Cross Country");
-
+    FCC("Force Cross Country"),
+    SWITCH_SCALE("Switch then Scale"),
+    ONLY_SAME_SIDE("Same side scale or drive straight");
     private final String name;
 
     AutonStrategy(String name)

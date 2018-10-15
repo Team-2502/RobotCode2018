@@ -8,18 +8,15 @@ import com.team2502.robot2018.pathplanning.localization.NavXLocationEstimator;
 import com.team2502.robot2018.pathplanning.srxprofiling.TrajConfig;
 import com.team2502.robot2018.sendables.SendableDriveStrategyType;
 import com.team2502.robot2018.sendables.SendableDriveTrain;
+import com.team2502.robot2018.sendables.SendableNavX;
 import com.team2502.robot2018.sendables.SendableVersioning;
 import com.team2502.robot2018.subsystem.ActiveIntakeSubsystem;
 import com.team2502.robot2018.subsystem.DriveTrainSubsystem;
 import com.team2502.robot2018.subsystem.ElevatorSubsystem;
 import com.team2502.robot2018.subsystem.solenoid.*;
-import com.team2502.robot2018.utils.Files;
 import com.team2502.robot2018.utils.InterpolationMap;
 import com.team2502.robot2018.utils.MathUtils;
-import edu.wpi.first.wpilibj.Compressor;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.IterativeRobot;
-import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -201,21 +198,24 @@ public final class Robot extends IterativeRobot
     @Override
     public void robotInit()
     {
-
         TrajConfig.Center.init();
+
         // initialize sin lookup table
         MathUtils.init();
 
-
-        String fileName = "/home/lvuser/FILES";
-        Files.setFileName(fileName);
-        Files.newFile(fileName);
+        // Initialize OI
+        OI.init();
 
         // Initialize NavX
-        NAVX = new AHRS(SPI.Port.kMXP);
+        CameraServer.getInstance().startAutomaticCapture();
 
-        // Start pushing video from the camera to the DS
-//        CameraServer.getInstance().startAutomaticCapture();
+        // Initialize the ACCELERATION_FOR_ELEVATOR_HEIGHT interpolation map.
+        Map<Double, Double> map = ImmutableMap.<Double, Double>builder()
+                .put(0D, 14D)
+                .build();
+        Constants.Physical.ACCELERATION_FOR_ELEVATOR_HEIGHT = new InterpolationMap(map);
+
+
 
         // Create the autonomous strategy selector
         autonStrategySelector = new SendableChooser<>();
@@ -235,6 +235,8 @@ public final class Robot extends IterativeRobot
 
         SmartDashboard.putData("auto_strategy", autonStrategySelector);
 
+        AutoStartLocationSwitcher.putToSmartDashboard();
+
         // Initialize all subsystems
         TRANSMISSION_SOLENOID = new TransmissionSolenoid();
         COMPRESSOR = new Compressor();
@@ -246,25 +248,24 @@ public final class Robot extends IterativeRobot
         CLIMBER_SOLENOID = new ClimberSolenoid();
         BUTTERFLY_SOLENOID = new ButterflySolenoid();
         CLIMBER_CARRIAGE_BRAKE = new CarriageBrakeSolenoid();
-        OI.init();
+        NAVX = new AHRS(SPI.Port.kMXP);
 
-        // Initialize OI
-        OI.init();
+        NAVX.resetDisplacement();
+        initSendables();
 
-        // Initialize the ACCELERATION_FOR_ELEVATOR_HEIGHT interpolation map.
-        Map<Double, Double> map = ImmutableMap.<Double, Double>builder()
-                .put(0D, 14D)
-                .build();
+    }
 
-        Constants.Physical.ACCELERATION_FOR_ELEVATOR_HEIGHT = new InterpolationMap(map);
-        AutoStartLocationSwitcher.putToSmartDashboard();
-
+    private void initSendables()
+    {
         // Initialize our sendables
         SendableDriveTrain.init();
         DashboardData.addUpdater(SendableDriveTrain.INSTANCE);
 
+        DashboardData.addUpdater(SendableNavX.INSTANCE);
+
         DashboardData.addUpdater(SendableDriveStrategyType.INSTANCE);
 
+        // Add versioning to ShuffleBoard
         SendableVersioning.INSTANCE.init();
         SmartDashboard.putData(SendableVersioning.INSTANCE);
 
@@ -279,11 +280,9 @@ public final class Robot extends IterativeRobot
         SmartDashboard.putBoolean("calibration_enabled", false);
         SmartDashboard.putNumber("calibration_velocity", 0);
 
-        NAVX.resetDisplacement();
 
-        fileWriting();
-
-        TrajConfig.Center.init();
+        SmartDashboard.putNumber("Side switch tuning: angle", 80);
+        SmartDashboard.putNumber("Side switch distance", 13.5);
     }
 
     /**
@@ -344,7 +343,7 @@ public final class Robot extends IterativeRobot
         NAVX.reset();
         startLocalization();
 
-        TRANSMISSION_SOLENOID.setHighGear(true);
+//        TRANSMISSION_SOLENOID.setHighGear(true);
 
         // Ensure that the motors are in slave mode like they should be
         DRIVE_TRAIN.setAutonSettings();
@@ -377,7 +376,7 @@ public final class Robot extends IterativeRobot
     {
 
         DRIVE_TRAIN.setTeleopSettings();
-        ELEVATOR.calibrateEncoder();
+//        ELEVATOR.calibrateEncoder();
     }
 
     /**
@@ -398,9 +397,4 @@ public final class Robot extends IterativeRobot
         DashboardData.update();
     }
 
-    private void fileWriting()
-    {
-        String fileName = "/home/lvuser/FILES";
-        Files.setFileName(fileName);
-    }
 }

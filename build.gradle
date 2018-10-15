@@ -11,11 +11,11 @@ def TEAM = 2502
 def ROBOT_CLASS = "com.team2502.robot2018.Robot"
 
 deploy {
-    targets { 
-        target("roborio", jaci.openrio.gradle.frc.RoboRIO) { 
-            team = TEAM 
+    targets {
+        target("roborio", jaci.openrio.gradle.frc.RoboRIO) {
+            team = TEAM
             timeout = 15
-        } 
+        }
     }
     artifacts { artifact('frcJava', jaci.openrio.gradle.frc.FRCJavaArtifact) { targets << "roborio" } }
 }
@@ -34,7 +34,7 @@ dependencies {
     compile pathfinder()
 
     compile "com.team2502.ctannotationprocessor:CTAnnotationProcessor:1.1.0"
-    apt     "com.team2502.ctannotationprocessor:CTAnnotationProcessor:1.1.0"
+    apt "com.team2502.ctannotationprocessor:CTAnnotationProcessor:1.1.0"
     compile group: 'com.google.guava', name: 'guava', version: '23.5-jre'
     compile group: 'org.apache.commons', name: 'commons-math3', version: '3.6.1'
 
@@ -59,12 +59,16 @@ def branch() {
 }
 
 def hash = { ->
-    def stdout = new ByteArrayOutputStream()
-    exec {
-        commandLine 'git', 'rev-parse', '--short', 'HEAD'
-        standardOutput = stdout
+    try {
+        def stdout = new ByteArrayOutputStream()
+        exec {
+            commandLine 'git', 'rev-parse', '--short', 'HEAD'
+            standardOutput = stdout
+        }
+        return stdout.toString().trim()
+    } catch (Exception e) {
+        return "could not get commit hash"
     }
-    return stdout.toString().trim()
 }
 
 jar {
@@ -80,8 +84,8 @@ jar {
 }
 
 task genJavadoc(type: Jar, dependsOn: javadoc) {
-  classifier = 'javadoc'
-  from javadoc.destinationDir
+    classifier = 'javadoc'
+    from javadoc.destinationDir
 }
 
 artifacts { archives genJavadoc }
@@ -90,9 +94,9 @@ genJavadoc.onlyIf { project.hasProperty('runJavadoc') }
 javadoc.onlyIf { project.hasProperty('runJavadoc') }
 
 task wrapper(type: Wrapper) {
-            gradleVersion = '4.4'
-            distributionType = Wrapper.DistributionType.ALL
-        }
+    gradleVersion = '4.4'
+    distributionType = Wrapper.DistributionType.ALL
+}
 
 sourceSets {
     main {

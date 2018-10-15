@@ -23,7 +23,7 @@ public class ElevatorAutonCommand extends TimedCommand
     }
 
     /**
-     * Positive voltage is up by default is down
+     * Positive voltage is up by default
      *
      * @param timeout How long to try to move the elevator to the right hight
      * @param feet    How high the elevator should be (approximate)
@@ -50,7 +50,7 @@ public class ElevatorAutonCommand extends TimedCommand
     @Override
     protected boolean isFinished()
     {
-        if(super.isFinished()) // if timed out
+        if(isTimedOut()) // if timed out
         {
             return true;
         }

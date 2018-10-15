@@ -60,12 +60,15 @@ public final class OI
 
     private static final Button TOGGLE_CARRIAGE_BRAKE = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.TOGGLE_CARRIAGE_BRAKE);
 
+//    private static final Button TOGGLE_TANK = new JoystickButton(JOYSTICK_DRIVE_LEFT, 3);
+
     /*
      * Runs when the first static method (usually OI#init()) is called
      * Called the "static initialization constructor"
      */
     static
     {
+//        TOGGLE_TANK.whenPressed(new QuickCommand(() -> Robot.DRIVE_TRAIN.usingTank = ! Robot.DRIVE_TRAIN.usingTank));
         // Elevator buttons
         ELEV_UP.whileHeld(new ElevatorCommand(1.0));
         ELEV_DOWN.whileHeld(new ElevatorCommand(-0.5));

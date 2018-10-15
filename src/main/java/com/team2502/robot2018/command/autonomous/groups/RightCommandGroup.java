@@ -3,6 +3,7 @@ package com.team2502.robot2018.command.autonomous.groups;
 import com.team2502.robot2018.Robot;
 import com.team2502.robot2018.command.autonomous.ingredients.*;
 import edu.wpi.first.wpilibj.command.CommandGroup;
+import edu.wpi.first.wpilibj.command.WaitCommand;
 
 
 public class RightCommandGroup extends CommandGroup
@@ -19,22 +20,97 @@ public class RightCommandGroup extends CommandGroup
         {
             switch(AUTO_GAME_DATA)
             {
-                case "RL":
                 case "LL":
-                    System.out.println("Going cross country!");
-                    goScaleLeft();
+                    switch(Robot.autonStrategySelector.getSelected())
+                    {
+                        case SCALE_WAIT:
+                            addSequential(new WaitCommand(3));
+                        case SCALE:
+                        case DEEP_SCALE:
+                            goScaleLeft();
+                            break;
+
+                        case ONLY_SAME_SIDE:
+                        default:
+                            crossLine();
+                            break;
+                    }
                     break;
 
-                case "RR":
                 case "LR":
                     switch(Robot.autonStrategySelector.getSelected())
                     {
+                        case SCALE_WAIT:
+                        case ONLY_SAME_SIDE:
                         case SCALE:
                             goScaleRight();
                             break;
+
+                        case DEEP_SCALE:
+                            goDeepScaleRight();
+                            break;
+
+                        default:
+                            crossLine();
+                            break;
                     }
+                    break;
+
+                case "RL":
+                    switch(Robot.autonStrategySelector.getSelected())
+                    {
+                        case SCALE_WAIT:
+                            addSequential(new WaitCommand(3));
+                        case SCALE:
+                            goScaleLeft();
+                            break;
+                            
+                        case SWITCH:
+                            goSwitch();
+                            break;
+                            
+                        case ONLY_SAME_SIDE:
+                        default:
+                            crossLine();
+                            break;
+                    }
+                    break;
+
+                case "RR":
+                    switch(Robot.autonStrategySelector.getSelected())
+                    {
+                        case ONLY_SAME_SIDE:
+                        case SCALE_WAIT:
+                        case SCALE:
+                            goScaleRight();
+                            break;
+                            
+                        case SWITCH:
+                            goSwitch();
+                            break;
+                            
+                        case SWITCH_SCALE:
+                            goScaleRight();
+                            secondCubeRight();
+                            break;
+                            
+                        case DEEP_SCALE:
+                            goDeepScaleRight();
+                            break;
+                            
+                        default:
+                            crossLine();
+                            break;
+                    }
+                    break;
+
             }
         }
+    }
+
+    private void goDeepScaleRight()
+    {
+        
     }
 
     /**

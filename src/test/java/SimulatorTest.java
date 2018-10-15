@@ -79,7 +79,7 @@ public class SimulatorTest
         // CCW degrees where 0 is front of robot
         testPath(PathConfig.Left.leftScale, 332, 15, "leftToLeftScale");
         testPath(PathConfig.Left.rightScale, 39, 15, "leftToRightScale");
-        testPath(PathConfig.Left.leftSwitch, 0, 15, "leftToLeftSwitch");
+        testPath(PathConfig.Left.leftSwitch, 270, 15, "leftToLeftSwitch");
         testPath(PathConfig.Left.leftScaleDeepNullZone, 275, 15, "leftToLeftScaleDeepNullZone");
         testPath(PathConfig.Left.leftScaleToSwitch, 332, 15, "leftScaleToLeftSwitch");
         testPath(PathConfig.Left.leftSwitchToScale, 275, 15, "leftSwitchToLeftScale");
@@ -93,7 +93,7 @@ public class SimulatorTest
     {
         testPath(PathConfig.Right.leftScale, 321, 7.3F, "rightToLeftScale");
         testPath(PathConfig.Right.rightScale, 28, 3.5F, "rightToRightScale");
-        testPath(PathConfig.Right.rightSwitch, 0, 3.5F, "rightToRightSwitch");
+        testPath(PathConfig.Right.rightSwitch, 90, 3.5F, "rightToRightSwitch");
         testPath(PathConfig.Right.rightScaleDeepNullZone, 90, 15, "rightToRightScaleInNullZone");
     }
 
