@@ -290,9 +290,49 @@ public class DriveTrainSubsystem extends Subsystem implements DashboardData.Dash
         return getSpeedTank(SPEED_CONTAINER);
     }
 
+    private FloatPair getSpeedArcade(FloatPair out)
+    {
+        float turnFactor = (float) OI.JOYSTICK_DRIVE_RIGHT.getRawAxis(2);
+        float forwardFactor = (float) OI.JOYSTICK_DRIVE_RIGHT.getRawAxis(1);
+
+        float maxInput = Math.copySign(Math.max(Math.abs(forwardFactor), Math.abs(turnFactor)), forwardFactor);
+
+        if (forwardFactor >= 0.0) {
+            // First quadrant, else second quadrant
+            if (turnFactor >= 0.0) {
+                out.left = maxInput;
+                out.right = forwardFactor - turnFactor;
+            } else {
+                out.left = forwardFactor + turnFactor;
+                out.right  = maxInput;
+            }
+        } else {
+            // Third quadrant, else fourth quadrant
+            if (turnFactor >= 0.0) {
+                out.left = forwardFactor + turnFactor;
+                out.right  = maxInput;
+            } else {
+                out.left = maxInput;
+                out.right = forwardFactor - turnFactor;
+            }
+        }
+
+        // Sets the speed to 0 if the speed is less than 0.05 and larger than -0.05
+        if(Math.abs(out.left) < 0.05F) { out.left = 0.0F; }
+        if(Math.abs(out.right) < 0.05F) { out.right = 0.0F; }
+
+        return out;
+    }
+
+    private FloatPair getSpeedArcade()
+    {
+        return getSpeedArcade(SPEED_CONTAINER);
+    }
+
+
     public void drive()
     {
-        FloatPair speed = getSpeedTank();
+        FloatPair speed = getSpeedArcade();
         SmartDashboard.putNumber("speedL", -speed.left);
         SmartDashboard.putNumber("speedR", -speed.right);
 
